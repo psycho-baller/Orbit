@@ -42,6 +42,8 @@
 		25DC74FF2CC0522300731939 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F62CC0522300731939 /* Poppins-Bold.ttf */; };
 		25DC75002CC0522300731939 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F72CC0522300731939 /* Poppins-SemiBold.ttf */; };
 		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
+		61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137602CC4AFD600E7BA6C /* ProfileView.swift */; };
+		61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137622CC4B02C00E7BA6C /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +106,8 @@
 		25DC74F72CC0522300731939 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		25DC74F82CC0522300731939 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = BAHNSCHRIFT.TTF; sourceTree = "<group>"; };
+		61E137602CC4AFD600E7BA6C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		61E137622CC4B02C00E7BA6C /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +176,7 @@
 				259CB28A2CC0465600C9F285 /* HomeView.swift */,
 				259CB28B2CC0465600C9F285 /* SignupView.swift */,
 				259CB28C2CC0465600C9F285 /* ContentView.swift */,
+				61E137602CC4AFD600E7BA6C /* ProfileView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -180,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				259CB28E2CC0465600C9F285 /* AppwriteLogo.swift */,
+				61E137622CC4B02C00E7BA6C /* ImagePicker.swift */,
 				259CB28F2CC0465600C9F285 /* SearchBar.swift */,
 				259CB2902CC0465600C9F285 /* InterestsHorizontalTags.swift */,
 				259CB2922CC0465600C9F285 /* ActivityIndicatorView.swift */,
@@ -448,6 +454,7 @@
 				259CB29D2CC0465600C9F285 /* InterestsHorizontalTags.swift in Sources */,
 				259CB2812CC0460400C9F285 /* UserManagementService.swift in Sources */,
 				259CB2982CC0465600C9F285 /* HomeView.swift in Sources */,
+				61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */,
 				259CB2AA2CC0486D00C9F285 /* OrbitApp.swift in Sources */,
 				259CB2A02CC0465600C9F285 /* ErrorView.swift in Sources */,
 				259CB2972CC0465600C9F285 /* LoginView.swift in Sources */,
@@ -460,6 +467,7 @@
 				259CB2992CC0465600C9F285 /* SignupView.swift in Sources */,
 				259CB2A32CC046F300C9F285 /* UserModels.swift in Sources */,
 				259CB2822CC0460400C9F285 /* AppwriteService.swift in Sources */,
+				61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */,
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -63,6 +63,7 @@ extension SearchBar {
             searchBar.endEditing(true)
             searchBar.text = ""
             text.wrappedValue = ""
+            searchBar.setShowsCancelButton(false, animated: true)
         }
     }
 }

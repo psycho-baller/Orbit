@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject var authViewModel : AuthViewModel
+    @StateObject var userViewModel = UserViewModel()
+    
     var body: some View {
         TabView {
             // First Tab - HomeView
@@ -49,13 +52,19 @@ struct MainTabView: View {
 
             // Fifth Tab - Another Example View
             NavigationView {
-                ExampleView4()
+                if let user = authViewModel.user {
+                    ProfileView(userViewModel: userViewModel)
+                }
+                else {
+                    Text("Please log in to view your profile.")
+                }
             }
             .tabItem {
-                Image(systemName: "ellipsis.circle.fill")  // Fifth Tab Icon
-                Text("Tab 5")
+                Image(systemName: "person.circle.fill")  // Fifth Tab Icon
+                Text("Profile")
             }
         }
+       
     }
 }
 
@@ -78,13 +87,6 @@ struct ExampleView3: View {
     var body: some View {
         Text("Content for Tab 4")
             .navigationTitle("Tab 4")
-    }
-}
-
-struct ExampleView4: View {
-    var body: some View {
-        Text("Content for Tab 5")
-            .navigationTitle("Tab 5")
     }
 }
 

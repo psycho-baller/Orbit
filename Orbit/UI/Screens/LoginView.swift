@@ -85,7 +85,7 @@ struct LoginView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(width: 300, height: 50)
-                .background(Color.pink)
+                .background(Color.blue)
                 .cornerRadius(16.0)
 
                 HStack {

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct SignupView: View {
-    @State private var email = "iiiii@gmail.com"
-    @State private var password = "12345678"
-    @State private var name = "Rami"
+    @State private var email = ""
+    @State private var password = ""
+    @State private var name = ""
 
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var userVM: UserViewModel
@@ -96,7 +96,7 @@ struct SignupView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: 60)
-                .background(Color.pink)
+                .background(Color.blue)
                 .cornerRadius(16.0)
 
                 Spacer()

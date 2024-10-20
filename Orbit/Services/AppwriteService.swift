@@ -35,6 +35,13 @@ class AppwriteService: AppwriteServiceProtocol {
 
     static let shared = AppwriteService()
 
+    func uploadImage(base64Image: String, completion: @escaping (Result<String, Error>) -> Void) {
+           // Logic to upload image to Appwrite or any other service
+           // On success, return the file URL or ID
+           completion(.success("https://example.com/uploaded_image.jpg"))  // Example success response
+       }
+    
+    
     init() {
 
         client = Client()

@@ -312,4 +312,54 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             return distanceFromEachOther <= radius
         }
     }
+    
+    func updateUserProfile() {
+        guard let user = currentUser else { return }
+
+        Task {
+            // 1. Check if we need to upload a profile image
+            if let imageBase64 = user.profileImageBase64 {
+                uploadProfileImage(base64Image: imageBase64) { result in
+                    switch result {
+                    case .success(let imageURL):
+                        // If the image upload is successful, update the user's profile image URL
+                        self.currentUser?.profileImageURL = imageURL
+                        Task {
+                            await self.updateUserDetails()
+                        }
+                    case .failure(let error):
+                        print("Error uploading profile image: \(error.localizedDescription)")
+                    }
+                }
+            } else {
+                // 2. If no image to upload, update user details directly
+                await updateUserDetails()
+            }
+        }
+    }
+
+    private func updateUserDetails() async {
+        guard let user = currentUser else { return }
+
+        do {
+            // Await the updateUser function which expects accountId and updatedUser
+            let updatedUserDocument = try await userManagementService.updateUser(accountId: user.accountId, updatedUser: user)
+            if let updatedUserDocument = updatedUserDocument {
+                print("Profile updated successfully for user \(updatedUserDocument.id)")
+            } else {
+                print("Failed to update user: User document not found.")
+            }
+        } catch {
+            print("Error updating profile: \(error.localizedDescription)")
+            self.error = error.localizedDescription
+        }
+    }
+
+    private func uploadProfileImage(base64Image: String, completion: @escaping (Result<String, Error>) -> Void) {
+        // Upload the profile image to a server or a file storage service like Appwrite
+        // Once uploaded, call completion with the resulting URL or file ID
+        AppwriteService().uploadImage(base64Image: base64Image) { result in
+            completion(result)
+        }
+    }
 }
