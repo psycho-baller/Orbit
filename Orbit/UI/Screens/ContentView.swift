@@ -67,37 +67,43 @@ struct SplashScreenView: View {
             VStack {
                 HStack(spacing: 0) {
                     // "O" part of the logo
-                    Text("O")
-                        .font(.system(size: 72, weight: .bold))
+                    Image("Orbit_O")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
                         .foregroundColor(.blue)
-                        .offset(x: isAnimating ? 0 : 20)
-                        .scaleEffect(isAnimating ? 1 : 3)
-                        .animation(.easeInOut(duration: 1.0), value: isAnimating)
-                    
+                        .offset(x: isAnimating ? 30 : 41, y: -3)
+                        .scaleEffect(isAnimating ? 3 : 6)
+                        .animation(.easeInOut(duration: 1.5).delay(0.4), value: isAnimating)
+                   
                     // Remaining letters ("rbit"), revealed one by one
                     Text("r")
-                        .font(.system(size: 72, weight: .bold))
+                        .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(.blue)
                         .opacity(showR ? 1 : 0)
-                        .animation(.easeInOut(duration: 0.3).delay(0.5), value: showR)
+                        .offset(x: -14)
+                        .animation(.easeInOut(duration: 0.3).delay(0.9), value: showR)
                     
                     Text("b")
-                        .font(.system(size: 72, weight: .bold))
+                        .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(.blue)
                         .opacity(showB ? 1 : 0)
-                        .animation(.easeInOut(duration: 0.3).delay(0.4), value: showB)
+                        .offset(x: -14)
+                        .animation(.easeInOut(duration: 0.3).delay(0.8), value: showB)
                     
                     Text("i")
-                        .font(.system(size: 72, weight: .bold))
+                        .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(.blue)
                         .opacity(showI ? 1 : 0)
-                        .animation(.easeInOut(duration: 0.3).delay(0.3), value: showI)
+                        .offset(x: -14)
+                        .animation(.easeInOut(duration: 0.3).delay(0.7), value: showI)
                     
                     Text("t")
-                        .font(.system(size: 72, weight: .bold))
+                        .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(.blue)
                         .opacity(showT ? 1 : 0)
-                        .animation(.easeInOut(duration: 0.3).delay(0.2), value: showT)
+                        .offset(x: -14)
+                        .animation(.easeInOut(duration: 0.3).delay(0.6), value: showT)
                 }
                 
                 // Loading indicator below the logo
@@ -116,7 +122,7 @@ struct SplashScreenView: View {
                 }
                 
                 // Automatically switch to the main screen after the animation
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     withAnimation(.easeInOut(duration: 0.5)) {
                         self.isActive = false
                     }

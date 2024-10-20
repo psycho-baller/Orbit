@@ -41,6 +41,7 @@
 		25DC74FE2CC0522300731939 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F52CC0522300731939 /* Poppins-Regular.ttf */; };
 		25DC74FF2CC0522300731939 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F62CC0522300731939 /* Poppins-Bold.ttf */; };
 		25DC75002CC0522300731939 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F72CC0522300731939 /* Poppins-SemiBold.ttf */; };
+		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		25DC74F62CC0522300731939 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		25DC74F72CC0522300731939 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		25DC74F82CC0522300731939 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = BAHNSCHRIFT.TTF; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,6 +281,7 @@
 		25DC74F32CC0522300731939 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */,
 				25DC74F42CC0522300731939 /* Poppins-Light.ttf */,
 				25DC74F52CC0522300731939 /* Poppins-Regular.ttf */,
 				25DC74F62CC0522300731939 /* Poppins-Bold.ttf */,
@@ -411,6 +414,7 @@
 				25DC74F92CC0522300731939 /* Localizable.strings in Resources */,
 				25DC75002CC0522300731939 /* Poppins-SemiBold.ttf in Resources */,
 				25DC74FC2CC0522300731939 /* Preview Assets.xcassets in Resources */,
+				61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */,
 				25DC74FB2CC0522300731939 /* Assets.xcassets in Resources */,
 				25DC74FE2CC0522300731939 /* Poppins-Regular.ttf in Resources */,
 			);
