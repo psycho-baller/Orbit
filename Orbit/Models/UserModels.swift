@@ -22,32 +22,17 @@ struct UserModel: Codable, Identifiable {
     var longitude: Double?
     var isInterestedToMeet: Bool?
     
-    var profileImageBase64: String? 
-    var profileImageURL: String?
+
     
-    var profileImage: UIImage? {
-            if let base64String = profileImageBase64,
-               let imageData = Data(base64Encoded: base64String) {
-                return UIImage(data: imageData)
-            }
-            return nil
-        }
+
     
-    mutating func setProfileImage(_ image: UIImage) {
-            if let imageData = image.jpegData(compressionQuality: 0.8) {
-                profileImageBase64 = imageData.base64EncodedString()
-            }
-        }
-    
-    init(accountId: String, name: String, interests: [String]? = nil, latitude: Double? = nil, longitude: Double? = nil, isInterestedToMeet: Bool? = nil, profileImageBase64: String? = nil, profileImageURL: String? = nil) {
+    init(accountId: String, name: String, interests: [String]? = nil, latitude: Double? = nil, longitude: Double? = nil, isInterestedToMeet: Bool? = nil) {
             self.accountId = accountId
             self.name = name
             self.interests = interests
             self.latitude = latitude
             self.longitude = longitude
             self.isInterestedToMeet = isInterestedToMeet
-            self.profileImageBase64 = profileImageBase64
-            self.profileImageURL = profileImageURL
         }
     
     //    var isOnline: Bool

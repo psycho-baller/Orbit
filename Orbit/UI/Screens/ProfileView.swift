@@ -11,34 +11,18 @@ struct ProfileView: View {
     @State private var allInterests = ["Basketball", "Video Games", "Music", "Reading", "Cooking", "Art", "Travel", "Movies"] // Sample interests
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var showingImagePicker = false
-    @State private var inputImage: UIImage?
     @State private var isEditing = false  // Controls the edit mode
     @State private var selectedInterests: [String] = []  // Temporary storage for edited interests
 
     var body: some View {
         VStack {
-
-            Button(action: {
-                showingImagePicker = true  // Open image picker when profile picture is clicked
-            }) {
-                if let profileImage = userViewModel.currentUser?.profileImage {
-                    Image(uiImage: profileImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 2))
-                        .padding()
-                } else {
                     Image(systemName: "person.crop.circle.fill")
                         .resizable()
                         .frame(width: 120, height: 120)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color.gray, lineWidth: 2))
                         .padding()
-                }
-            }
+            
             
             // Display user's name
             if let name = userViewModel.currentUser?.name {
@@ -64,10 +48,13 @@ struct ProfileView: View {
 
                 Button(action: {
                     // Save selected interests to the user's profile
-                    userViewModel.currentUser?.interests = selectedInterests
-                    isEditing = false  // Exit edit mode
-                    Task {
-                        await userViewModel.updateUserProfile()
+                    Task{
+                        await userViewModel.updateUserInterests(interests: selectedInterests)
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            isEditing = false
+                        }
                     }
                 }) {
                     Text("Save")
@@ -75,6 +62,7 @@ struct ProfileView: View {
                         .padding()
                         .background(Color.blue)
                         .cornerRadius(10)
+                        .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
                 .padding()
 
@@ -103,11 +91,14 @@ struct ProfileView: View {
                 .padding()
             }
         }
-        .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
-            ImagePicker(image: $inputImage)
-        }
+
         .onAppear {
             // Load user's existing interests into the view
+            if let interests = userViewModel.currentUser?.interests {
+                selectedInterests = interests
+            }
+        }
+        .onChange(of: userViewModel.currentUser?.interests){
             if let interests = userViewModel.currentUser?.interests {
                 selectedInterests = interests
             }
@@ -123,19 +114,8 @@ struct ProfileView: View {
             selectedInterests.append(interest)  // Add if not already selected
         }
     }
-    
-    // Helper function to load image after selection
-    func loadImage() {
-        guard let inputImage = inputImage else { return }
-        if var user = userViewModel.currentUser {
-            user.setProfileImage(inputImage)
-            userViewModel.currentUser = user
-        }
-        Task {
-            await userViewModel.updateUserProfile()
-        }
-    }
 }
+    
 
 struct WrappingHStack: View {
     var items: [String]
@@ -223,18 +203,3 @@ struct ProfileView_Previews: PreviewProvider {
     }
 }
 
-extension UserViewModel {
-    static func mock() -> UserViewModel {
-        let viewModel = UserViewModel()
-        viewModel.currentUser = UserModel(
-            accountId: "12345",
-            name: "John Doe",
-            interests: ["Basketball", "Music"],
-            latitude: nil,
-            longitude: nil,
-            isInterestedToMeet: true,
-            profileImageBase64: nil
-        )
-        return viewModel
-    }
-}
