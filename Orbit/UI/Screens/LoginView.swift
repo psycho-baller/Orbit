@@ -79,6 +79,11 @@ struct LoginView: View {
                 Button("Login") {
                     Task {
                         await authVM.login(email: email, password: password)
+                        // check if user was logged in. If yes,
+                        // update currentUser from UserViewModel
+                        if let currentUserAccountId = authVM.user?.id {
+                            await userVM.updateCurrentUser(accountId: currentUserAccountId)
+                        }
                     }
                 }
                 .regularFont()

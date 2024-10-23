@@ -42,6 +42,30 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         )
         await listUsers()
         await subscribeToRealtimeUpdates()
+        await fetchCurrentUser()
+    }
+
+    @MainActor
+    private func fetchCurrentUser() async {
+        do {
+            if let user = try await userManagementService.getCurrentUser() {
+                self.currentUser = user
+                print(
+                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(user.accountId)."
+                )
+            } else {
+                print("UserViewModel - fetchCurrentUser: No current user found.")
+            }
+        } catch {
+            print("UserViewModel - Source: fetchCurrentUser - Error: \(error.localizedDescription)")
+            self.error = error.localizedDescription
+        }
+    }
+
+    // setCurrentUser
+    func updateCurrentUser(accountId: String) async {
+        let userFromDatabase = users.first { $0.accountId == accountId }
+        self.currentUser = userFromDatabase
     }
 
     @MainActor
@@ -312,7 +336,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             return distanceFromEachOther <= radius
         }
     }
-    
+
     func updateUserProfile() {
         guard let user = currentUser else { return }
 
@@ -343,7 +367,8 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
 
         do {
             // Await the updateUser function which expects accountId and updatedUser
-            let updatedUserDocument = try await userManagementService.updateUser(accountId: user.accountId, updatedUser: user)
+            let updatedUserDocument = try await userManagementService.updateUser(
+                accountId: user.accountId, updatedUser: user)
             if let updatedUserDocument = updatedUserDocument {
                 print("Profile updated successfully for user \(updatedUserDocument.id)")
             } else {
@@ -355,7 +380,9 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         }
     }
 
-    private func uploadProfileImage(base64Image: String, completion: @escaping (Result<String, Error>) -> Void) {
+    private func uploadProfileImage(
+        base64Image: String, completion: @escaping (Result<String, Error>) -> Void
+    ) {
         // Upload the profile image to a server or a file storage service like Appwrite
         // Once uploaded, call completion with the resulting URL or file ID
         AppwriteService().uploadImage(base64Image: base64Image) { result in
