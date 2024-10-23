@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var allInterests = ["Basketball", "Video Games", "Music", "Reading", "Cooking", "Art", "Travel", "Movies"] // Sample interests
-    @ObservedObject var userViewModel: UserViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var showingImagePicker = false
     @State private var inputImage: UIImage?
     @State private var isEditing = false  // Controls the edit mode
@@ -216,9 +217,9 @@ struct WrappingHStack: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(userViewModel: UserViewModel.mock())
+        ProfileView()
             .environmentObject(AuthViewModel())
-            .environmentObject(UserViewModel())
+            .environmentObject(UserViewModel.mock())
     }
 }
 

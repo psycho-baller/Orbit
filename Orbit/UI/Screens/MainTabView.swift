@@ -53,7 +53,7 @@ struct MainTabView: View {
             // Fifth Tab - Another Example View
             NavigationView {
                 if let user = authViewModel.user {
-                    ProfileView(userViewModel: userViewModel)
+                    ProfileView()
                 }
                 else {
                     Text("Please log in to view your profile.")
