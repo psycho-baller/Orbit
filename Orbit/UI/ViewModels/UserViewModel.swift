@@ -151,34 +151,34 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
 
     // Filter users based on selected interests and search text
     var filteredUsers: [UserModel] {
-        // filter the current user out
-        let allOtherUsers = users.filter {
-            $0.accountId != currentUser?.accountId
+        // Filter users based on multiple criteria in a single pass
+        let lowercasedSearchText = searchText.lowercased()
+        let selectedInterestsSet = Set(selectedInterests)
+
+        let filteredUsers = users.filter { user in
+            // Exclude the current user
+            guard user.accountId != currentUser?.accountId else { return false }
+
+            // Exclude users not interested in meetups
+            guard user.isInterestedToMeet ?? false else { return false }
+
+            // Check if the user matches the search text
+            let matchesSearchText =
+                lowercasedSearchText.isEmpty
+                || user.name.lowercased().contains(lowercasedSearchText)
+                || (user.interests?.joined(separator: " ").lowercased().contains(
+                    lowercasedSearchText) ?? false)
+
+            // Check if the user matches the selected interests
+            let matchesInterests =
+                selectedInterests.isEmpty
+                || (user.interests != nil
+                    && !Set(user.interests!).intersection(selectedInterestsSet).isEmpty)
+
+            return matchesSearchText && matchesInterests
         }
-        // Filter by search text
-        let usersFilteredBySearch =
-            searchText.isEmpty
-            ? allOtherUsers
-            : allOtherUsers.filter { user in
-                user.name.lowercased().contains(searchText.lowercased())
-                    || (user.interests?.joined(separator: " ").lowercased()
-                        .contains(searchText.lowercased()) ?? false)
-            }
-
-        // Filter by interests
-        let usersFilteredByInterests: [UserModel]
-        if selectedInterests.isEmpty {
-            usersFilteredByInterests = usersFilteredBySearch
-        } else {
-            usersFilteredByInterests = usersFilteredBySearch.filter { user in
-                guard let userInterests = user.interests else { return false }
-                return !Set(userInterests).intersection(Set(selectedInterests))
-                    .isEmpty
-            }
-        }
-
-        return usersNearby(users: usersFilteredByInterests)
-
+        return usersNearby(users: filteredUsers)
+//        return filteredUsers
     }
 
     @MainActor
@@ -262,7 +262,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             "UserViewModel - subscribeToRealtimeUpdates: Subscribing to real-time updates."
         )
         do {
-            let subscription = try await appwriteRealtimeClient.subscribe(
+            let _subscription = try await appwriteRealtimeClient.subscribe(
                 channels: [
                     "databases.\(AppwriteService.shared.databaseId).collections.users.documents"
                 ]
