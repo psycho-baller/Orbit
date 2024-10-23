@@ -50,16 +50,19 @@ struct SignupView: View {
                     .padding()
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(16.0)
+                    .textInputAutocapitalization(.never)
 
                 TextField("E-mail", text: self.$email)
                     .padding()
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(16.0)
+                    .textInputAutocapitalization(.never)
 
                 SecureField("Password", text: self.$password)
                     .padding()
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(16.0)
+                    .textInputAutocapitalization(.never)
                 Spacer().frame(height: 16)
                 Button("Create account") {
                     Task {
