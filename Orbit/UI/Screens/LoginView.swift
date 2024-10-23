@@ -68,12 +68,14 @@ struct LoginView: View {
                     .padding()
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(16.0)
+                    .textInputAutocapitalization(.never)
 
                 SecureField("Password", text: self.$password)
                     .padding()
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(16.0)
-
+                    .textInputAutocapitalization(.never)
+                
                 Spacer().frame(height: 16)
 
                 Button("Login") {
