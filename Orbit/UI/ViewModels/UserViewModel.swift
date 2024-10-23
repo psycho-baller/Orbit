@@ -43,6 +43,10 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         await listUsers()
         await subscribeToRealtimeUpdates()
         await fetchCurrentUser()
+        
+        // TEMP FIX: LocationDelegate Does Not Work Properly
+        self.currentLocation = CLLocationCoordinate2D(
+            latitude: 51.078621, longitude: -114.136719)
     }
 
     @MainActor
