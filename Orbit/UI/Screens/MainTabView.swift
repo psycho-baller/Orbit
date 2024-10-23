@@ -6,65 +6,78 @@
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
 
+
 import SwiftUI
+import AnimatedTabBar
 
 struct MainTabView: View {
-    @EnvironmentObject var authViewModel : AuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var userViewModel = UserViewModel()
     
+    @State private var selectedIndex = 0
+    @State private var prevSelectedIndex = 0
+
     var body: some View {
-        TabView {
-            // First Tab - HomeView
-            NavigationView {
-                HomeView()
-            }
-            .tabItem {
-                Image(systemName: "house.fill")  // Home Icon
-                Text("Home")
-            }
-
-            // Second Tab - Example View
-            NavigationView {
-                ExampleView1()
-            }
-            .tabItem {
-                Image(systemName: "person.2.fill")  // Second Tab Icon
-                Text("Tab 2")
-            }
-
-            // Third Tab - Another Example View
-            NavigationView {
-                ExampleView2()
-            }
-            .tabItem {
-                Image(systemName: "star.fill")  // Third Tab Icon
-                Text("Tab 3")
-            }
-
-            // Fourth Tab - Another Example View
-            NavigationView {
-                ExampleView3()
-            }
-            .tabItem {
-                Image(systemName: "gearshape.fill")  // Fourth Tab Icon
-                Text("Tab 4")
-            }
-
-            // Fifth Tab - Another Example View
-            NavigationView {
-                if let user = authViewModel.user {
-                    ProfileView()
-                }
-                else {
-                    Text("Please log in to view your profile.")
+        ZStack(alignment: .bottom) {
+            // Content for each tab based on selectedIndex
+            VStack {
+                if selectedIndex == 0 {
+                    NavigationView {
+                        HomeView()
+                    }
+                } else if selectedIndex == 1 {
+                    NavigationView {
+                        ExampleView1()
+                    }
+                } else if selectedIndex == 2 {
+                    NavigationView {
+                        ExampleView2()
+                    }
+                } else if selectedIndex == 3 {
+                    NavigationView {
+                        ExampleView3()
+                    }
+                } else if selectedIndex == 4 {
+                    NavigationView {
+                        if let user = authViewModel.user {
+                            ProfileView()
+                        } else {
+                            Text("Please log in to view your profile.")
+                        }
+                    }
                 }
             }
-            .tabItem {
-                Image(systemName: "person.circle.fill")  // Fifth Tab Icon
-                Text("Profile")
+            
+            // Animated Tab Bar
+            AnimatedTabBar(selectedIndex: $selectedIndex, prevSelectedIndex: $prevSelectedIndex) {
+                tabButtonAt(0, icon: "house.fill", title: "Home")
+                tabButtonAt(1, icon: "person.2.fill", title: "Tab 2")
+                tabButtonAt(2, icon: "star.fill", title: "Tab 3")
+                tabButtonAt(3, icon: "gearshape.fill", title: "Tab 4")
+                tabButtonAt(4, icon: "person.circle.fill", title: "Profile")
             }
+            .cornerRadius(16)
+            .selectedColor(Color(hex: "#F5F5DC"))
+            .unselectedColor(Color(hex: "#708090"))
+            .ballColor(Color(hex: "#F5F5DC"))
+            .verticalPadding(20)
+            .ballTrajectory(.straight)
+            .ballAnimation(.interpolatingSpring(stiffness: 130, damping: 15))
+            .indentAnimation(.easeOut(duration: 0.3))
+            .barColor(Color(hex: "#003366"))
         }
-       
+        .edgesIgnoringSafeArea(.bottom)
+    }
+
+    // Helper function to create tab buttons with icons and titles
+    func tabButtonAt(_ index: Int, icon: String, title: String) -> some View {
+        VStack {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+            Text(title)
+                .font(.caption)
+        }
+        .scaleEffect(selectedIndex == index ? 1.2 : 1.0) // Add scale effect for selected tab
     }
 }
 
