@@ -175,7 +175,6 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             return matchesSearchText && matchesInterests
         }
         return usersNearby(users: filteredUsers, radius: selectedRadius)
-//        return filteredUsers
     }
 
     @MainActor
