@@ -371,6 +371,50 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             longitude: nil,
             isInterestedToMeet: true
         )
+        
+        // Add mock users
+            viewModel.users = [
+                UserModel(
+                    accountId: "67890",
+                    name: "Jane Smith",
+                    interests: ["Reading", "Cooking"],
+                    latitude: 51.0500,  // ~1.5 km away from John Doe
+                    longitude: -114.0745,
+                    isInterestedToMeet: true
+                ),
+                UserModel(
+                    accountId: "11223",
+                    name: "Michael Brown",
+                    interests: ["Video Games", "Art"],
+                    latitude: 51.0450,  // ~2 km away
+                    longitude: -114.0650,
+                    isInterestedToMeet: false
+                ),
+                UserModel(
+                    accountId: "33445",
+                    name: "Emily White",
+                    interests: ["Travel", "Movies"],
+                    latitude: 51.0530,  // ~4 km away
+                    longitude: -114.0780,
+                    isInterestedToMeet: true
+                ),
+                UserModel(
+                    accountId: "55667",
+                    name: "David Green",
+                    interests: ["Basketball", "Music", "Art"],
+                    latitude: 51.0700,  // ~10 km away
+                    longitude: -114.1000,
+                    isInterestedToMeet: false
+                ),
+                UserModel(
+                    accountId: "77889",
+                    name: "Sophia Black",
+                    interests: ["Hiking", "Photography"],
+                    latitude: 51.1150,  // ~25 km away
+                    longitude: -114.1500,
+                    isInterestedToMeet: true
+                )
+            ]
         return viewModel
     }
 }

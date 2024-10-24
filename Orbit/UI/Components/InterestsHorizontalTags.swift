@@ -21,12 +21,15 @@ struct InterestsHorizontalTags: View {
                         .padding(.horizontal, 12)
                         .background(
                             userVM.selectedInterests.contains(interest)
-                                ? Color.blue
-                                : Color.gray.opacity(0.2)
-                        ).clipShape(Capsule())
+                            ? Color(hex: "#A23E8C")
+                                : Color(hex: "#ADD8E6")
+                        )
+                        .foregroundColor(
+                            (userVM.selectedInterests.contains(interest) ? Color(hex: "#F5F5DC") : .black))
+                        .clipShape(Capsule())
                         .shadow(
                             color: userVM.selectedInterests.contains(interest)
-                                ? .blue.opacity(0.5) : .clear, radius: 5, x: 0,
+                            ? Color(hex: "#A23E8C").opacity(0.5) : .clear, radius: 5, x: 0,
                             y: 4
                         )
                         .onTapGesture {

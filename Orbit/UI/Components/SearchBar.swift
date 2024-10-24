@@ -13,6 +13,7 @@ struct SearchBar: UIViewRepresentable {
 
     @Binding var text: String
     var placeholder: String = ""  // Add a placeholder property
+    var cancelButtonColor: UIColor = .red
 
     func makeUIView(context: UIViewRepresentableContext<SearchBar>)
         -> UISearchBar
@@ -20,6 +21,21 @@ struct SearchBar: UIViewRepresentable {
         let searchBar = UISearchBar(frame: .zero)
         searchBar.delegate = context.coordinator
         searchBar.placeholder = placeholder
+        
+        searchBar.searchBarStyle = .minimal  // Removes the default background and border
+        searchBar.backgroundImage = UIImage()  // Removes background image to make it clear
+        
+        // Customize the search text field
+        if let textField = searchBar.searchTextField as? UITextField {
+            textField.backgroundColor = UIColor(white: 1, alpha: 0.3) // Semi-transparent background
+            textField.textColor = .white  // White text color
+            textField.tintColor = .white  // White cursor and text input highlight
+            textField.layer.cornerRadius = 10  // Rounded corners
+            textField.clipsToBounds = true  // Apply corner radius
+                }
+        
+        searchBar.tintColor = cancelButtonColor
+        
         return searchBar
     }
 
