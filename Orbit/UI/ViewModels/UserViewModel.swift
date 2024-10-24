@@ -343,7 +343,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         guard var user = currentUser else { return }
 
         user.interests = interests
-        self.currentUser=currentUser
+        self.currentUser?.interests = interests
         print("UserViewModel - updateUserInterests: Updating interests to \(interests).")
         
         do {
