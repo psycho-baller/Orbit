@@ -41,6 +41,7 @@
 		25DC74FE2CC0522300731939 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F52CC0522300731939 /* Poppins-Regular.ttf */; };
 		25DC74FF2CC0522300731939 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F62CC0522300731939 /* Poppins-Bold.ttf */; };
 		25DC75002CC0522300731939 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F72CC0522300731939 /* Poppins-SemiBold.ttf */; };
+		61A07DE22CC98B1E00AD7A01 /* AnimatedTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */; };
 		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
 		61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137602CC4AFD600E7BA6C /* ProfileView.swift */; };
 		61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137622CC4B02C00E7BA6C /* ImagePicker.swift */; };
@@ -115,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61A07DE22CC98B1E00AD7A01 /* AnimatedTabBar in Frameworks */,
 				259CB2292CC02F2500C9F285 /* EnvironmentOverrides in Frameworks */,
 				259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */,
 			);
@@ -315,6 +317,7 @@
 			packageProductDependencies = (
 				259CB2252CC02F0D00C9F285 /* Appwrite */,
 				259CB2282CC02F2500C9F285 /* EnvironmentOverrides */,
+				61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */,
 			);
 			productName = Orbit;
 			productReference = 25A399522CBF30C500D6BCE8 /* Orbit.app */;
@@ -396,6 +399,7 @@
 			packageReferences = (
 				259CB2242CC02F0D00C9F285 /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
 				259CB2272CC02F2500C9F285 /* XCRemoteSwiftPackageReference "EnvironmentOverrides" */,
+				61A07DE02CC98B1E00AD7A01 /* XCRemoteSwiftPackageReference "AnimatedTabBar" */,
 			);
 			productRefGroup = 25A399532CBF30C500D6BCE8 /* Products */;
 			projectDirPath = "";
@@ -843,6 +847,14 @@
 				minimumVersion = 0.0.4;
 			};
 		};
+		61A07DE02CC98B1E00AD7A01 /* XCRemoteSwiftPackageReference "AnimatedTabBar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/AnimatedTabBar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -855,6 +867,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 259CB2272CC02F2500C9F285 /* XCRemoteSwiftPackageReference "EnvironmentOverrides" */;
 			productName = EnvironmentOverrides;
+		};
+		61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61A07DE02CC98B1E00AD7A01 /* XCRemoteSwiftPackageReference "AnimatedTabBar" */;
+			productName = AnimatedTabBar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

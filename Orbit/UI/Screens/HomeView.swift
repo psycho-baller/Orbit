@@ -4,30 +4,37 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
+    
+    @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
+    @State private var isShowingChatRequest = false  // Control showing the chat request popup
 
+
+    
     var body: some View {
         content
             .navigationBarItems(trailing: logoutButton)
             .navigationBarTitle("Users", displayMode: .inline)
-            .background(Color(UIColor.systemGroupedBackground))
             .onAppear {
                 Task {
+                    #if !DEBUG
                     await userVM.initialize()
+                    #endif
                 }
             }
+            .sheet(item: $selectedUser) { user in  // Show the chat request sheet
+                ChatRequestView(user: user)
+            }
     }
+    
 
     @ViewBuilder private var content: some View {
         if userVM.isLoading {
             ActivityIndicatorView().padding()
-                .transition(.opacity)
         } else if let error = userVM.error {
             failedView(error)
-                .transition(.opacity)
+
         } else {
             loadedView(userVM.filteredUsers)
-                .transition(.move(edge: .bottom))
-                .animation(.easeInOut(duration: 0.3))
         }
     }
 
@@ -69,8 +76,16 @@ struct HomeView: View {
     private func loadedView(_ users: [UserModel]) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             SearchBar(
-                text: $userVM.searchText, placeholder: "search for a user")
+                text: $userVM.searchText, placeholder: "search for a user", cancelButtonColor: .black)
 
+            // Distance filter slider
+            VStack {
+                Text("Filter by Distance: \(String(format: "%.1f", userVM.selectedRadius)) km")
+                Slider(value: $userVM.selectedRadius, in: 1...50, step: 1)
+                    .padding(.horizontal)
+                    .tint(Color(hex: "#00008B"))
+                }
+            
             // Horizontal tags for filtering by interests
             InterestsHorizontalTags(
                 interests: userVM.allInterests,
@@ -80,9 +95,8 @@ struct HomeView: View {
                     }
                 }
             )
-            .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(Color(UIColor.secondarySystemBackground))
+            .background(Color.clear)
             .cornerRadius(10)
             .shadow(radius: 3)
 
@@ -95,6 +109,7 @@ struct HomeView: View {
                                 Text(user.name)
                                     .font(.title)
                                     .padding(.bottom, 1)
+                                    .foregroundColor(Color(hex: "#F5F5DC"))
 
                                 // user-specific interests tags
                                 InterestsHorizontalTags(
@@ -110,11 +125,58 @@ struct HomeView: View {
                         }
                         .padding()
                         .background(.ultraThinMaterial)  // Apply the translucent background effect here
+                        .background(Color(hex:"#00008B"))
                         .cornerRadius(10)
                         .shadow(radius: 3)
+                        .onTapGesture {
+                            selectedUser = user  // Set the selected user
+                        }
                         //                        .padding(.vertical)  // Add padding on the sides to space it from screen edges
                     }
                 }
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 60)
+        }
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color(hex: "#4A90E2"), Color(hex: "#1B3A4B")]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+    }
+}
+
+// MARK: - Chat Request View
+struct ChatRequestView: View {
+    let user: UserModel
+    @Environment(\.dismiss) var dismiss
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Request to Chat with \(user.name)")
+                .font(.title)
+                .padding()
+
+            Text("Interests: \(user.interests?.joined(separator: ", ") ?? "No interests available")")
+
+            Button(action: {
+                // Logic to send chat request goes here
+            }) {
+                Text("Send Chat Request")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+
+            Button(action: {
+                dismiss()
+            }) {
+                Text("Cancel")
+                    .foregroundColor(.red)
+                    .padding()
             }
         }
         .padding()
@@ -127,6 +189,6 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
             .environmentObject(AuthViewModel())
-            .environmentObject(UserViewModel())
+            .environmentObject(UserViewModel.mock())
     }
 }

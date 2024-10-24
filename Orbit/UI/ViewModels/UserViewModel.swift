@@ -21,6 +21,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     @Published var searchText: String = ""
     @Published var selectedInterests: [String] = []
     @Published var currentLocation: CLLocationCoordinate2D?
+    @Published var selectedRadius: Double = 10.0
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -173,8 +174,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
 
             return matchesSearchText && matchesInterests
         }
-        return usersNearby(users: filteredUsers)
-//        return filteredUsers
+        return usersNearby(users: filteredUsers, radius: selectedRadius)
     }
 
     @MainActor
@@ -306,7 +306,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     }
 
     // Helper function to filter users by location proximity
-    func usersNearby(users: [UserModel], radius: Double = 10000) -> [UserModel] {
+    func usersNearby(users: [UserModel], radius: Double) -> [UserModel] {
         guard let currentLocation = currentLocation else {
             print(
                 "UserViewModel - usersNearby: Current location not available.")
@@ -333,42 +333,23 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             print(
                 "UserViewModel - usersNearby: User \(user.id) is \(distanceFromEachOther) meters away."
             )
-            return distanceFromEachOther <= radius
+            return distanceFromEachOther <= radius * 1000 //Converts to meters
         }
     }
 
-    func updateUserProfile() {
-        guard let user = currentUser else { return }
+    @MainActor
+    func updateUserInterests(interests: [String]) async {
+        guard var user = currentUser else { return }
 
-        Task {
-            // 1. Check if we need to upload a profile image
-            if let imageBase64 = user.profileImageBase64 {
-                uploadProfileImage(base64Image: imageBase64) { result in
-                    switch result {
-                    case .success(let imageURL):
-                        // If the image upload is successful, update the user's profile image URL
-                        self.currentUser?.profileImageURL = imageURL
-                        Task {
-                            await self.updateUserDetails()
-                        }
-                    case .failure(let error):
-                        print("Error uploading profile image: \(error.localizedDescription)")
-                    }
-                }
-            } else {
-                // 2. If no image to upload, update user details directly
-                await updateUserDetails()
-            }
-        }
-    }
-
-    private func updateUserDetails() async {
-        guard let user = currentUser else { return }
-
+        user.interests = interests
+        self.currentUser?.interests = interests
+        print("UserViewModel - updateUserInterests: Updating interests to \(interests).")
+        
         do {
             // Await the updateUser function which expects accountId and updatedUser
             let updatedUserDocument = try await userManagementService.updateUser(
                 accountId: user.accountId, updatedUser: user)
+            
             if let updatedUserDocument = updatedUserDocument {
                 print("Profile updated successfully for user \(updatedUserDocument.id)")
             } else {
@@ -379,14 +360,61 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             self.error = error.localizedDescription
         }
     }
-
-    private func uploadProfileImage(
-        base64Image: String, completion: @escaping (Result<String, Error>) -> Void
-    ) {
-        // Upload the profile image to a server or a file storage service like Appwrite
-        // Once uploaded, call completion with the resulting URL or file ID
-        AppwriteService().uploadImage(base64Image: base64Image) { result in
-            completion(result)
-        }
+    
+    static func mock() -> UserViewModel {
+        let viewModel = UserViewModel()
+        viewModel.currentUser = UserModel(
+            accountId: "12345",
+            name: "John Doe",
+            interests: ["Basketball", "Music"],
+            latitude: nil,
+            longitude: nil,
+            isInterestedToMeet: true
+        )
+        
+        // Add mock users
+            viewModel.users = [
+                UserModel(
+                    accountId: "67890",
+                    name: "Jane Smith",
+                    interests: ["Reading", "Cooking"],
+                    latitude: 51.0500,  // ~1.5 km away from John Doe
+                    longitude: -114.0745,
+                    isInterestedToMeet: true
+                ),
+                UserModel(
+                    accountId: "11223",
+                    name: "Michael Brown",
+                    interests: ["Video Games", "Art"],
+                    latitude: 51.0450,  // ~2 km away
+                    longitude: -114.0650,
+                    isInterestedToMeet: false
+                ),
+                UserModel(
+                    accountId: "33445",
+                    name: "Emily White",
+                    interests: ["Travel", "Movies"],
+                    latitude: 51.0530,  // ~4 km away
+                    longitude: -114.0780,
+                    isInterestedToMeet: true
+                ),
+                UserModel(
+                    accountId: "55667",
+                    name: "David Green",
+                    interests: ["Basketball", "Music", "Art"],
+                    latitude: 51.0700,  // ~10 km away
+                    longitude: -114.1000,
+                    isInterestedToMeet: false
+                ),
+                UserModel(
+                    accountId: "77889",
+                    name: "Sophia Black",
+                    interests: ["Hiking", "Photography"],
+                    latitude: 51.1150,  // ~25 km away
+                    longitude: -114.1500,
+                    isInterestedToMeet: true
+                )
+            ]
+        return viewModel
     }
 }

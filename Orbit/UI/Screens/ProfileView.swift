@@ -11,34 +11,18 @@ struct ProfileView: View {
     @State private var allInterests = ["Basketball", "Video Games", "Music", "Reading", "Cooking", "Art", "Travel", "Movies"] // Sample interests
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var showingImagePicker = false
-    @State private var inputImage: UIImage?
-    @State private var isEditing = false  // Controls the edit mode
+    @State private var showingBottomSheet = false  // Controls the bottom sheet visibility
     @State private var selectedInterests: [String] = []  // Temporary storage for edited interests
 
     var body: some View {
         VStack {
-
-            Button(action: {
-                showingImagePicker = true  // Open image picker when profile picture is clicked
-            }) {
-                if let profileImage = userViewModel.currentUser?.profileImage {
-                    Image(uiImage: profileImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 2))
-                        .padding()
-                } else {
                     Image(systemName: "person.crop.circle.fill")
                         .resizable()
                         .frame(width: 120, height: 120)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color.gray, lineWidth: 2))
                         .padding()
-                }
-            }
+            
             
             // Display user's name
             if let name = userViewModel.currentUser?.name {
@@ -46,65 +30,29 @@ struct ProfileView: View {
                     .font(.title)
                     .fontWeight(.bold)
                     .padding()
+                    .foregroundColor(Color(hex: "#F5F5DC"))
             } else {
                 Text("Loading user data...")
             }
             
-            // Interest section
-            if isEditing {
-                Text("Edit Your Interests")
-                    .font(.headline)
-                    .padding()
-
-                // Wrapping layout for interests
-                GeometryReader { geometry in
-                    WrappingHStack(items: allInterests, availableWidth: geometry.size.width, selectedInterests: $selectedInterests, toggleInterest: toggleInterest, isEditing: true)
-                }
+            // Display selected interests
+            Text("Your Interests")
+                .font(.headline)
                 .padding()
-
-                Button(action: {
-                    // Save selected interests to the user's profile
-                    userViewModel.currentUser?.interests = selectedInterests
-                    isEditing = false  // Exit edit mode
-                    Task {
-                        await userViewModel.updateUserProfile()
-                    }
-                }) {
-                    Text("Save")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                .padding()
-
-            } else {
-                // Display selected interests when not editing
-                Text("Your Interests")
-                    .font(.headline)
-                    .padding()
-
-                GeometryReader { geometry in
-                    WrappingHStack(items: userViewModel.currentUser?.interests ?? [], availableWidth: geometry.size.width, selectedInterests: .constant([]), toggleInterest: { _ in }, isEditing: false)
-                }
-                .padding()
-
-                Button(action: {
-                    // Enter edit mode
-                    selectedInterests = userViewModel.currentUser?.interests ?? []  // Load user's current interests into the editable list
-                    isEditing = true
-                }) {
-                    Text("Edit")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                .padding()
+                .foregroundColor(Color(hex: "#F5F5DC"))
+            
+            GeometryReader { geometry in
+                WrappingHStack(
+                    items: userViewModel.currentUser?.interests ?? [],
+                    availableWidth: geometry.size.width,
+                    selectedInterests: .constant([]), // Display only, no selection here
+                    toggleInterest: { _ in },
+                    isEditing: false,
+                    showingBottomSheet: $showingBottomSheet
+                )
             }
-        }
-        .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
-            ImagePicker(image: $inputImage)
+            .padding()
+            
         }
         .onAppear {
             // Load user's existing interests into the view
@@ -112,7 +60,63 @@ struct ProfileView: View {
                 selectedInterests = interests
             }
         }
+        .onChange(of: userViewModel.currentUser?.interests) {
+            if let interests = userViewModel.currentUser?.interests {
+                selectedInterests = interests
+            }
+        }
+        .sheet(isPresented: $showingBottomSheet, onDismiss: {
+            Task {
+                await userViewModel.updateUserInterests(interests: selectedInterests)
+            }
+        }) {
+        InterestsSelectionView(
+            allInterests: allInterests,
+            selectedInterests: $selectedInterests,
+            showingBottomSheet: $showingBottomSheet
+        )
+        .presentationDetents([.fraction(0.4)]) // Bottom sheet takes half the screen
+    }
         .navigationTitle("Profile")
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color(hex: "#4A90E2"), Color(hex: "#1B3A4B")]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+
+    }
+}
+
+// MARK: - Interests Selection View
+
+struct InterestsSelectionView: View {
+    var allInterests: [String]
+    @Binding var selectedInterests: [String]
+    @Binding var showingBottomSheet: Bool
+
+    var body: some View {
+        VStack {
+            Text("Edit Your Interests")
+                .font(.headline)
+                .padding()
+            
+            ScrollView {
+                GeometryReader { geometry in
+                    WrappingHStack(
+                        items: allInterests,
+                        availableWidth: geometry.size.width,
+                        selectedInterests: $selectedInterests,
+                        toggleInterest: toggleInterest,
+                        isEditing: true,
+                        showingBottomSheet: $showingBottomSheet
+                    )
+                }
+                .padding()
+            }
+        }
+        .background(Color(hex: "#003366"))
     }
     
     // Toggle the selected interest
@@ -123,19 +127,9 @@ struct ProfileView: View {
             selectedInterests.append(interest)  // Add if not already selected
         }
     }
-    
-    // Helper function to load image after selection
-    func loadImage() {
-        guard let inputImage = inputImage else { return }
-        if var user = userViewModel.currentUser {
-            user.setProfileImage(inputImage)
-            userViewModel.currentUser = user
-        }
-        Task {
-            await userViewModel.updateUserProfile()
-        }
-    }
 }
+
+// MARK: - WrappingHStack
 
 struct WrappingHStack: View {
     var items: [String]
@@ -143,6 +137,7 @@ struct WrappingHStack: View {
     @Binding var selectedInterests: [String]
     var toggleInterest: (String) -> Void
     var isEditing: Bool
+    @Binding var showingBottomSheet: Bool
 
     @State private var totalHeight = CGFloat.zero  // Tracks total height
 
@@ -194,13 +189,19 @@ struct WrappingHStack: View {
             .padding(.horizontal, 12)
             .background(
                 isEditing ?
-                (selectedInterests.contains(item) ? Color.blue : Color.gray.opacity(0.2)) :
-                    Color.blue
+                (selectedInterests.contains(item) ? Color(hex: "#00008B") : Color(hex: "#ADD8E6")) :
+                    Color(hex: "#00008B")
             )
             .clipShape(Capsule())
-            .foregroundColor(selectedInterests.contains(item) ? .white : .black)
+            .foregroundColor(
+                isEditing ?
+                (selectedInterests.contains(item) ? Color(hex: "#F5F5DC") : .black) :
+                    Color(hex: "#F5F5DC"))
             .onTapGesture {
                 toggleInterest(item)
+                if !isEditing{
+                    showingBottomSheet = true
+                }
             }
     }
 
@@ -215,26 +216,12 @@ struct WrappingHStack: View {
     }
 }
 
+// MARK: - Preview
+
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         ProfileView()
             .environmentObject(AuthViewModel())
             .environmentObject(UserViewModel.mock())
-    }
-}
-
-extension UserViewModel {
-    static func mock() -> UserViewModel {
-        let viewModel = UserViewModel()
-        viewModel.currentUser = UserModel(
-            accountId: "12345",
-            name: "John Doe",
-            interests: ["Basketball", "Music"],
-            latitude: nil,
-            longitude: nil,
-            isInterestedToMeet: true,
-            profileImageBase64: nil
-        )
-        return viewModel
     }
 }
