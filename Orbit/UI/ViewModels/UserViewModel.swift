@@ -334,7 +334,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             print(
                 "UserViewModel - usersNearby: User \(user.id) is \(distanceFromEachOther) meters away."
             )
-            return distanceFromEachOther <= radius
+            return distanceFromEachOther <= radius * 1000 //Converts to meters
         }
     }
 
