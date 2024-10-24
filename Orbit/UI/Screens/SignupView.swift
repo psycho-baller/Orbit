@@ -15,6 +15,7 @@ struct SignupView: View {
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         AppwriteLogo {
@@ -33,6 +34,7 @@ struct SignupView: View {
                 HStack {
                     Text("Join Millions of\n other users!")
                         .largeSemiBoldFont()
+                        .foregroundColor(ColorPalette.text(for: colorScheme))
                     Spacer()
                 }
 
@@ -42,25 +44,26 @@ struct SignupView: View {
                     Text("Create an account")
                         .largeLightFont()
                         .padding(.bottom)
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                     Spacer()
                 }
                 .padding(.bottom, 30)
 
                 TextField("Name", text: self.$name)
                     .padding()
-                    .background(Color.gray.opacity(0.2))
+                    .background(ColorPalette.lightGray(for: colorScheme))
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
 
                 TextField("E-mail", text: self.$email)
                     .padding()
-                    .background(Color.gray.opacity(0.2))
+                    .background(ColorPalette.lightGray(for: colorScheme))
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
 
                 SecureField("Password", text: self.$password)
                     .padding()
-                    .background(Color.gray.opacity(0.2))
+                    .background(ColorPalette.lightGray(for: colorScheme))
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
                 Spacer().frame(height: 16)
@@ -96,10 +99,10 @@ struct SignupView: View {
                     }
                 }
                 .regularFont()
-                .foregroundColor(.white)
+                .foregroundColor(ColorPalette.text(for: colorScheme))
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: 60)
-                .background(Color.blue)
+                .background(ColorPalette.button(for: colorScheme))
                 .cornerRadius(16.0)
 
                 Spacer()
@@ -107,6 +110,7 @@ struct SignupView: View {
             .padding([.leading, .trailing], 27.5)
             .navigationBarHidden(true)
         }
+        .background(ColorPalette.background(for: colorScheme))
     }
     func retryUserCreation(userData: UserModel, retries: Int = 3) async throws {
         var attempts = 0

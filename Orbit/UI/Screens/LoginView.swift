@@ -21,6 +21,7 @@ struct LoginView: View {
 
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var userVM: UserViewModel
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -54,25 +55,28 @@ struct LoginView: View {
                         .largeSemiBoldFont()
                         .padding(.top, 60)
                         .multilineTextAlignment(.leading)
+                        .foregroundColor(ColorPalette.text(for: colorScheme))
                     Spacer()
                 }
                 Spacer().frame(height: 10)
                 HStack {
                     Text("Let's sign in.")
                         .largeLightFont()
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                     Spacer()
                 }
                 .padding(.bottom, 30)
 
                 TextField("E-mail", text: self.$email)
                     .padding()
-                    .background(Color.gray.opacity(0.2))
+                    .background(ColorPalette.lightGray(for: colorScheme))
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
+                
 
                 SecureField("Password", text: self.$password)
                     .padding()
-                    .background(Color.gray.opacity(0.2))
+                    .background(ColorPalette.lightGray(for: colorScheme))
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
                 
@@ -92,18 +96,21 @@ struct LoginView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(width: 300, height: 50)
-                .background(Color.blue)
+                .background(ColorPalette.button(for: colorScheme))
                 .cornerRadius(16.0)
 
                 HStack {
                     Text("Anonymous Login")
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .onTapGesture {
                             Task {
                                 await authVM.loginAnonymous()
                             }
                         }
                     Text(".")
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                     Text("Signup")
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .onTapGesture {
                             isActiveSignup = true
                         }
@@ -118,6 +125,7 @@ struct LoginView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(true)
+        .background(ColorPalette.background(for: colorScheme))
     }
     //    }
 }

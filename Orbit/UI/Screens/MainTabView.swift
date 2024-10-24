@@ -13,6 +13,7 @@ import AnimatedTabBar
 struct MainTabView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var userViewModel = UserViewModel()
+    @Environment(\.colorScheme) var colorScheme
     
     @State private var selectedIndex = 0
     @State private var prevSelectedIndex = 0
@@ -57,14 +58,14 @@ struct MainTabView: View {
                 tabButtonAt(4, icon: "person.circle.fill", title: "Profile")
             }
             .cornerRadius(16)
-            .selectedColor(Color(hex: "#F5F5DC"))
-            .unselectedColor(Color(hex: "#708090"))
-            .ballColor(Color(hex: "#F5F5DC"))
+            .selectedColor(ColorPalette.selectedItem(for: colorScheme))
+            .unselectedColor(ColorPalette.secondaryText(for: colorScheme))
+            .ballColor(ColorPalette.selectedItem(for: colorScheme))
             .verticalPadding(20)
             .ballTrajectory(.straight)
             .ballAnimation(.interpolatingSpring(stiffness: 130, damping: 15))
             .indentAnimation(.easeOut(duration: 0.3))
-            .barColor(Color(hex: "#003366"))
+            .barColor(ColorPalette.accent(for: colorScheme))
         }
         .edgesIgnoringSafeArea(.bottom)
     }
