@@ -21,6 +21,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     @Published var searchText: String = ""
     @Published var selectedInterests: [String] = []
     @Published var currentLocation: CLLocationCoordinate2D?
+    @Published var selectedRadius: Double = 10.0
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -173,7 +174,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
 
             return matchesSearchText && matchesInterests
         }
-        return usersNearby(users: filteredUsers)
+        return usersNearby(users: filteredUsers, radius: selectedRadius)
 //        return filteredUsers
     }
 
@@ -306,7 +307,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     }
 
     // Helper function to filter users by location proximity
-    func usersNearby(users: [UserModel], radius: Double = 10000) -> [UserModel] {
+    func usersNearby(users: [UserModel], radius: Double) -> [UserModel] {
         guard let currentLocation = currentLocation else {
             print(
                 "UserViewModel - usersNearby: Current location not available.")

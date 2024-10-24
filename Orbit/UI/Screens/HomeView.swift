@@ -78,7 +78,14 @@ struct HomeView: View {
             SearchBar(
                 text: $userVM.searchText, placeholder: "search for a user", cancelButtonColor: .black)
 
-
+            // Distance filter slider
+            VStack {
+                Text("Filter by Distance: \(String(format: "%.1f", userVM.selectedRadius)) km")
+                Slider(value: $userVM.selectedRadius, in: 1...50, step: 1)
+                    .padding(.horizontal)
+                    .tint(Color(hex: "#00008B"))
+                }
+            
             // Horizontal tags for filtering by interests
             InterestsHorizontalTags(
                 interests: userVM.allInterests,
