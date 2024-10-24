@@ -13,6 +13,7 @@ struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var showingBottomSheet = false  // Controls the bottom sheet visibility
     @State private var selectedInterests: [String] = []  // Temporary storage for edited interests
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         VStack {
@@ -20,7 +21,7 @@ struct ProfileView: View {
                         .resizable()
                         .frame(width: 120, height: 120)
                         .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 2))
+                        .overlay(Circle().stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2))
                         .padding()
             
             
@@ -30,16 +31,17 @@ struct ProfileView: View {
                     .font(.title)
                     .fontWeight(.bold)
                     .padding()
-                    .foregroundColor(Color(hex: "#F5F5DC"))
+                    .foregroundColor(ColorPalette.text(for: colorScheme))
             } else {
                 Text("Loading user data...")
+                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
             }
             
             // Display selected interests
             Text("Your Interests")
                 .font(.headline)
                 .padding()
-                .foregroundColor(Color(hex: "#F5F5DC"))
+                .foregroundColor(ColorPalette.text(for: colorScheme))
             
             GeometryReader { geometry in
                 WrappingHStack(
@@ -80,7 +82,7 @@ struct ProfileView: View {
         .navigationTitle("Profile")
         .background(
             LinearGradient(
-                gradient: Gradient(colors: [Color(hex: "#4A90E2"), Color(hex: "#1B3A4B")]),
+                gradient: Gradient(colors: [ColorPalette.background(for: colorScheme), ColorPalette.main(for: colorScheme)]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -95,12 +97,14 @@ struct InterestsSelectionView: View {
     var allInterests: [String]
     @Binding var selectedInterests: [String]
     @Binding var showingBottomSheet: Bool
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         VStack {
             Text("Edit Your Interests")
                 .font(.headline)
                 .padding()
+                .foregroundColor(ColorPalette.text(for: colorScheme))
             
             ScrollView {
                 GeometryReader { geometry in
@@ -116,7 +120,7 @@ struct InterestsSelectionView: View {
                 .padding()
             }
         }
-        .background(Color(hex: "#003366"))
+        .background(ColorPalette.background(for: colorScheme))
     }
     
     // Toggle the selected interest
@@ -138,6 +142,7 @@ struct WrappingHStack: View {
     var toggleInterest: (String) -> Void
     var isEditing: Bool
     @Binding var showingBottomSheet: Bool
+    @Environment(\.colorScheme) var colorScheme
 
     @State private var totalHeight = CGFloat.zero  // Tracks total height
 
@@ -189,14 +194,20 @@ struct WrappingHStack: View {
             .padding(.horizontal, 12)
             .background(
                 isEditing ?
-                (selectedInterests.contains(item) ? Color(hex: "#00008B") : Color(hex: "#ADD8E6")) :
-                    Color(hex: "#00008B")
+                (selectedInterests.contains(item) ? ColorPalette.accent(for: colorScheme) : ColorPalette.lightGray(for: colorScheme)) :
+                    ColorPalette.accent(for: colorScheme)
             )
             .clipShape(Capsule())
             .foregroundColor(
                 isEditing ?
-                (selectedInterests.contains(item) ? Color(hex: "#F5F5DC") : .black) :
-                    Color(hex: "#F5F5DC"))
+                (selectedInterests.contains(item) ? ColorPalette.text(for: colorScheme) : .black) :
+                    ColorPalette.text(for: colorScheme)
+                )
+            .shadow(
+                color: selectedInterests.contains(item)
+                ? ColorPalette.accent(for: colorScheme).opacity(0.5) : .clear, radius: 5, x: 0,
+                y: 4
+            )
             .onTapGesture {
                 toggleInterest(item)
                 if !isEditing{

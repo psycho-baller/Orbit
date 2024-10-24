@@ -15,6 +15,7 @@ struct ContentView: View {
     @EnvironmentObject var userVM: UserViewModel
     @State var isOneSecondAfterLaunch = false
     @State private var showSplashScreen = true
+    @Environment(\.colorScheme) var colorScheme  // Detect light/dark mode
 
     var body: some View {
         ZStack {
@@ -61,9 +62,12 @@ struct SplashScreenView: View {
     @State private var showI = false
     @State private var showB = false
     @State private var showR = false
+    @Environment(\.colorScheme) var colorScheme  // Detect light/dark mode
     
     var body: some View {
         ZStack {
+            ColorPalette.background(for: colorScheme) // Background color
+                .ignoresSafeArea()  // Make sure it covers the whole screen
             VStack {
                 HStack(spacing: 0) {
                     // "O" part of the logo
@@ -71,7 +75,7 @@ struct SplashScreenView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 100)
-                        .foregroundColor(.blue)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .offset(x: isAnimating ? 30 : 41, y: -3)
                         .scaleEffect(isAnimating ? 3 : 6)
                         .animation(.easeInOut(duration: 1.5).delay(0.4), value: isAnimating)
@@ -79,28 +83,28 @@ struct SplashScreenView: View {
                     // Remaining letters ("rbit"), revealed one by one
                     Text("r")
                         .font(.custom("Bahnschrift", size: 72))
-                        .foregroundColor(.blue)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showR ? 1 : 0)
                         .offset(x: -14)
                         .animation(.easeInOut(duration: 0.3).delay(0.9), value: showR)
                     
                     Text("b")
                         .font(.custom("Bahnschrift", size: 72))
-                        .foregroundColor(.blue)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showB ? 1 : 0)
                         .offset(x: -14)
                         .animation(.easeInOut(duration: 0.3).delay(0.8), value: showB)
                     
                     Text("i")
                         .font(.custom("Bahnschrift", size: 72))
-                        .foregroundColor(.blue)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showI ? 1 : 0)
                         .offset(x: -14)
                         .animation(.easeInOut(duration: 0.3).delay(0.7), value: showI)
                     
                     Text("t")
                         .font(.custom("Bahnschrift", size: 72))
-                        .foregroundColor(.blue)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showT ? 1 : 0)
                         .offset(x: -14)
                         .animation(.easeInOut(duration: 0.3).delay(0.6), value: showT)
@@ -108,7 +112,7 @@ struct SplashScreenView: View {
                 
                 // Loading indicator below the logo
                 ProgressView("Loading...")
-                    .foregroundColor(Color(UIColor.label))
+                    .foregroundColor(ColorPalette.text(for: colorScheme))
                     .progressViewStyle(CircularProgressViewStyle())
                     .padding(.top, 20)
             }

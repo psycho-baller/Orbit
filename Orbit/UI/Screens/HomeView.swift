@@ -4,6 +4,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
+    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
     
     @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
     @State private var isShowingChatRequest = false  // Control showing the chat request popup
@@ -24,6 +25,7 @@ struct HomeView: View {
             .sheet(item: $selectedUser) { user in  // Show the chat request sheet
                 ChatRequestView(user: user)
             }
+            .background(ColorPalette.background(for: colorScheme))
     }
     
 
@@ -46,7 +48,7 @@ struct HomeView: View {
         }) {
             Image(systemName: "rectangle.portrait.and.arrow.right")
                 .font(.headline)
-                .foregroundColor(.red)
+                .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
     }
 
@@ -54,7 +56,7 @@ struct HomeView: View {
         VStack {
             Text("Error loading users")
                 .font(.title)
-                .foregroundColor(.red)
+                .foregroundColor(ColorPalette.accent(for: colorScheme))
             Text(error)
                 .multilineTextAlignment(.center)
                 .padding()
@@ -66,11 +68,12 @@ struct HomeView: View {
             }) {
                 Text("Retry")
                     .padding()
-                    .background(Color.blue)
+                    .background(ColorPalette.button(for: colorScheme))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
         }
+        .background(ColorPalette.background(for: colorScheme))
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
@@ -81,9 +84,11 @@ struct HomeView: View {
             // Distance filter slider
             VStack {
                 Text("Filter by Distance: \(String(format: "%.1f", userVM.selectedRadius)) km")
+                    .foregroundColor(ColorPalette.text(for: colorScheme))
                 Slider(value: $userVM.selectedRadius, in: 1...50, step: 1)
                     .padding(.horizontal)
-                    .tint(Color(hex: "#00008B"))
+                    .tint(ColorPalette.accent(for: colorScheme))
+                   // .accentColor(ColorPalette.)
                 }
             
             // Horizontal tags for filtering by interests
@@ -109,7 +114,7 @@ struct HomeView: View {
                                 Text(user.name)
                                     .font(.title)
                                     .padding(.bottom, 1)
-                                    .foregroundColor(Color(hex: "#F5F5DC"))
+                                    .foregroundColor(ColorPalette.text(for: colorScheme))
 
                                 // user-specific interests tags
                                 InterestsHorizontalTags(
@@ -125,7 +130,7 @@ struct HomeView: View {
                         }
                         .padding()
                         .background(.ultraThinMaterial)  // Apply the translucent background effect here
-                        .background(Color(hex:"#00008B"))
+                        .background(ColorPalette.main(for: colorScheme))
                         .cornerRadius(10)
                         .shadow(radius: 3)
                         .onTapGesture {
@@ -140,7 +145,7 @@ struct HomeView: View {
         }
         .background(
             LinearGradient(
-                gradient: Gradient(colors: [Color(hex: "#4A90E2"), Color(hex: "#1B3A4B")]),
+                gradient: Gradient(colors: [ColorPalette.background(for: colorScheme), ColorPalette.main(for: colorScheme)]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -152,22 +157,25 @@ struct HomeView: View {
 struct ChatRequestView: View {
     let user: UserModel
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
 
     var body: some View {
         VStack(spacing: 20) {
             Text("Request to Chat with \(user.name)")
                 .font(.title)
                 .padding()
+                .foregroundColor(ColorPalette.text(for: colorScheme))
 
             Text("Interests: \(user.interests?.joined(separator: ", ") ?? "No interests available")")
-
+                .foregroundColor(ColorPalette.text(for: colorScheme))
+            
             Button(action: {
                 // Logic to send chat request goes here
             }) {
                 Text("Send Chat Request")
-                    .foregroundColor(.white)
+                    .foregroundColor(ColorPalette.text(for: colorScheme))
                     .padding()
-                    .background(Color.blue)
+                    .background(ColorPalette.button(for: colorScheme))
                     .cornerRadius(10)
             }
 
@@ -175,13 +183,17 @@ struct ChatRequestView: View {
                 dismiss()
             }) {
                 Text("Cancel")
-                    .foregroundColor(.red)
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
                     .padding()
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(ColorPalette.background(for: colorScheme))
+        .cornerRadius(15)
     }
 }
+
 
 // MARK: - Preview
 
