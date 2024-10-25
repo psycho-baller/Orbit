@@ -16,7 +16,10 @@ struct CustomMenu<Label: View, Content: View>: View {
     let alignment: MenuAlignment
     @State private var isExpanded = false
 
-    init(alignment: MenuAlignment = .under, @ViewBuilder label: () -> Label, @ViewBuilder content: () -> Content) {
+    init(
+        alignment: MenuAlignment = .under, @ViewBuilder label: () -> Label,
+        @ViewBuilder content: () -> Content
+    ) {
         self.label = label()
         self.content = content()
         self.alignment = alignment
@@ -39,47 +42,54 @@ struct CustomMenu<Label: View, Content: View>: View {
                             .background(.ultraThinMaterial)
                             .cornerRadius(8)
                             .shadow(radius: 4)
-                            .frame(maxWidth: maxWidthForAlignment())
                             .transition(.opacity.combined(with: .move(edge: .top)))
                     }
                 }
-                .offset(x: xOffsetForAlignment(), y: 45), // Positioning content below the label with custom horizontal offset
-                alignment: .topLeading
+                .offset(x: xOffsetForAlignment(), y: 45),  // Positioning menu content below the label
+                alignment: overlayAlignment()
             )
         }
     }
 
-    // Determines the x-offset based on alignment
+    // Determines the alignment point of the overlay content
+    private func overlayAlignment() -> Alignment {
+        switch alignment {
+        case .leading: return .topLeading
+        case .trailing: return .topTrailing
+        case .under: return .top  // Centered directly under the label
+        }
+    }
+
+    // Determines the x-offset for the content position relative to the label
     private func xOffsetForAlignment() -> CGFloat {
         switch alignment {
         case .leading:
-            return -UIScreen.main.bounds.width / 2 + 20 // Align to left side of screen with padding
+            return 0  // Align left edge of overlay with left edge of label
         case .trailing:
-            return UIScreen.main.bounds.width / 2 - 100 // Align to right side of screen with padding
+            return 0  // Align right edge of overlay with right edge of label
         case .under:
-            return 0 // Centered alignment under the label
-        }
-    }
-    
-    // Sets a max width based on the alignment
-    private func maxWidthForAlignment() -> CGFloat? {
-        switch alignment {
-        case .leading, .trailing:
-            return UIScreen.main.bounds.width * 0.5 // Restrict width for side alignment
-        case .under:
-            return nil // Flexible width for centered alignment
+            return 0  // Centered alignment under the label
         }
     }
 }
 
-#Preview {
+struct CustomMenuPreview: View {
+    @State private var number: Double = 25
 
-    CustomMenu(
-        alignment: .trailing,
-        label: { Text("hi") },
-        content: {
-            Text("Hello")
-            Text("World")
-        }
-    )
+    var body: some View {
+        CustomMenu(
+            alignment: .trailing,
+            label: { Text("hi") },
+            content: {
+                Slider(value: $number, in: 1...50, step: 1)
+                    .padding(.horizontal)
+                    .frame(width: 150)
+            }
+        )
+        .padding()  // Optional: Add padding to the CustomMenu for better appearance
+    }
+}
+
+#Preview {
+    CustomMenuPreview()
 }
