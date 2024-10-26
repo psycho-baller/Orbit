@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
+		2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2588CC842CCBF1FC00891879 /* CustomMenu.swift */; };
 		259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2252CC02F0D00C9F285 /* Appwrite */; };
 		259CB2292CC02F2500C9F285 /* EnvironmentOverrides in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2282CC02F2500C9F285 /* EnvironmentOverrides */; };
 		259CB27E2CC0460400C9F285 /* LocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CB2792CC0460400C9F285 /* LocationManagerDelegate.swift */; };
@@ -65,6 +66,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2588CC842CCBF1FC00891879 /* CustomMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMenu.swift; sourceTree = "<group>"; };
 		259CB2792CC0460400C9F285 /* LocationManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerDelegate.swift; sourceTree = "<group>"; };
 		259CB27A2CC0460400C9F285 /* AccountManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManagementService.swift; sourceTree = "<group>"; };
 		259CB27C2CC0460400C9F285 /* UserManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserManagementService.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				259CB2902CC0465600C9F285 /* InterestsHorizontalTags.swift */,
 				259CB2922CC0465600C9F285 /* ActivityIndicatorView.swift */,
 				259CB2932CC0465600C9F285 /* ErrorView.swift */,
+				2588CC842CCBF1FC00891879 /* CustomMenu.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -463,6 +466,7 @@
 				259CB2A02CC0465600C9F285 /* ErrorView.swift in Sources */,
 				259CB2972CC0465600C9F285 /* LoginView.swift in Sources */,
 				259CB29C2CC0465600C9F285 /* SearchBar.swift in Sources */,
+				2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */,
 				259CB2962CC0465600C9F285 /* MainTabView.swift in Sources */,
 				259CB2A82CC047D000C9F285 /* LazyList.swift in Sources */,
 				259CB2952CC0465600C9F285 /* AuthViewModel.swift in Sources */,

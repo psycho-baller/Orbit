@@ -5,29 +5,38 @@ struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
     @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
-    
+
     @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
     @State private var isShowingChatRequest = false  // Control showing the chat request popup
+    @State private var isMenuExpanded = false
 
-
-    
     var body: some View {
-        content
-            .navigationBarItems(trailing: logoutButton)
-            .navigationBarTitle("Users", displayMode: .inline)
-            .onAppear {
-                Task {
-                    #if !DEBUG
-                    await userVM.initialize()
-                    #endif
+        ZStack {
+            content
+                .navigationBarItems(trailing: logoutButton)
+                .navigationBarTitle("Users", displayMode: .inline)
+                .onAppear {
+                    Task {
+                        await userVM.initialize()
+                    }
                 }
+                .sheet(item: $selectedUser) { user in  // Show the chat request sheet
+                    ChatRequestView(user: user)
+                }
+                .background(ColorPalette.background(for: colorScheme))
+
+            // Overlay to detect taps outside the menu
+            if isMenuExpanded {
+                Color.clear
+                    .contentShape(Rectangle())  // Make the entire area tappable
+                    .onTapGesture {
+                        withAnimation {
+                            isMenuExpanded = false  // Collapse the menu when tapping outside
+                        }
+                    }
             }
-            .sheet(item: $selectedUser) { user in  // Show the chat request sheet
-                ChatRequestView(user: user)
-            }
-            .background(ColorPalette.background(for: colorScheme))
+        }
     }
-    
 
     @ViewBuilder private var content: some View {
         if userVM.isLoading {
@@ -77,79 +86,102 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            SearchBar(
-                text: $userVM.searchText, placeholder: "search for a user", cancelButtonColor: .black)
+        ZStack {
+            VStack(alignment: .leading, spacing: 4) {
+                SearchBar(
+                    text: $userVM.searchText, placeholder: "search for a user",
+                    cancelButtonColor: .black)
 
-            // Distance filter slider
-            VStack {
-                Text("Filter by Distance: \(String(format: "%.1f", userVM.selectedRadius)) km")
-                    .foregroundColor(ColorPalette.text(for: colorScheme))
-                Slider(value: $userVM.selectedRadius, in: 1...50, step: 1)
-                    .padding(.horizontal)
-                    .tint(ColorPalette.accent(for: colorScheme))
-                   // .accentColor(ColorPalette.)
-                }
-            
-            // Horizontal tags for filtering by interests
-            InterestsHorizontalTags(
-                interests: userVM.allInterests,
-                onTapInterest: { interest in
-                    withAnimation {
-                        userVM.toggleInterest(interest)
-                    }
-                }
-            )
-            .padding(.vertical, 8)
-            .background(Color.clear)
-            .cornerRadius(10)
-            .shadow(radius: 3)
-
-            // List of users
-            ScrollView {
-                LazyVStack(spacing: 16) {  // Using LazyVStack for efficient loading and spacing
-                    ForEach(users) { user in
-                        HStack(alignment: .center, spacing: 16) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(user.name)
-                                    .font(.title)
-                                    .padding(.bottom, 1)
-                                    .foregroundColor(ColorPalette.text(for: colorScheme))
-
-                                // user-specific interests tags
-                                InterestsHorizontalTags(
-                                    interests: user.interests ?? [],
-                                    onTapInterest: { interest in
-                                        withAnimation {
-                                            userVM.toggleInterest(interest)
-                                        }
-                                    }
-                                )
+                // Horizontal tags for filtering by interests
+                HStack {
+                    InterestsHorizontalTags(
+                        interests: userVM.allInterests,
+                        onTapInterest: { interest in
+                            withAnimation {
+                                userVM.toggleInterest(interest)
                             }
-                            //                            Spacer()  // Pushes the content to the leading edge
                         }
-                        .padding()
-                        .background(.ultraThinMaterial)  // Apply the translucent background effect here
-                        .background(ColorPalette.main(for: colorScheme))
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
-                        .onTapGesture {
-                            selectedUser = user  // Set the selected user
+                    )
+                    .background(Color.clear)
+                    .cornerRadius(10)
+                    .shadow(radius: 3)
+
+                    CustomMenu(
+                        alignment: .trailing,
+                        isExpanded: $isMenuExpanded,
+                        label: {
+                            // Using an icon instead of text
+                            Image(systemName: "slider.horizontal.3")  // Suitable icon for slider
+                                .resizable()
+                                .frame(width: 24, height: 24)  // Adjust size as needed
+                                .foregroundColor(ColorPalette.accent(for: colorScheme))
+                                .padding(.trailing, 8)
+                                .background(ColorPalette.background(for: colorScheme))
+                                .cornerRadius(8)
                         }
-                        //                        .padding(.vertical)  // Add padding on the sides to space it from screen edges
+                    ) {
+                        VStack {
+                            Text(
+                                "\(String(format: "%.1f", userVM.selectedRadius)) km"
+                            )
+                            .foregroundColor(ColorPalette.text(for: colorScheme))
+
+                            Slider(value: $userVM.selectedRadius, in: 1...50, step: 1)
+                                .tint(ColorPalette.accent(for: colorScheme))
+                                .frame(width: 150)
+                        }
                     }
                 }
+
+                // List of users
+                ScrollView {
+                    LazyVStack(spacing: 16) {  // Using LazyVStack for efficient loading and spacing
+                        ForEach(users) { user in
+                            HStack(alignment: .center, spacing: 16) {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(user.name)
+                                        .font(.title)
+                                        .padding(.bottom, 1)
+                                        .foregroundColor(
+                                            ColorPalette.text(for: colorScheme))
+
+                                    // user-specific interests tags
+                                    InterestsHorizontalTags(
+                                        interests: user.interests ?? [],
+                                        onTapInterest: { interest in
+                                            withAnimation {
+                                                userVM.toggleInterest(interest)
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                            .padding()
+                            .background(.ultraThinMaterial)  // Apply the translucent background effect here
+                            .background(ColorPalette.main(for: colorScheme))
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
+                            .onTapGesture {
+                                selectedUser = user  // Set the selected user
+                            }
+                        }
+                    }
+                }
+                .disabled(isMenuExpanded)  // Disable interaction with ScrollView when menu is expanded
+                .padding(.horizontal)
+                .padding(.bottom, 60)
             }
-            .padding(.horizontal)
-            .padding(.bottom, 60)
-        }
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [ColorPalette.background(for: colorScheme), ColorPalette.main(for: colorScheme)]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+            .background(
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        ColorPalette.background(for: colorScheme),
+                        ColorPalette.main(for: colorScheme),
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
             )
-        )
+        }
     }
 }
 
@@ -166,9 +198,11 @@ struct ChatRequestView: View {
                 .padding()
                 .foregroundColor(ColorPalette.text(for: colorScheme))
 
-            Text("Interests: \(user.interests?.joined(separator: ", ") ?? "No interests available")")
-                .foregroundColor(ColorPalette.text(for: colorScheme))
-            
+            Text(
+                "Interests: \(user.interests?.joined(separator: ", ") ?? "No interests available")"
+            )
+            .foregroundColor(ColorPalette.text(for: colorScheme))
+
             Button(action: {
                 // Logic to send chat request goes here
             }) {
@@ -194,13 +228,11 @@ struct ChatRequestView: View {
     }
 }
 
-
 // MARK: - Preview
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
+#if DEBUG
+    #Preview {
         HomeView()
             .environmentObject(AuthViewModel())
             .environmentObject(UserViewModel.mock())
     }
-}
+#endif
