@@ -17,7 +17,9 @@ struct HomeView: View {
                 .navigationBarTitle("Users", displayMode: .inline)
                 .onAppear {
                     Task {
-                        await userVM.initialize()
+                        #if !DEBUG
+                            await userVM.initialize()
+                        #endif
                     }
                 }
                 .sheet(item: $selectedUser) { user in  // Show the chat request sheet
@@ -86,102 +88,100 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
-        ZStack {
-            VStack(alignment: .leading, spacing: 4) {
-                SearchBar(
-                    text: $userVM.searchText, placeholder: "search for a user",
-                    cancelButtonColor: .black)
+        VStack(alignment: .leading, spacing: 4) {
+            SearchBar(
+                text: $userVM.searchText, placeholder: "search for a user",
+                cancelButtonColor: .black)
 
-                // Horizontal tags for filtering by interests
-                HStack {
-                    InterestsHorizontalTags(
-                        interests: userVM.allInterests,
-                        onTapInterest: { interest in
-                            withAnimation {
-                                userVM.toggleInterest(interest)
-                            }
-                        }
-                    )
-                    .background(Color.clear)
-                    .cornerRadius(10)
-                    .shadow(radius: 3)
-
-                    CustomMenu(
-                        alignment: .trailing,
-                        isExpanded: $isMenuExpanded,
-                        label: {
-                            // Using an icon instead of text
-                            Image(systemName: "slider.horizontal.3")  // Suitable icon for slider
-                                .resizable()
-                                .frame(width: 24, height: 24)  // Adjust size as needed
-                                .foregroundColor(ColorPalette.accent(for: colorScheme))
-                                .padding(.trailing, 8)
-                                .background(ColorPalette.background(for: colorScheme))
-                                .cornerRadius(8)
-                        }
-                    ) {
-                        VStack {
-                            Text(
-                                "\(String(format: "%.1f", userVM.selectedRadius)) km"
-                            )
-                            .foregroundColor(ColorPalette.text(for: colorScheme))
-
-                            Slider(value: $userVM.selectedRadius, in: 1...50, step: 1)
-                                .tint(ColorPalette.accent(for: colorScheme))
-                                .frame(width: 150)
+            HStack {
+                InterestsHorizontalTags(
+                    interests: userVM.allInterests,
+                    onTapInterest: { interest in
+                        withAnimation {
+                            userVM.toggleInterest(interest)
                         }
                     }
-                }
-
-                // List of users
-                ScrollView {
-                    LazyVStack(spacing: 16) {  // Using LazyVStack for efficient loading and spacing
-                        ForEach(users) { user in
-                            HStack(alignment: .center, spacing: 16) {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(user.name)
-                                        .font(.title)
-                                        .padding(.bottom, 1)
-                                        .foregroundColor(
-                                            ColorPalette.text(for: colorScheme))
-
-                                    // user-specific interests tags
-                                    InterestsHorizontalTags(
-                                        interests: user.interests ?? [],
-                                        onTapInterest: { interest in
-                                            withAnimation {
-                                                userVM.toggleInterest(interest)
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-                            .padding()
-                            .background(.ultraThinMaterial)  // Apply the translucent background effect here
-                            .background(ColorPalette.main(for: colorScheme))
-                            .cornerRadius(10)
-                            .shadow(radius: 3)
-                            .onTapGesture {
-                                selectedUser = user  // Set the selected user
-                            }
-                        }
-                    }
-                }
-                .disabled(isMenuExpanded)  // Disable interaction with ScrollView when menu is expanded
-                .padding(.horizontal)
-                .padding(.bottom, 60)
-            }
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        ColorPalette.background(for: colorScheme),
-                        ColorPalette.main(for: colorScheme),
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
                 )
-            )
+                .background(Color.clear)
+                .cornerRadius(10)
+                .shadow(radius: 3)
+
+                CustomMenu(
+                    alignment: .trailing,
+                    isExpanded: $isMenuExpanded,
+                    label: {
+                        // Using an icon instead of text
+                        Image(systemName: "slider.horizontal.3")  // Suitable icon for slider
+                            .resizable()
+                            .frame(width: 24, height: 24)  // Adjust size as needed
+                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .padding(.trailing, 8)
+                            .background(ColorPalette.background(for: colorScheme))
+                            .cornerRadius(8)
+                    }
+                ) {
+                    VStack {
+                        Text(
+                            "\(String(format: "%.1f", userVM.selectedRadius)) km"
+                        )
+                        .foregroundColor(ColorPalette.text(for: colorScheme))
+
+                        Slider(value: $userVM.selectedRadius, in: 1...60, step: 1)
+                            .tint(ColorPalette.accent(for: colorScheme))
+                            .frame(width: 150)
+                    }
+                }
+            }
+
+            // List of users
+            ScrollView {
+                LazyVStack(spacing: 16) {  // Using LazyVStack for efficient loading and spacing
+                    ForEach(users) { user in
+                        HStack(alignment: .center, spacing: 16) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(user.name)
+                                    .font(.title)
+                                    .padding(.bottom, 1)
+                                    .foregroundColor(
+                                        ColorPalette.text(for: colorScheme))
+
+                                // user-specific interests tags
+                                InterestsHorizontalTags(
+                                    interests: user.interests ?? [],
+                                    onTapInterest: { interest in
+                                        withAnimation {
+                                            userVM.toggleInterest(interest)
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                        .padding()
+                        .background(.ultraThinMaterial)  // Apply the translucent background effect here
+                        .background(ColorPalette.main(for: colorScheme))
+                        .cornerRadius(10)
+                        .shadow(radius: 3)
+                        .onTapGesture {
+                            selectedUser = user  // Set the selected user
+                        }
+                    }
+                }
+            }
+            .disabled(isMenuExpanded)  // Disable interaction with ScrollView when menu is expanded
+            .padding(.horizontal)
+            .padding(.bottom, 60)
+            .zIndex(-1)
         }
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    ColorPalette.background(for: colorScheme),
+                    ColorPalette.main(for: colorScheme),
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
     }
 }
 

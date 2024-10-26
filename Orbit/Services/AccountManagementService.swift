@@ -102,7 +102,7 @@ class AccountManagementService: AccountManagementServiceProtocol {
 
     func socialLogin(provider: String) async throws {
         _ = try await account.createOAuth2Session(
-            provider: .google  //OAuthProvider(rawValue: provider) ?? .google
+            provider: .google  // OAuthProvider(rawValue: provider) ?? .google
         )
     }
 }
