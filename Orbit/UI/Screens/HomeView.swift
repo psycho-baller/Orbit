@@ -17,7 +17,7 @@ struct HomeView: View {
                 .navigationBarTitle("Users", displayMode: .inline)
                 .onAppear {
                     Task {
-                        #if !DEBUG
+                        #if !PREVIEW
                             await userVM.initialize()
                         #endif
                     }
@@ -88,7 +88,7 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) {
             SearchBar(
                 text: $userVM.searchText, placeholder: "search for a user",
                 cancelButtonColor: .black)

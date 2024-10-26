@@ -214,8 +214,10 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         self.currentLocation = CLLocationCoordinate2D(
             latitude: latitude, longitude: longitude)
         Task {
-            await updateCurrentUserLocation(
-                latitude: latitude, longitude: longitude)
+            #if !PREVIEW
+                await updateCurrentUserLocation(
+                    latitude: latitude, longitude: longitude)
+            #endif
         }
     }
 
