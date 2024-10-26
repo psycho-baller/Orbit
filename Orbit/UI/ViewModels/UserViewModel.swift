@@ -333,7 +333,7 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             print(
                 "UserViewModel - usersNearby: User \(user.id) is \(distanceFromEachOther) meters away."
             )
-            return distanceFromEachOther <= radius * 1000 //Converts to meters
+            return distanceFromEachOther <= radius * 1000  //Converts to meters
         }
     }
 
@@ -344,12 +344,12 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         user.interests = interests
         self.currentUser?.interests = interests
         print("UserViewModel - updateUserInterests: Updating interests to \(interests).")
-        
+
         do {
             // Await the updateUser function which expects accountId and updatedUser
             let updatedUserDocument = try await userManagementService.updateUser(
                 accountId: user.accountId, updatedUser: user)
-            
+
             if let updatedUserDocument = updatedUserDocument {
                 print("Profile updated successfully for user \(updatedUserDocument.id)")
             } else {
@@ -360,61 +360,72 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             self.error = error.localizedDescription
         }
     }
-    
+
     static func mock() -> UserViewModel {
         let viewModel = UserViewModel()
         viewModel.currentUser = UserModel(
             accountId: "12345",
             name: "John Doe",
             interests: ["Basketball", "Music"],
-            latitude: nil,
-            longitude: nil,
+            latitude: 51.07452,
+            longitude: -114.12035,
             isInterestedToMeet: true
         )
-        
+
         // Add mock users
-            viewModel.users = [
-                UserModel(
-                    accountId: "67890",
-                    name: "Jane Smith",
-                    interests: ["Reading", "Cooking"],
-                    latitude: 51.0500,  // ~1.5 km away from John Doe
-                    longitude: -114.0745,
-                    isInterestedToMeet: true
-                ),
-                UserModel(
-                    accountId: "11223",
-                    name: "Michael Brown",
-                    interests: ["Video Games", "Art"],
-                    latitude: 51.0450,  // ~2 km away
-                    longitude: -114.0650,
-                    isInterestedToMeet: false
-                ),
-                UserModel(
-                    accountId: "33445",
-                    name: "Emily White",
-                    interests: ["Travel", "Movies"],
-                    latitude: 51.0530,  // ~4 km away
-                    longitude: -114.0780,
-                    isInterestedToMeet: true
-                ),
-                UserModel(
-                    accountId: "55667",
-                    name: "David Green",
-                    interests: ["Basketball", "Music", "Art"],
-                    latitude: 51.0700,  // ~10 km away
-                    longitude: -114.1000,
-                    isInterestedToMeet: false
-                ),
-                UserModel(
-                    accountId: "77889",
-                    name: "Sophia Black",
-                    interests: ["Hiking", "Photography"],
-                    latitude: 51.1150,  // ~25 km away
-                    longitude: -114.1500,
-                    isInterestedToMeet: true
-                )
-            ]
+        viewModel.users = [
+            UserModel(
+                accountId: "67890",
+                name: "Jane Smith",
+                interests: ["Reading", "Cooking"],
+                latitude: 51.0500,  // ~1.5 km away from John Doe
+                longitude: -114.0745,
+                isInterestedToMeet: true
+            ),
+            UserModel(
+                accountId: "11223",
+                name: "Michael Brown",
+                interests: ["Video Games", "Art"],
+                latitude: 51.0450,  // ~2 km away
+                longitude: -114.0650,
+                isInterestedToMeet: false
+            ),
+            UserModel(
+                accountId: "33445",
+                name: "Emily White",
+                interests: ["Travel", "Movies"],
+                latitude: 51.0530,  // ~4 km away
+                longitude: -114.0780,
+                isInterestedToMeet: true
+            ),
+            UserModel(
+                accountId: "55667",
+                name: "David Green",
+                interests: ["Basketball", "Music", "Art"],
+                latitude: 51.0700,  // ~10 km away
+                longitude: -114.1000,
+                isInterestedToMeet: false
+            ),
+            UserModel(
+                accountId: "77889",
+                name: "Sophia Black",
+                interests: ["Hiking", "Photography"],
+                latitude: 51.1150,  // ~25 km away
+                longitude: -114.1500,
+                isInterestedToMeet: true
+            ),
+            UserModel(
+                accountId: "77889",
+                name: "Sophia Black",
+                interests: ["Hiking", "Photography"],
+                latitude: 51.07452,
+                longitude: -114.12035,
+                isInterestedToMeet: true
+            ),
+        ]
+        //        override func initialize() {
+        //
+        //        }
         return viewModel
     }
 }
