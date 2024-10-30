@@ -6,8 +6,9 @@
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
 
-import Appwrite
 import Foundation
+import Appwrite
+import AppwriteModels
 
 protocol AppwriteServiceProtocol {
     var client: Client { get }
@@ -48,5 +49,54 @@ class AppwriteService: AppwriteServiceProtocol {
         storage = Storage(client)
         realtime = Realtime(client)
 
+    }
+    
+    func create(
+        collectionId: String,
+        data: [String: String],
+        permissions: [String]? = nil
+    ) async throws -> Any {
+        let document = try await databases.createDocument(
+            databaseId: self.databaseId,
+            collectionId: collectionId,
+            documentId: ID.unique(),
+            data: data,
+            permissions: permissions
+        )
+        return document;
+    }
+
+    func read(collectionId: String, queries: [String]) async throws -> Any {
+        let documents = try await databases.listDocuments(
+            databaseId: self.databaseId,
+            collectionId: collectionId,
+            queries: queries
+        )
+        return documents
+    }
+    
+    func update(
+        collectionId: String,
+        documentId: String,
+        data: [String: String]? = nil,
+        permissions: [String]? = nil
+    ) async throws -> Any {
+        let result = try await databases.updateDocument(
+            databaseId: self.databaseId,
+            collectionId: collectionId,
+            documentId: documentId,
+            data: data,
+            permissions: permissions
+        )
+        return result;
+    }
+    
+    func delete(collectionId: String, documentId: String) async throws -> Any {
+        let result = try await databases.deleteDocument(
+            databaseId: self.databaseId,
+            collectionId: collectionId,
+            documentId: documentId
+        )
+        return result
     }
 }
