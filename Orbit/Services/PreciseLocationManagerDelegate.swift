@@ -29,7 +29,7 @@ class PreciseLocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.requestAlwaysAuthorization()
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
-        setStandardAccuracy()  // Set standard accuracy by default
+        disableHighAccuracyAfterMeetup()
 
     }
     
@@ -40,19 +40,6 @@ class PreciseLocationManager: NSObject, CLLocationManagerDelegate {
 
     func stopTrackingLocation() {
         locationManager.stopUpdatingLocation()
-    }
-
-    func enableHighPrecisionMode() {
-        isMeetingInProgress = true
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation  // Most precise mode
-        locationManager.startUpdatingLocation()  // Ensure updates are active
-        print("PreciseLocationManager: High precision mode activated for meetup.")
-    }
-
-    func disableHighPrecisionMode() {
-        isMeetingInProgress = false
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters  // Reset to standard accuracy
-        print("PreciseLocationManager: High precision mode deactivated, reverted to standard accuracy.")
     }
 
     // MARK: - Accuracy Modes
@@ -69,7 +56,6 @@ class PreciseLocationManager: NSObject, CLLocationManagerDelegate {
    }
     
     // MARK: - Enable High Accuracy for Meetups
-
     func enableHighAccuracyForMeetup() {
         setHighAccuracy()
         startTrackingLocation()
@@ -91,13 +77,5 @@ class PreciseLocationManager: NSObject, CLLocationManagerDelegate {
         
         // Notify delegate (UserViewModel) of new precise location
         delegate?.didUpdateLocation(latitude: userLatitude, longitude: userLongitude)
-    }
-    
-    // Helper function to update general location in Appwrite
-    func updateUserGeneralLocation(area: String) {
-        // Here you would call your backend to update the user’s general location
-        // For example:
-        // AppwriteAPI.updateUserLocation(area: area)
-        print("User has entered area: \(area)")
     }
 }
