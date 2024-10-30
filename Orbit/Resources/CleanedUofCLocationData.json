@@ -682,16 +682,6 @@
     ]
   },
   {
-    "id": 596486737,
-    "name": 5411,
-    "lon": -114.13291199999999,
-    "lat": 51.07858699923606,
-    "categories": [
-      "public_transport",
-      "public_transport.bus"
-    ]
-  },
-  {
     "id": 95030941,
     "name": "500 Campus Place NW",
     "lon": -114.12683536208384,
@@ -1069,16 +1059,6 @@
     ]
   },
   {
-    "id": 1123732211,
-    "name": "24 Avenue NW",
-    "lon": -114.13744445,
-    "lat": 51.07644989923644,
-    "categories": [
-      "sport",
-      "sport.pitch"
-    ]
-  },
-  {
     "id": 605381836,
     "name": "University Heights",
     "lon": -114.13647688158639,
@@ -1283,16 +1263,6 @@
     ]
   },
   {
-    "id": 483838554,
-    "name": "24 Avenue NW",
-    "lon": -114.12305903442297,
-    "lat": 51.0747951992367,
-    "categories": [
-      "sport",
-      "sport.pitch"
-    ]
-  },
-  {
     "id": 10812229856,
     "name": "2500 University Drive NW",
     "lon": -114.1284062,
@@ -1310,46 +1280,6 @@
     "categories": [
       "building",
       "building.sport",
-      "sport",
-      "sport.pitch"
-    ]
-  },
-  {
-    "id": 6333788582,
-    "name": "24 Avenue NW",
-    "lon": -114.13340959999998,
-    "lat": 51.074502699236746,
-    "categories": [
-      "public_transport",
-      "public_transport.bus"
-    ]
-  },
-  {
-    "id": 6333761947,
-    "name": "24 Avenue NW",
-    "lon": -114.13598139999999,
-    "lat": 51.074493699236754,
-    "categories": [
-      "public_transport",
-      "public_transport.bus"
-    ]
-  },
-  {
-    "id": 216525628,
-    "name": "24 Avenue NW",
-    "lon": -114.12310596331596,
-    "lat": 51.0742101492368,
-    "categories": [
-      "sport",
-      "sport.pitch"
-    ]
-  },
-  {
-    "id": 216525631,
-    "name": "24 Avenue NW",
-    "lon": -114.12329122024224,
-    "lat": 51.0741506492368,
-    "categories": [
       "sport",
       "sport.pitch"
     ]
