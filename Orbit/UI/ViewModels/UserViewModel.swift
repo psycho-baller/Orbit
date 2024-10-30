@@ -19,14 +19,18 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     @Published var error: String?
     @Published var isLoading = false
     @Published var searchText: String = ""
+    @Published var currentArea: String?  // Updated area name for the user
     @Published var selectedInterests: [String] = []
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var selectedRadius: Double = 10.0
+    @Published var isInsideCampus = false  // Track if the user is inside campus
+
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
     private var appwriteRealtimeClient = AppwriteService.shared.realtime
     private var locationManager: LocationManager
+
 
     init(locationManager: LocationManager = LocationManager()) {
         self.locationManager = locationManager
@@ -207,6 +211,24 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     }
 
     // MARK - Location Updates
+    func didEnterArea(area: String) {
+        currentArea = area
+    }
+    
+    func didExitArea(area: String) {
+        currentArea = "Outside defined areas"
+    }
+    
+    // Enable precise location for meetups
+    func enablePreciseLocationSharing() {
+        locationManager.setPreciseLocationSharing(enabled: true)
+    }
+    
+    // Disable precise location after meetup ends
+    func disablePreciseLocationSharing() {
+        locationManager.setPreciseLocationSharing(enabled: false)
+    }
+    
     func didUpdateLocation(latitude: Double, longitude: Double) {
         print(
             "UserViewModel - didUpdateLocation: Received location update - Latitude: \(latitude), Longitude: \(longitude)."

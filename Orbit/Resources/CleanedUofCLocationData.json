@@ -1,0 +1,1380 @@
+[
+  {
+    "id": 23647427,
+    "name": "Calgary Technologies Inc",
+    "lon": -114.13060901707865,
+    "lat": 51.08427534923512,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 764324563,
+    "name": "Research Way NW",
+    "lon": -114.13695589753064,
+    "lat": 51.08299204923533,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 265516457,
+    "name": "Crowchild Trail NW",
+    "lon": -114.1275847,
+    "lat": 51.08364724923523,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 23647426,
+    "name": "Energy Resources Research",
+    "lon": -114.13357150546157,
+    "lat": 51.084089499235155,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 23647425,
+    "name": "Alberta Energy Regulator Core Research Centre",
+    "lon": -114.13615771585012,
+    "lat": 51.083634299235214,
+    "categories": [
+      "building",
+      "building.office",
+      "office",
+      "office.government"
+    ]
+  },
+  {
+    "id": 890330409,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.12371492941176,
+    "lat": 51.08382479923519,
+    "categories": [
+      "building",
+      "building.garage"
+    ]
+  },
+  {
+    "id": 890330410,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.12349359428038,
+    "lat": 51.083776049235205,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 265516455,
+    "name": "3113 31 Street NW",
+    "lon": -114.12891212324496,
+    "lat": 51.08357399923525,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 890330411,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.12333439134318,
+    "lat": 51.083630349235236,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 890330412,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.12307883914836,
+    "lat": 51.08364829923522,
+    "categories": [
+      "building",
+      "building.garage"
+    ]
+  },
+  {
+    "id": 890330413,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.12325549312078,
+    "lat": 51.08345969923527,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 890330415,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.1233489,
+    "lat": 51.0831789992353,
+    "categories": [
+      "building",
+      "building.garage"
+    ]
+  },
+  {
+    "id": 890330416,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.12347129580291,
+    "lat": 51.08329374923528,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 890330417,
+    "name": "Charleswood Crescent NW",
+    "lon": -114.1235896101052,
+    "lat": 51.083180699235285,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 265516456,
+    "name": "Foothills Lutheran Church",
+    "lon": -114.12779077381951,
+    "lat": 51.083289299235275,
+    "categories": [
+      "building",
+      "building.place_of_worship"
+    ]
+  },
+  {
+    "id": 890330414,
+    "name": "Morley Crescent NW",
+    "lon": -114.12307869142765,
+    "lat": 51.08338249923526,
+    "categories": [
+      "building",
+      "building.garage"
+    ]
+  },
+  {
+    "id": 890330421,
+    "name": "Morley Crescent NW",
+    "lon": -114.12287484999999,
+    "lat": 51.08309499923531,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 265516453,
+    "name": "Vecova Bottle Depot",
+    "lon": -114.13201555782896,
+    "lat": 51.08278504923537,
+    "categories": [
+      "building",
+      "building.facility",
+      "service",
+      "service.recycling",
+      "service.recycling.centre"
+    ]
+  },
+  {
+    "id": 193482847,
+    "name": "3435 32 Avenue NW",
+    "lon": -114.12691822856067,
+    "lat": 51.082778649235365,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 890330419,
+    "name": "Morley Crescent NW",
+    "lon": -114.12314249131003,
+    "lat": 51.083068699235305,
+    "categories": [
+      "building",
+      "building.garage"
+    ]
+  },
+  {
+    "id": 890330420,
+    "name": "Morley Crescent NW",
+    "lon": -114.12305226148496,
+    "lat": 51.08293094923533,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 890330418,
+    "name": "Morley Trail NW",
+    "lon": -114.12324208855875,
+    "lat": 51.08283789923535,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 539327356,
+    "name": "Varsity Condo's",
+    "lon": -114.12766204984268,
+    "lat": 51.082557749235406,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 23647428,
+    "name": "Geological Survey of Canada",
+    "lon": -114.13606971314269,
+    "lat": 51.08238629923544,
+    "categories": [
+      "building",
+      "building.office",
+      "office",
+      "office.government"
+    ]
+  },
+  {
+    "id": 3687410389,
+    "name": "3304 33 Street NW",
+    "lon": -114.13278799999999,
+    "lat": 51.082372099235435,
+    "categories": [
+      "access",
+      "access.yes",
+      "sport",
+      "sport.swimming_pool"
+    ]
+  },
+  {
+    "id": 23647433,
+    "name": "Mechanical Engineering Building",
+    "lon": -114.13067331446575,
+    "lat": 51.082331049235435,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 265516450,
+    "name": "Vecova",
+    "lon": -114.13254384785253,
+    "lat": 51.08220064923546,
+    "categories": [
+      "building",
+      "building.facility",
+      "service",
+      "service.social_facility",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 265516454,
+    "name": "The Church of Jesus Christ of Latter-day Saints",
+    "lon": -114.1287414019265,
+    "lat": 51.08204809923548,
+    "categories": [
+      "building",
+      "building.place_of_worship",
+      "religion",
+      "religion.place_of_worship",
+      "religion.place_of_worship.christianity"
+    ]
+  },
+  {
+    "id": 8695758854,
+    "name": "31st Street NW Station (WB)",
+    "lon": -114.13027609999999,
+    "lat": 51.08191699923552,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 183344663,
+    "name": "St. David's United Church",
+    "lon": -114.12281691408381,
+    "lat": 51.08179934923553,
+    "categories": [
+      "building",
+      "building.place_of_worship",
+      "religion",
+      "religion.place_of_worship",
+      "religion.place_of_worship.christianity"
+    ]
+  },
+  {
+    "id": 8695758853,
+    "name": "31st Street NW Station (EB)",
+    "lon": -114.1297424,
+    "lat": 51.08175859923552,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 122800126,
+    "name": "32 Avenue NW",
+    "lon": -114.13459884999999,
+    "lat": 51.08098739923565,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 9403604520,
+    "name": "EB 32 Avenue @ Campus Drive NW",
+    "lon": -114.12979929999999,
+    "lat": 51.0813678992356,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 4970219,
+    "name": "Energy Environment Experiential Learning Building (EEEL)",
+    "lon": -114.12944309848768,
+    "lat": 51.08110789923564,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 1174097740,
+    "name": "Engineering Block C",
+    "lon": -114.13178479897435,
+    "lat": 51.08089299923569,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 10139147848,
+    "name": "2500 University Drive NW",
+    "lon": -114.12929499999998,
+    "lat": 51.0807651992357,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 270493216,
+    "name": "Engineering Block B",
+    "lon": -114.13151376904705,
+    "lat": 51.080685649235704,
+    "categories": [
+      "building",
+      "building.university",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 2755063916,
+    "name": "Schulich School of Engineering",
+    "lon": -114.13213609999998,
+    "lat": 51.08054139923575,
+    "categories": [
+      "building",
+      "building.university",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 270493218,
+    "name": "Engineering Block D",
+    "lon": -114.13259736761364,
+    "lat": 51.08051899923575,
+    "categories": [
+      "building",
+      "building.university",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 3044668378,
+    "name": "GeoSensorWeb Lab",
+    "lon": -114.1337777,
+    "lat": 51.08046799923574,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 10139147849,
+    "name": "2500 University Drive NW",
+    "lon": -114.1251859,
+    "lat": 51.08036379923577,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 270493215,
+    "name": "Calgary Centre for Innovative Technology",
+    "lon": -114.13373814317484,
+    "lat": 51.08032209923577,
+    "categories": [
+      "building",
+      "building.university",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 119876217,
+    "name": "Trailer B",
+    "lon": -114.12808027349823,
+    "lat": 51.080298399235794,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 452550147,
+    "name": "Engineering Block G",
+    "lon": -114.13197691860225,
+    "lat": 51.08026144923578,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 539325873,
+    "name": "Earth Sciences",
+    "lon": -114.12909546747221,
+    "lat": 51.08020924923579,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 1174102420,
+    "name": "Information and Communications Technology (ICT) Building",
+    "lon": -114.13035416391128,
+    "lat": 51.0802007492358,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 270493217,
+    "name": "Engineering Block A",
+    "lon": -114.1313999576143,
+    "lat": 51.0801392492358,
+    "categories": [
+      "building",
+      "building.university",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 197609299,
+    "name": "University",
+    "lon": -114.12297453689808,
+    "lat": 51.08000629923583,
+    "categories": [
+      "building",
+      "building.transportation",
+      "internet_access",
+      "internet_access.free"
+    ]
+  },
+  {
+    "id": 4973044,
+    "name": "Mathematical Sciences",
+    "lon": -114.12778314946775,
+    "lat": 51.07999234923583,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 270493221,
+    "name": "Engineering Block E",
+    "lon": -114.13252183006952,
+    "lat": 51.07998559923583,
+    "categories": [
+      "building",
+      "building.university",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 10139147850,
+    "name": "2500 University Drive NW",
+    "lon": -114.12448399999998,
+    "lat": 51.07994679923584,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 4973054,
+    "name": "Biological Sciences",
+    "lon": -114.12558877437797,
+    "lat": 51.07992994923585,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 270496858,
+    "name": "Cenovus Spo\u2019pi Solar House",
+    "lon": -114.13365765,
+    "lat": 51.07974784923587,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 4976776,
+    "name": "Science Theatres",
+    "lon": -114.1271661493854,
+    "lat": 51.0795783992359,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 35961877,
+    "name": "500 Campus Place NW",
+    "lon": -114.12622950863246,
+    "lat": 51.07955089923591,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 539325875,
+    "name": "Science B",
+    "lon": -114.12943785602025,
+    "lat": 51.07948619923591,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 539325876,
+    "name": "Taylor Institute for Teaching and Learning",
+    "lon": -114.13126908347742,
+    "lat": 51.07914759923597,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": -5664022,
+    "name": "Crowsnest Hall",
+    "lon": -114.13503793364568,
+    "lat": 51.07914559923597,
+    "categories": [
+      "building",
+      "building.residential",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 4973045,
+    "name": "Science A",
+    "lon": -114.12815450873057,
+    "lat": 51.07913524923596,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 4973042,
+    "name": "Social Sciences",
+    "lon": -114.12691137290216,
+    "lat": 51.07909079923599,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 270493220,
+    "name": "Engineering Block F",
+    "lon": -114.13255325802467,
+    "lat": 51.07939429923593,
+    "categories": [
+      "building",
+      "building.university",
+      "wheelchair",
+      "wheelchair.yes"
+    ]
+  },
+  {
+    "id": 990215865,
+    "name": "Bird Nest Scooter Pickup",
+    "lon": -114.13541305692813,
+    "lat": 51.07891464923601,
+    "categories": [
+      "building",
+      "building.commercial",
+      "building.service",
+      "commercial",
+      "commercial.kiosk"
+    ]
+  },
+  {
+    "id": 4976775,
+    "name": "400 Campus Place NW",
+    "lon": -114.12459120428859,
+    "lat": 51.0783494992361,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 521659157,
+    "name": "MacEwan Hall",
+    "lon": -114.13039823941826,
+    "lat": 51.07860369923606,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 35961873,
+    "name": "Collegiate Boulevard NW",
+    "lon": -114.13275191707316,
+    "lat": 51.078192799236135,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 596486737,
+    "name": 5411,
+    "lon": -114.13291199999999,
+    "lat": 51.07858699923606,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 95030941,
+    "name": "500 Campus Place NW",
+    "lon": -114.12683536208384,
+    "lat": 51.07870804923605,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 189431061,
+    "name": "Field 1",
+    "lon": -114.13808139494637,
+    "lat": 51.07820724923614,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 4973040,
+    "name": "MacEwan Student Centre",
+    "lon": -114.13164164581733,
+    "lat": 51.078181299236135,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 4973043,
+    "name": "Administration",
+    "lon": -114.12712787036062,
+    "lat": 51.07813454923614,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 3835030368,
+    "name": "Fitness Centre",
+    "lon": -114.13364,
+    "lat": 51.07801849923617,
+    "categories": [
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 816331036,
+    "name": "Kinesiology Block B",
+    "lon": -114.1337199998347,
+    "lat": 51.077967649236165,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 749349008,
+    "name": "Jack Simpson Gym",
+    "lon": -114.1340616191209,
+    "lat": 51.077866799236176,
+    "categories": [
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 95030944,
+    "name": "University Heights",
+    "lon": -114.12944309288108,
+    "lat": 51.077618449236226,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 4973052,
+    "name": "MacKimmie Tower",
+    "lon": -114.12888791177019,
+    "lat": 51.07749864923625,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 27442423,
+    "name": "Charleswood",
+    "lon": -114.12666388611287,
+    "lat": 51.07712484923633,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 189431070,
+    "name": "Field 2",
+    "lon": -114.1381786,
+    "lat": 51.07743284923627,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 3836767672,
+    "name": "Racquet Centre",
+    "lon": -114.13324239999999,
+    "lat": 51.07741749923626,
+    "categories": [
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 539331376,
+    "name": "Taylor Family Digital Library",
+    "lon": -114.12979409121621,
+    "lat": 51.07741184923627,
+    "categories": [
+      "building",
+      "building.public_and_civil",
+      "education",
+      "education.library",
+      "internet_access"
+    ]
+  },
+  {
+    "id": 4976658,
+    "name": "Professional Faculties",
+    "lon": -114.12694616014538,
+    "lat": 51.07737299923627,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 4973048,
+    "name": "Scurfield Hall",
+    "lon": -114.12479190811763,
+    "lat": 51.07737224923627,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 3835030369,
+    "name": "Outdoor Centre",
+    "lon": -114.1339909,
+    "lat": 51.07734859923628,
+    "categories": [
+      "access_limited",
+      "access_limited.customers",
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 4973049,
+    "name": "Education Tower",
+    "lon": -114.12609800014431,
+    "lat": 51.077086099236325,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 4976659,
+    "name": "University Theatre",
+    "lon": -114.13019341782412,
+    "lat": 51.07708469923632,
+    "categories": [
+      "building",
+      "building.entertainment",
+      "entertainment",
+      "entertainment.culture",
+      "entertainment.culture.theatre"
+    ]
+  },
+  {
+    "id": 3836767673,
+    "name": "Aquatic Centre",
+    "lon": -114.133483,
+    "lat": 51.07705909923633,
+    "categories": [
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 539325877,
+    "name": "Kinesiology Block A",
+    "lon": -114.13297216042852,
+    "lat": 51.07704734923634,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 4976657,
+    "name": "Murray Fraser Hall",
+    "lon": -114.12846148000003,
+    "lat": 51.077043099236334,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 106778987,
+    "name": "100 Campus Place NW",
+    "lon": -114.12546492117846,
+    "lat": 51.0772207992363,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 749349007,
+    "name": "Gold Gym",
+    "lon": -114.13219328865324,
+    "lat": 51.07701384923634,
+    "categories": [
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 4976471,
+    "name": "Olympic Oval",
+    "lon": -114.13570217975357,
+    "lat": 51.07694939923634,
+    "categories": [
+      "building",
+      "building.sport",
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 1123732214,
+    "name": "Collegiate Boulevard NW",
+    "lon": -114.137445,
+    "lat": 51.07683054923637,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 749349006,
+    "name": "Red Gym",
+    "lon": -114.13258614460798,
+    "lat": 51.07681514923637,
+    "categories": [
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 35961865,
+    "name": "University Heights",
+    "lon": -114.12875311588833,
+    "lat": 51.07680149923636,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 990520245,
+    "name": "Mathison Hall",
+    "lon": -114.12469053430978,
+    "lat": 51.07673954923638,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 1123732213,
+    "name": "Collegiate Boulevard NW",
+    "lon": -114.137445,
+    "lat": 51.07670324923638,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 270510065,
+    "name": "Cascade Athletic Courts",
+    "lon": -114.13746004220162,
+    "lat": 51.07667829923638,
+    "categories": [
+      "access",
+      "access.yes",
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 4973053,
+    "name": "Craigie Hall",
+    "lon": -114.12907348213236,
+    "lat": 51.07666159923639,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 35961860,
+    "name": "University Court NW",
+    "lon": -114.13050468071066,
+    "lat": 51.076528199236414,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 4973050,
+    "name": "Education Block",
+    "lon": -114.12644013748655,
+    "lat": 51.076635999236395,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 10824742611,
+    "name": "University of Calgary Bus Terminal",
+    "lon": -114.12711629999998,
+    "lat": 51.0766084992364,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 1123732212,
+    "name": "Collegiate Boulevard NW",
+    "lon": -114.13744704975227,
+    "lat": 51.07657529923641,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 652771454,
+    "name": "Trailer A",
+    "lon": -114.12570321001871,
+    "lat": 51.0765649492364,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 2150916087,
+    "name": "University of Calgary Bus Terminal",
+    "lon": -114.12703699999999,
+    "lat": 51.076520499236416,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 1123732211,
+    "name": "24 Avenue NW",
+    "lon": -114.13744445,
+    "lat": 51.07644989923644,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 605381836,
+    "name": "University Heights",
+    "lon": -114.13647688158639,
+    "lat": 51.0765287492364,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 4976661,
+    "name": "Rozsa Centre",
+    "lon": -114.13142789744572,
+    "lat": 51.07638039923644,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 4976471,
+    "name": "Olympic Oval",
+    "lon": -114.13570217975357,
+    "lat": 51.07694939923634,
+    "categories": [
+      "building",
+      "building.sport",
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 25619429,
+    "name": "Reeve Theatre",
+    "lon": -114.1308424777812,
+    "lat": 51.07628789923646,
+    "categories": [
+      "building",
+      "building.university"
+    ]
+  },
+  {
+    "id": 198605952,
+    "name": "Unversity of Calgary Bus Terminal",
+    "lon": -114.1268927,
+    "lat": 51.07612319923648,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 273190755,
+    "name": "International House",
+    "lon": -114.13297870205368,
+    "lat": 51.07611164923649,
+    "categories": [
+      "building",
+      "internet_access"
+    ]
+  },
+  {
+    "id": 6086716385,
+    "name": "2500 University Drive NW",
+    "lon": -114.13453889999998,
+    "lat": 51.07608189923649,
+    "categories": [
+      "sport",
+      "sport.fitness",
+      "sport.fitness.fitness_station"
+    ]
+  },
+  {
+    "id": 25619413,
+    "name": "Cascade Hall",
+    "lon": -114.13754566205705,
+    "lat": 51.07602874923649,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 198605943,
+    "name": "University of Calgary Bus Terminal",
+    "lon": -114.127081,
+    "lat": 51.076020499236485,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 25603078,
+    "name": "Dining Centre",
+    "lon": -114.13343816418882,
+    "lat": 51.07585649923653,
+    "categories": [
+      "building"
+    ]
+  },
+  {
+    "id": 25619419,
+    "name": "Glacier Hall",
+    "lon": -114.1361544877334,
+    "lat": 51.07563784923657,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 4970205,
+    "name": "Art Parkade",
+    "lon": -114.1301810831668,
+    "lat": 51.07542549923659,
+    "categories": [
+      "access",
+      "access.yes",
+      "building",
+      "building.parking",
+      "no_fee",
+      "no_fee.no",
+      "parking",
+      "parking.cars",
+      "parking.multistorey"
+    ]
+  },
+  {
+    "id": 25619423,
+    "name": "Kananaskis Hall",
+    "lon": -114.13488916168902,
+    "lat": 51.07533609923662,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 165680964,
+    "name": "Yamnuska Hall",
+    "lon": -114.13689407801476,
+    "lat": 51.07515144923664,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 23457908,
+    "name": "Volleydome",
+    "lon": -114.12396033479611,
+    "lat": 51.074574749236746,
+    "categories": [
+      "building",
+      "building.sport",
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 25619421,
+    "name": "Olympus Hall",
+    "lon": -114.13563340572694,
+    "lat": 51.07507444923666,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 25619424,
+    "name": "Rundle Hall",
+    "lon": -114.13284912247373,
+    "lat": 51.07505779923666,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 23457909,
+    "name": "Foothills Aquatic Centre",
+    "lon": -114.12548549529811,
+    "lat": 51.074105199236826,
+    "categories": [
+      "access",
+      "access.yes",
+      "building",
+      "building.sport",
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 392876765,
+    "name": "Aurora Hall",
+    "lon": -114.13417958272791,
+    "lat": 51.0748738992367,
+    "categories": [
+      "building",
+      "building.residential"
+    ]
+  },
+  {
+    "id": 483838554,
+    "name": "24 Avenue NW",
+    "lon": -114.12305903442297,
+    "lat": 51.0747951992367,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 10812229856,
+    "name": "2500 University Drive NW",
+    "lon": -114.1284062,
+    "lat": 51.07469509923672,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 23457908,
+    "name": "Volleydome",
+    "lon": -114.12396033479611,
+    "lat": 51.074574749236746,
+    "categories": [
+      "building",
+      "building.sport",
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 6333788582,
+    "name": "24 Avenue NW",
+    "lon": -114.13340959999998,
+    "lat": 51.074502699236746,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 6333761947,
+    "name": "24 Avenue NW",
+    "lon": -114.13598139999999,
+    "lat": 51.074493699236754,
+    "categories": [
+      "public_transport",
+      "public_transport.bus"
+    ]
+  },
+  {
+    "id": 216525628,
+    "name": "24 Avenue NW",
+    "lon": -114.12310596331596,
+    "lat": 51.0742101492368,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 216525631,
+    "name": "24 Avenue NW",
+    "lon": -114.12329122024224,
+    "lat": 51.0741506492368,
+    "categories": [
+      "sport",
+      "sport.pitch"
+    ]
+  },
+  {
+    "id": 23457909,
+    "name": "Foothills Aquatic Centre",
+    "lon": -114.12548549529811,
+    "lat": 51.074105199236826,
+    "categories": [
+      "access",
+      "access.yes",
+      "building",
+      "building.sport",
+      "sport",
+      "sport.sports_centre"
+    ]
+  },
+  {
+    "id": 23457901,
+    "name": "Foothills Athletic Park",
+    "lon": -114.12258435628192,
+    "lat": 51.072951349237,
+    "categories": [
+      "sport"
+    ]
+  }
+]

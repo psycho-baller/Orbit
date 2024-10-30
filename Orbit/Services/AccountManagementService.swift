@@ -1,12 +1,4 @@
 //
-//  AccountManagementServiceProtocol.swift
-//  Orbit
-//
-//  Created by Rami Maalouf on 2024-10-05.
-//  Copyright © 2024 CPSC 575. All rights reserved.
-//
-
-//
 //  AccountManagementService.swift
 //  Orbit
 //
@@ -19,7 +11,7 @@ import AppwriteModels
 import Foundation
 import JSONCodable
 
-protocol AccountManagementServiceProtocol {
+protocol AccountManagementServiceProtocol: AnyObject {
     func createAccount(_ email: String, _ password: String, _ name: String)
         async throws
         -> AppwriteModels.User<[String: AnyCodable]>
