@@ -14,14 +14,10 @@ struct HomeView: View {
         ZStack {
             content
                 .navigationBarItems(trailing: logoutButton)
-                .navigationBarTitle("Users", displayMode: .inline)
-                .onAppear {
-                    Task {
-                        #if !PREVIEW
-                            await userVM.initialize()
-                        #endif
-                    }
-                }
+                .navigationBarTitle(
+                    userVM.currentArea.map { "Users in \($0)" } ?? "Users",
+                    displayMode: .inline
+                )
                 .sheet(item: $selectedUser) { user in  // Show the chat request sheet
                     ChatRequestView(user: user)
                 }
@@ -45,9 +41,10 @@ struct HomeView: View {
             ActivityIndicatorView().padding()
         } else if let error = userVM.error {
             failedView(error)
-
-        } else {
+        } else if userVM.isOnCampus {
             loadedView(userVM.filteredUsers)
+        } else {
+            offCampusView()
         }
     }
 
@@ -87,11 +84,24 @@ struct HomeView: View {
         .background(ColorPalette.background(for: colorScheme))
     }
 
+    private func offCampusView() -> some View {
+        VStack {
+            Text("You are currently off-campus.")
+                .font(.title)
+                .foregroundColor(ColorPalette.accent(for: colorScheme))
+            Text("User list is available only on campus.")
+                .multilineTextAlignment(.center)
+                .padding()
+        }
+        .background(ColorPalette.background(for: colorScheme))
+        .padding()
+    }
+
     private func loadedView(_ users: [UserModel]) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             SearchBar(
-                text: $userVM.searchText, placeholder: "search for a user",
-                cancelButtonColor: .black)
+                text: $userVM.searchText, placeholder: "search for a user"
+            )
 
             HStack {
                 InterestsHorizontalTags(
@@ -114,9 +124,13 @@ struct HomeView: View {
                         Image(systemName: "slider.horizontal.3")  // Suitable icon for slider
                             .resizable()
                             .frame(width: 24, height: 24)  // Adjust size as needed
-                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.accent(for: colorScheme)
+                            )
                             .padding(.trailing, 8)
-                            .background(ColorPalette.background(for: colorScheme))
+                            .background(
+                                ColorPalette.background(for: colorScheme)
+                            )
                             .cornerRadius(8)
                     }
                 ) {
@@ -126,9 +140,11 @@ struct HomeView: View {
                         )
                         .foregroundColor(ColorPalette.text(for: colorScheme))
 
-                        Slider(value: $userVM.selectedRadius, in: 1...60, step: 1)
-                            .tint(ColorPalette.accent(for: colorScheme))
-                            .frame(width: 150)
+                        Slider(
+                            value: $userVM.selectedRadius, in: 1...60, step: 1
+                        )
+                        .tint(ColorPalette.accent(for: colorScheme))
+                        .frame(width: 150)
                     }
                 }
             }
@@ -181,7 +197,13 @@ struct HomeView: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-        )
+        ).onAppear {
+            Task {
+                #if !PREVIEW
+                    await userVM.initialize()
+                #endif
+            }
+        }
     }
 }
 
