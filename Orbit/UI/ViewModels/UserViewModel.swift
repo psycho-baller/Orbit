@@ -12,7 +12,9 @@ import Foundation
 import JSONCodable
 import SwiftUI
 
-class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
+class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
+    CampusLocationDelegate
+{
 
     @Published var users: [UserModel] = []
     @Published var currentUser: UserModel?  // The current logged-in user
@@ -23,20 +25,23 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     @Published var selectedInterests: [String] = []
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var selectedRadius: Double = 10.0
-    @Published var isInsideCampus = false  // Track if the user is inside campus
-
+    @Published var isOnCampus = false  // Track if the user is inside campus
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
     private var appwriteRealtimeClient = AppwriteService.shared.realtime
-    private var locationManager: LocationManager
+    private var preciseLocationManager: PreciseLocationManager?
+    private var campusLocationManager: CampusLocationManager
+    private let areaData: [Area]  // Load JSON area data
 
-
-    init(locationManager: LocationManager = LocationManager()) {
-        self.locationManager = locationManager
+    init(
+        campusLocationManager: CampusLocationManager = CampusLocationManager()
+    ) {
+        self.campusLocationManager = campusLocationManager
+        self.areaData = DataLoader.loadUofCLocationDataFromJSON()
         super.init()
-        locationManager.delegate = self  // Set delegate to receive location updates
-        locationManager.locationManager.startUpdatingLocation()  // Start location updates
+        campusLocationManager.delegate = self
+        campusLocationManager.checkIfInsideCampus()
     }
 
     @MainActor
@@ -45,6 +50,9 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         print(
             "UserViewModel - initialize: Initializing user list and subscribing to real-time updates."
         )
+        self.preciseLocationManager = PreciseLocationManager()
+        preciseLocationManager?.delegate = self  // Set delegate to receive location updates
+
         await listUsers()
         await subscribeToRealtimeUpdates()
         await fetchCurrentUser()
@@ -59,15 +67,19 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
                     "UserViewModel - fetchCurrentUser: Successfully fetched current user \(user.accountId)."
                 )
             } else {
-                print("UserViewModel - fetchCurrentUser: No current user found.")
+                print(
+                    "UserViewModel - fetchCurrentUser: No current user found.")
             }
         } catch {
-            print("UserViewModel - Source: fetchCurrentUser - Error: \(error.localizedDescription)")
+            print(
+                "UserViewModel - Source: fetchCurrentUser - Error: \(error.localizedDescription)"
+            )
             self.error = error.localizedDescription
         }
     }
 
     // setCurrentUser
+    @MainActor
     func updateCurrentUser(accountId: String) async {
         let userFromDatabase = users.first { $0.accountId == accountId }
         self.currentUser = userFromDatabase
@@ -167,14 +179,16 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
                 || user.name.lowercased().contains(lowercasedSearchText)
-                || (user.interests?.joined(separator: " ").lowercased().contains(
-                    lowercasedSearchText) ?? false)
+                || (user.interests?.joined(separator: " ").lowercased()
+                    .contains(
+                        lowercasedSearchText) ?? false)
 
             // Check if the user matches the selected interests
             let matchesInterests =
                 selectedInterests.isEmpty
                 || (user.interests != nil
-                    && !Set(user.interests!).intersection(selectedInterestsSet).isEmpty)
+                    && !Set(user.interests!).intersection(selectedInterestsSet)
+                        .isEmpty)
 
             return matchesSearchText && matchesInterests
         }
@@ -211,36 +225,91 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
     }
 
     // MARK - Location Updates
-    func didEnterArea(area: String) {
-        currentArea = area
+
+    // MARK: - CampusLocationDelegate Methods
+    func didEnterCampus() {
+        isOnCampus = true
+        print("User entered campus. Starting precise location tracking.")
     }
-    
-    func didExitArea(area: String) {
-        currentArea = "Outside defined areas"
+
+    func didExitCampus() {
+        isOnCampus = false
+        print("User exited campus. Stopping precise location tracking.")
+        preciseLocationManager?.stopTrackingLocation()  // Stop tracking when off-campus
+        currentArea = nil  // Clear current area when outside campus
     }
-    
-    // Enable precise location for meetups
-    func enablePreciseLocationSharing() {
-        locationManager.setPreciseLocationSharing(enabled: true)
-    }
-    
-    // Disable precise location after meetup ends
-    func disablePreciseLocationSharing() {
-        locationManager.setPreciseLocationSharing(enabled: false)
-    }
-    
+
+    // MARK: - PreciseLocationDelegate Methods
     func didUpdateLocation(latitude: Double, longitude: Double) {
         print(
             "UserViewModel - didUpdateLocation: Received location update - Latitude: \(latitude), Longitude: \(longitude)."
         )
         self.currentLocation = CLLocationCoordinate2D(
             latitude: latitude, longitude: longitude)
-        Task {
-            #if !PREVIEW
-                await updateCurrentUserLocation(
-                    latitude: latitude, longitude: longitude)
-            #endif
+        // Calculate nearest area based on location
+        if let nearestArea = findNearestArea(
+            latitude: latitude, longitude: longitude)
+        {
+            self.currentArea = nearestArea.name
+            Task {
+                await updateUserGeneralLocation(areaId: nearestArea.id)
+            }
         }
+    }
+
+    // Helper to find the nearest area from a given latitude and longitude
+    func findNearestArea(latitude: Double, longitude: Double) -> Area? {
+        guard !areaData.isEmpty else {
+            print("No area data available.")
+            return nil
+        }
+
+        // User's current location
+        let userLocation = CLLocation(latitude: latitude, longitude: longitude)
+
+        // Find the area with the minimum distance from the user
+        var nearestArea: Area?
+        var minimumDistance: CLLocationDistance = .greatestFiniteMagnitude
+
+        for area in areaData {
+            // Area location
+            let areaLocation = CLLocation(
+                latitude: area.lat, longitude: area.lon)
+            // Calculate distance between user's location and area location
+            let distance = userLocation.distance(from: areaLocation)
+
+            // Check if this area is closer than previously found areas
+            if distance < minimumDistance {
+                minimumDistance = distance
+                nearestArea = area
+            }
+        }
+
+        // Log result for debugging
+        if let nearestArea = nearestArea {
+            print(
+                "Nearest area: \(nearestArea.name) at distance: \(minimumDistance) meters."
+            )
+        }
+
+        return nearestArea
+    }
+    // MARK: - Meetup Control for High-Accuracy Mode
+
+    func initiateMeetup() {
+        guard isOnCampus else {
+            print("User is outside campus; high accuracy is not enabled.")
+            return
+        }
+        preciseLocationManager?
+            .enableHighAccuracyForMeetup()  // Enable high accuracy for meetup
+        print("UserViewModel: High-accuracy tracking enabled for meetup.")
+    }
+
+    func endMeetup() {
+        preciseLocationManager?
+            .disableHighAccuracyAfterMeetup()  // Return to standard accuracy after meetup
+        print("UserViewModel: High-accuracy tracking disabled after meetup.")
     }
 
     @MainActor
@@ -271,6 +340,31 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
         } catch {
             print(
                 "UserViewModel - Source: updateCurrentUserLocation - Error: \(error.localizedDescription)"
+            )
+            self.error = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func updateUserGeneralLocation(areaId: String) async {
+        do {
+            print("Updating general location for user to area ID \(areaId).")
+            guard
+                let currentUser =
+                    try await userManagementService.getCurrentUser()
+            else {
+                print("Current user not found.")
+                return
+            }
+            var updatedUser = currentUser
+            updatedUser.currentAreaId = areaId
+
+            await updateUser(id: currentUser.id, updatedUser: updatedUser)
+            self.currentUser = updatedUser
+            print("Successfully updated general location for user.")
+        } catch {
+            print(
+                "Error updating general location: \(error.localizedDescription)"
             )
             self.error = error.localizedDescription
         }
@@ -331,33 +425,24 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
 
     // Helper function to filter users by location proximity
     func usersNearby(users: [UserModel], radius: Double) -> [UserModel] {
-        guard let currentLocation = currentLocation else {
-            print(
-                "UserViewModel - usersNearby: Current location not available.")
+        guard let currentAreaId = currentUser?.currentAreaId else {
+            print("UserViewModel - usersInSameArea: Current area not available.")
             return []
         }
-        print(
-            "UserViewModel - usersNearby: Filtering users within \(radius) meters of current location."
-        )
+
+        print("UserViewModel - usersInSameArea: Filtering users in area \(currentAreaId).")
+
         return users.filter { user in
-            guard let userLat = user.latitude, let userLong = user.longitude
-            else {
+            guard let userAreaId = user.currentAreaId else {
                 print(
-                    "UserViewModel - usersNearby: Skipping user \(user.id), missing location data."
-                )
+                    "UserViewModel - usersInSameArea: Skipping user \(user.id), missing area data.")
                 return false
             }
-            let userLocation = CLLocation(
-                latitude: Double(userLat), longitude: Double(userLong))
-            let currentCLLocation = CLLocation(
-                latitude: currentLocation.latitude,
-                longitude: currentLocation.longitude)
-            let distanceFromEachOther = currentCLLocation.distance(
-                from: userLocation)
-            print(
-                "UserViewModel - usersNearby: User \(user.id) is \(distanceFromEachOther) meters away."
-            )
-            return distanceFromEachOther <= radius * 1000  //Converts to meters
+            let isInSameArea = userAreaId == currentAreaId
+            if isInSameArea {
+                print("UserViewModel - usersInSameArea: User \(user.id) is in the same area.")
+            }
+            return isInSameArea
         }
     }
 
@@ -367,15 +452,20 @@ class UserViewModel: NSObject, ObservableObject, LocationManagerDelegate {
 
         user.interests = interests
         self.currentUser?.interests = interests
-        print("UserViewModel - updateUserInterests: Updating interests to \(interests).")
+        print(
+            "UserViewModel - updateUserInterests: Updating interests to \(interests)."
+        )
 
         do {
             // Await the updateUser function which expects accountId and updatedUser
-            let updatedUserDocument = try await userManagementService.updateUser(
-                accountId: user.accountId, updatedUser: user)
+            let updatedUserDocument =
+                try await userManagementService.updateUser(
+                    accountId: user.accountId, updatedUser: user)
 
             if let updatedUserDocument = updatedUserDocument {
-                print("Profile updated successfully for user \(updatedUserDocument.id)")
+                print(
+                    "Profile updated successfully for user \(updatedUserDocument.id)"
+                )
             } else {
                 print("Failed to update user: User document not found.")
             }
