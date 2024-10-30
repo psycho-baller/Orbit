@@ -39,15 +39,15 @@ class AppwriteService: AppwriteServiceProtocol {
     
     init() {
 
-        client = Client()
+        self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1")
             .setProject("67017126001e334dd053")
             .setSelfSigned(true)  // For self signed certificates, only use for development
 
-        account = Account(client)
-        databases = Databases(client)
-        storage = Storage(client)
-        realtime = Realtime(client)
+        self.account = Account(client)
+        self.databases = Databases(client)
+        self.storage = Storage(client)
+        self.realtime = Realtime(client)
 
     }
     
@@ -66,7 +66,7 @@ class AppwriteService: AppwriteServiceProtocol {
         return document;
     }
 
-    func read(collectionId: String, queries: [String]) async throws -> Any {
+    func read(collectionId: String, queries: [String]) async throws -> [Any] {
         let documents = try await databases.listDocuments(
             databaseId: self.databaseId,
             collectionId: collectionId,
