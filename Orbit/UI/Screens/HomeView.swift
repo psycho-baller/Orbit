@@ -16,7 +16,7 @@ struct HomeView: View {
                 .navigationBarItems(trailing: logoutButton)
                 .navigationBarTitle(
                     userVM.currentArea.map { "Users in \($0)" } ?? "Users",
-                    displayMode: .inline
+                    displayMode: .automatic
                 )
                 .sheet(item: $selectedUser) { user in  // Show the chat request sheet
                     ChatRequestView(user: user)
