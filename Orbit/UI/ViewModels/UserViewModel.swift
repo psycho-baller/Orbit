@@ -325,6 +325,19 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     @MainActor
     func updateUserGeneralLocation(areaId: String) async {
+        // assert that the area is new and the user is within campus
+        guard currentUser?.currentAreaId != areaId else {
+            print(
+                "UserViewModel - updateUserGeneralLocation: User is already in area \(areaId)."
+            )
+            return
+        }
+        guard isOnCampus else {
+            print(
+                "UserViewModel - updateUserGeneralLocation: User is outside campus."
+            )
+            return
+        }
         do {
             print("Updating general location for user to area ID \(areaId).")
             guard
