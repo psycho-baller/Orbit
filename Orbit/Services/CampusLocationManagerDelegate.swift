@@ -18,8 +18,8 @@ class CampusLocationManager: NSObject, CLLocationManagerDelegate {
 
     private let campusRegion = CLCircularRegion(
         center: CLLocationCoordinate2D(
-            latitude: 51.07452, longitude: -114.1202),  // Campus center coordinates
-        radius: 800,
+            latitude: 51.077427, longitude: -114.130622),  // Campus center coordinates
+        radius: 750,
         identifier: "CampusRegion"
     )
 
@@ -31,7 +31,7 @@ class CampusLocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
         setupCampusGeofence()
-//        checkIfInsideCampus()  // Perform the initial campus check
+        //        checkIfInsideCampus()  // Perform the initial campus check
 
     }
 
@@ -85,7 +85,6 @@ class CampusLocationManager: NSObject, CLLocationManagerDelegate {
             print(
                 "CampusLocationManager - didExitRegion: User exited campus region."
             )
-
             delegate?.didExitCampus()
         }
     }
