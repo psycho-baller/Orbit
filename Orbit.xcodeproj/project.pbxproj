@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0669F94A2CD1CCA30031D154 /* MessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F9492CD1CCA30031D154 /* MessagingService.swift */; };
+		0669F94C2CD6C6460031D154 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F94B2CD6C6460031D154 /* MessageModel.swift */; };
+		0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F94D2CD6CEB10031D154 /* ConversationModel.swift */; };
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
 		2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2588CC842CCBF1FC00891879 /* CustomMenu.swift */; };
 		259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2252CC02F0D00C9F285 /* Appwrite */; };
@@ -68,6 +70,8 @@
 
 /* Begin PBXFileReference section */
 		0669F9492CD1CCA30031D154 /* MessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingService.swift; sourceTree = "<group>"; };
+		0669F94B2CD6C6460031D154 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		0669F94D2CD6CEB10031D154 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
 		2588CC842CCBF1FC00891879 /* CustomMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMenu.swift; sourceTree = "<group>"; };
 		259CB2792CC0460400C9F285 /* LocationManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerDelegate.swift; sourceTree = "<group>"; };
 		259CB27A2CC0460400C9F285 /* AccountManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManagementService.swift; sourceTree = "<group>"; };
@@ -206,6 +210,8 @@
 			isa = PBXGroup;
 			children = (
 				259CB2A22CC046F300C9F285 /* UserModels.swift */,
+				0669F94B2CD6C6460031D154 /* MessageModel.swift */,
+				0669F94D2CD6CEB10031D154 /* ConversationModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -477,7 +483,9 @@
 				259CB27E2CC0460400C9F285 /* LocationManagerDelegate.swift in Sources */,
 				259CB2A72CC047D000C9F285 /* Extensions.swift in Sources */,
 				259CB2992CC0465600C9F285 /* SignupView.swift in Sources */,
+				0669F94C2CD6C6460031D154 /* MessageModel.swift in Sources */,
 				259CB2A32CC046F300C9F285 /* UserModels.swift in Sources */,
+				0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */,
 				259CB2822CC0460400C9F285 /* AppwriteService.swift in Sources */,
 				61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */,
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,

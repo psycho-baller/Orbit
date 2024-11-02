@@ -27,6 +27,9 @@ class AppwriteService: AppwriteServiceProtocol {
     let databaseId = "orbit"
     let collectionId = "users"
     let bucketId = "userAssets"
+    
+    let COLLECTION_ID_MESSAGES = "messages"
+    let COLLECTION_ID_CONVERSATIONS = "conversations"
     //    var functionId = "YOUR_FUNCTION_ID"
     //    var executionId = ""
     //    var userId = ""
@@ -49,54 +52,5 @@ class AppwriteService: AppwriteServiceProtocol {
         self.storage = Storage(client)
         self.realtime = Realtime(client)
 
-    }
-    
-    func create(
-        collectionId: String,
-        data: [String: String],
-        permissions: [String]? = nil
-    ) async throws -> Any {
-        let document = try await databases.createDocument(
-            databaseId: self.databaseId,
-            collectionId: collectionId,
-            documentId: ID.unique(),
-            data: data,
-            permissions: permissions
-        )
-        return document;
-    }
-
-    func read(collectionId: String, queries: [String]) async throws -> [Any] {
-        let documents = try await databases.listDocuments(
-            databaseId: self.databaseId,
-            collectionId: collectionId,
-            queries: queries
-        )
-        return documents
-    }
-    
-    func update(
-        collectionId: String,
-        documentId: String,
-        data: [String: String]? = nil,
-        permissions: [String]? = nil
-    ) async throws -> Any {
-        let result = try await databases.updateDocument(
-            databaseId: self.databaseId,
-            collectionId: collectionId,
-            documentId: documentId,
-            data: data,
-            permissions: permissions
-        )
-        return result;
-    }
-    
-    func delete(collectionId: String, documentId: String) async throws -> Any {
-        let result = try await databases.deleteDocument(
-            databaseId: self.databaseId,
-            collectionId: collectionId,
-            documentId: documentId
-        )
-        return result
     }
 }
