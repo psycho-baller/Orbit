@@ -11,7 +11,7 @@ import Appwrite
 protocol MessagingServiceProtocol {
     func createConversation(_ conversation: ConversationModel) async throws -> ConversationDocument
     func createMessage(_ message: MessageModel) async throws -> MessageDocument
-    func getMessages(conversationId: String, numOfMessages: Int) async throws -> [MessageDocument]
+    func getMessages(_ conversationId: String, _ numOfMessages: Int) async throws -> [MessageDocument]
 }
 
 class MessagingService: MessagingServiceProtocol {
@@ -43,7 +43,7 @@ class MessagingService: MessagingServiceProtocol {
         return document;
     }
 
-    func getMessages(conversationId: String, numOfMessages: Int = 100) async throws -> [MessageDocument] {
+    func getMessages(_ conversationId: String, _ numOfMessages: Int) async throws -> [MessageDocument] {
         
         let queries = [
             Query.equal("conversationId", value: conversationId),

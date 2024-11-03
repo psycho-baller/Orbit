@@ -60,4 +60,35 @@ class MessagingViewModel: ObservableObject{
             print("MessagingViewModel - createConversation failed \(error.localizedDescription)")
         }
     }
+    
+    @MainActor
+    func createMessage(_ conversationId: String,_ senderAccountId: String, _ message: String) async {
+        let currentDateTime = Date()
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let formattedDateTime = formatter.string(from: currentDateTime)
+        let newMessage = MessageModel(
+            conversationId: conversationId,
+            senderAccountId: senderAccountId,
+            message: message,
+            createdAt: formattedDateTime
+        )
+        do{
+            try await messagingService.createMessage(newMessage)
+        } catch {
+            print("MessagingViewModel - createMessage failed \(error.localizedDescription)")
+        }
+    }
+    
+    
+    @MainActor
+    func getMessages(_ conversationId: String, _ numOfMessages:Int = 100) async -> [MessageDocument] {
+        do{
+            let messages = try await messagingService.getMessages(conversationId, numOfMessages)
+            return messages
+        } catch {
+            print("MessagingViewModel - createMessage failed \(error.localizedDescription)")
+            return []
+        }
+    }
 }
