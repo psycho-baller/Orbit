@@ -13,19 +13,35 @@ class MessagingViewModel: ObservableObject{
     private var messagingService: MessagingServiceProtocol = MessagingService()
     private var userManagementService: UserManagementServiceProtocol = UserManagementService()
     
+    @MainActor
+    func getConversations(_ accountId: String) async -> [String]{
+        do{
+            if let userModel = try await userManagementService.getUser(accountId){
+                if let conversations = userModel.data.conversations{
+                    return conversations
+                }
+            }
+            throw NSError(domain: "UsersNotFound: \"\(accountId)\"", code: 404)
+        } catch {
+            print("MessagingViewModel - getConversations failed \(error.localizedDescription)")
+            return []
+        }
+    }
+    
     
     @MainActor
     func createConversation(_ participants: [String]) async {
         do{
-            let newConversation = ConversationModel(participants: participants)
-            let conversation = try await messagingService.createConversation(newConversation)
+            // Create entry in conversation table
+            let conversationData = ConversationModel(participants: participants)
+            let conversationEntry = try await messagingService.createConversation(conversationData)
+            
+            // Add conversation id to users
             for accountId in participants{
                 if let userModel  = try await userManagementService.getUser(accountId) {
                     if let conversations = userModel.data.conversations{
                         var newConversations = conversations
-                        print("old: \(newConversations)")
-                        newConversations.append(conversation.id)
-                        print("new: \(newConversations)")
+                        newConversations.append(conversationEntry.id)
                         let newUserModel = UserModel(
                             accountId: accountId,
                             name: userModel.data.name,
@@ -43,6 +59,5 @@ class MessagingViewModel: ObservableObject{
         catch {
             print("MessagingViewModel - createConversation failed \(error.localizedDescription)")
         }
-
     }
 }

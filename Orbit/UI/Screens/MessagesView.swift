@@ -12,17 +12,26 @@ struct MessagesView: View {
     @EnvironmentObject private var msgVM: MessagingViewModel
     @EnvironmentObject private var userVM: UserViewModel
     var body: some View {
-        HStack {
-            Button(/*@START_MENU_TOKEN@*/"Button"/*@END_MENU_TOKEN@*/) {
+        VStack {
+            Button("Create Conversation") {
                 Task {
                     if let currentUser = userVM.currentUser?.accountId {
-                        print("participants: \(currentUser)")
                         await msgVM.createConversation([currentUser,"6726b1ef776f5badc4fe"])
                         // hard coded to bob
                     }
               }
             }
             .buttonStyle(.borderedProminent)
+            Button("Get Conversations") {
+                Task {
+                    if let currentUser = userVM.currentUser?.accountId {
+                        let conversations = await msgVM.getConversations(currentUser)
+                        print("conversations \(conversations)")
+                    }
+              }
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.green)
         }
     }
 }
