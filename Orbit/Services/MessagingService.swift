@@ -9,12 +9,12 @@ import Foundation
 import Appwrite
 
 protocol MessagingServiceProtocol {
-//    func getMessages(accountId: String, numOfMessages: Int) async throws -> MessageDocument
-    
+    func createConversation(_ conversation: ConversationModel) async throws -> ConversationDocument
+    func createMessage(_ message: MessageModel) async throws -> MessageDocument
+    func getMessages(conversationId: String, numOfMessages: Int) async throws -> [MessageDocument]
 }
 
-//class MessagingService: MessagingServiceProtocol {
-class MessagingService {
+class MessagingService: MessagingServiceProtocol {
     private let appwriteService: AppwriteService = AppwriteService.shared
     
     func createConversation(_ conversation: ConversationModel) async throws -> ConversationDocument{
@@ -42,7 +42,7 @@ class MessagingService {
         print("created message: \(document)")
         return document;
     }
-    
+
     func getMessages(conversationId: String, numOfMessages: Int = 100) async throws -> [MessageDocument] {
         
         let queries = [

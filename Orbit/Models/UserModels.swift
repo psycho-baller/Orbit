@@ -21,20 +21,23 @@ struct UserModel: Codable, Identifiable {
     var latitude: Double?
     var longitude: Double?
     var isInterestedToMeet: Bool?
+    var conversations: [String]?
     
 
     
 
     
-    init(accountId: String, name: String, interests: [String]? = nil, latitude: Double? = nil, longitude: Double? = nil, isInterestedToMeet: Bool? = nil) {
+    init(accountId: String, name: String, interests: [String]? = nil, latitude: Double? = nil, longitude: Double? = nil, isInterestedToMeet: Bool? = nil, conversations: [String]?=nil) {
             self.accountId = accountId
             self.name = name
             self.interests = interests
             self.latitude = latitude
             self.longitude = longitude
             self.isInterestedToMeet = isInterestedToMeet
-        }
-    
+            self.conversations=conversations
+        
+    }
+        
     //    var isOnline: Bool
     //    var lastActive: Date
     //    var lastActive:

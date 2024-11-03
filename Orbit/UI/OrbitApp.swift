@@ -12,6 +12,7 @@ struct OrbitApp: App {
 
     @StateObject var authVM = AuthViewModel()
     @StateObject var userVM = UserViewModel()
+    @StateObject var msgVM = MessagingViewModel()
 
     var body: some Scene {
         WindowGroup {
@@ -19,6 +20,7 @@ struct OrbitApp: App {
                 // .attachEnvironmentOverrides()
                 .environmentObject(authVM)
                 .environmentObject(userVM)
+                .environmentObject(msgVM)
         }
     }
 }

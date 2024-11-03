@@ -9,12 +9,10 @@
 import Foundation
 import Appwrite
 
-struct ConversationModel: Identifiable, Codable {
-    let id: String
-    let participants: [String]
+struct ConversationModel: Codable {
+    let participants: [String]?
     
-    init(id: String, participants: [String]) {
-        self.id = id
+    init(participants: [String]) {
         self.participants = participants
     }
 }

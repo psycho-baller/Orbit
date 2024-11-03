@@ -28,7 +28,7 @@ struct MainTabView: View {
                     }
                 } else if selectedIndex == 1 {
                     NavigationView {
-                        ExampleView1()
+                        MessagesView()
                     }
                 } else if selectedIndex == 2 {
                     NavigationView {
@@ -52,7 +52,7 @@ struct MainTabView: View {
             // Animated Tab Bar
             AnimatedTabBar(selectedIndex: $selectedIndex, prevSelectedIndex: $prevSelectedIndex) {
                 tabButtonAt(0, icon: "house.fill", title: "Home")
-                tabButtonAt(1, icon: "person.2.fill", title: "Tab 2")
+                tabButtonAt(1, icon: "message.fill", title: "Messages")
                 tabButtonAt(2, icon: "star.fill", title: "Tab 3")
                 tabButtonAt(3, icon: "gearshape.fill", title: "Tab 4")
                 tabButtonAt(4, icon: "person.circle.fill", title: "Profile")

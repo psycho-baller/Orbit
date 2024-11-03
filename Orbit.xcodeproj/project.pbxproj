@@ -10,6 +10,8 @@
 		0669F94A2CD1CCA30031D154 /* MessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F9492CD1CCA30031D154 /* MessagingService.swift */; };
 		0669F94C2CD6C6460031D154 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F94B2CD6C6460031D154 /* MessageModel.swift */; };
 		0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F94D2CD6CEB10031D154 /* ConversationModel.swift */; };
+		0669F9562CD6D87C0031D154 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F9552CD6D87C0031D154 /* MessagesView.swift */; };
+		0669F9582CD6DD9C0031D154 /* MessagingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F9572CD6DD9C0031D154 /* MessagingViewModel.swift */; };
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
 		2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2588CC842CCBF1FC00891879 /* CustomMenu.swift */; };
 		259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2252CC02F0D00C9F285 /* Appwrite */; };
@@ -72,6 +74,8 @@
 		0669F9492CD1CCA30031D154 /* MessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingService.swift; sourceTree = "<group>"; };
 		0669F94B2CD6C6460031D154 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		0669F94D2CD6CEB10031D154 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
+		0669F9552CD6D87C0031D154 /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
+		0669F9572CD6DD9C0031D154 /* MessagingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingViewModel.swift; sourceTree = "<group>"; };
 		2588CC842CCBF1FC00891879 /* CustomMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMenu.swift; sourceTree = "<group>"; };
 		259CB2792CC0460400C9F285 /* LocationManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManagerDelegate.swift; sourceTree = "<group>"; };
 		259CB27A2CC0460400C9F285 /* AccountManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManagementService.swift; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				259CB2852CC0465600C9F285 /* UserViewModel.swift */,
+				0669F9572CD6DD9C0031D154 /* MessagingViewModel.swift */,
 				259CB2862CC0465600C9F285 /* AuthViewModel.swift */,
 			);
 			path = ViewModels;
@@ -187,6 +192,7 @@
 				259CB28A2CC0465600C9F285 /* HomeView.swift */,
 				259CB28B2CC0465600C9F285 /* SignupView.swift */,
 				259CB28C2CC0465600C9F285 /* ContentView.swift */,
+				0669F9552CD6D87C0031D154 /* MessagesView.swift */,
 				61E137602CC4AFD600E7BA6C /* ProfileView.swift */,
 			);
 			path = Screens;
@@ -465,6 +471,7 @@
 			files = (
 				0669F94A2CD1CCA30031D154 /* MessagingService.swift in Sources */,
 				259CB27F2CC0460400C9F285 /* AccountManagementService.swift in Sources */,
+				0669F9562CD6D87C0031D154 /* MessagesView.swift in Sources */,
 				259CB2942CC0465600C9F285 /* UserViewModel.swift in Sources */,
 				259CB29B2CC0465600C9F285 /* AppwriteLogo.swift in Sources */,
 				259CB29A2CC0465600C9F285 /* ContentView.swift in Sources */,
@@ -475,6 +482,7 @@
 				259CB2AA2CC0486D00C9F285 /* OrbitApp.swift in Sources */,
 				259CB2A02CC0465600C9F285 /* ErrorView.swift in Sources */,
 				259CB2972CC0465600C9F285 /* LoginView.swift in Sources */,
+				0669F9582CD6DD9C0031D154 /* MessagingViewModel.swift in Sources */,
 				259CB29C2CC0465600C9F285 /* SearchBar.swift in Sources */,
 				2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */,
 				259CB2962CC0465600C9F285 /* MainTabView.swift in Sources */,
