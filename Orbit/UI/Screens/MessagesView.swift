@@ -15,17 +15,17 @@ struct MessagesView: View {
         VStack {
             Button("Create Conversation") {
                 Task {
-                    if let currentUser = userVM.currentUser?.accountId {
-                        await msgVM.createConversation([currentUser,"6726b1ef776f5badc4fe"])
-                        // hard coded to bob
+                    let accountIdBob = "6726b1ef776f5badc4fe"
+                    if let currentAccountId = userVM.currentUser?.accountId {
+                        await msgVM.createConversation([currentAccountId,accountIdBob])
                     }
               }
             }
             .buttonStyle(.borderedProminent)
             Button("Get Conversations") {
                 Task {
-                    if let currentUser = userVM.currentUser?.accountId {
-                        let conversations = await msgVM.getConversations(currentUser)
+                    if let currentAccountId = userVM.currentUser?.accountId {
+                        let conversations = await msgVM.getConversations(currentAccountId)
                         print("conversations \(conversations)")
                     }
               }
@@ -36,8 +36,8 @@ struct MessagesView: View {
             Button("Send Message (Alice)") {
                 Task {
                     let conversationId = "6726fe3b0728578a945a"
-                    if let currentUser = userVM.currentUser?.accountId {
-                        await msgVM.createMessage(conversationId, currentUser, "Hello World")
+                    if let currentAccountId = userVM.currentUser?.accountId {
+                        await msgVM.createMessage(conversationId, currentAccountId, "Hello World")
                     }
               }
             }
@@ -46,9 +46,8 @@ struct MessagesView: View {
             Button("Send Message (Bob)") {
                 Task {
                     let conversationId = "6726fe3b0728578a945a"
-                    if let currentUser = userVM.currentUser?.accountId {
-                        await msgVM.createMessage(conversationId, "6726b1ef776f5badc4fe", "Hello World")
-                    }
+                    let accountIdBob = "6726b1ef776f5badc4fe"
+                    await msgVM.createMessage(conversationId, accountIdBob, "Hello World")
               }
             }
             .buttonStyle(.borderedProminent)
