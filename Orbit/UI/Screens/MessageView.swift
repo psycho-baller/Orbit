@@ -10,13 +10,21 @@ import SwiftUI
 struct MessageView: View {
     var messageArray = ["Hello", "How are you doing", "Makka Pakka Wakka Akka"]
     
+    @EnvironmentObject private var msgVM: MessagingViewModel
+    @EnvironmentObject private var userVM: UserViewModel
+    @State private var messages: [MessageDocument] = []
+    @State private var newMessageText: String = ""
+    let conversationId: String
+    
     var body: some View {
         VStack {
             VStack{
                 ChatProfileTitle(isInMessageView: true)
                 
                 ScrollView{
-                    ForEach(messageArray, id: \.self) { text in MessageBox(message: Message(id: "12345", text: text, received: true , timestamp: Date()))
+                    ForEach(messages, id: \.id) { messageDocument in
+                        let isReceived = messageDocument.data.senderAccountId != (userVM.currentUser?.accountId ?? "")
+                        MessageBox(message: Message(id: messageDocument.id, text: messageDocument.message, received: isReceived , timestamp: Date()))
                         
                     }
                 }
@@ -26,13 +34,36 @@ struct MessageView: View {
             }
             .background(ColorPalette.accent(for: ColorScheme.light))
             
-            MessageField()
+            MessageField(text: $newMessageText, onSend: sendMessage)
             
+        }
+        .onAppear{
+            Task {
+                await loadMessages()
+            }
         }
         
     }
+    
+    private func loadMessages() async {
+        messages = await msgVM.getMessages(conversationId)
+    }
+
+    private func sendMessage() {
+        Task {
+            if let senderId = userVM.currentUser?.accountId {
+                await msgVM.createMessage(conversationId, senderId, newMessageText)
+                newMessageText = ""  // Clear the text field
+                await loadMessages()  // Refresh the messages to show the new one
+            }
+        }
+    }
 }
 
+
+
 #Preview {
-    MessageView()
+    MessageView(conversationId: "exampleConversationId")
+         .environmentObject(UserViewModel.mock())
+         .environmentObject(MessagingViewModel())
 }

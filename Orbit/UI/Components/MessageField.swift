@@ -8,16 +8,15 @@
 import SwiftUI
 
 struct MessageField: View {
-    @State private var message = "" //the state that changes when uesr inputs into message field
+    @Binding var text : String //the state that changes when uesr inputs into message field
+    var onSend: () -> Void
     
     var body: some View {
         HStack{
-            CustomTextField(placeholder: Text("Message..."), text: $message)
+            CustomTextField(placeholder: Text("Message..."), text: $text)
             
-            Button{
-                print("Message sent.")
-                message = ""
-            } label: {
+            Button(action: { onSend()})
+            {
                 Image(systemName: "paperplane.fill")
                     .foregroundColor(.white)
                     .padding(10)
@@ -35,7 +34,9 @@ struct MessageField: View {
 }
 
 #Preview {
-    MessageField()
+    MessageField(text: .constant("")){
+        print("Send button pressed")
+    }
 }
 
 struct CustomTextField: View {
