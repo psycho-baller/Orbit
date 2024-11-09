@@ -23,8 +23,10 @@ struct MessageView: View {
                 
                 ScrollView{
                     ForEach(messages, id: \.id) { messageDocument in
-                        let isReceived = messageDocument.data.senderAccountId != (userVM.currentUser?.accountId ?? "")
-                        MessageBox(message: Message(id: messageDocument.id, text: messageDocument.message, received: isReceived , timestamp: Date()))
+                        if (messageDocument.data.senderAccountId).isEmpty == false {
+                            var isReceived = messageDocument.data.senderAccountId != (userVM.currentUser?.accountId ?? "")
+                            MessageBox(message: Message(id: messageDocument.id, text: messageDocument.message, received: isReceived , timestamp: Date()))
+                        }
                         
                     }
                 }
