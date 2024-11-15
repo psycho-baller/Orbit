@@ -34,6 +34,11 @@
 		25A399692CBF30C700D6BCE8 /* OrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399682CBF30C700D6BCE8 /* OrbitTests.swift */; };
 		25A399732CBF30C700D6BCE8 /* OrbitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399722CBF30C700D6BCE8 /* OrbitUITests.swift */; };
 		25A399752CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399742CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift */; };
+		25D90B052CE6C11000463D67 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B042CE6C11000463D67 /* NotificationService.swift */; };
+		25D90B072CE6CE4B00463D67 /* ChatRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */; };
+		25D90B092CE6D7ED00463D67 /* ChatRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */; };
+		25D90B0B2CE6EB3800463D67 /* ChatRequestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B0A2CE6EB3800463D67 /* ChatRequestViewModel.swift */; };
+		25D90B0D2CE6EC3100463D67 /* ChatRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B0C2CE6EC3000463D67 /* ChatRequestView.swift */; };
 		25DC74F92CC0522300731939 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74E82CC0522300731939 /* Localizable.strings */; };
 		25DC74FA2CC0522300731939 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74EA2CC0522300731939 /* LaunchScreen.storyboard */; };
 		25DC74FB2CC0522300731939 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74EE2CC0522300731939 /* Assets.xcassets */; };
@@ -99,6 +104,11 @@
 		25A3996E2CBF30C700D6BCE8 /* OrbitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		25A399722CBF30C700D6BCE8 /* OrbitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitUITests.swift; sourceTree = "<group>"; };
 		25A399742CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		25D90B042CE6C11000463D67 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestModel.swift; sourceTree = "<group>"; };
+		25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestService.swift; sourceTree = "<group>"; };
+		25D90B0A2CE6EB3800463D67 /* ChatRequestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestViewModel.swift; sourceTree = "<group>"; };
+		25D90B0C2CE6EC3000463D67 /* ChatRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestView.swift; sourceTree = "<group>"; };
 		25DC74E92CC0522300731939 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		25DC74EB2CC0522300731939 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		25DC74EC2CC0522300731939 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -154,6 +164,8 @@
 		259CB2782CC0460400C9F285 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */,
+				25D90B042CE6C11000463D67 /* NotificationService.swift */,
 				259CB2792CC0460400C9F285 /* PreciseLocationManagerDelegate.swift */,
 				25E1ABC02CD004F500F27722 /* CampusLocationManagerDelegate.swift */,
 				259CB27A2CC0460400C9F285 /* AccountManagementService.swift */,
@@ -177,6 +189,7 @@
 		259CB2842CC0465600C9F285 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				25D90B0A2CE6EB3800463D67 /* ChatRequestViewModel.swift */,
 				259CB2852CC0465600C9F285 /* UserViewModel.swift */,
 				259CB2862CC0465600C9F285 /* AuthViewModel.swift */,
 			);
@@ -189,6 +202,7 @@
 				259CB2882CC0465600C9F285 /* MainTabView.swift */,
 				259CB2892CC0465600C9F285 /* LoginView.swift */,
 				259CB28A2CC0465600C9F285 /* HomeView.swift */,
+				25D90B0C2CE6EC3000463D67 /* ChatRequestView.swift */,
 				259CB28B2CC0465600C9F285 /* SignupView.swift */,
 				259CB28C2CC0465600C9F285 /* ContentView.swift */,
 				61E137602CC4AFD600E7BA6C /* ProfileView.swift */,
@@ -213,6 +227,7 @@
 		259CB2A12CC046F300C9F285 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */,
 				25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */,
 				259CB2A22CC046F300C9F285 /* UserModels.swift */,
 				25E1ABC22CD00FAD00F27722 /* AreaModel.swift */,
@@ -474,6 +489,7 @@
 				259CB2942CC0465600C9F285 /* UserViewModel.swift in Sources */,
 				259CB29B2CC0465600C9F285 /* AppwriteLogo.swift in Sources */,
 				259CB29A2CC0465600C9F285 /* ContentView.swift in Sources */,
+				25D90B072CE6CE4B00463D67 /* ChatRequestModel.swift in Sources */,
 				259CB29D2CC0465600C9F285 /* InterestsHorizontalTags.swift in Sources */,
 				259CB2812CC0460400C9F285 /* UserManagementService.swift in Sources */,
 				25E1ABC32CD00FAD00F27722 /* AreaModel.swift in Sources */,
@@ -486,10 +502,14 @@
 				2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */,
 				259CB2962CC0465600C9F285 /* MainTabView.swift in Sources */,
 				25E1ABC12CD004F500F27722 /* CampusLocationManagerDelegate.swift in Sources */,
+				25D90B052CE6C11000463D67 /* NotificationService.swift in Sources */,
+				25D90B092CE6D7ED00463D67 /* ChatRequestService.swift in Sources */,
 				259CB2A82CC047D000C9F285 /* LazyList.swift in Sources */,
+				25D90B0D2CE6EC3100463D67 /* ChatRequestView.swift in Sources */,
 				259CB2952CC0465600C9F285 /* AuthViewModel.swift in Sources */,
 				259CB27E2CC0460400C9F285 /* PreciseLocationManagerDelegate.swift in Sources */,
 				259CB2A72CC047D000C9F285 /* Extensions.swift in Sources */,
+				25D90B0B2CE6EB3800463D67 /* ChatRequestViewModel.swift in Sources */,
 				259CB2992CC0465600C9F285 /* SignupView.swift in Sources */,
 				25ECBA202CD1B1F300256104 /* UserLocationModel.swift in Sources */,
 				259CB2A32CC046F300C9F285 /* UserModels.swift in Sources */,

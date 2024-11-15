@@ -19,7 +19,7 @@ struct HomeView: View {
                     displayMode: .automatic
                 )
                 .sheet(item: $selectedUser) { user in  // Show the chat request sheet
-                    ChatRequestView(user: user)
+                    ChatRequestView(sender: userVM.currentUser, receiver: user)
                 }
                 .background(ColorPalette.background(for: colorScheme))
 
@@ -204,49 +204,6 @@ struct HomeView: View {
                 #endif
             }
         }
-    }
-}
-
-// MARK: - Chat Request View
-struct ChatRequestView: View {
-    let user: UserModel
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("Request to Chat with \(user.name)")
-                .font(.title)
-                .padding()
-                .foregroundColor(ColorPalette.text(for: colorScheme))
-
-            Text(
-                "Interests: \(user.interests?.joined(separator: ", ") ?? "No interests available")"
-            )
-            .foregroundColor(ColorPalette.text(for: colorScheme))
-
-            Button(action: {
-                // Logic to send chat request goes here
-            }) {
-                Text("Send Chat Request")
-                    .foregroundColor(ColorPalette.text(for: colorScheme))
-                    .padding()
-                    .background(ColorPalette.button(for: colorScheme))
-                    .cornerRadius(10)
-            }
-
-            Button(action: {
-                dismiss()
-            }) {
-                Text("Cancel")
-                    .foregroundColor(ColorPalette.accent(for: colorScheme))
-                    .padding()
-            }
-        }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(ColorPalette.background(for: colorScheme))
-        .cornerRadius(15)
     }
 }
 

@@ -22,9 +22,9 @@ class AppwriteService: AppwriteServiceProtocol {
     let databases: Databases
     let storage: Storage
     let realtime: Realtime
+    let messaging: Messaging
 
     let databaseId = "orbit"
-    let collectionId = "users"
     let bucketId = "userAssets"
     //    var functionId = "YOUR_FUNCTION_ID"
     //    var executionId = ""
@@ -47,6 +47,7 @@ class AppwriteService: AppwriteServiceProtocol {
         databases = Databases(client)
         storage = Storage(client)
         realtime = Realtime(client)
+        messaging = Messaging(client)
 
     }
 }

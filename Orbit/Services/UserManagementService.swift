@@ -23,6 +23,7 @@ protocol UserManagementServiceProtocol {
 
 class UserManagementService: UserManagementServiceProtocol {
     private let appwriteService: AppwriteService = AppwriteService.shared
+    private let collectionId = "users"
 
     //    init(appwriteService: AppwriteService) {
     //        self.appwriteService = appwriteService
@@ -31,13 +32,13 @@ class UserManagementService: UserManagementServiceProtocol {
     // Create
     func createUser(_ user: UserModel) async throws -> UserDocument {
 
-        print(appwriteService.collectionId, appwriteService.databaseId)
+        print(collectionId, appwriteService.databaseId)
 
         let document = try await appwriteService.databases.createDocument<
             UserModel
         >(
             databaseId: appwriteService.databaseId,
-            collectionId: appwriteService.collectionId,
+            collectionId: collectionId,
             documentId: ID.unique(),
             data: user.toJson(),
             permissions: nil,  // [Appwrite.Permission.write(Role.user(user.accountId))],
@@ -60,7 +61,7 @@ class UserManagementService: UserManagementServiceProtocol {
             UserModel
         >(
             databaseId: appwriteService.databaseId,
-            collectionId: appwriteService.collectionId,
+            collectionId: collectionId,
             queries: [query],
             nestedType: UserModel.self
 
@@ -96,7 +97,7 @@ class UserManagementService: UserManagementServiceProtocol {
         let updatedDocument = try await appwriteService.databases
             .updateDocument<UserModel>(
                 databaseId: appwriteService.databaseId,
-                collectionId: appwriteService.collectionId,
+                collectionId: collectionId,
                 documentId: documentId,  // Use the documentId instead of accountId
                 data: updatedUser.toJson(),
                 permissions: nil,
@@ -118,7 +119,7 @@ class UserManagementService: UserManagementServiceProtocol {
         // Perform the delete operation using the documentId
         try await appwriteService.databases.deleteDocument(
             databaseId: appwriteService.databaseId,
-            collectionId: appwriteService.collectionId,
+            collectionId: collectionId,
             documentId: documentId  // Use the documentId instead of accountId
         )
     }
@@ -129,7 +130,7 @@ class UserManagementService: UserManagementServiceProtocol {
             UserModel
         >(
             databaseId: appwriteService.databaseId,
-            collectionId: appwriteService.collectionId,
+            collectionId: collectionId,
             queries: queries,
             nestedType: UserModel.self
 
