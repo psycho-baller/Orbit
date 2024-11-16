@@ -30,10 +30,10 @@ struct MessageBox: View {
                     }
                     
                     if showTime{
-                        Text(message.createdAt)
-                            .regularFont()
-                            .foregroundColor(.gray)
-                            .padding(isReceived ? .leading : .trailing, 25)
+//                        Text(message.createdAt)
+//                            .regularFont()
+//                            .foregroundColor(.gray)
+//                            .padding(isReceived ? .leading : .trailing, 25)
                     }
                     
                     
@@ -45,5 +45,5 @@ struct MessageBox: View {
 }
 
 #Preview {
-    MessageBox(message: MessageModel(conversationId: "12345", senderAccountId: "fdjkghkdfj", message: "I am the skibidi sigma. From the screen to the ring to the pen to the king.", createdAt: "15/01/2024 9:34 AM", isRead: true), currentUser: UserModel(accountId: "sdghkjghkdfj", name: "Allen", interests: ["Pooping"], latitude: 752.56, longitude: 65.67, isInterestedToMeet: false, conversations: ["gdfgdsg"]))
+    MessageBox(message: MessageModel(conversationId: "12345", senderAccountId: "fdjkghkdfj", message: "I am the skibidi sigma. From the screen to the ring to the pen to the king.", isRead: true), currentUser: UserModel(accountId: "sdghkjghkdfj", name: "Allen", interests: ["Pooping"], latitude: 752.56, longitude: 65.67, isInterestedToMeet: false, conversations: ["gdfgdsg"]))
 }

@@ -11,10 +11,6 @@ import Appwrite
 
 struct ConversationModel: Codable {
     let participants: [String]?
-    
-    init(participants: [String]) {
-        self.participants = participants
-    }
 }
 
 typealias ConversationDocument = AppwriteModels.Document<ConversationModel>
