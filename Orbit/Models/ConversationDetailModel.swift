@@ -12,6 +12,7 @@ struct ConversationDetailModel: Identifiable {
     let messagerName: String
     let lastMessage: String
     let timestamp: String
+    let isRead: Bool
     
    
 }

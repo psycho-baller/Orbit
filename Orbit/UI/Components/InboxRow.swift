@@ -11,6 +11,7 @@ struct InboxRow: View {
     var messagerName: String
     var lastMessage: String
     var timestamp: String
+    var isRead: Bool
     
     var body: some View {
         HStack(alignment: .top, spacing: 12){
@@ -20,6 +21,10 @@ struct InboxRow: View {
                 .foregroundColor(Color(.systemGray4))
             
             VStack (alignment: .leading, spacing: 4){
+                if !isRead {
+                    Circle()
+                        .fill(ColorPalette.button(for: ColorScheme.light))
+                }
                 Text(messagerName)
                     .normalSemiBoldFont()
                 
@@ -45,5 +50,5 @@ struct InboxRow: View {
 }
 
 #Preview {
-    InboxRow(messagerName: "Makka Pakka", lastMessage: "Makka Pakka Wakka Akka. Makka Pakka is coming for you", timestamp: "Yesterday" )
+    InboxRow(messagerName: "Makka Pakka", lastMessage: "Makka Pakka Wakka Akka. Makka Pakka is coming for you", timestamp: "Yesterday", isRead: false )
 }

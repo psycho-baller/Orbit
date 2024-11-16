@@ -15,6 +15,7 @@ protocol MessagingServiceProtocol {
     func getParticipants(for conversationId: String) async throws -> [String]
     func subscribeToMessages(conversationId: String, onNewMessage: @escaping (MessageDocument) -> Void) async throws
     func unsubscribeFromMesages() async
+    func markMessagesRead(conversationId: String) async throws
 }
 
 class MessagingService: MessagingServiceProtocol {
@@ -119,6 +120,39 @@ class MessagingService: MessagingServiceProtocol {
         } catch {
             print("Failed to unscubscirbe from real time messages: \(error.localizedDescription)")
         }
+    }
+    
+    func markMessagesRead(conversationId: String) async throws {  //get all messages in the particular conversation that are marked as isRead = false
+        let queries = [
+            Query.equal("conversationId", value: conversationId),
+            Query.equal("isRead", value: false)
+        ]
+        
+        let messages = try await appwriteService.databases.listDocuments<MessageModel>(  //getting messages based on queries
+            databaseId: appwriteService.databaseId,
+            collectionId: appwriteService.COLLECTION_ID_MESSAGES,
+            queries: queries,
+            nestedType: MessageModel.self
+        )
+        
+        for message in messages.documents {
+            
+            let updatedMessage = MessageModel(
+                conversationId: message.data.conversationId,
+                senderAccountId: message.data.senderAccountId,
+                message: message.data.message,
+                createdAt: message.data.createdAt,
+                isRead: true
+            )
+            
+            try await appwriteService.databases.updateDocument(
+                databaseId: appwriteService.databaseId,
+                collectionId: appwriteService.COLLECTION_ID_MESSAGES,
+                documentId: message.id,
+                data: updatedMessage.toJson())
+        }
+        
+        
     }
     
 }

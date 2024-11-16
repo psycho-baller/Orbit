@@ -14,6 +14,7 @@ struct InboxView: View {
     @State private var showNewMessageView = false
     @State private var conversations: [ConversationDetailModel] = []
     @Binding var isTabHidden: Bool
+    @State private var subscriptionTask: Task<Void, Never>?
     
     var body: some View {
         NavigationStack{
@@ -92,8 +93,12 @@ struct InboxView: View {
                 print("InboxView - onAppear: UserViewModel currentUser: \(userVM.currentUser?.accountId ?? "nil")")
                 Task {
                    await loadConversations()
+                    subscribeToMessages()
 
                 }
+            }
+            .onDisappear{
+                //subscriptionTask?.cancel()
             }
         }.background(ColorPalette.background(for: ColorScheme.light))
     }
@@ -107,6 +112,17 @@ struct InboxView: View {
             print("Loaded Conversations")
         }else {
             print("User ID not found")
+        }
+    }
+    
+    
+    private func subscribeToMessages(){
+        subscriptionTask = Task {
+            await msgVM.subscribeToMessages(conversationId: "") { _ in
+                Task {
+                    await loadConversations()
+                }
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct ChatProfileTitle: View {
-    var name: String = "Allen the Alien"
+    let messagerName: String
     var isInMessageView: Bool
     
     var body: some View {
@@ -24,7 +24,7 @@ struct ChatProfileTitle: View {
             
         
             VStack(alignment: .leading){
-                Text(name)
+                Text(messagerName)
                     .normalSemiBoldFont()
                    
             }
@@ -38,6 +38,6 @@ struct ChatProfileTitle: View {
 }
 
 #Preview {
-    ChatProfileTitle(isInMessageView: true)
+    ChatProfileTitle(messagerName: "Allen the Alien", isInMessageView: true)
         .background(ColorPalette.accent(for: ColorScheme.light))
 }

@@ -17,12 +17,13 @@ struct MessageView: View {
     let conversationId: String
     @Binding var isTabHidden: Bool
     @State private var lastMessageId: String? = nil
+    let messagerName: String
 
     
     var body: some View {
         VStack {
             VStack{
-                ChatProfileTitle(isInMessageView: true)
+                ChatProfileTitle(messagerName: messagerName, isInMessageView: true)
                 ScrollViewReader {proxy in
                     ScrollView{
                         ForEach($messages, id: \.id) {$messageDocument in
@@ -60,6 +61,7 @@ struct MessageView: View {
             Task {
                 await loadMessages()
                 await subscribeToMessages()
+                await msgVM.markMessagesRead(conversationId: conversationId)  //should mark all messages in the conversation as read upon being in this view
             }
         }
         .onDisappear{
@@ -107,15 +109,13 @@ struct MessageView: View {
         }
     }
     
-    static func isEqual(_ lhs: MessageDocument,_ rhs: MessageDocument) -> Bool {
-        lhs.id == rhs.id
-    }
+  
 }
 
 
 
 #Preview {
-    MessageView(conversationId: "exampleConversationId", isTabHidden: .constant(false))
+    MessageView(conversationId: "exampleConversationId", isTabHidden: .constant(false), messagerName: "Allen the Alien")
          .environmentObject(UserViewModel.mock())
          .environmentObject(MessagingViewModel())
 }

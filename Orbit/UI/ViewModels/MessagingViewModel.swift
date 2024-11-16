@@ -123,12 +123,14 @@ class MessagingViewModel: ObservableObject{
                         print("The last message is \(lastMessage)")
                         let timestamp = formatTimestamp(lastMessage.data.createdAt)
                         print("The timestamp is \(timestamp)")
+                        let isRead = lastMessage.data.isRead
                         
                         let conversationDetail = ConversationDetailModel(
                             id: conversationId,
                             messagerName: messagerName,
                             lastMessage: lastMessage.data.message,
-                            timestamp: timestamp
+                            timestamp: timestamp,
+                            isRead: isRead
                         )
                         conversationDetails.append(conversationDetail)
                     }
@@ -138,6 +140,7 @@ class MessagingViewModel: ObservableObject{
             }
         } 
         
+        conversationDetails.sort {$0.timestamp > $1.timestamp}  //sorts conversations in descending order so that the conversations with the latest message are at the top
         return conversationDetails
     }
     
@@ -190,6 +193,16 @@ class MessagingViewModel: ObservableObject{
     
     func unsubscribeFromMessages() async {
         await messagingService.unsubscribeFromMesages()
+    }
+    
+    @MainActor
+    func markMessagesRead(conversationId: String) async {
+        do {
+            try await messagingService.markMessagesRead(conversationId: conversationId)
+            print("MessagingViewModel - marked all messages as read in conversation \(conversationId)")
+        } catch {
+            print("MessagingViewModel - failed to mark messages as read: \(error.localizedDescription)")
+        }
     }
     
     

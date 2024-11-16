@@ -16,7 +16,7 @@ struct ChatProfileView: View {
         
             VStack {
                 VStack{
-                    ChatProfileTitle(isInMessageView: false)
+                    ChatProfileTitle(messagerName: name, isInMessageView: false)
                     
                     VStack{
                         
