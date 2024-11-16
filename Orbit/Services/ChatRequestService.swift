@@ -90,7 +90,7 @@ class ChatRequestService: ChatRequestServiceProtocol {
     func getMeetUpRequests(
         userId: String, limit: Int? = nil, offset: Int? = nil
     ) async throws -> [ChatRequestDocument] {
-        let queries = Query.equal("senderAccountId", value: userId)
+        let queries = Query.equal("receiverAccountId", value: userId)
         let response = try await appwriteService.databases.listDocuments<
             ChatRequestModel
         >(
