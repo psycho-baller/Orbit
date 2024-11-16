@@ -116,7 +116,7 @@ struct InboxView: View {
     }
     
     
-    private func subscribeToMessages(){
+    private func subscribeToMessages(){  //meant to listen for new messages and reload the page, this isn't fully working yet
         subscriptionTask = Task {
             await msgVM.subscribeToMessages(conversationId: "") { _ in
                 Task {
