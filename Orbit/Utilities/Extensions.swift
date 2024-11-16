@@ -120,9 +120,9 @@ struct ColorPalette {
 
 extension AppwriteModels.Document: @retroactive Identifiable
 where T: Identifiable, T.ID == String {
-    public var id: String {
-        return data.id
-    }
+    //    public var id: String {
+    //        return self.id
+    //    }
 }
 
 //struct ColorPalette {

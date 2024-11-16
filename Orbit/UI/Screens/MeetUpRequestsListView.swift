@@ -45,7 +45,7 @@ struct MeetUpRequestsListView: View {
                             destination: MeetUpRequestDetailsView(
                                 request: request
                             )
-                            .environmentObject(chatRequestVM)
+                            //                            .environmentObject(chatRequestVM)
                             //                            .environmentObject(messagingVM)
                         ) {
                             MeetUpRequestRow(request: request)

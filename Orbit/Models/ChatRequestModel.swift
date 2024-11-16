@@ -10,7 +10,7 @@ import Foundation
 
 struct ChatRequestModel: Codable, Identifiable {
     var id: String {
-        return "\(senderAccountId)_\(receiverAccountId)"
+        return "\(senderAccountId)_\(receiverAccountId)_\(message)"
     }
     var senderAccountId: String  // ID of the user sending the request
     var receiverAccountId: String  // ID of the user receiving the request
@@ -26,10 +26,9 @@ struct ChatRequestModel: Codable, Identifiable {
 
 typealias ChatRequestDocument = AppwriteModels.Document<ChatRequestModel>
 
-
 //struct IdentifiableDocument<T: Identifiable & Codable>: Identifiable {
 //    let document: AppwriteModels.Document<T>
-//    
+//
 //    var id: T.ID {
 //        return document.data.id
 //    }
