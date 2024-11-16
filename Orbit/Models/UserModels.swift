@@ -11,7 +11,7 @@ import CoreLocation
 import Foundation
 import UIKit
 
-struct UserModel: Codable, Identifiable {
+struct UserModel: Codable, Identifiable, Equatable {
     let accountId: String
     var id: String {
         return accountId
@@ -24,8 +24,9 @@ struct UserModel: Codable, Identifiable {
     var conversations: [String]?
     
 
-    
-
+    static func == (lhs: UserModel, rhs: UserModel) -> Bool {
+        return lhs.accountId == rhs.accountId
+    }
     
     init(accountId: String, name: String, interests: [String]? = nil, latitude: Double? = nil, longitude: Double? = nil, isInterestedToMeet: Bool? = nil, conversations: [String]?=nil) {
             self.accountId = accountId
@@ -37,6 +38,8 @@ struct UserModel: Codable, Identifiable {
             self.conversations=conversations
         
     }
+    
+    
         
     var profileImageURL: URL?
        var currentAreaId: String?  // References Area collection

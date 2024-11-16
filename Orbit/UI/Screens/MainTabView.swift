@@ -17,6 +17,7 @@ struct MainTabView: View {
     
     @State private var selectedIndex = 0
     @State private var prevSelectedIndex = 0
+    @State private var isTabHidden = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -28,7 +29,12 @@ struct MainTabView: View {
                     }
                 } else if selectedIndex == 1 {
                     NavigationView {
-                        MessagesView()
+                        InboxView(isTabHidden: $isTabHidden)
+                            .environmentObject(userViewModel)
+                        
+                    }
+                    .task {
+                        await userViewModel.initialize()
                     }
                 } else if selectedIndex == 2 {
                     NavigationView {
@@ -49,23 +55,26 @@ struct MainTabView: View {
                 }
             }
             
-            // Animated Tab Bar
-            AnimatedTabBar(selectedIndex: $selectedIndex, prevSelectedIndex: $prevSelectedIndex) {
-                tabButtonAt(0, icon: "house.fill", title: "Home")
-                tabButtonAt(1, icon: "message.fill", title: "Messages")
-                tabButtonAt(2, icon: "star.fill", title: "Tab 3")
-                tabButtonAt(3, icon: "gearshape.fill", title: "Tab 4")
-                tabButtonAt(4, icon: "person.circle.fill", title: "Profile")
+            if !isTabHidden {
+                // Animated Tab Bar
+                AnimatedTabBar(selectedIndex: $selectedIndex, prevSelectedIndex: $prevSelectedIndex) {
+                    tabButtonAt(0, icon: "house.fill", title: "Home")
+                    tabButtonAt(1, icon: "message.fill", title: "Messages")
+                    tabButtonAt(2, icon: "star.fill", title: "Tab 3")
+                    tabButtonAt(3, icon: "gearshape.fill", title: "Tab 4")
+                    tabButtonAt(4, icon: "person.circle.fill", title: "Profile")
+                }
+                .cornerRadius(16)
+                .selectedColor(ColorPalette.selectedItem(for: colorScheme))
+                .unselectedColor(ColorPalette.secondaryText(for: colorScheme))
+                .ballColor(ColorPalette.selectedItem(for: colorScheme))
+                .verticalPadding(20)
+                .ballTrajectory(.straight)
+                .ballAnimation(.interpolatingSpring(stiffness: 130, damping: 15))
+                .indentAnimation(.easeOut(duration: 0.3))
+                .barColor(ColorPalette.accent(for: colorScheme))
+                
             }
-            .cornerRadius(16)
-            .selectedColor(ColorPalette.selectedItem(for: colorScheme))
-            .unselectedColor(ColorPalette.secondaryText(for: colorScheme))
-            .ballColor(ColorPalette.selectedItem(for: colorScheme))
-            .verticalPadding(20)
-            .ballTrajectory(.straight)
-            .ballAnimation(.interpolatingSpring(stiffness: 130, damping: 15))
-            .indentAnimation(.easeOut(duration: 0.3))
-            .barColor(ColorPalette.accent(for: colorScheme))
         }
         .edgesIgnoringSafeArea(.bottom)
     }

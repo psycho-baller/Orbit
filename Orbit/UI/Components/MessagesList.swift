@@ -8,10 +8,23 @@
 import SwiftUI
 
 struct MessagesList: View {
+    var conversations: [ConversationDetailModel]  //input
+    @Binding var isTabHidden: Bool
+
+    
     var body: some View {
         List{
-            ForEach(0 ... 10, id: \.self){
-                message in InboxRow()
+            ForEach(conversations){conversation in
+                NavigationLink(destination: MessageView(conversationId: conversation.id, isTabHidden: $isTabHidden)
+                ){
+                    InboxRow(
+                        messagerName: conversation.messagerName, 
+                        lastMessage: conversation.lastMessage,
+                        timestamp: conversation.timestamp
+                    )
+                    
+                }
+               
             }
         }
         .listStyle(PlainListStyle())
@@ -20,5 +33,8 @@ struct MessagesList: View {
 }
 
 #Preview {
-    MessagesList()
+    MessagesList(conversations: [
+        ConversationDetailModel(id: "conv1", messagerName: "John Doe", lastMessage: "Hey, how's it going?", timestamp: "Today"),
+        ConversationDetailModel(id: "conv2", messagerName: "Jane Smith", lastMessage: "Can we meet tomorrow?", timestamp: "Yesterday")
+    ], isTabHidden: .constant(false))
 }

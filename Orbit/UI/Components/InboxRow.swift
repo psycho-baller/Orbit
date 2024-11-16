@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct InboxRow: View {
+    var messagerName: String
+    var lastMessage: String
+    var timestamp: String
+    
     var body: some View {
         HStack(alignment: .top, spacing: 12){
             Image(systemName: "person.circle.fill")
@@ -16,10 +20,10 @@ struct InboxRow: View {
                 .foregroundColor(Color(.systemGray4))
             
             VStack (alignment: .leading, spacing: 4){
-                Text("Makka Pakka")
+                Text(messagerName)
                     .normalSemiBoldFont()
                 
-                Text("Makka Pakka Wakka Akka. Makka Pakka is coming for you")
+                Text(lastMessage)
                     .regularFont()
                     .foregroundColor(.gray)
                     .lineLimit(2)
@@ -27,7 +31,7 @@ struct InboxRow: View {
             }
             
             HStack{
-                Text("Yesterday")
+                Text(timestamp)
                 Image(systemName: "chevron.right")
             }
             .font(.footnote)
@@ -41,5 +45,5 @@ struct InboxRow: View {
 }
 
 #Preview {
-    InboxRow()
+    InboxRow(messagerName: "Makka Pakka", lastMessage: "Makka Pakka Wakka Akka. Makka Pakka is coming for you", timestamp: "Yesterday" )
 }

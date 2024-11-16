@@ -23,6 +23,7 @@ class AppwriteService: AppwriteServiceProtocol {
     let databases: Databases
     let storage: Storage
     let realtime: Realtime
+    let realtime2: Realtime
 
     let databaseId = "orbit"
     let collectionId = "users"
@@ -39,7 +40,7 @@ class AppwriteService: AppwriteServiceProtocol {
 
     static let shared = AppwriteService()
     
-    
+       
     init() {
 
         self.client = Client()
@@ -51,6 +52,7 @@ class AppwriteService: AppwriteServiceProtocol {
         self.databases = Databases(client)
         self.storage = Storage(client)
         self.realtime = Realtime(client)
+        self.realtime2 = Realtime(client)
 
     }
 }

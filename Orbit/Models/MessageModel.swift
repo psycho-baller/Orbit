@@ -7,8 +7,10 @@
 
 import Foundation
 import Appwrite
+import AppwriteModels
 
-struct MessageModel: Codable {
+
+struct MessageModel: Codable, Equatable{
     let conversationId: String
     let senderAccountId: String
     let message: String
@@ -23,6 +25,19 @@ struct MessageModel: Codable {
         self.createdAt = createdAt
         self.isRead = isRead
     }
+    
+   
+    
+}
+
+struct CustomMessageDocument: Identifiable, Decodable {
+    let id: String
+    let data: MessageModel
 }
 
 typealias MessageDocument = AppwriteModels.Document<MessageModel>
+
+
+
+
+

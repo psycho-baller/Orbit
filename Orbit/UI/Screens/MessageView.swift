@@ -15,21 +15,37 @@ struct MessageView: View {
     @State private var messages: [MessageDocument] = []
     @State private var newMessageText: String = ""
     let conversationId: String
+    @Binding var isTabHidden: Bool
+    @State private var lastMessageId: String? = nil
+
     
     var body: some View {
         VStack {
             VStack{
                 ChatProfileTitle(isInMessageView: true)
-                
-                ScrollView{
-                    ForEach(messages, id: \.id) { messageDocument in
-                        if (messageDocument.data.senderAccountId).isEmpty == false {
-                            var isReceived = messageDocument.data.senderAccountId != (userVM.currentUser?.accountId ?? "")
-                            MessageBox(message: Message(id: messageDocument.id, text: messageDocument.message, received: isReceived , timestamp: Date()))
+                ScrollViewReader {proxy in
+                    ScrollView{
+                        ForEach($messages, id: \.id) {$messageDocument in
+                            let status = messageDocument.data.senderAccountId.isEmpty
+                            if !status{
+                                //let isReceived = messageDocument.data.senderAccountId != (userVM.currentUser?.accountId ?? "")
+                                MessageBox(message: MessageModel(conversationId: messageDocument.data.conversationId, senderAccountId: messageDocument.data.senderAccountId, message: messageDocument.data.message , createdAt: msgVM.formatTimestamp(messageDocument.data.createdAt)), currentUser: UserModel(accountId: userVM.currentUser?.accountId ?? "123", name: userVM.currentUser?.name ?? "Name", interests: userVM.currentUser?.interests, latitude: userVM.currentUser?.latitude, longitude: userVM.currentUser?.longitude, isInterestedToMeet: userVM.currentUser?.isInterestedToMeet, conversations: userVM.currentUser?.conversations))
+                                
+                                    .id(messageDocument.id)
+                            }
+                            
                         }
+                    }
+                    .onChange(of: lastMessageId) {oldMessageId, newMessageId in
                         
+                        if let id = newMessageId {
+                            withAnimation{
+                                proxy.scrollTo(id, anchor: .bottom)
+                            }
+                        }
                     }
                 }
+            
                 .padding(.top, 10)
                 .background(.white)
                 .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
@@ -40,32 +56,66 @@ struct MessageView: View {
             
         }
         .onAppear{
+            isTabHidden = true
             Task {
                 await loadMessages()
+                await subscribeToMessages()
+            }
+        }
+        .onDisappear{
+            isTabHidden = false
+            Task{
+                await msgVM.unsubscribeFromMessages()
             }
         }
         
     }
     
     private func loadMessages() async {
+        
         messages = await msgVM.getMessages(conversationId)
+        if let lastMessage = messages.last{
+            lastMessageId = lastMessage.id
+        }
     }
 
     private func sendMessage() {
         Task {
             if let senderId = userVM.currentUser?.accountId {
                 await msgVM.createMessage(conversationId, senderId, newMessageText)
-                newMessageText = ""  // Clear the text field
+                DispatchQueue.main.async {
+                    self.newMessageText = ""
+                }
                 await loadMessages()  // Refresh the messages to show the new one
             }
         }
+    }
+    
+    private func subscribeToMessages() async {
+        await msgVM.subscribeToMessages(conversationId: conversationId) {
+            newMessage in
+            DispatchQueue.main.async{
+                print("Received new message: \(newMessage.data.message)")
+                if !self.messages.contains(where: {$0.id == newMessage.id}){
+                    self.messages.append(newMessage)
+                    self.messages.sort { $0.data.createdAt < $1.data.createdAt }
+                    self.lastMessageId = newMessage.id
+                    
+                }
+                
+            }
+        }
+    }
+    
+    static func isEqual(_ lhs: MessageDocument,_ rhs: MessageDocument) -> Bool {
+        lhs.id == rhs.id
     }
 }
 
 
 
 #Preview {
-    MessageView(conversationId: "exampleConversationId")
+    MessageView(conversationId: "exampleConversationId", isTabHidden: .constant(false))
          .environmentObject(UserViewModel.mock())
          .environmentObject(MessagingViewModel())
 }

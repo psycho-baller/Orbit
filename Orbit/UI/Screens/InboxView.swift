@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct InboxView: View {
+    @EnvironmentObject private var msgVM: MessagingViewModel
+    @EnvironmentObject private var userVM: UserViewModel
     @State private var selectedTab: MessageTab = .messages
     @State private var showNewMessageView = false
+    @State private var conversations: [ConversationDetailModel] = []
+    @Binding var isTabHidden: Bool
     
     var body: some View {
         NavigationStack{
@@ -42,11 +46,25 @@ struct InboxView: View {
                     
                 }
                 
-                MessagesList()
+                if userVM.currentUser == nil {
+                    ProgressView("Loading User Info")
+                }else{
+                    MessagesList(conversations: conversations, isTabHidden: $isTabHidden)
+                }
                 
                 
             }
-            .fullScreenCover(isPresented: $showNewMessageView, content: {Text("New Message")})
+            .onChange(of: userVM.currentUser){
+                if userVM.currentUser == nil{
+                    print("Still loading user")
+                } else{
+                    Task{
+                        await loadConversations()
+                    }
+                }
+              
+            }
+            //.navigationTitle("Messages")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack{
@@ -69,7 +87,27 @@ struct InboxView: View {
                     }
                 }
             }
+            .fullScreenCover(isPresented: $showNewMessageView, content: {Text("New Message")})
+            .onAppear{
+                print("InboxView - onAppear: UserViewModel currentUser: \(userVM.currentUser?.accountId ?? "nil")")
+                Task {
+                   await loadConversations()
+
+                }
+            }
         }.background(ColorPalette.background(for: ColorScheme.light))
+    }
+    
+    private func loadConversations() async {
+        print("Loading Conversations")
+        
+        if let userId = userVM.currentUser?.accountId {
+            print("User ID: \(userId)")
+            conversations = await msgVM.getConversationDetails(userId)
+            print("Loaded Conversations")
+        }else {
+            print("User ID not found")
+        }
     }
 }
 
@@ -79,5 +117,8 @@ enum MessageTab: String{
 }
 
 #Preview {
-    InboxView()
+    InboxView(isTabHidden: .constant(false))
+        .environmentObject(UserViewModel.mock())
+        .environmentObject(MessagingViewModel())
+    
 }
