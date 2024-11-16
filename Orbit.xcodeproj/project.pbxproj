@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		000AE7432CD5E71700431CDB /* ChatProfileTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000AE7422CD5E71700431CDB /* ChatProfileTitle.swift */; };
 		000AE7452CD5F3BA00431CDB /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000AE7442CD5F3BA00431CDB /* MessageView.swift */; };
-		000AE7472CD5F49400431CDB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000AE7462CD5F49400431CDB /* Message.swift */; };
 		000AE7492CD5F5DD00431CDB /* MessageBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000AE7482CD5F5DD00431CDB /* MessageBox.swift */; };
 		005518CF2CE6E5A000F3E92B /* ConversationDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005518CE2CE6E5A000F3E92B /* ConversationDetailModel.swift */; };
 		0088BFDF2CD853E0002B4B9D /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0088BFDE2CD853E0002B4B9D /* MessageField.swift */; };
@@ -88,7 +87,6 @@
 /* Begin PBXFileReference section */
 		000AE7422CD5E71700431CDB /* ChatProfileTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatProfileTitle.swift; sourceTree = "<group>"; };
 		000AE7442CD5F3BA00431CDB /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		000AE7462CD5F49400431CDB /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		000AE7482CD5F5DD00431CDB /* MessageBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBox.swift; sourceTree = "<group>"; };
 		005518CE2CE6E5A000F3E92B /* ConversationDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDetailModel.swift; sourceTree = "<group>"; };
 		0088BFDE2CD853E0002B4B9D /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
@@ -259,7 +257,6 @@
 				0669F94B2CD6C6460031D154 /* MessageModel.swift */,
 				0669F94D2CD6CEB10031D154 /* ConversationModel.swift */,
 				25E1ABC22CD00FAD00F27722 /* AreaModel.swift */,
-				000AE7462CD5F49400431CDB /* Message.swift */,
 				005518CE2CE6E5A000F3E92B /* ConversationDetailModel.swift */,
 			);
 			path = Models;
@@ -555,7 +552,6 @@
 				259CB2A32CC046F300C9F285 /* UserModels.swift in Sources */,
 				25ECBA1C2CD0390600256104 /* DataLoader.swift in Sources */,
 				259CB2822CC0460400C9F285 /* AppwriteService.swift in Sources */,
-				000AE7472CD5F49400431CDB /* Message.swift in Sources */,
 				61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */,
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,
 			);
