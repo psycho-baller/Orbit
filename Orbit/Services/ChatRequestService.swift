@@ -16,6 +16,9 @@ protocol ChatRequestServiceProtocol {
     func respondToMeetUpRequest(
         requestId: String, response: ChatRequestModel.RequestStatus
     ) async throws -> ChatRequestDocument?
+    func getMeetUpRequests(
+        userId: String, limit: Int?, offset: Int?
+    ) async throws -> [ChatRequestDocument]
 }
 
 class ChatRequestService: ChatRequestServiceProtocol {
@@ -26,13 +29,14 @@ class ChatRequestService: ChatRequestServiceProtocol {
     func sendMeetUpRequest(_ request: ChatRequestModel) async throws
         -> ChatRequestDocument
     {
+        print("Sending meet-up request...")
         let document = try await appwriteService.databases.createDocument<
             ChatRequestModel
         >(
             databaseId: appwriteService.databaseId,
             collectionId: collectionId,
-            documentId: request.id,
-            data: request,
+            documentId: ID.unique(),
+            data: request.toJson(),
             permissions: nil,
             nestedType: ChatRequestModel.self
                 //            [
@@ -43,6 +47,7 @@ class ChatRequestService: ChatRequestServiceProtocol {
                 //            ]
         )
 
+        print("Created meet-up request: \(document)")
         return document
     }
 
@@ -79,5 +84,21 @@ class ChatRequestService: ChatRequestServiceProtocol {
         )
 
         return document
+    }
+
+    // Get meetup requests for a user
+    func getMeetUpRequests(
+        userId: String, limit: Int? = nil, offset: Int? = nil
+    ) async throws -> [ChatRequestDocument] {
+        let queries = Query.equal("senderAccountId", value: userId)
+        let response = try await appwriteService.databases.listDocuments<
+            ChatRequestModel
+        >(
+            databaseId: appwriteService.databaseId,
+            collectionId: collectionId,
+            queries: [queries],
+            nestedType: ChatRequestModel.self
+        )
+        return response.documents
     }
 }

@@ -15,7 +15,7 @@ struct ChatRequestModel: Codable, Identifiable {
     var senderAccountId: String  // ID of the user sending the request
     var receiverAccountId: String  // ID of the user receiving the request
     var message: String  // Message content sent by the sender
-    var status: RequestStatus  // Status of the chat request
+    var status: RequestStatus?  // Status of the chat request
 
     enum RequestStatus: String, Codable {
         case pending
@@ -25,3 +25,12 @@ struct ChatRequestModel: Codable, Identifiable {
 }
 
 typealias ChatRequestDocument = AppwriteModels.Document<ChatRequestModel>
+
+
+//struct IdentifiableDocument<T: Identifiable & Codable>: Identifiable {
+//    let document: AppwriteModels.Document<T>
+//    
+//    var id: T.ID {
+//        return document.data.id
+//    }
+//}

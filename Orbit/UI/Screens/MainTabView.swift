@@ -92,8 +92,7 @@ struct ExampleView1: View {
 
 struct ExampleView2: View {
     var body: some View {
-        Text("Content for Tab 3")
-            .navigationTitle("Tab 3")
+        MeetUpRequestsListView()
     }
 }
 
