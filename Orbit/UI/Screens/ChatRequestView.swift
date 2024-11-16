@@ -14,6 +14,7 @@ struct ChatRequestView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
+    @State private var message = ""
 
     var body: some View {
         VStack(spacing: 20) {
@@ -26,14 +27,15 @@ struct ChatRequestView: View {
                 "Interests: \(receiver.interests?.joined(separator: ", ") ?? "No interests available")"
             )
             .foregroundColor(ColorPalette.text(for: colorScheme))
-
+            TextField("Enter your message...", text: $message)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
             if let senderAccountId = sender?.accountId {
                 Button(action: {
                     let request = ChatRequestModel(
                         senderAccountId: senderAccountId,
                         receiverAccountId: receiver.accountId,
-                        message: "Let's chat!",
-                        status: .pending
+                        message: message
                     )
                     Task {
                         await chatRequestVM.sendMeetUpRequest(request: request)
@@ -59,5 +61,12 @@ struct ChatRequestView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(ColorPalette.background(for: colorScheme))
         .cornerRadius(15)
+        .alert(
+            "Error", isPresented: .constant(chatRequestVM.errorMessage != nil)
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(chatRequestVM.errorMessage ?? "")
+        }
     }
 }
