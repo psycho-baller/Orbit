@@ -50,14 +50,7 @@ class MessagingViewModel: ObservableObject {
                     if let conversations = userModel.data.conversations {
                         var newConversations = conversations
                         newConversations.append(conversationEntry.id)
-                        let newUserModel = UserModel(
-                            accountId: accountId,
-                            name: userModel.data.name,
-                            interests: userModel.data.interests,
-                            latitude: userModel.data.latitude,
-                            longitude: userModel.data.longitude,
-                            isInterestedToMeet: userModel.data
-                                .isInterestedToMeet,
+                        let newUserModel = userModel.data.update(
                             conversations: newConversations
                         )
                         try await userManagementService.updateUser(
