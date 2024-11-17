@@ -37,8 +37,7 @@ struct MessageView: View {
                                             .conversationId,
                                         senderAccountId: messageDocument.data
                                             .senderAccountId,
-                                        message: messageDocument.data.message,
-                                        isRead: nil
+                                        message: messageDocument.data.message
                                     ),
                                     currentUser: UserModel(
                                         accountId: userVM.currentUser?.accountId

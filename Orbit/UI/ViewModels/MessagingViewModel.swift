@@ -79,8 +79,7 @@ class MessagingViewModel: ObservableObject {
         let newMessage = MessageModel(
             conversationId: conversationId,
             senderAccountId: senderAccountId,
-            message: message,
-            isRead: nil
+            message: message
         )
         do {
             try await messagingService.createMessage(newMessage)

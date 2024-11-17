@@ -15,70 +15,82 @@ struct InboxView: View {
     @State private var conversations: [ConversationDetailModel] = []
     @Binding var isTabHidden: Bool
     @State private var subscriptionTask: Task<Void, Never>?
-    
+
     var body: some View {
-        NavigationStack{
-            ScrollView{
-                
-                HStack{
-                    Button(action: {selectedTab = .messages}){
+        NavigationStack {
+            ScrollView {
+
+                HStack {
+                    Button(action: { selectedTab = .messages }) {
                         Text("Messages")
                             .normalSemiBoldFont()
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(selectedTab == .messages ? ColorPalette.accent(for: ColorScheme.light) : ColorPalette.lightGray(for: ColorScheme.light))
-                            .foregroundColor(.white )
+                            .background(
+                                selectedTab == .messages
+                                    ? ColorPalette.accent(
+                                        for: ColorScheme.light)
+                                    : ColorPalette.lightGray(
+                                        for: ColorScheme.light)
+                            )
+                            .foregroundColor(.white)
                             .cornerRadius(10)
-                        
+
                     }
                     .padding()
-                    
-                    Button(action: {selectedTab = .messages}){
+
+                    Button(action: { selectedTab = .messages }) {
                         Text("Requests")
                             .normalSemiBoldFont()
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(selectedTab == .requests ? ColorPalette.accent(for: ColorScheme.light) : ColorPalette.lightGray(for: ColorScheme.light))
+                            .background(
+                                selectedTab == .requests
+                                    ? ColorPalette.accent(
+                                        for: ColorScheme.light)
+                                    : ColorPalette.lightGray(
+                                        for: ColorScheme.light)
+                            )
                             .foregroundColor(.white)
                             .cornerRadius(10)
-                        
+
                     }
                     .padding()
-                    
+
                 }
-                
+
                 if userVM.currentUser == nil {
                     ProgressView("Loading User Info")
-                }else{
-                    MessagesList(conversations: conversations, isTabHidden: $isTabHidden)
+                } else {
+                    MessagesList(
+                        conversations: conversations, isTabHidden: $isTabHidden)
                 }
-                
-                
+
             }
-            .onChange(of: userVM.currentUser){
-                if userVM.currentUser == nil{
+            .onChange(of: userVM.currentUser) {
+                if userVM.currentUser == nil {
                     print("Still loading user")
-                } else{
-                    Task{
+                } else {
+                    Task {
                         await loadConversations()
                     }
                 }
-              
+
             }
             //.navigationTitle("Messages")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    HStack{
+                    HStack {
                         Image(systemName: "person.circle.fill")
                             .font(.system(size: 25))
-                        
+
                         Text("Messages")
                             .largeBoldFont()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button{
+                    Button {
                         showNewMessageView.toggle()
                     } label: {
                         Image(systemName: "square.and.pencil.circle.fill")
@@ -88,35 +100,39 @@ struct InboxView: View {
                     }
                 }
             }
-            .fullScreenCover(isPresented: $showNewMessageView, content: {Text("New Message")})
-            .onAppear{
-                print("InboxView - onAppear: UserViewModel currentUser: \(userVM.currentUser?.accountId ?? "nil")")
+            .fullScreenCover(
+                isPresented: $showNewMessageView,
+                content: { Text("New Message") }
+            )
+            .onAppear {
+                print(
+                    "InboxView - onAppear: UserViewModel currentUser: \(userVM.currentUser?.accountId ?? "nil")"
+                )
                 Task {
-                   await loadConversations()
+                    await loadConversations()
                     subscribeToMessages()
 
                 }
             }
-            .onDisappear{
+            .onDisappear {
                 //subscriptionTask?.cancel()
             }
         }.background(ColorPalette.background(for: ColorScheme.light))
     }
-    
+
     private func loadConversations() async {
         print("Loading Conversations")
-        
+
         if let userId = userVM.currentUser?.accountId {
             print("User ID: \(userId)")
             conversations = await msgVM.getConversationDetails(userId)
             print("Loaded Conversations")
-        }else {
+        } else {
             print("User ID not found")
         }
     }
-    
-    
-    private func subscribeToMessages(){  //meant to listen for new messages and reload the page, this isn't fully working yet
+
+    private func subscribeToMessages() {  //meant to listen for new messages and reload the page, this isn't fully working yet
         subscriptionTask = Task {
             await msgVM.subscribeToMessages(conversationId: "") { _ in
                 Task {
@@ -127,7 +143,7 @@ struct InboxView: View {
     }
 }
 
-enum MessageTab: String{
+enum MessageTab: String {
     case messages
     case requests
 }
@@ -136,5 +152,5 @@ enum MessageTab: String{
     InboxView(isTabHidden: .constant(false))
         .environmentObject(UserViewModel.mock())
         .environmentObject(MessagingViewModel())
-    
+
 }
