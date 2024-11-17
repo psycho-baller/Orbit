@@ -32,32 +32,11 @@ struct MessageView: View {
                             if !status {
                                 //let isReceived = messageDocument.data.senderAccountId != (userVM.currentUser?.accountId ?? "")
                                 MessageBox(
-                                    message: MessageModel(
-                                        conversationId: messageDocument.data
-                                            .conversationId,
-                                        senderAccountId: messageDocument.data
-                                            .senderAccountId,
-                                        message: messageDocument.data.message
-                                    ),
-                                    currentUser: UserModel(
-                                        accountId: userVM.currentUser?.accountId
-                                            ?? "123",
-                                        name: userVM.currentUser?.name
-                                            ?? "Name",
-                                        interests: userVM.currentUser?
-                                            .interests,
-                                        latitude: userVM.currentUser?.latitude,
-                                        longitude: userVM.currentUser?
-                                            .longitude,
-                                        isInterestedToMeet: userVM.currentUser?
-                                            .isInterestedToMeet,
-                                        conversations: userVM.currentUser?
-                                            .conversations)
+                                    messageDocument: messageDocument
+                                        .conversations
                                 )
-
                                 .id(messageDocument.id)
                             }
-
                         }
                     }
                     .onChange(of: lastMessageId) { oldMessageId, newMessageId in
