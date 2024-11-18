@@ -19,7 +19,6 @@ struct InboxView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-
                 HStack {
                     Button(action: { selectedTab = .messages }) {
                         Text("Messages")

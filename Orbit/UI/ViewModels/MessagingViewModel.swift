@@ -104,60 +104,64 @@ class MessagingViewModel: ObservableObject {
         -> [ConversationDetailModel]
     {
         print("Getting conversations for user: \(accountId)")
-        var conversationDetails: [ConversationDetailModel] = []
 
-        do {
-            let conversationIds = await getConversations(accountId)
-            print("Fetched conversation IDs: \(conversationIds)")
+        let conversationIds = await getConversations(accountId)
+        print("Fetched conversation IDs: \(conversationIds)")
 
+        let conversationDetails = await withTaskGroup(
+            of: ConversationDetailModel?.self
+        ) { group in
             for conversationId in conversationIds {
-                do {
-                    let participants =
-                        try await messagingService.getParticipants(
-                            for: conversationId)
-
-                    guard
-                        let otherParticipantId = participants.first(where: {
-                            $0 != accountId
-                        })
-                    else {
-                        continue
-                    }
-
-                    let messagerName = await getParticipantName(
-                        otherParticipantId)
-                    print("The messager is \(messagerName)")
-                    let messages = try await messagingService.getMessages(
-                        conversationId, 100)
-
-                    if let lastMessage = messages.max(by: {
-                        $0.createdAt < $1.createdAt
-                    }) {  //gets last sent message
-                        print("The last message is \(lastMessage)")
-                        let timestamp = formatTimestamp(
-                            lastMessage.createdAt)
-                        print("The timestamp is \(timestamp)")
-                        let isRead = lastMessage.data.isRead
-
-                        let conversationDetail = ConversationDetailModel(
-                            id: conversationId,
-                            messagerName: messagerName,
-                            lastMessage: lastMessage.data.message,
-                            timestamp: timestamp,
-                            isRead: isRead ?? false
-                        )
-                        conversationDetails.append(conversationDetail)
-                    }
-                } catch {
-                    print(
-                        "failed to process conversation \(conversationId): \(error)"
-                    )
+                group.addTask {
+                    await self.fetchConversationDetail(
+                        accountId: accountId, conversationId: conversationId)
                 }
             }
-        }
 
-        conversationDetails.sort { $0.timestamp > $1.timestamp }  //sorts conversations in descending order so that the conversations with the latest message are at the top
-        return conversationDetails
+            var results: [ConversationDetailModel] = []
+            for await detail in group {
+                if let detail = detail {
+                    results.append(detail)
+                }
+            }
+            return results
+        }
+        return conversationDetails.sorted { $0.timestamp > $1.timestamp }
+    }
+
+    @MainActor
+    private func fetchConversationDetail(
+        accountId: String, conversationId: String
+    ) async -> ConversationDetailModel? {
+        do {
+            let participants = try await messagingService.getParticipants(
+                for: conversationId)
+            guard
+                let otherParticipantId = participants.first(where: {
+                    $0 != accountId
+                })
+            else { return nil }
+
+            let messagerName = await getParticipantName(otherParticipantId)
+            let messages = try await messagingService.getMessages(
+                conversationId, 100)
+            guard
+                let lastMessage = messages.max(by: {
+                    $0.createdAt < $1.createdAt
+                })
+            else { return nil }
+
+            return ConversationDetailModel(
+                id: conversationId,
+                messagerName: messagerName,
+                lastMessage: lastMessage.data.message,
+                timestamp: formatTimestamp(lastMessage.createdAt),
+                isRead: lastMessage.data.isRead ?? false
+            )
+        } catch {
+            print("Failed to process conversation \(conversationId): \(error)")
+            return nil
+        }
     }
 
     private func getParticipantName(_ participantId: String) async -> String {
