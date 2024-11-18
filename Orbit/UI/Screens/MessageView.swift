@@ -19,27 +19,19 @@ struct MessageView: View {
     var body: some View {
         VStack {
             VStack {
+                // Chat Header
                 ChatProfileTitle(
                     messagerName: messagerName, isInMessageView: true)
 
                 ScrollViewReader { proxy in
-                    LazyVStack {
+                    ScrollView {
                         ForEach($msgVM.messages, id: \.id) { $messageDocument in
-                            ScrollView {
-                                if !messageDocument.data
-                                    .senderAccountId
-                                    .isEmpty
-                                {
-
-                                    MessageBox(
-                                        messageDocument: messageDocument
-                                    )  // Your custom message row
-                                    .id(messageDocument.id)  // Assign a unique ID to each message
-                                }
+                            if !messageDocument.data.senderAccountId.isEmpty {
+                                MessageBox(messageDocument: messageDocument)
+                                    .id(messageDocument.id)  // Assign unique ID to each message
                             }
                         }
                     }
-
                     .onChange(of: msgVM.lastMessageId) { newMessageId in
                         if let id = newMessageId {
                             withAnimation {
@@ -61,23 +53,25 @@ struct MessageView: View {
             }
             .background(ColorPalette.accent(for: ColorScheme.light))
 
+            // Message Input Field
             MessageField(text: $newMessageText, onSend: sendMessage)
         }
         .onAppear {
             Task {
+                // Fetch messages and subscribe to updates
                 await msgVM.getMessages(conversationId)
-                await msgVM.subscribeToMessages(conversationId: conversationId)
-                {
-                    newMessage in
+                await msgVM.subscribeToMessages(
+                    conversationId: conversationId
+                ) { newMessage in
                     print(
                         "Received new message: \(newMessage.data.message)")
+
                     if !msgVM.messages.contains(where: {
                         $0.id == newMessage.id
                     }) {
                         msgVM.messages.append(newMessage)
                         msgVM.messages.sort { $0.createdAt < $1.createdAt }
-                        msgVM.lastMessageld.wrappedValue = newMessage.id
-
+                        msgVM.lastMessageId = newMessage.id
                     }
                 }
                 await msgVM.markMessagesRead(conversationId: conversationId)
@@ -90,7 +84,6 @@ struct MessageView: View {
         }
         .toolbar(.hidden, for: .tabBar)
     }
-
     private func sendMessage() {
         Task {
             if let senderId = userVM.currentUser?.accountId {
