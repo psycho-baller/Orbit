@@ -15,6 +15,8 @@ class MessagingViewModel: ObservableObject {
         UserManagementService()
     private var subscription: RealtimeSubscription?
     @Published var conversations: [ConversationDetailModel] = []
+    @Published var messages: [MessageDocument] = []
+    @Published var lastMessageId: String? = nil
 
     @MainActor
     func getConversations(_ accountId: String) async -> [String] {
@@ -68,7 +70,7 @@ class MessagingViewModel: ObservableObject {
 
     @MainActor
     func createMessage(
-        _ conversationId: String, _ senderAccountId: String, _ message: String
+        conversationId: String, senderAccountId: String, message: String
     ) async {
         let newMessage = MessageModel(
             conversationId: conversationId,
@@ -88,9 +90,13 @@ class MessagingViewModel: ObservableObject {
     func getMessages(_ conversationId: String, _ numOfMessages: Int = 100) async
         -> [MessageDocument]
     {
+        print("Loading messages for conversation ID: \(conversationId)")
         do {
-            let messages = try await messagingService.getMessages(
+            messages = try await messagingService.getMessages(
                 conversationId, numOfMessages)
+            if let lastMessage = messages.last {
+                lastMessageId = lastMessage.id
+            }
             return messages
         } catch {
             print(
@@ -249,9 +255,10 @@ class MessagingViewModel: ObservableObject {
             onNewMessage: { newMessage in
                 print("Received new message: \(newMessage.data.message)")
                 self.conversations = self.conversations.map { conversation in
-                    var mutableConversation = conversation // Create a mutable copy
-                    if mutableConversation.id == newMessage.data.conversationId {
-                        mutableConversation.update(with: newMessage) // Mutate the copy
+                    var mutableConversation = conversation  // Create a mutable copy
+                    if mutableConversation.id == newMessage.data.conversationId
+                    {
+                        mutableConversation.update(with: newMessage)  // Mutate the copy
                     }
                     return mutableConversation
                 }
