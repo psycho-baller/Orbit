@@ -10,9 +10,13 @@ import Foundation
 struct ConversationDetailModel: Identifiable {
     let id: String
     let messagerName: String
-    let lastMessage: String
-    let timestamp: String
-    let isRead: Bool
+    var lastMessage: String
+    var timestamp: String
+    var isRead: Bool
     
-   
+    mutating func update(with message: MessageDocument) {
+        self.lastMessage = message.data.message
+        self.timestamp = message.createdAt
+        self.isRead = message.data.isRead ?? false
+    }
 }

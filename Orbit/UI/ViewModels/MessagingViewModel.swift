@@ -14,6 +14,7 @@ class MessagingViewModel: ObservableObject {
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
     private var subscription: RealtimeSubscription?
+    @Published var conversations: [ConversationDetailModel] = []
 
     @MainActor
     func getConversations(_ accountId: String) async -> [String] {
@@ -196,16 +197,17 @@ class MessagingViewModel: ObservableObject {
         return "Unknown"
     }
 
+    @MainActor
     func subscribeToMessages(
         conversationId: String,
-        onNewMessage: @escaping (MessageDocument) -> Void
+        onNewMessage: ((MessageDocument) -> Void)? = nil
     ) async {
         do {
             try await messagingService.subscribeToMessages(
                 conversationId: conversationId,
                 onNewMessage: { newMessage in
                     DispatchQueue.main.async {
-                        onNewMessage(newMessage)
+                        onNewMessage?(newMessage)  // Safely call the optional closure
                     }
                 }
             )
@@ -221,8 +223,39 @@ class MessagingViewModel: ObservableObject {
 
     }
 
+    @MainActor
     func unsubscribeFromMessages() async {
         await messagingService.unsubscribeFromMesages()
+    }
+
+    /// Initializes the inbox: Fetches conversations and subscribes to new messages
+    @MainActor
+    func initializeInbox(
+        for userId: String?,
+        completion: @escaping ([ConversationDetailModel]) -> Void
+    ) async {
+        guard let userId = userId else {
+            print("User ID not found")
+            return
+        }
+
+        print("Fetching conversations for user ID: \(userId)")
+        let fetchedConversations = await getConversationDetails(userId)
+        self.conversations = fetchedConversations
+        completion(fetchedConversations)
+
+        await subscribeToMessages(
+            conversationId: userId,
+            onNewMessage: { newMessage in
+                print("Received new message: \(newMessage.data.message)")
+                self.conversations = self.conversations.map { conversation in
+                    var mutableConversation = conversation // Create a mutable copy
+                    if mutableConversation.id == newMessage.data.conversationId {
+                        mutableConversation.update(with: newMessage) // Mutate the copy
+                    }
+                    return mutableConversation
+                }
+            })
     }
 
     @MainActor

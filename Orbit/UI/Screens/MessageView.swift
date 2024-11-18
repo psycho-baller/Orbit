@@ -15,7 +15,6 @@ struct MessageView: View {
     @State private var messages: [MessageDocument] = []
     @State private var newMessageText: String = ""
     let conversationId: String
-    @Binding var isTabHidden: Bool
     @State private var lastMessageId: String? = nil
     let messagerName: String
 
@@ -33,7 +32,6 @@ struct MessageView: View {
                                 //let isReceived = messageDocument.data.senderAccountId != (userVM.currentUser?.accountId ?? "")
                                 MessageBox(
                                     messageDocument: messageDocument
-                                        .conversations
                                 )
                                 .id(messageDocument.id)
                             }
@@ -59,7 +57,6 @@ struct MessageView: View {
 
         }
         .onAppear {
-            isTabHidden = true
             Task {
                 await loadMessages()
                 await subscribeToMessages()
@@ -67,12 +64,11 @@ struct MessageView: View {
             }
         }
         .onDisappear {
-            isTabHidden = false
             Task {
                 await msgVM.unsubscribeFromMessages()
             }
         }
-
+        .toolbar(.hidden, for: .tabBar)
     }
 
     private func loadMessages() async {
@@ -116,7 +112,7 @@ struct MessageView: View {
 
 #Preview {
     MessageView(
-        conversationId: "exampleConversationId", isTabHidden: .constant(false),
+        conversationId: "exampleConversationId",
         messagerName: "Allen the Alien"
     )
     .environmentObject(UserViewModel.mock())
