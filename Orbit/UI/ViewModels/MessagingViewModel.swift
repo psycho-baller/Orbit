@@ -8,6 +8,7 @@
 @preconcurrency import Appwrite
 import Appwrite
 import Foundation
+import SwiftUI
 
 class MessagingViewModel: ObservableObject {
     private var messagingService: MessagingServiceProtocol = MessagingService()
@@ -17,6 +18,12 @@ class MessagingViewModel: ObservableObject {
     @Published var conversations: [ConversationDetailModel] = []
     @Published var messages: [MessageDocument] = []
     @Published var lastMessageId: String? = nil
+    var lastMessageld: Binding<String?> {
+        Binding(
+            get: { self.lastMessageId },
+            set: { self.lastMessageId = $0 }
+        )
+    }
 
     @MainActor
     func getConversations(_ accountId: String) async -> [String] {
