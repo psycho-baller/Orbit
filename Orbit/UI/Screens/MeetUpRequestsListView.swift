@@ -9,13 +9,13 @@ import SwiftUI
 
 struct MeetUpRequestsListView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
-    //    @EnvironmentObject var messagingVM: MessagingViewModel
-    @EnvironmentObject var userVM: UserViewModel  // Assuming this has the current user's ID
+    @EnvironmentObject var userVM: UserViewModel
+    @Environment(\.colorScheme) var colorScheme
     @State private var isLoading = true
     @State private var errorMessage: String?
+    @State private var swipedRequestId: String?
 
     var body: some View {
-        NavigationView {
             VStack {
                 if isLoading {
                     ProgressView("Loading requests...")
@@ -38,36 +38,39 @@ struct MeetUpRequestsListView: View {
                         .padding()
                     }
                 } else {
-                    List(
-                        chatRequestVM.requests
-                    ) { request in
-                        NavigationLink(
-                            destination: MeetUpRequestDetailsView(
-                                request: request
-                            )
-                            //                            .environmentObject(chatRequestVM)
-                            //                            .environmentObject(messagingVM)
-                        ) {
+                    List {
+                        ForEach(chatRequestVM.requests) { request in
                             MeetUpRequestRow(request: request)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button("Accept") {
+                                        acceptRequest(request)
+                                    }
+                                    .tint(.green)
+                                }
+                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                    Button("Decline") {
+                                        declineRequest(request)
+                                    }
+                                    .tint(.red)
+                                }
                         }
                     }
-                    .listStyle(InsetGroupedListStyle())
+                    .listStyle(PlainListStyle())
+                    .navigationTitle("Meet-Up Requests")
+                    }
                 }
+                .onAppear {
+                    Task {
+                        await loadRequests()
+                    }
             }
-            .navigationTitle("Meet-Up Requests")
-            .onAppear {
-                Task {
-                    await loadRequests()
-                }
-            }
-        }
     }
 
-    // Load requests for the current user
     private func loadRequests() async {
         guard let currentUserId = userVM.currentUser?.accountId else {
             errorMessage = "Unable to determine the current user."
             isLoading = false
+            print("Error: currentUserId is nil.")
             return
         }
 
@@ -77,36 +80,50 @@ struct MeetUpRequestsListView: View {
         do {
             try await chatRequestVM.fetchRequestsForUser(userId: currentUserId)
             isLoading = false
+            print("Requests loaded successfully: \(chatRequestVM.requests.count) requests found.")
         } catch {
-            errorMessage =
-                "Failed to load requests: \(error.localizedDescription)"
+            errorMessage = "Failed to load requests: \(error.localizedDescription)"
             isLoading = false
+            print("Error loading requests: \(error.localizedDescription)")
         }
     }
+    
+    private func acceptRequest(_ request: ChatRequestDocument) {
+            Task {
+                await chatRequestVM.respondToMeetUpRequest(requestId: request.id, response: .approved)
+            }
+        }
+
+        private func declineRequest(_ request: ChatRequestDocument) {
+            Task {
+                await chatRequestVM.respondToMeetUpRequest(requestId: request.id, response: .declined)
+            }
+        }
 }
 
-// Row for displaying a single meet-up request in the list
+// Update the MeetUpRequestRow to match the styling
 struct MeetUpRequestRow: View {
     var request: ChatRequestDocument
     @EnvironmentObject var userVM: UserViewModel
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text("From: \(userVM.getUserName(from: request.data.senderAccountId))")
-                    .font(.headline)
-                Text(request.data.message)
-                    .lineLimit(1)
-                    .foregroundColor(.gray)
-            }
-            Spacer()
-            Text(request.data.status?.rawValue.capitalized ?? "")
-                .font(.subheadline)
-                .foregroundColor(
-                    request.data.status == .pending
-                        ? .orange
-                        : (request.data.status == .approved ? .green : .red))
+        VStack(alignment: .leading, spacing: 8) {
+            Text("From: \(userVM.getUserName(from: request.data.senderAccountId))")
+                .font(.title)
+                .padding(.bottom, 1)
+                .foregroundColor(ColorPalette.text(for: colorScheme))
+
+            Text(request.data.message)
+                .font(.body)
+                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
         }
-        .padding(.vertical, 8)
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(.ultraThinMaterial)
+        .background(ColorPalette.main(for: colorScheme))
+        .cornerRadius(10)
+        .shadow(radius: 3)
     }
 }
+
