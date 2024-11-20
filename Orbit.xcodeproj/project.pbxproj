@@ -54,6 +54,7 @@
 		25ECBA1C2CD0390600256104 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECBA1B2CD0390600256104 /* DataLoader.swift */; };
 		25ECBA1E2CD03A0A00256104 /* CleanedUofCLocationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 25ECBA1D2CD03A0A00256104 /* CleanedUofCLocationData.json */; };
 		25ECBA202CD1B1F300256104 /* UserLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */; };
+		61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61129BC62CEC10D10076C793 /* UserCardView.swift */; };
 		61A07DE22CC98B1E00AD7A01 /* AnimatedTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */; };
 		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
 		61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137602CC4AFD600E7BA6C /* ProfileView.swift */; };
@@ -132,6 +133,7 @@
 		25ECBA1B2CD0390600256104 /* DataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		25ECBA1D2CD03A0A00256104 /* CleanedUofCLocationData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CleanedUofCLocationData.json; sourceTree = "<group>"; };
 		25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationModel.swift; sourceTree = "<group>"; };
+		61129BC62CEC10D10076C793 /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
 		61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = BAHNSCHRIFT.TTF; sourceTree = "<group>"; };
 		61E137602CC4AFD600E7BA6C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		61E137622CC4B02C00E7BA6C /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 				259CB28B2CC0465600C9F285 /* SignupView.swift */,
 				259CB28C2CC0465600C9F285 /* ContentView.swift */,
 				61E137602CC4AFD600E7BA6C /* ProfileView.swift */,
+				61129BC62CEC10D10076C793 /* UserCardView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */,
 				252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */,
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,
+				61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

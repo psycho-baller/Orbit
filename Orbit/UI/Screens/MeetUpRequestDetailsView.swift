@@ -10,6 +10,7 @@ import SwiftUI
 struct MeetUpRequestDetailsView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     //    @EnvironmentObject var messagingVM: MessagingViewModel
+    @Environment(\.dismiss) var dismiss
     var request: ChatRequestDocument
 
     var body: some View {
@@ -28,6 +29,7 @@ struct MeetUpRequestDetailsView: View {
                             requestId: request.id,
                             response: .approved
                         )
+                        dismiss()
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -39,6 +41,7 @@ struct MeetUpRequestDetailsView: View {
                             requestId: request.id,
                             response: .declined
                         )
+                        dismiss()
                     }
                 }
                 .buttonStyle(.bordered)

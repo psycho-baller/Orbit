@@ -4,6 +4,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
+    @EnvironmentObject private var chatRequestVM: ChatRequestViewModel
     @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
 
     @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
@@ -13,7 +14,25 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             content
-                .navigationBarItems(trailing: logoutButton)
+                .navigationBarItems(
+                    trailing: HStack {
+                        logoutButton
+                        notificationButton
+                            .overlay(
+                                Group {
+                                    if chatRequestVM.requests.count > 0 {
+                                        Text("\(chatRequestVM.requests.count)")
+                                        .font(.caption2)
+                                        .padding(5)
+                                        .foregroundColor(.white)
+                                        .background(Color.red)
+                                        .clipShape(Circle())
+                                        .offset(x: 10, y: -10)
+                                }
+                            }
+                        )
+                    }
+                )
                 .navigationBarTitle(
                     userVM.currentArea.map { "Users in \($0)" } ?? "Users",
                     displayMode: .automatic
@@ -41,11 +60,21 @@ struct HomeView: View {
             ActivityIndicatorView().padding()
         } else if let error = userVM.error {
             failedView(error)
-        } else if userVM.isOnCampus {
+        } else if userVM.isOnCampus || isInPreviewMode {
             loadedView(userVM.filteredUsers)
         } else {
             offCampusView()
         }
+    }
+
+
+    private var notificationButton: some View {
+        NavigationLink(destination: MeetUpRequestsListView()) {
+            Image(systemName: "bell")
+                .font(.headline)
+                .foregroundColor(ColorPalette.accent(for: colorScheme))
+        }
+        
     }
 
     private var logoutButton: some View {
@@ -151,37 +180,15 @@ struct HomeView: View {
 
             // List of users
             ScrollView {
-                LazyVStack(spacing: 16) {  // Using LazyVStack for efficient loading and spacing
-                    ForEach(users) { user in
-                        HStack(alignment: .center, spacing: 16) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(user.name)
-                                    .font(.title)
-                                    .padding(.bottom, 1)
-                                    .foregroundColor(
-                                        ColorPalette.text(for: colorScheme))
-
-                                // user-specific interests tags
-                                InterestsHorizontalTags(
-                                    interests: user.interests ?? [],
-                                    onTapInterest: { interest in
-                                        withAnimation {
-                                            userVM.toggleInterest(interest)
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                        .padding()
-                        .background(.ultraThinMaterial)  // Apply the translucent background effect here
-                        .background(ColorPalette.main(for: colorScheme))
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
-                        .onTapGesture {
-                            selectedUser = user  // Set the selected user
+                LazyVStack(spacing: 16) {
+                        ForEach(userVM.filteredUsers) { user in
+                            UserCardView(user: user, currentUser: userVM.currentUser)
+                                .onTapGesture {
+                                    selectedUser = user
+                                }
                         }
                     }
-                }
+                    .padding(.horizontal)
             }
             .disabled(isMenuExpanded)  // Disable interaction with ScrollView when menu is expanded
             .padding(.horizontal)
@@ -211,7 +218,16 @@ struct HomeView: View {
 #if DEBUG
     #Preview {
         HomeView()
-            .environmentObject(AuthViewModel())
+            .environmentObject(AuthViewModel.mock())
             .environmentObject(UserViewModel.mock())
+            .environmentObject(ChatRequestViewModel.mock())
     }
 #endif
+
+private var isInPreviewMode: Bool {
+    #if DEBUG
+    return true
+    #else
+    return false
+    #endif
+}

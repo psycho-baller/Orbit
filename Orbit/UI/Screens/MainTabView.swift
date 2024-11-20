@@ -11,6 +11,7 @@ import SwiftUI
 import AnimatedTabBar
 
 struct MainTabView: View {
+    @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var userViewModel = UserViewModel()
     @Environment(\.colorScheme) var colorScheme
@@ -92,7 +93,8 @@ struct ExampleView1: View {
 
 struct ExampleView2: View {
     var body: some View {
-        MeetUpRequestsListView()
+        Text("Content for Tab 3")
+            .navigationTitle("Tab 3")
     }
 }
 
@@ -107,7 +109,8 @@ struct ExampleView3: View {
 struct MainTabView_Previews: PreviewProvider {
     static var previews: some View {
         MainTabView()
-            .environmentObject(UserViewModel())
-            .environmentObject(AuthViewModel())
+            .environmentObject(UserViewModel.mock())
+            .environmentObject(AuthViewModel.mock())
+            .environmentObject(ChatRequestViewModel.mock())
     }
 }
