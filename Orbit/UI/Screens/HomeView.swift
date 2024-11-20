@@ -179,21 +179,20 @@ struct HomeView: View {
             }
 
             // List of users
-            ScrollView {
-                LazyVStack(spacing: 16) {
-                        ForEach(userVM.filteredUsers) { user in
-                            UserCardView(user: user, currentUser: userVM.currentUser)
-                                .onTapGesture {
-                                    selectedUser = user
-                                }
-                        }
+            List(userVM.filteredUsers) { user in
+                UserCardView(user: user, currentUser: userVM.currentUser)
+                    .onTapGesture {
+                        selectedUser = user
                     }
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
                     .padding(.horizontal)
+                    .padding(.vertical, 8)
             }
-            .disabled(isMenuExpanded)  // Disable interaction with ScrollView when menu is expanded
-            .padding(.horizontal)
+            .listStyle(PlainListStyle())
+            .background(Color.clear)
+            .disabled(isMenuExpanded)
             .padding(.bottom, 60)
-            .zIndex(-1)
         }
         .background(
             LinearGradient(
