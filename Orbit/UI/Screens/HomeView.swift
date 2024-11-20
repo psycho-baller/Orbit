@@ -8,7 +8,7 @@ struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
 
     @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
-    @State private var isShowingChatRequest = false  // Control showing the chat request popup
+    @State private var isShowingChatRequests = false  // Control showing the chat request popup
     @State private var isMenuExpanded = false
 
     var body: some View {
@@ -37,6 +37,13 @@ struct HomeView: View {
                     userVM.currentArea.map { "Users in \($0)" } ?? "Users",
                     displayMode: .automatic
                 )
+                .sheet(isPresented: $isShowingChatRequests) {  // Present as bottom sheet
+                                    MeetUpRequestsListView()
+                                        .environmentObject(chatRequestVM)
+                                        .environmentObject(userVM)
+                                        .presentationDetents([.medium, .large]) // Adjustable heights
+                                        .presentationDragIndicator(.visible)   // Drag indicator for resizing
+                                }
                 .sheet(item: $selectedUser) { user in  // Show the chat request sheet
                     ChatRequestView(sender: userVM.currentUser, receiver: user)
                 }
@@ -69,13 +76,14 @@ struct HomeView: View {
 
 
     private var notificationButton: some View {
-        NavigationLink(destination: MeetUpRequestsListView()) {
-            Image(systemName: "bell")
-                .font(.headline)
-                .foregroundColor(ColorPalette.accent(for: colorScheme))
-        }
-        
-    }
+        Button(action: {
+                    isShowingChatRequests = true  // Show the bottom sheet
+                }) {
+                    Image(systemName: "bell")
+                        .font(.headline)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
+                }
+            }
 
     private var logoutButton: some View {
         Button(action: {

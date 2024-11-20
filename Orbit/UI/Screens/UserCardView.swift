@@ -65,6 +65,7 @@ struct UserCardView: View {
                        } label: {
                            Label("Ignore", systemImage: "xmark.circle.fill")
                        }
+                       .tint(.red)
                    }
                }
            }
