@@ -88,11 +88,12 @@ struct MeetUpRequestsListView: View {
 // Row for displaying a single meet-up request in the list
 struct MeetUpRequestRow: View {
     var request: ChatRequestDocument
+    @EnvironmentObject var userVM: UserViewModel
 
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("From: \(request.data.senderAccountId)")
+                Text("From: \(userVM.getUserName(from: request.data.senderAccountId))")
                     .font(.headline)
                 Text(request.data.message)
                     .lineLimit(1)

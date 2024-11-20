@@ -12,6 +12,7 @@ class ChatRequestViewModel: ObservableObject {
     @Published var requests: [ChatRequestDocument] = []
     @Published var errorMessage: String?
     @Published var isLoading = false
+    @Published private var sentRequests: Set<String> = []
 
     private let chatRequestService: ChatRequestServiceProtocol
 
@@ -36,6 +37,14 @@ class ChatRequestViewModel: ObservableObject {
                 "Failed to send meet-up request: \(error.localizedDescription)"
         }
     }
+    
+    func hasSentRequest(to accountId: String) -> Bool {
+            return sentRequests.contains(accountId)
+        }
+
+        func markRequestSent(to accountId: String) {
+            sentRequests.insert(accountId)
+        }
 
     // Fetch a specific meet-up request by ID
     @MainActor
@@ -101,4 +110,16 @@ class ChatRequestViewModel: ObservableObject {
             throw error
         }
     }
+    
 }
+
+// MARK: - Mock for SwiftUI Preview
+#if DEBUG
+extension ChatRequestViewModel {
+    static func mock() -> ChatRequestViewModel {
+        let mockVM = ChatRequestViewModel()
+        mockVM.requests = []
+        return mockVM
+    }
+}
+#endif

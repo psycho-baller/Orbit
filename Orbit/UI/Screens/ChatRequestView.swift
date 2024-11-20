@@ -39,6 +39,7 @@ struct ChatRequestView: View {
                     )
                     Task {
                         await chatRequestVM.sendMeetUpRequest(request: request)
+                        dismiss()
                     }
                 }) {
                     Text("Send Chat Request")

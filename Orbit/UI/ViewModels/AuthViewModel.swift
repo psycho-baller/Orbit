@@ -143,3 +143,21 @@ class AuthViewModel: ObservableObject {
         }
     }
 }
+
+
+// MARK: - Mock for SwiftUI Preview
+#if DEBUG
+import SwiftUI
+
+extension AuthViewModel {
+    static func mock() -> AuthViewModel {
+        let viewModel = AuthViewModel()
+        viewModel.isLoggedIn = true
+        viewModel.isLoading = false
+        viewModel.error = nil
+        
+        
+        return viewModel
+    }
+}
+#endif
