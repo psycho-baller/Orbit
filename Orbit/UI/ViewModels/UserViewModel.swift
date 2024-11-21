@@ -54,13 +54,13 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         )
         self.preciseLocationManager = PreciseLocationManager()
         preciseLocationManager?.delegate = self  // Set delegate to receive location updates
-
-        await fetchCurrentUser()
-        await subscribeToRealtimeUpdates()
+            await fetchCurrentUser()
+            await subscribeToRealtimeUpdates()
     }
 
     @MainActor
     private func fetchCurrentUser() async {
+
         do {
             if let user = try await userManagementService.getCurrentUser() {
                 self.currentUser = user
@@ -69,7 +69,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 )
             } else {
                 print(
-                    "UserViewModel - fetchCurrentUser: No current user found.")
+                    "UserViewModel - fetchCurrentUser: No current user found."
+                )
             }
         } catch {
             print(
@@ -77,6 +78,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             )
             self.error = error.localizedDescription
         }
+
+    }
+
+    //Get the User's name from their ID. (Used for chat requests)
+    func getUserName(from id: String) -> String {
+        if let user = users.first(where: { $0.accountId == id }) {
+            return user.name
+        }
+        return "Unknown"
     }
 
     // setCurrentUser
@@ -263,7 +273,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             self.currentArea = nearestArea.name
             Task {
                 await updateUserGeneralLocation(areaId: nearestArea.id)
-                await fetchUsersInArea(areaId: nearestArea.id)
+                if !isPreviewMode {
+                    await fetchUsersInArea(areaId: nearestArea.id)
+                }
             }
         }
     }
@@ -473,72 +485,72 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             self.error = error.localizedDescription
         }
     }
-
-    static func mock() -> UserViewModel {
-        let viewModel = UserViewModel()
-        viewModel.currentUser = UserModel(
-            accountId: "12345",
-            name: "John Doe",
-            interests: ["Basketball", "Music"],
-            latitude: 51.07452,
-            longitude: -114.12035,
-            isInterestedToMeet: true
-        )
-
-        // Add mock users
-        viewModel.users = [
-            UserModel(
-                accountId: "67890",
-                name: "Jane Smith",
-                interests: ["Reading", "Cooking"],
-                latitude: 51.0500,  // ~1.5 km away from John Doe
-                longitude: -114.0745,
-                isInterestedToMeet: true
-            ),
-            UserModel(
-                accountId: "11223",
-                name: "Michael Brown",
-                interests: ["Video Games", "Art"],
-                latitude: 51.0450,  // ~2 km away
-                longitude: -114.0650,
-                isInterestedToMeet: false
-            ),
-            UserModel(
-                accountId: "33445",
-                name: "Emily White",
-                interests: ["Travel", "Movies"],
-                latitude: 51.0530,  // ~4 km away
-                longitude: -114.0780,
-                isInterestedToMeet: true
-            ),
-            UserModel(
-                accountId: "55667",
-                name: "David Green",
-                interests: ["Basketball", "Music", "Art"],
-                latitude: 51.0700,  // ~10 km away
-                longitude: -114.1000,
-                isInterestedToMeet: false
-            ),
-            UserModel(
-                accountId: "77889",
-                name: "Sophia Black",
-                interests: ["Hiking", "Photography"],
-                latitude: 51.1150,  // ~25 km away
-                longitude: -114.1500,
-                isInterestedToMeet: true
-            ),
-            UserModel(
-                accountId: "77889",
-                name: "Sophia Black",
-                interests: ["Hiking", "Photography"],
-                latitude: 51.07452,
-                longitude: -114.12035,
-                isInterestedToMeet: true
-            ),
-        ]
-        //        override func initialize() {
-        //
-        //        }
-        return viewModel
-    }
 }
+
+// MARK: - Mock for SwiftUI Preview
+#if DEBUG
+    extension UserViewModel {
+        static func mock() -> UserViewModel {
+            let viewModel = UserViewModel()
+            viewModel.currentUser = UserModel(
+                accountId: "6707fc9594f9bf8a1f1f",
+                name: "John Doe",
+                interests: ["Basketball", "Music"],
+                latitude: 51.078621,
+                longitude: -114.136719,
+                isInterestedToMeet: true,
+                currentAreaId: "990215865"
+            )
+
+            // Add mock users
+            viewModel.users = [
+                UserModel(
+                    accountId: "6726b1ef776f5badc4fe",
+                    name: "Jane Smith",
+                    interests: ["Reading", "Cooking"],
+                    latitude: 51.078621,
+                    longitude: -114.136719,
+                    isInterestedToMeet: true,
+                    currentAreaId: "990215865"
+                ),
+                UserModel(
+                    accountId: "11223",
+                    name: "Michael Brown",
+                    interests: ["Video Games", "Art"],
+                    latitude: 51.078621,
+                    longitude: -114.136719,
+                    isInterestedToMeet: true,
+                    currentAreaId: "990215865"
+                ),
+                UserModel(
+                    accountId: "33445",
+                    name: "Emily White",
+                    interests: ["Travel", "Movies"],
+                    latitude: 51.078621,
+                    longitude: -114.136719,
+                    isInterestedToMeet: true,
+                    currentAreaId: "990215865"
+                ),
+                UserModel(
+                    accountId: "55667",
+                    name: "David Green",
+                    interests: ["Basketball", "Music", "Art"],
+                    latitude: 51.078621,
+                    longitude: -114.136719,
+                    isInterestedToMeet: true,
+                    currentAreaId: "990215865"
+                ),
+                UserModel(
+                    accountId: "77889",
+                    name: "Sophia Black",
+                    interests: ["Hiking", "Photography"],
+                    latitude: 51.078621,
+                    longitude: -114.136719,
+                    isInterestedToMeet: true,
+                    currentAreaId: "990215865"
+                ),
+            ]
+            return viewModel
+        }
+    }
+#endif

@@ -13,6 +13,8 @@ struct OrbitApp: App {
     @StateObject var authVM = AuthViewModel()
     @StateObject var userVM = UserViewModel()
     @StateObject var msgVM = MessagingViewModel()
+    @StateObject var notificationService = NotificationService()
+    @StateObject var chatRequestVM = ChatRequestViewModel()
 
     var body: some Scene {
         WindowGroup {
@@ -21,6 +23,8 @@ struct OrbitApp: App {
                 .environmentObject(authVM)
                 .environmentObject(userVM)
                 .environmentObject(msgVM)
+                .environmentObject(notificationService)
+                .environmentObject(chatRequestVM)
         }
     }
 }

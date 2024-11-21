@@ -4,36 +4,55 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
+    @EnvironmentObject private var chatRequestVM: ChatRequestViewModel
     @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
 
     @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
-    @State private var isShowingChatRequest = false  // Control showing the chat request popup
-    @State private var isMenuExpanded = false
+    @State private var isShowingChatRequests = false  // Control showing the chat request popup
 
     var body: some View {
         ZStack {
             content
-                .navigationBarItems(trailing: logoutButton)
+                .navigationBarItems(
+                    trailing: HStack {
+                        logoutButton
+                        notificationButton
+                            .overlay(
+                                Group {
+                                    if chatRequestVM.requests.count > 0 {
+                                        Text("\(chatRequestVM.requests.count)")
+                                            .font(.caption2)
+                                            .padding(5)
+                                            .foregroundColor(.white)
+                                            .background(Color.red)
+                                            .clipShape(Circle())
+                                            .offset(x: 10, y: -10)
+                                    }
+                                }
+                            )
+                    }
+                )
                 .navigationBarTitle(
                     userVM.currentArea.map { "Users in \($0)" } ?? "Users",
                     displayMode: .automatic
                 )
+                .sheet(isPresented: $isShowingChatRequests) {  // Present as bottom sheet
+                    MeetUpRequestsListView()
+                        .environmentObject(chatRequestVM)
+                        .environmentObject(userVM)
+                        .presentationDetents([.medium, .large])  // Adjustable heights
+                        .presentationDragIndicator(.visible)  // Drag indicator for resizing
+                }
                 .sheet(item: $selectedUser) { user in  // Show the chat request sheet
-                    ChatRequestView(user: user)
+                    ChatRequestView(sender: userVM.currentUser, receiver: user)
                 }
                 .background(ColorPalette.background(for: colorScheme))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)  // Ensure it spans the full space
 
-            // Overlay to detect taps outside the menu
-            if isMenuExpanded {
-                Color.clear
-                    .contentShape(Rectangle())  // Make the entire area tappable
-                    .onTapGesture {
-                        withAnimation {
-                            isMenuExpanded = false  // Collapse the menu when tapping outside
-                        }
-                    }
-            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)  // Ensure it spans the full space
+
+        //        .background(Color.red)  // Red background for the List
     }
 
     @ViewBuilder private var content: some View {
@@ -41,10 +60,20 @@ struct HomeView: View {
             ActivityIndicatorView().padding()
         } else if let error = userVM.error {
             failedView(error)
-        } else if userVM.isOnCampus {
+        } else if userVM.isOnCampus || isPreviewMode {
             loadedView(userVM.filteredUsers)
         } else {
             offCampusView()
+        }
+    }
+
+    private var notificationButton: some View {
+        Button(action: {
+            isShowingChatRequests = true  // Show the bottom sheet
+        }) {
+            Image(systemName: "bell")
+                .font(.headline)
+                .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
     }
 
@@ -98,7 +127,7 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 0) {
             SearchBar(
                 text: $userVM.searchText, placeholder: "search for a user"
             )
@@ -112,141 +141,58 @@ struct HomeView: View {
                         }
                     }
                 )
-                .background(Color.clear)
                 .cornerRadius(10)
                 .shadow(radius: 3)
-
-                CustomMenu(
-                    alignment: .trailing,
-                    isExpanded: $isMenuExpanded,
-                    label: {
-                        // Using an icon instead of text
-                        Image(systemName: "slider.horizontal.3")  // Suitable icon for slider
-                            .resizable()
-                            .frame(width: 24, height: 24)  // Adjust size as needed
-                            .foregroundColor(
-                                ColorPalette.accent(for: colorScheme)
-                            )
-                            .padding(.trailing, 8)
-                            .background(
-                                ColorPalette.background(for: colorScheme)
-                            )
-                            .cornerRadius(8)
-                    }
-                ) {
-                    VStack {
-                        Text(
-                            "\(String(format: "%.1f", userVM.selectedRadius)) km"
-                        )
-                        .foregroundColor(ColorPalette.text(for: colorScheme))
-
-                        Slider(
-                            value: $userVM.selectedRadius, in: 1...60, step: 1
-                        )
-                        .tint(ColorPalette.accent(for: colorScheme))
-                        .frame(width: 150)
-                    }
-                }
             }
 
-            // List of users
             ScrollView {
-                LazyVStack(spacing: 16) {  // Using LazyVStack for efficient loading and spacing
-                    ForEach(users) { user in
-                        HStack(alignment: .center, spacing: 16) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(user.name)
-                                    .font(.title)
-                                    .padding(.bottom, 1)
-                                    .foregroundColor(
-                                        ColorPalette.text(for: colorScheme))
-
-                                // user-specific interests tags
-                                InterestsHorizontalTags(
-                                    interests: user.interests ?? [],
-                                    onTapInterest: { interest in
-                                        withAnimation {
-                                            userVM.toggleInterest(interest)
-                                        }
-                                    }
-                                )
-                            }
+                VStack(spacing: 16) {
+                    ForEach(userVM.filteredUsers) { user in
+                        UserCardView(
+                            user: user, currentUser: userVM.currentUser
+                        )
+                        .onTapGesture {
+                            selectedUser = user
                         }
-                        .padding()
-                        .background(.ultraThinMaterial)  // Apply the translucent background effect here
-                        .background(ColorPalette.main(for: colorScheme))
                         .cornerRadius(10)
                         .shadow(radius: 3)
-                        .onTapGesture {
-                            selectedUser = user  // Set the selected user
+                    }
+                }
+                .background(
+                    ColorPalette.background(for: colorScheme)
+                    //                    LinearGradient(
+                    //                        gradient: Gradient(colors: [
+                    //                            ColorPalette.background(for: colorScheme),
+                    //                            ColorPalette.main(for: colorScheme),
+                    //                        ]),
+                    //                        startPoint: .topLeading,
+                    //                        endPoint: .bottomTrailing
+                    //                    )
+                ).onAppear {
+                    if !isPreviewMode {
+                        Task {
+                            await userVM.initialize()
+                            await loadRequests()
                         }
                     }
                 }
-            }
-            .disabled(isMenuExpanded)  // Disable interaction with ScrollView when menu is expanded
-            .padding(.horizontal)
-            .padding(.bottom, 60)
-            .zIndex(-1)
-        }
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    ColorPalette.background(for: colorScheme),
-                    ColorPalette.main(for: colorScheme),
-                ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        ).onAppear {
-            Task {
-                #if !PREVIEW
-                    await userVM.initialize()
-                #endif
+                .padding(.horizontal)
             }
         }
     }
-}
-
-// MARK: - Chat Request View
-struct ChatRequestView: View {
-    let user: UserModel
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("Request to Chat with \(user.name)")
-                .font(.title)
-                .padding()
-                .foregroundColor(ColorPalette.text(for: colorScheme))
-
-            Text(
-                "Interests: \(user.interests?.joined(separator: ", ") ?? "No interests available")"
-            )
-            .foregroundColor(ColorPalette.text(for: colorScheme))
-
-            Button(action: {
-                // Logic to send chat request goes here
-            }) {
-                Text("Send Chat Request")
-                    .foregroundColor(ColorPalette.text(for: colorScheme))
-                    .padding()
-                    .background(ColorPalette.button(for: colorScheme))
-                    .cornerRadius(10)
-            }
-
-            Button(action: {
-                dismiss()
-            }) {
-                Text("Cancel")
-                    .foregroundColor(ColorPalette.accent(for: colorScheme))
-                    .padding()
-            }
+    private func loadRequests() async {
+        guard let currentUserId = userVM.currentUser?.accountId else {
+            chatRequestVM.errorMessage = "Unable to determine the current user."
+            print("Error: currentUserId is nil.")
+            return
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(ColorPalette.background(for: colorScheme))
-        .cornerRadius(15)
+
+        print("Loading requests for user: \(currentUserId)")
+
+        await chatRequestVM.fetchRequestsForUser(userId: currentUserId)
+        print(
+            "Requests loaded successfully: \(chatRequestVM.requests.count) requests found."
+        )
     }
 }
 
@@ -254,7 +200,8 @@ struct ChatRequestView: View {
 #if DEBUG
     #Preview {
         HomeView()
-            .environmentObject(AuthViewModel())
+            .environmentObject(AuthViewModel.mock())
             .environmentObject(UserViewModel.mock())
+            .environmentObject(ChatRequestViewModel.mock())
     }
 #endif

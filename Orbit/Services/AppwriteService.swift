@@ -24,9 +24,9 @@ class AppwriteService: AppwriteServiceProtocol {
     let storage: Storage
     let realtime: Realtime
     let realtime2: Realtime
+    let messaging: Messaging
 
     let databaseId = "orbit"
-    let collectionId = "users"
     let bucketId = "userAssets"
     
     let COLLECTION_ID_MESSAGES = "messages"
@@ -53,6 +53,7 @@ class AppwriteService: AppwriteServiceProtocol {
         self.storage = Storage(client)
         self.realtime = Realtime(client)
         self.realtime2 = Realtime(client)
+        self.messaging = Messaging(client)
 
     }
 }
