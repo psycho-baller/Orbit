@@ -9,7 +9,6 @@ struct HomeView: View {
 
     @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
     @State private var isShowingChatRequests = false  // Control showing the chat request popup
-    @State private var isMenuExpanded = false
 
     var body: some View {
         ZStack {
@@ -22,15 +21,15 @@ struct HomeView: View {
                                 Group {
                                     if chatRequestVM.requests.count > 0 {
                                         Text("\(chatRequestVM.requests.count)")
-                                        .font(.caption2)
-                                        .padding(5)
-                                        .foregroundColor(.white)
-                                        .background(Color.red)
-                                        .clipShape(Circle())
-                                        .offset(x: 10, y: -10)
+                                            .font(.caption2)
+                                            .padding(5)
+                                            .foregroundColor(.white)
+                                            .background(Color.red)
+                                            .clipShape(Circle())
+                                            .offset(x: 10, y: -10)
+                                    }
                                 }
-                            }
-                        )
+                            )
                     }
                 )
                 .navigationBarTitle(
@@ -38,28 +37,22 @@ struct HomeView: View {
                     displayMode: .automatic
                 )
                 .sheet(isPresented: $isShowingChatRequests) {  // Present as bottom sheet
-                                    MeetUpRequestsListView()
-                                        .environmentObject(chatRequestVM)
-                                        .environmentObject(userVM)
-                                        .presentationDetents([.medium, .large]) // Adjustable heights
-                                        .presentationDragIndicator(.visible)   // Drag indicator for resizing
-                                }
+                    MeetUpRequestsListView()
+                        .environmentObject(chatRequestVM)
+                        .environmentObject(userVM)
+                        .presentationDetents([.medium, .large])  // Adjustable heights
+                        .presentationDragIndicator(.visible)  // Drag indicator for resizing
+                }
                 .sheet(item: $selectedUser) { user in  // Show the chat request sheet
                     ChatRequestView(sender: userVM.currentUser, receiver: user)
                 }
                 .background(ColorPalette.background(for: colorScheme))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)  // Ensure it spans the full space
 
-            // Overlay to detect taps outside the menu
-            if isMenuExpanded {
-                Color.clear
-                    .contentShape(Rectangle())  // Make the entire area tappable
-                    .onTapGesture {
-                        withAnimation {
-                            isMenuExpanded = false  // Collapse the menu when tapping outside
-                        }
-                    }
-            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)  // Ensure it spans the full space
+
+        //        .background(Color.red)  // Red background for the List
     }
 
     @ViewBuilder private var content: some View {
@@ -67,23 +60,22 @@ struct HomeView: View {
             ActivityIndicatorView().padding()
         } else if let error = userVM.error {
             failedView(error)
-        } else if userVM.isOnCampus || isInPreviewMode {
+        } else if userVM.isOnCampus || isPreviewMode {
             loadedView(userVM.filteredUsers)
         } else {
             offCampusView()
         }
     }
 
-
     private var notificationButton: some View {
         Button(action: {
-                    isShowingChatRequests = true  // Show the bottom sheet
-                }) {
-                    Image(systemName: "bell")
-                        .font(.headline)
-                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                }
-            }
+            isShowingChatRequests = true  // Show the bottom sheet
+        }) {
+            Image(systemName: "bell")
+                .font(.headline)
+                .foregroundColor(ColorPalette.accent(for: colorScheme))
+        }
+    }
 
     private var logoutButton: some View {
         Button(action: {
@@ -135,7 +127,7 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 0) {
             SearchBar(
                 text: $userVM.searchText, placeholder: "search for a user"
             )
@@ -149,75 +141,58 @@ struct HomeView: View {
                         }
                     }
                 )
-                .background(Color.clear)
                 .cornerRadius(10)
                 .shadow(radius: 3)
+            }
 
-                CustomMenu(
-                    alignment: .trailing,
-                    isExpanded: $isMenuExpanded,
-                    label: {
-                        // Using an icon instead of text
-                        Image(systemName: "slider.horizontal.3")  // Suitable icon for slider
-                            .resizable()
-                            .frame(width: 24, height: 24)  // Adjust size as needed
-                            .foregroundColor(
-                                ColorPalette.accent(for: colorScheme)
-                            )
-                            .padding(.trailing, 8)
-                            .background(
-                                ColorPalette.background(for: colorScheme)
-                            )
-                            .cornerRadius(8)
-                    }
-                ) {
-                    VStack {
-                        Text(
-                            "\(String(format: "%.1f", userVM.selectedRadius)) km"
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(userVM.filteredUsers) { user in
+                        UserCardView(
+                            user: user, currentUser: userVM.currentUser
                         )
-                        .foregroundColor(ColorPalette.text(for: colorScheme))
-
-                        Slider(
-                            value: $userVM.selectedRadius, in: 1...60, step: 1
-                        )
-                        .tint(ColorPalette.accent(for: colorScheme))
-                        .frame(width: 150)
+                        .onTapGesture {
+                            selectedUser = user
+                        }
+                        .cornerRadius(10)
+                        .shadow(radius: 3)
                     }
                 }
-            }
-
-            // List of users
-            List(userVM.filteredUsers) { user in
-                UserCardView(user: user, currentUser: userVM.currentUser)
-                    .onTapGesture {
-                        selectedUser = user
+                .background(
+                    ColorPalette.background(for: colorScheme)
+                    //                    LinearGradient(
+                    //                        gradient: Gradient(colors: [
+                    //                            ColorPalette.background(for: colorScheme),
+                    //                            ColorPalette.main(for: colorScheme),
+                    //                        ]),
+                    //                        startPoint: .topLeading,
+                    //                        endPoint: .bottomTrailing
+                    //                    )
+                ).onAppear {
+                    if !isPreviewMode {
+                        Task {
+                            await userVM.initialize()
+                            await loadRequests()
+                        }
                     }
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-            }
-            .listStyle(PlainListStyle())
-            .background(Color.clear)
-            .disabled(isMenuExpanded)
-            .padding(.bottom, 60)
-        }
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    ColorPalette.background(for: colorScheme),
-                    ColorPalette.main(for: colorScheme),
-                ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        ).onAppear {
-            Task {
-                #if !PREVIEW
-                    await userVM.initialize()
-                #endif
+                }
+                .padding(.horizontal)
             }
         }
+    }
+    private func loadRequests() async {
+        guard let currentUserId = userVM.currentUser?.accountId else {
+            chatRequestVM.errorMessage = "Unable to determine the current user."
+            print("Error: currentUserId is nil.")
+            return
+        }
+
+        print("Loading requests for user: \(currentUserId)")
+
+        await chatRequestVM.fetchRequestsForUser(userId: currentUserId)
+        print(
+            "Requests loaded successfully: \(chatRequestVM.requests.count) requests found."
+        )
     }
 }
 
@@ -230,11 +205,3 @@ struct HomeView: View {
             .environmentObject(ChatRequestViewModel.mock())
     }
 #endif
-
-private var isInPreviewMode: Bool {
-    #if DEBUG
-    return true
-    #else
-    return false
-    #endif
-}
