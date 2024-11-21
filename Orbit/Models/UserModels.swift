@@ -22,6 +22,7 @@ struct UserModel: Codable, Identifiable, Equatable {
     var longitude: Double?
     var isInterestedToMeet: Bool?
     var conversations: [String]?
+    var currentAreaId: String?  // References Area collection
 
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
@@ -30,7 +31,8 @@ struct UserModel: Codable, Identifiable, Equatable {
     init(
         accountId: String, name: String, interests: [String]? = nil,
         latitude: Double? = nil, longitude: Double? = nil,
-        isInterestedToMeet: Bool? = nil, conversations: [String]? = nil
+        isInterestedToMeet: Bool? = nil, conversations: [String]? = nil,
+        currentAreaId: String? = nil
     ) {
         self.accountId = accountId
         self.name = name
@@ -39,6 +41,7 @@ struct UserModel: Codable, Identifiable, Equatable {
         self.longitude = longitude
         self.isInterestedToMeet = isInterestedToMeet
         self.conversations = conversations
+        self.currentAreaId = currentAreaId
 
     }
     func update(
@@ -61,7 +64,6 @@ struct UserModel: Codable, Identifiable, Equatable {
     }
 
     var profileImageURL: URL?
-    var currentAreaId: String?  // References Area collection
     var inactiveAreas: [Int] = []  // Array of area_id references
     //    var inactiveTimes: [TimeRangeConfig] = []
 
