@@ -37,14 +37,14 @@ class ChatRequestViewModel: ObservableObject {
                 "Failed to send meet-up request: \(error.localizedDescription)"
         }
     }
-    
-    func hasSentRequest(to accountId: String) -> Bool {
-            return sentRequests.contains(accountId)
-        }
 
-        func markRequestSent(to accountId: String) {
-            sentRequests.insert(accountId)
-        }
+    func hasSentRequest(to accountId: String) -> Bool {
+        return sentRequests.contains(accountId)
+    }
+
+    func markRequestSent(to accountId: String) {
+        sentRequests.insert(accountId)
+    }
 
     // Fetch a specific meet-up request by ID
     @MainActor
@@ -98,7 +98,7 @@ class ChatRequestViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchRequestsForUser(userId: String) async throws {
+    func fetchRequestsForUser(userId: String) async {
         do {
             let fetchedRequestsDocuments =
                 try await chatRequestService.getMeetUpRequests(
@@ -107,19 +107,22 @@ class ChatRequestViewModel: ObservableObject {
                 self.requests = fetchedRequestsDocuments
             }
         } catch {
-            throw error
+            self.errorMessage =
+                "Failed to load requests: \(error.localizedDescription)"
+            print("Error loading requests: \(error.localizedDescription)")
+
         }
     }
-    
+
 }
 
 // MARK: - Mock for SwiftUI Preview
 #if DEBUG
-extension ChatRequestViewModel {
-    static func mock() -> ChatRequestViewModel {
-        let mockVM = ChatRequestViewModel()
-        mockVM.requests = []
-        return mockVM
+    extension ChatRequestViewModel {
+        static func mock() -> ChatRequestViewModel {
+            let mockVM = ChatRequestViewModel()
+            mockVM.requests = []
+            return mockVM
+        }
     }
-}
 #endif
