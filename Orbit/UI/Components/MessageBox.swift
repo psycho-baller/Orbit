@@ -35,7 +35,7 @@ struct MessageBox: View {
             }
 
             if showTime {
-                Text(messageDocument.createdAt)
+                Text(formatTimestamp(messageDocument.createdAt))
                     .regularFont()
                     .foregroundColor(.gray)
                     .padding(isReceived ? .leading : .trailing, 25)
@@ -49,14 +49,31 @@ struct MessageBox: View {
         .padding(isReceived ? .leading : .trailing)
         .padding(.horizontal, 10)
     }
+    
+    func formatTimestamp(_ timestamp: String) -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [
+            .withInternetDateTime, .withFractionalSeconds,
+        ]
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+        if let date = formatter.date(from: timestamp) {
+            let displayFormatter = DateFormatter()
+            displayFormatter.timeZone = TimeZone.current
+            displayFormatter.dateStyle = .short
+            displayFormatter.timeStyle = .short
+            return displayFormatter.string(from: date)
+        }
+
+        return "Unknown"
+    }
+    
+    
 }
 
-//#Preview {
-//    MessageBox(
-//        messageDocument: MessageModel(
-//            conversationId: "12345", senderAccountId: "fdjkghkdfj",
-//            message:
-//                "I am the skibidi sigma. From the screen to the ring to the pen to the king.",
-//            isRead: true)
-//    ).environmentObject(UserViewModel.mock())
-//}
+
+
+
+
+
+

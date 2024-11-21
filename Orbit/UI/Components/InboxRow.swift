@@ -37,7 +37,7 @@ struct InboxRow: View {
             
             HStack{
                 Text(timestamp)
-                Image(systemName: "chevron.right")
+                
             }
             .font(.footnote)
             .foregroundColor(.gray)

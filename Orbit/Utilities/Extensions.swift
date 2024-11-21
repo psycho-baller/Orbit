@@ -121,7 +121,7 @@ struct ColorPalette {
     }
 }
 
-extension AppwriteModels.Document: @retroactive Identifiable
+extension AppwriteModels.Document: Identifiable
 where T: Identifiable, T.ID == String {
     //    public var id: String {
     //        return self.id
