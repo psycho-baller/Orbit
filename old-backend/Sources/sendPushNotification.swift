@@ -1,7 +1,6 @@
 @preconcurrency import Appwrite
 import Foundation
 import JSONCodable
-import Shared
 
 @MainActor
 public let processInfo = ProcessInfo.processInfo
