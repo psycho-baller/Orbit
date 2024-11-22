@@ -9,16 +9,35 @@ let package = Package(
         .macOS(.v11)  // Set this to .v11 or later
     ],
     dependencies: [
-        .package(url: "https://github.com/appwrite/sdk-for-swift.git", from: "6.1.0")
+        .package(
+            url: "https://github.com/appwrite/sdk-for-swift.git", from: "6.1.0")
     ],
-    // Targets are the basic building blocks of a package, defining a module or a test suite.
-    // Targets can depend on other targets in this package and products from dependencies.
     targets: [
+        .target(
+            name: "Shared",
+            dependencies: [
+                .product(name: "Appwrite", package: "sdk-for-swift")
+            ],
+            path: "Sources",
+            sources: ["Shared.swift"]
+        ),
         .executableTarget(
             name: "deleteAllUnusedAuthUsers",
             dependencies: [
-                .product(name: "Appwrite", package: "sdk-for-swift")
-            ]
-        )
+                "Shared",
+                .product(name: "Appwrite", package: "sdk-for-swift"),
+            ],
+            path: "Sources",
+            sources: ["deleteAllUnusedAuthUsers.swift"]
+        ),
+        .executableTarget(
+            name: "sendPushNotification",
+            dependencies: [
+                "Shared",
+                .product(name: "Appwrite", package: "sdk-for-swift"),
+            ],
+            path: "Sources",
+            sources: ["sendPushNotification.swift"]
+        ),
     ]
 )
