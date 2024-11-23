@@ -85,7 +85,13 @@ class MessagingViewModel: ObservableObject {
             message: message
         )
         do {
-            try await messagingService.createMessage(newMessage)
+            let createdMessage = try await messagingService.createMessage(newMessage)
+            
+            DispatchQueue.main.async {
+                self.messages.append(createdMessage)
+                self.messages.sort {$0.createdAt < $1.createdAt}
+                self.lastMessageId = createdMessage.id
+            }
         } catch {
             print(
                 "MessagingViewModel - createMessage failed \(error.localizedDescription)"
@@ -213,14 +219,14 @@ class MessagingViewModel: ObservableObject {
     @MainActor
     func subscribeToMessages(
         conversationId: String,
-        onNewMessage: ((MessageDocument) -> Void)? = nil
+        onNewMessage: @escaping (MessageDocument) -> Void
     ) async {
         do {
             try await messagingService.subscribeToMessages(
                 conversationId: conversationId,
                 onNewMessage: { newMessage in
                     DispatchQueue.main.async {
-                        onNewMessage?(newMessage)  // Safely call the optional closure
+                        onNewMessage(newMessage)  // Safely call the optional closure
                     }
                 }
             )
@@ -258,17 +264,23 @@ class MessagingViewModel: ObservableObject {
         completion(fetchedConversations)
 
         await subscribeToMessages(
-            conversationId: userId,
+            conversationId: "",
             onNewMessage: { newMessage in
-                print("Received new message: \(newMessage.data.message)")
-                self.conversations = self.conversations.map { conversation in
-                    var mutableConversation = conversation  // Create a mutable copy
-                    if mutableConversation.id == newMessage.data.conversationId
-                    {
-                        mutableConversation.update(with: newMessage)  // Mutate the copy
+                DispatchQueue.main.async{
+                    print("Received new message: \(newMessage.data.message)")
+                    self.conversations = self.conversations.map { conversation in
+                        var mutableConversation = conversation  // Create a mutable copy
+                        if mutableConversation.id == newMessage.data.conversationId
+                        {
+                         
+                            mutableConversation.update(with: newMessage)  // Mutate the copy
+                            mutableConversation.timestamp = self.formatTimestamp(newMessage.createdAt)
+                        }
+                        return mutableConversation
                     }
-                    return mutableConversation
+                    
                 }
+             
             })
     }
 
