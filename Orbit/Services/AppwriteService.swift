@@ -23,6 +23,7 @@ class AppwriteService: AppwriteServiceProtocol {
     let storage: Storage
     let realtime: Realtime
     let messaging: Messaging
+    let functions: Functions
 
     let databaseId = "orbit"
     let bucketId = "userAssets"
@@ -34,8 +35,7 @@ class AppwriteService: AppwriteServiceProtocol {
     //    var fileId = ""
 
     static let shared = AppwriteService()
-    
-    
+
     init() {
 
         client = Client()
@@ -48,6 +48,7 @@ class AppwriteService: AppwriteServiceProtocol {
         storage = Storage(client)
         realtime = Realtime(client)
         messaging = Messaging(client)
+        functions = Functions(client)
 
     }
 }

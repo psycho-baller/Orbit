@@ -9,11 +9,11 @@ import Foundation
 
 class NotificationService {
     private var appwriteService: AppwriteService
-    private var messagingService: MessagingService
+    //    private var messagingService: MessagingService
 
     init(appwriteService: AppwriteService = .shared) {
         self.appwriteService = appwriteService
-        self.messagingService = appwriteService.messaging
+        //        self.messagingService = appwriteService.messaging
     }
 
     func sendPushNotification(to accountId: String, message: String)
@@ -33,8 +33,13 @@ class NotificationService {
 
         do {
             // Call the Appwrite messaging service to send the notification
-            let response = try await messagingService.(
-                payload: payload)
+            let response = try await appwriteService.functions.createExecution(
+                functionId: "<FUNCTION_ID>",
+                //                body: payload,
+                async: true,
+                method: .pOST,
+                headers: [:]
+            )
             print("Notification sent successfully: \(response)")
         } catch {
             throw NSError(
