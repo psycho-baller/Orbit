@@ -45,7 +45,12 @@ struct InboxRow: View {
             }
             
             HStack{
-                Text(newTimestamp)
+                VStack{
+                    Spacer()
+                    Text(newTimestamp)
+                    Spacer()
+                }
+               
                
             }
             .font(.footnote)
@@ -81,9 +86,9 @@ struct InboxRow: View {
         
          
         if Calendar.current.isDate(date, inSameDayAs: currentDate) {
-              return timeDisplayFormatter.string(from: date) // Return only the time
+              return timeDisplayFormatter.string(from: date) // return only the time
           } else {
-              return dateDisplayFormatter.string(from: date) // Return only the date
+              return dateDisplayFormatter.string(from: date) // return only the date
           }
      }
 }

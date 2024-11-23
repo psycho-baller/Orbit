@@ -23,6 +23,7 @@ struct InboxView: View {
                 }
             }
             .frame(maxWidth: .infinity)
+            
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack {
@@ -50,5 +51,6 @@ struct InboxView: View {
             }
         }
         .background(ColorPalette.background(for: ColorScheme.light))
+        .accentColor(.white)
     }
 }

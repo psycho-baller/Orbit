@@ -92,6 +92,7 @@ struct MessageView: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        
     }
     private func sendMessage() {
         Task {

@@ -13,11 +13,11 @@ struct ChatProfileTitle: View {
     var isInMessageView: Bool
     
     var body: some View {
-        VStack(spacing: 10){
+        VStack(spacing: 0){
             Image(.alienorbit)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: isInMessageView ? 60 : 100, height:  isInMessageView ? 60 : 100 )
+                .frame(width: isInMessageView ? 40 : 100, height:  isInMessageView ? 40 : 100 )
                 .cornerRadius(50)
                 
             
