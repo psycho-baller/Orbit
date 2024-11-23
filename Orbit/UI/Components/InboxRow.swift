@@ -15,16 +15,18 @@ struct InboxRow: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 12){
+            if !isRead {
+                Circle()
+                    .fill(ColorPalette.button(for: ColorScheme.light))
+                    .frame(width: 10, height: 10)
+            }
             Image(systemName: "person.circle.fill")
                 .resizable()
-                .frame(width: 64, height: 64)
+                .frame(width: 50, height: 50)
                 .foregroundColor(Color(.systemGray4))
             
             VStack (alignment: .leading, spacing: 4){
-                if !isRead {
-                    Circle()
-                        .fill(ColorPalette.button(for: ColorScheme.light))
-                }
+               
                 Text(messagerName)
                     .normalSemiBoldFont()
                 
@@ -36,7 +38,7 @@ struct InboxRow: View {
             }
             
             HStack{
-                Text(timestamp)
+                Text(formatTimestamp(timestamp))
                 
             }
             .font(.footnote)
@@ -46,6 +48,40 @@ struct InboxRow: View {
         .padding(.horizontal)
         .frame(height: 72)
         
+    }
+    
+    func formatTimestamp(_ timestamp: String) -> String {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        isoFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        guard let date = isoFormatter.date(from: timestamp) else {
+            return timestamp
+        }
+        
+        let currentDate = Date()
+        
+        //date only
+        let dateDisplayFormatter = DateFormatter()
+        dateDisplayFormatter.timeZone = TimeZone.current
+        dateDisplayFormatter.dateStyle = .short
+        dateDisplayFormatter.timeStyle = .none
+        
+        //time only
+        let timeDisplayFormatter = DateFormatter()
+        timeDisplayFormatter.timeZone = TimeZone.current
+        timeDisplayFormatter.dateStyle = .none
+        timeDisplayFormatter.timeStyle = .short
+        
+        let formattedCurrentDate = dateDisplayFormatter.string(for: currentDate)
+        let formattedDate = dateDisplayFormatter.string(for: date)
+        
+        if formattedCurrentDate == formattedDate {
+            return timeDisplayFormatter.string(for: date) ?? timestamp
+        } else {
+            return dateDisplayFormatter.string(for: date) ?? timestamp
+        }
+       
     }
 }
 
