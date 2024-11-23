@@ -18,6 +18,8 @@ protocol AccountManagementServiceProtocol: AnyObject {
     func getAccount() async throws -> User<[String: AnyCodable]>?
     func createSession(_ email: String, _ password: String) async throws
         -> Session
+    func createPushTarget(targetId: String, identifier: String) async throws
+        -> AppwriteModels.Target
     func createAnonymousSession() async throws -> Session
     func listSessions() async throws -> [Session]
     func deleteSessions() async throws
@@ -64,6 +66,13 @@ class AccountManagementService: AccountManagementServiceProtocol {
             email: email,
             password: password
         )
+    }
+
+    func createPushTarget(targetId: String, identifier: String) async throws
+        -> AppwriteModels.Target
+    {
+        return try await account.createPushTarget(
+            targetId: targetId, identifier: identifier)
     }
 
     func createAnonymousSession() async throws -> Session {

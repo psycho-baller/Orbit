@@ -7,7 +7,13 @@
 
 import Foundation
 
-class NotificationService {
+protocol NotificationServiceProtocol {
+    func sendPushNotification(to accountId: String, title: String, body: String)
+        async throws
+
+}
+
+class NotificationService: NotificationServiceProtocol {
     private var appwriteService: AppwriteService
     //    private var messagingService: MessagingService
 
@@ -28,7 +34,7 @@ class NotificationService {
             "data": [
                 "userIds": [accountId]
             ],
-            "DeviceToken": "ass",
+            // "DeviceToken": "",
         ]
 
         // Convert the dictionary to JSON data
@@ -39,16 +45,14 @@ class NotificationService {
             if let stringBody = String(data: jsonBody, encoding: .utf8) {
                 print("JSON String: \(stringBody)")
                 do {
-                    // Call the Appwrite messaging service to send the notification
+                    // Call the Appwrite backend function to send the push notification
                     let response = try await appwriteService.functions
                         .createExecution(
                             functionId: "push-notif",
                             body: stringBody,
-                            async: true,
-                            method: .pOST,
-                            headers: [:]
+                            async: true
                         )
-                    print("Notification sent successfully: \(response)")
+                    print("Notification sent successfully: \(response.status)")
                 } catch {
                     throw NSError(
                         domain: "NotificationService", code: 0,

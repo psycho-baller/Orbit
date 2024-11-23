@@ -7,6 +7,7 @@
 //
 
 import Appwrite
+import AppwriteModels
 import Foundation
 
 protocol AppwriteServiceProtocol {
@@ -22,11 +23,15 @@ class AppwriteService: AppwriteServiceProtocol {
     let databases: Databases
     let storage: Storage
     let realtime: Realtime
+    let realtime2: Realtime
     let messaging: Messaging
     let functions: Functions
 
     let databaseId = "orbit"
     let bucketId = "userAssets"
+
+    let COLLECTION_ID_MESSAGES = "messages"
+    let COLLECTION_ID_CONVERSATIONS = "conversations"
     //    var functionId = "YOUR_FUNCTION_ID"
     //    var executionId = ""
     //    var userId = ""
@@ -35,20 +40,20 @@ class AppwriteService: AppwriteServiceProtocol {
     //    var fileId = ""
 
     static let shared = AppwriteService()
-
     init() {
 
-        client = Client()
+        self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1")
             .setProject("67017126001e334dd053")
             .setSelfSigned(true)  // For self signed certificates, only use for development
 
-        account = Account(client)
-        databases = Databases(client)
-        storage = Storage(client)
-        realtime = Realtime(client)
-        messaging = Messaging(client)
-        functions = Functions(client)
+        self.account = Account(client)
+        self.databases = Databases(client)
+        self.storage = Storage(client)
+        self.realtime = Realtime(client)
+        self.realtime2 = Realtime(client)
+        self.messaging = Messaging(client)
+        self.functions = Functions(client)
 
     }
 }

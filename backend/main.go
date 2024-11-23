@@ -9,7 +9,7 @@ import (
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/id"
 	"github.com/appwrite/sdk-for-go/models"
-	"github.com/joho/godotenv"
+
 	"github.com/open-runtimes/types-for-go/v4/openruntimes"
 )
 
@@ -26,7 +26,7 @@ type Data struct {
 type RequestData struct {
 	Message Message `json:"message"`
 	Data    Data    `json:"data"`
-	DeviceToken string `json:"deviceToken"`
+	// DeviceToken string `json:"deviceToken"`
 }
 
 type ResponseData struct {
@@ -35,12 +35,10 @@ type ResponseData struct {
 }
 
 // Main function
-func Main(Context openruntimes.Context) openruntimes.Response {    // Load environment variables
-    if err := godotenv.Load(); err != nil {
-        log.Fatalf("Error loading .env file: %v", err)
-    }
+func Main(Context openruntimes.Context) openruntimes.Response {
 	// Create a new Appwrite client
 	client := appwrite.NewClient(
+		// appwrite.WithEndpoint(os.Getenv("APPWRITE_FUNCTION_API_ENDPOINT")),
 		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
 		appwrite.WithKey(os.Getenv("APPWRITE_API_KEY")),
 	)
@@ -53,14 +51,14 @@ func Main(Context openruntimes.Context) openruntimes.Response {    // Load envir
 		// Combine the values into a single string with new line separators
 		combinedString := requestData.Message.Title + "\n" +
 		requestData.Message.Body + "\n" +
-		strings.Join(requestData.Data.UserIds, ", ") + "\n" +
-		requestData.DeviceToken
+		strings.Join(requestData.Data.UserIds, ", ") + "\n"
+		// + requestData.DeviceToken
 		Context.Log("Data parsed successfully:\n" + combinedString)
 	}
 
 	// Send a notification
 	messaging := appwrite.NewMessaging(client)
-	response, err := messaging.CreatePush(id.Unique(), "[TITLE]", "[BODY]", messaging.WithCreatePushUsers(requestData.Data.UserIds))
+	response, err := messaging.CreatePush(id.Unique(), requestData.Message.Title, requestData.Message.Body, messaging.WithCreatePushUsers(requestData.Data.UserIds))
 	if err != nil {
 		log.Fatalf("Failed to send notification: %v", err)
 	}

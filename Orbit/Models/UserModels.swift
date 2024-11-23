@@ -11,7 +11,7 @@ import CoreLocation
 import Foundation
 import UIKit
 
-struct UserModel: Codable, Identifiable {
+struct UserModel: Codable, Identifiable, Equatable {
     let accountId: String
     var id: String {
         return accountId
@@ -21,8 +21,49 @@ struct UserModel: Codable, Identifiable {
     var latitude: Double?
     var longitude: Double?
     var isInterestedToMeet: Bool?
-    var profileImageURL: URL?
+    var conversations: [String]?
     var currentAreaId: String?  // References Area collection
+
+    static func == (lhs: UserModel, rhs: UserModel) -> Bool {
+        return lhs.accountId == rhs.accountId
+    }
+
+    init(
+        accountId: String, name: String, interests: [String]? = nil,
+        latitude: Double? = nil, longitude: Double? = nil,
+        isInterestedToMeet: Bool? = nil, conversations: [String]? = nil,
+        currentAreaId: String? = nil
+    ) {
+        self.accountId = accountId
+        self.name = name
+        self.interests = interests
+        self.latitude = latitude
+        self.longitude = longitude
+        self.isInterestedToMeet = isInterestedToMeet
+        self.conversations = conversations
+        self.currentAreaId = currentAreaId
+
+    }
+    func update(
+        name: String? = nil,
+        interests: [String]? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil,
+        isInterestedToMeet: Bool? = nil,
+        conversations: [String]? = nil
+    ) -> UserModel {
+        return UserModel(
+            accountId: self.accountId,  // accountId stays the same
+            name: name ?? self.name,
+            interests: interests ?? self.interests,
+            latitude: latitude ?? self.latitude,
+            longitude: longitude ?? self.longitude,
+            isInterestedToMeet: isInterestedToMeet ?? self.isInterestedToMeet,
+            conversations: conversations ?? self.conversations
+        )
+    }
+
+    var profileImageURL: URL?
     var inactiveAreas: [Int] = []  // Array of area_id references
     //    var inactiveTimes: [TimeRangeConfig] = []
 

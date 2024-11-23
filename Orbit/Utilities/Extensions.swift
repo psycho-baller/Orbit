@@ -7,6 +7,7 @@
 
 import Appwrite
 import SwiftUI
+import Foundation
 
 extension Text {
     func largeSemiBoldFont() -> Text {
@@ -28,15 +29,17 @@ extension Text {
         self.font(.custom("Poppins", size: 24))
             .fontWeight(.bold)
     }
-
 }
 
 extension View {
     func regularFont() -> some View {
         self.font(.custom("Poppins", size: 16))
     }
-
+    func cornerRadius( radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
 }
+
 
 extension Color {
     init(hex: String) {
@@ -118,7 +121,7 @@ struct ColorPalette {
     }
 }
 
-extension AppwriteModels.Document: @retroactive Identifiable
+extension AppwriteModels.Document: Identifiable
 where T: Identifiable, T.ID == String {
     //    public var id: String {
     //        return self.id
@@ -157,3 +160,12 @@ where T: Identifiable, T.ID == String {
 //        return colorScheme == .dark ? Color(hex: "#7393B3") : Color(hex: "#375E97")
 //    }
 //}
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}

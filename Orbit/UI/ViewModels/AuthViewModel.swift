@@ -118,6 +118,24 @@ class AuthViewModel: ObservableObject {
             try await account.createSession(email, password)
             print(
                 "AuthViewModel - login: Success, session created for \(email).")
+
+            guard let token = UserDefaults.standard.string(forKey: "apnsToken")
+            else {
+                return
+            }
+            print("token: \(token)")
+
+            guard
+                let target = try? await account.createPushTarget(
+                    targetId: ID.unique(),
+                    identifier: token
+                )
+            else {
+                return
+            }
+            print("targetId: \(target.id)")
+
+            UserDefaults.standard.set(target.id, forKey: "targetId")
             await self.getAccount()
         } catch {
             print(
@@ -144,20 +162,18 @@ class AuthViewModel: ObservableObject {
     }
 }
 
-
 // MARK: - Mock for SwiftUI Preview
 #if DEBUG
-import SwiftUI
+    import SwiftUI
 
-extension AuthViewModel {
-    static func mock() -> AuthViewModel {
-        let viewModel = AuthViewModel()
-        viewModel.isLoggedIn = true
-        viewModel.isLoading = false
-        viewModel.error = nil
-        
-        
-        return viewModel
+    extension AuthViewModel {
+        static func mock() -> AuthViewModel {
+            let viewModel = AuthViewModel()
+            viewModel.isLoggedIn = true
+            viewModel.isLoading = false
+            viewModel.error = nil
+
+            return viewModel
+        }
     }
-}
 #endif
