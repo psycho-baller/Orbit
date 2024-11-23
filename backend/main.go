@@ -9,7 +9,7 @@ import (
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/id"
 	"github.com/appwrite/sdk-for-go/models"
-	"github.com/joho/godotenv"
+
 	"github.com/open-runtimes/types-for-go/v4/openruntimes"
 )
 
@@ -35,12 +35,10 @@ type ResponseData struct {
 }
 
 // Main function
-func Main(Context openruntimes.Context) openruntimes.Response {    // Load environment variables
-    if err := godotenv.Load(); err != nil {
-        log.Fatalf("Error loading .env file: %v", err)
-    }
+func Main(Context openruntimes.Context) openruntimes.Response {
 	// Create a new Appwrite client
 	client := appwrite.NewClient(
+		// appwrite.WithEndpoint(os.Getenv("APPWRITE_FUNCTION_API_ENDPOINT")),
 		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
 		appwrite.WithKey(os.Getenv("APPWRITE_API_KEY")),
 	)

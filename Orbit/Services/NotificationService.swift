@@ -45,16 +45,16 @@ class NotificationService: NotificationServiceProtocol {
             if let stringBody = String(data: jsonBody, encoding: .utf8) {
                 print("JSON String: \(stringBody)")
                 do {
-                    // Call the Appwrite messaging service to send the notification
+                    // Call the Appwrite backend function to send the push notification
                     let response = try await appwriteService.functions
                         .createExecution(
                             functionId: "push-notif",
                             body: stringBody,
-                            async: true,
-                            method: .pOST,
-                            headers: [:]
+                            async: true
+                                // method: .pOST
+                                //                            headers: [:]
                         )
-                    print("Notification sent successfully: \(response)")
+                    print("Notification sent successfully: \(response.status)")
                 } catch {
                     throw NSError(
                         domain: "NotificationService", code: 0,
