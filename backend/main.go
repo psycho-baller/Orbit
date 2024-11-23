@@ -21,6 +21,7 @@ type Message struct {
 
 type Data struct {
 	UserIds []string `json:"userIds"`
+	TargetScreen string `json:"targetScreen"`
 }
 
 type RequestData struct {
@@ -58,7 +59,11 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 
 	// Send a notification
 	messaging := appwrite.NewMessaging(client)
-	response, err := messaging.CreatePush(id.Unique(), requestData.Message.Title, requestData.Message.Body, messaging.WithCreatePushUsers(requestData.Data.UserIds))
+	response, err := messaging.CreatePush(id.Unique(), requestData.Message.Title, requestData.Message.Body,
+		messaging.WithCreatePushUsers(requestData.Data.UserIds),
+		messaging.WithCreatePushData(requestData.Data.TargetScreen),
+	)
+
 	if err != nil {
 		log.Fatalf("Failed to send notification: %v", err)
 	}
