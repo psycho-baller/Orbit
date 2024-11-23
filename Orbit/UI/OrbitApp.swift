@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct OrbitApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     @StateObject var authVM = AuthViewModel()
     @StateObject var userVM = UserViewModel()
     @StateObject var msgVM = MessagingViewModel()
-    @StateObject var notificationService = NotificationService()
     @StateObject var chatRequestVM = ChatRequestViewModel()
 
     var body: some Scene {
@@ -23,7 +23,6 @@ struct OrbitApp: App {
                 .environmentObject(authVM)
                 .environmentObject(userVM)
                 .environmentObject(msgVM)
-                .environmentObject(notificationService)
                 .environmentObject(chatRequestVM)
         }
     }

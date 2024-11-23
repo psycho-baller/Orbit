@@ -23,6 +23,7 @@
 		0669F9582CD6DD9C0031D154 /* MessagingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F9572CD6DD9C0031D154 /* MessagingViewModel.swift */; };
 		252746E62CE82AC800365712 /* MeetUpRequestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */; };
 		252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */; };
+		2553B44E2CF019E500E14E2B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2553B44D2CF019E500E14E2B /* AppDelegate.swift */; };
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
 		2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2588CC842CCBF1FC00891879 /* CustomMenu.swift */; };
 		259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2252CC02F0D00C9F285 /* Appwrite */; };
@@ -50,7 +51,6 @@
 		25A399692CBF30C700D6BCE8 /* OrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399682CBF30C700D6BCE8 /* OrbitTests.swift */; };
 		25A399732CBF30C700D6BCE8 /* OrbitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399722CBF30C700D6BCE8 /* OrbitUITests.swift */; };
 		25A399752CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399742CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift */; };
-		25D90B052CE6C11000463D67 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B042CE6C11000463D67 /* NotificationService.swift */; };
 		25D90B072CE6CE4B00463D67 /* ChatRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */; };
 		25D90B092CE6D7ED00463D67 /* ChatRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */; };
 		25D90B0B2CE6EB3800463D67 /* ChatRequestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B0A2CE6EB3800463D67 /* ChatRequestViewModel.swift */; };
@@ -111,6 +111,8 @@
 		0669F9572CD6DD9C0031D154 /* MessagingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingViewModel.swift; sourceTree = "<group>"; };
 		252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestDetailsView.swift; sourceTree = "<group>"; };
 		252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestsListView.swift; sourceTree = "<group>"; };
+		2553B44C2CF00AF000E14E2B /* Orbit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Orbit.entitlements; sourceTree = "<group>"; };
+		2553B44D2CF019E500E14E2B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2588CC842CCBF1FC00891879 /* CustomMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMenu.swift; sourceTree = "<group>"; };
 		259CB2792CC0460400C9F285 /* PreciseLocationManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreciseLocationManagerDelegate.swift; sourceTree = "<group>"; };
 		259CB27A2CC0460400C9F285 /* AccountManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManagementService.swift; sourceTree = "<group>"; };
@@ -139,7 +141,6 @@
 		25A3996E2CBF30C700D6BCE8 /* OrbitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		25A399722CBF30C700D6BCE8 /* OrbitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitUITests.swift; sourceTree = "<group>"; };
 		25A399742CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		25D90B042CE6C11000463D67 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestModel.swift; sourceTree = "<group>"; };
 		25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestService.swift; sourceTree = "<group>"; };
 		25D90B0A2CE6EB3800463D67 /* ChatRequestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestViewModel.swift; sourceTree = "<group>"; };
@@ -202,9 +203,9 @@
 		259CB2782CC0460400C9F285 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2553B44D2CF019E500E14E2B /* AppDelegate.swift */,
 				0669F9492CD1CCA30031D154 /* MessagingService.swift */,
 				25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */,
-				25D90B042CE6C11000463D67 /* NotificationService.swift */,
 				259CB2792CC0460400C9F285 /* PreciseLocationManagerDelegate.swift */,
 				25E1ABC02CD004F500F27722 /* CampusLocationManagerDelegate.swift */,
 				259CB27A2CC0460400C9F285 /* AccountManagementService.swift */,
@@ -325,6 +326,7 @@
 		25A399542CBF30C500D6BCE8 /* Orbit */ = {
 			isa = PBXGroup;
 			children = (
+				2553B44C2CF00AF000E14E2B /* Orbit.entitlements */,
 				259CB2832CC0465600C9F285 /* UI */,
 				259CB2782CC0460400C9F285 /* Services */,
 				259CB2A42CC047D000C9F285 /* Utilities */,
@@ -568,7 +570,6 @@
 				2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */,
 				259CB2962CC0465600C9F285 /* MainTabView.swift in Sources */,
 				25E1ABC12CD004F500F27722 /* CampusLocationManagerDelegate.swift in Sources */,
-				25D90B052CE6C11000463D67 /* NotificationService.swift in Sources */,
 				25D90B092CE6D7ED00463D67 /* ChatRequestService.swift in Sources */,
 				259CB2A82CC047D000C9F285 /* LazyList.swift in Sources */,
 				000AE7492CD5F5DD00431CDB /* MessageBox.swift in Sources */,
@@ -594,6 +595,7 @@
 				252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */,
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,
 				61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */,
+				2553B44E2CF019E500E14E2B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -777,6 +779,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Orbit/Orbit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = Orbit/Resources;
@@ -809,6 +812,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Orbit/Orbit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = Orbit/Resources;
