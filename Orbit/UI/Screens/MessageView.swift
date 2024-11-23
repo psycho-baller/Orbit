@@ -32,7 +32,7 @@ struct MessageView: View {
                             }
                         }
                     }
-                    .onChange(of: msgVM.lastMessageId) { oldMessageId, newMessageId in
+                    .onChange(of: msgVM.lastMessageId) { newMessageId in
                         if let id = newMessageId {
                             withAnimation {
                                 proxy.scrollTo(id, anchor: .bottom)
@@ -63,24 +63,16 @@ struct MessageView: View {
                 await msgVM.subscribeToMessages(
                     conversationId: conversationId
                 ) { newMessage in
-                    DispatchQueue.main.async{
-                        print(
-                            "MessageView - Received new message: \(newMessage.data.message)")
+                    print(
+                        "Received new message: \(newMessage.data.message)")
 
-                        if !msgVM.messages.contains(where: {
-                            $0.id == newMessage.id
-                        }) {
-                            msgVM.messages.append(newMessage)
-                            msgVM.messages.sort { $0.createdAt < $1.createdAt }
-                            msgVM.lastMessageId = newMessage.id
-                        }
-                        
-                        Task{
-                            await msgVM.markMessagesRead(conversationId: conversationId)
-                        }
+                    if !msgVM.messages.contains(where: {
+                        $0.id == newMessage.id
+                    }) {
+                        msgVM.messages.append(newMessage)
+                        msgVM.messages.sort { $0.createdAt < $1.createdAt }
+                        msgVM.lastMessageId = newMessage.id
                     }
-                        
-                   
                 }
                 await msgVM.markMessagesRead(conversationId: conversationId)
             }
@@ -88,7 +80,6 @@ struct MessageView: View {
         .onDisappear {
             Task {
                 await msgVM.unsubscribeFromMessages()
-                print("MessageView - Unsubscribed from messages")
             }
         }
         .toolbar(.hidden, for: .tabBar)

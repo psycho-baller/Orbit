@@ -16,7 +16,7 @@ protocol MessagingServiceProtocol {
         async throws -> [MessageDocument]
     func getParticipants(for conversationId: String) async throws -> [String]
     func subscribeToMessages(
-        conversationId: String?,
+        conversationId: String,
         onNewMessage: @escaping (MessageDocument) -> Void) async throws
     func unsubscribeFromMesages() async
     func markMessagesRead(conversationId: String) async throws
@@ -93,7 +93,7 @@ class MessagingService: MessagingServiceProtocol {
     }
 
     func subscribeToMessages(
-        conversationId: String? = nil,
+        conversationId: String,
         onNewMessage: @escaping (MessageDocument) -> Void
     ) async throws {
 
@@ -117,24 +117,16 @@ class MessagingService: MessagingServiceProtocol {
                                     documentId: documentId,
                                     nestedType: MessageModel.self
                                 )
-                            
-                            onNewMessage(document)
-                            /*
-                            if conversationId != nil {
-                                if document.data.conversationId == conversationId {
-                                    print(
-                                        "MessagingService - New Message for \(conversationId)"
-                                    )
-                                    onNewMessage(document)
-                                }
-                            } else {
+
+                            if document.data.conversationId == conversationId {
+                                print(
+                                    "MessagingService - New Message for \(conversationId)"
+                                )
                                 onNewMessage(document)
-                            } */
-                          
-                            
+                            }
                         }
                         print(
-                            "Subscribed to realtime messsages for conversation: \(conversationId ?? "some conversation")"
+                            "Subscribed to realtime messsages for conversation: \(conversationId)"
                         )
                     } catch {
                         print(
