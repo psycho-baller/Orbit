@@ -68,6 +68,7 @@
 		25ECBA1C2CD0390600256104 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECBA1B2CD0390600256104 /* DataLoader.swift */; };
 		25ECBA1E2CD03A0A00256104 /* CleanedUofCLocationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 25ECBA1D2CD03A0A00256104 /* CleanedUofCLocationData.json */; };
 		25ECBA202CD1B1F300256104 /* UserLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */; };
+		25F1BDAF2CF2656B0036D7E1 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F1BDAE2CF2656B0036D7E1 /* NotificationService.swift */; };
 		25F5B9CB2CEE5A0D0062438B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F5B9CA2CEE5A090062438B /* Helpers.swift */; };
 		25F5B9CF2CEEA4F90062438B /* SwipeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */; };
 		61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61129BC62CEC10D10076C793 /* UserCardView.swift */; };
@@ -164,6 +165,7 @@
 		25ECBA1B2CD0390600256104 /* DataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		25ECBA1D2CD03A0A00256104 /* CleanedUofCLocationData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CleanedUofCLocationData.json; sourceTree = "<group>"; };
 		25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationModel.swift; sourceTree = "<group>"; };
+		25F1BDAE2CF2656B0036D7E1 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		25F5B9CA2CEE5A090062438B /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeActions.swift; sourceTree = "<group>"; };
 		61129BC62CEC10D10076C793 /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 		259CB2782CC0460400C9F285 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				25F1BDAE2CF2656B0036D7E1 /* NotificationService.swift */,
 				2553B44D2CF019E500E14E2B /* AppDelegate.swift */,
 				0669F9492CD1CCA30031D154 /* MessagingService.swift */,
 				25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */,
@@ -561,6 +564,7 @@
 				25E1ABC32CD00FAD00F27722 /* AreaModel.swift in Sources */,
 				259CB2982CC0465600C9F285 /* HomeView.swift in Sources */,
 				000AE7432CD5E71700431CDB /* ChatProfileTitle.swift in Sources */,
+				25F1BDAF2CF2656B0036D7E1 /* NotificationService.swift in Sources */,
 				61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */,
 				259CB2AA2CC0486D00C9F285 /* OrbitApp.swift in Sources */,
 				259CB2A02CC0465600C9F285 /* ErrorView.swift in Sources */,

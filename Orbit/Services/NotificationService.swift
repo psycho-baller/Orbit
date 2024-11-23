@@ -7,7 +7,13 @@
 
 import Foundation
 
-class NotificationService {
+protocol NotificationServiceProtocol {
+    func sendPushNotification(to accountId: String, title: String, body: String)
+        async throws
+
+}
+
+class NotificationService: NotificationServiceProtocol {
     private var appwriteService: AppwriteService
     //    private var messagingService: MessagingService
 
