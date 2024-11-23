@@ -6,9 +6,9 @@
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
 
-import Foundation
 import Appwrite
 import AppwriteModels
+import Foundation
 
 protocol AppwriteServiceProtocol {
     var client: Client { get }
@@ -25,10 +25,11 @@ class AppwriteService: AppwriteServiceProtocol {
     let realtime: Realtime
     let realtime2: Realtime
     let messaging: Messaging
+    let functions: Functions
 
     let databaseId = "orbit"
     let bucketId = "userAssets"
-    
+
     let COLLECTION_ID_MESSAGES = "messages"
     let COLLECTION_ID_CONVERSATIONS = "conversations"
     //    var functionId = "YOUR_FUNCTION_ID"
@@ -39,8 +40,6 @@ class AppwriteService: AppwriteServiceProtocol {
     //    var fileId = ""
 
     static let shared = AppwriteService()
-    
-       
     init() {
 
         self.client = Client()
@@ -54,6 +53,7 @@ class AppwriteService: AppwriteServiceProtocol {
         self.realtime = Realtime(client)
         self.realtime2 = Realtime(client)
         self.messaging = Messaging(client)
+        self.functions = Functions(client)
 
     }
 }
