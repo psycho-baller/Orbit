@@ -259,7 +259,8 @@ class MessagingViewModel: ObservableObject {
         }
 
         print("Fetching conversations for user ID: \(userId)")
-        let fetchedConversations = await getConversationDetails(userId)
+        var fetchedConversations = await getConversationDetails(userId)
+        fetchedConversations.sort { $0.timestamp > $1.timestamp }
         self.conversations = fetchedConversations
         completion(fetchedConversations)
 
@@ -268,7 +269,28 @@ class MessagingViewModel: ObservableObject {
             onNewMessage: { newMessage in
                 DispatchQueue.main.async{
                     print("Received new message: \(newMessage.data.message)")
-                    self.conversations = self.conversations.map { conversation in
+                    
+                    if let index = self.conversations.firstIndex(where: {$0.id == newMessage.data.conversationId}) {
+                        
+                        var updatedConversation = self.conversations[index]
+                        updatedConversation.update(with: newMessage)
+                        updatedConversation.timestamp = self.formatTimestamp(newMessage.createdAt)
+                        
+                        self.conversations.remove(at: index)
+                        self.conversations.insert(updatedConversation, at: 0)
+                    } else {
+                        Task{
+                            if let newConversation = await self.fetchConversationDetail(accountId: userId, conversationId: newMessage.data.conversationId) {
+                                DispatchQueue.main.async {
+                                    self.conversations.insert(newConversation, at: 0)
+                                }
+                            }
+                        }
+                      
+                    }
+                    
+                    
+                   /* self.conversations = self.conversations.map { conversation in
                         var mutableConversation = conversation  // Create a mutable copy
                         if mutableConversation.id == newMessage.data.conversationId
                         {
@@ -277,11 +299,12 @@ class MessagingViewModel: ObservableObject {
                             mutableConversation.timestamp = self.formatTimestamp(newMessage.createdAt)
                         }
                         return mutableConversation
-                    }
+                    } */
                     
                 }
              
-            })
+            }
+        )
     }
 
     @MainActor
