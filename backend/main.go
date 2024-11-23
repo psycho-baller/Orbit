@@ -26,7 +26,7 @@ type Data struct {
 type RequestData struct {
 	Message Message `json:"message"`
 	Data    Data    `json:"data"`
-	DeviceToken string `json:"deviceToken"`
+	// DeviceToken string `json:"deviceToken"`
 }
 
 type ResponseData struct {
@@ -51,8 +51,8 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 		// Combine the values into a single string with new line separators
 		combinedString := requestData.Message.Title + "\n" +
 		requestData.Message.Body + "\n" +
-		strings.Join(requestData.Data.UserIds, ", ") + "\n" +
-		requestData.DeviceToken
+		strings.Join(requestData.Data.UserIds, ", ") + "\n"
+		// + requestData.DeviceToken
 		Context.Log("Data parsed successfully:\n" + combinedString)
 	}
 

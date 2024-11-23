@@ -34,7 +34,7 @@ class NotificationService: NotificationServiceProtocol {
             "data": [
                 "userIds": [accountId]
             ],
-            "DeviceToken": "ass",
+            // "DeviceToken": "",
         ]
 
         // Convert the dictionary to JSON data
@@ -51,8 +51,6 @@ class NotificationService: NotificationServiceProtocol {
                             functionId: "push-notif",
                             body: stringBody,
                             async: true
-                                // method: .pOST
-                                //                            headers: [:]
                         )
                     print("Notification sent successfully: \(response.status)")
                 } catch {
