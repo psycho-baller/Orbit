@@ -16,38 +16,52 @@ class NotificationService {
         //        self.messagingService = appwriteService.messaging
     }
 
-    func sendPushNotification(to accountId: String, message: String)
+    func sendPushNotification(to accountId: String, title: String, body: String)
         async throws
     {
-        // Construct the payload for the push notification
-        let payload: [String: Any] = [
-            "accountId": accountId,
-            "aps": [
-                "alert": [
-                    "title": "New Chat Request",
-                    "body": message,
-                ],
-                "sound": "default",
+        // Construct the json body for the push notification
+        let body: [String: Any] = [
+            "message": [
+                "title": title,
+                "body": body,
             ],
+            "data": [
+                "userIds": [accountId]
+            ],
+            "DeviceToken": "ass",
         ]
 
-        do {
-            // Call the Appwrite messaging service to send the notification
-            let response = try await appwriteService.functions.createExecution(
-                functionId: "<FUNCTION_ID>",
-                //                body: payload,
-                async: true,
-                method: .pOST,
-                headers: [:]
-            )
-            print("Notification sent successfully: \(response)")
-        } catch {
-            throw NSError(
-                domain: "NotificationService", code: 0,
-                userInfo: [
-                    NSLocalizedDescriptionKey:
-                        "Failed to send push notification: \(error.localizedDescription)"
-                ])
+        // Convert the dictionary to JSON data
+        if let jsonBody = try? JSONSerialization.data(
+            withJSONObject: body, options: .prettyPrinted)
+        {
+            // Convert JSON data to a string
+            if let stringBody = String(data: jsonBody, encoding: .utf8) {
+                print("JSON String: \(stringBody)")
+                do {
+                    // Call the Appwrite messaging service to send the notification
+                    let response = try await appwriteService.functions
+                        .createExecution(
+                            functionId: "push-notif",
+                            body: stringBody,
+                            async: true,
+                            method: .pOST,
+                            headers: [:]
+                        )
+                    print("Notification sent successfully: \(response)")
+                } catch {
+                    throw NSError(
+                        domain: "NotificationService", code: 0,
+                        userInfo: [
+                            NSLocalizedDescriptionKey:
+                                "Failed to send push notification: \(error.localizedDescription)"
+                        ])
+                }
+            } else {
+                print("Failed to convert JSON data to String.")
+            }
+        } else {
+            print("Failed to serialize JSON object.")
         }
     }
 }
