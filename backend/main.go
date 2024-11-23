@@ -58,7 +58,7 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 
 	// Send a notification
 	messaging := appwrite.NewMessaging(client)
-	response, err := messaging.CreatePush(id.Unique(), "[TITLE]", "[BODY]", messaging.WithCreatePushUsers(requestData.Data.UserIds))
+	response, err := messaging.CreatePush(id.Unique(), requestData.Message.Title, requestData.Message.Body, messaging.WithCreatePushUsers(requestData.Data.UserIds))
 	if err != nil {
 		log.Fatalf("Failed to send notification: %v", err)
 	}
