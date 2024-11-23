@@ -1,6 +1,6 @@
 module orbit-backend
 
-go 1.23.3
+go 1.23.0
 
 require (
 	github.com/appwrite/sdk-for-go v0.2.0 // indirect
