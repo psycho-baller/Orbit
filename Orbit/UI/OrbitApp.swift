@@ -24,6 +24,7 @@ struct OrbitApp: App {
                 .environmentObject(userVM)
                 .environmentObject(msgVM)
                 .environmentObject(chatRequestVM)
+                .environmentObject(appDelegate.appState)
         }
     }
 }
