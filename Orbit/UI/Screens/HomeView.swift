@@ -10,6 +10,7 @@ struct HomeView: View {
 
     @State private var selectedUser: UserModel? = nil
     @State private var isShowingChatRequests = false
+    @State private var chatRequestListDetent: PresentationDetent = .medium
 
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
@@ -29,10 +30,12 @@ struct HomeView: View {
                         }
                     )
                     .sheet(isPresented: $isShowingChatRequests) {
-                        MeetUpRequestsListView()
+                        MeetUpRequestsListView(chatRequestListDetent: $chatRequestListDetent)
                             .environmentObject(chatRequestVM)
                             .environmentObject(userVM)
-                            .presentationDetents([.medium, .large])
+                            .presentationDetents(
+                                [.medium, .large], selection: $chatRequestListDetent
+                            )
                             .presentationDragIndicator(.visible)
                     }
                     .sheet(item: $selectedUser) { user in
@@ -40,11 +43,29 @@ struct HomeView: View {
                             sender: userVM.currentUser, receiver: user)
                     }
                     .background(ColorPalette.background(for: colorScheme))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                //        .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .onAppear {
+                handleNotificationNavigation()
+            }
+            .onChange(of: appState.selectedRequestId) { _ in
+                handleNotificationNavigation()
             }
         }
     }
 
+    private func handleNotificationNavigation() {
+        if let requestId = appState.selectedRequestId {
+            if let request = chatRequestVM.requests.first(where: { $0.id == requestId }) {
+                isShowingChatRequests = true
+                chatRequestListDetent = .large
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    chatRequestVM.selectedRequest = request
+                }
+            }
+            appState.selectedRequestId = nil  // Reset after handling
+        }
+    }
     @ViewBuilder private var content: some View {
         if userVM.isLoading {
             ActivityIndicatorView().padding()
