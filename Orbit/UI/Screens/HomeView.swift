@@ -5,54 +5,44 @@ struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
     @EnvironmentObject private var chatRequestVM: ChatRequestViewModel
-    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
+    @EnvironmentObject private var appState: AppState
+    @Environment(\.colorScheme) var colorScheme
 
-    @State private var selectedUser: UserModel? = nil  // Track selected user for chat request
-    @State private var isShowingChatRequests = false  // Control showing the chat request popup
+    @State private var selectedUser: UserModel? = nil
+    @State private var isShowingChatRequests = false
 
     var body: some View {
-        ZStack {
-            content
-                .navigationBarItems(
-                    trailing: HStack {
-                        logoutButton
-                        notificationButton
-                            .overlay(
-                                Group {
-                                    if chatRequestVM.requests.count > 0 {
-                                        Text("\(chatRequestVM.requests.count)")
-                                            .font(.caption2)
-                                            .padding(5)
-                                            .foregroundColor(.white)
-                                            .background(Color.red)
-                                            .clipShape(Circle())
-                                            .offset(x: 10, y: -10)
-                                    }
-                                }
-                            )
+        NavigationStack(path: $appState.navigationPath) {
+            ZStack {
+                content
+                    .navigationTitle(
+                        userVM.currentArea.map { "Users in \($0)" } ?? "Users"
+                    )
+                    .navigationBarTitleDisplayMode(.automatic)
+                    .navigationBarItems(
+                        trailing: HStack {
+                            logoutButton
+                            notificationButton
+                                .overlay(
+                                    notificationBadge
+                                )
+                        }
+                    )
+                    .sheet(isPresented: $isShowingChatRequests) {
+                        MeetUpRequestsListView()
+                            .environmentObject(chatRequestVM)
+                            .environmentObject(userVM)
+                            .presentationDetents([.medium, .large])
+                            .presentationDragIndicator(.visible)
                     }
-                )
-                .navigationBarTitle(
-                    userVM.currentArea.map { "Users in \($0)" } ?? "Users",
-                    displayMode: .automatic
-                )
-                .sheet(isPresented: $isShowingChatRequests) {  // Present as bottom sheet
-                    MeetUpRequestsListView()
-                        .environmentObject(chatRequestVM)
-                        .environmentObject(userVM)
-                        .presentationDetents([.medium, .large])  // Adjustable heights
-                        .presentationDragIndicator(.visible)  // Drag indicator for resizing
-                }
-                .sheet(item: $selectedUser) { user in  // Show the chat request sheet
-                    ChatRequestView(sender: userVM.currentUser, receiver: user)
-                }
-                .background(ColorPalette.background(for: colorScheme))
-                .frame(maxWidth: .infinity, maxHeight: .infinity)  // Ensure it spans the full space
-
+                    .sheet(item: $selectedUser) { user in
+                        ChatRequestView(
+                            sender: userVM.currentUser, receiver: user)
+                    }
+                    .background(ColorPalette.background(for: colorScheme))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)  // Ensure it spans the full space
-
-        //        .background(Color.red)  // Red background for the List
     }
 
     @ViewBuilder private var content: some View {
@@ -67,13 +57,28 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - Buttons
     private var notificationButton: some View {
         Button(action: {
-            isShowingChatRequests = true  // Show the bottom sheet
+            isShowingChatRequests = true
         }) {
             Image(systemName: "bell")
                 .font(.headline)
                 .foregroundColor(ColorPalette.accent(for: colorScheme))
+        }
+    }
+
+    private var notificationBadge: some View {
+        Group {
+            if chatRequestVM.requests.count > 0 {
+                Text("\(chatRequestVM.requests.count)")
+                    .font(.caption2)
+                    .padding(5)
+                    .foregroundColor(.white)
+                    .background(Color.red)
+                    .clipShape(Circle())
+                    .offset(x: 10, y: -10)
+            }
         }
     }
 
@@ -89,6 +94,7 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - Views
     private func failedView(_ error: String) -> some View {
         VStack {
             Text("Error loading users")
@@ -129,7 +135,7 @@ struct HomeView: View {
     private func loadedView(_ users: [UserModel]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             SearchBar(
-                text: $userVM.searchText, placeholder: "search for a user"
+                text: $userVM.searchText, placeholder: "Search for a user"
             )
 
             HStack {
@@ -158,28 +164,19 @@ struct HomeView: View {
                         .shadow(radius: 3)
                     }
                 }
-                .background(
-                    ColorPalette.background(for: colorScheme)
-                    //                    LinearGradient(
-                    //                        gradient: Gradient(colors: [
-                    //                            ColorPalette.background(for: colorScheme),
-                    //                            ColorPalette.main(for: colorScheme),
-                    //                        ]),
-                    //                        startPoint: .topLeading,
-                    //                        endPoint: .bottomTrailing
-                    //                    )
-                ).onAppear {
-                    if !isPreviewMode {
-                        Task {
-                            await userVM.initialize()
-                            await loadRequests()
-                        }
+                .padding(.horizontal)
+            }
+            .onAppear {
+                if !isPreviewMode {
+                    Task {
+                        await userVM.initialize()
+                        await loadRequests()
                     }
                 }
-                .padding(.horizontal)
             }
         }
     }
+
     private func loadRequests() async {
         guard let currentUserId = userVM.currentUser?.accountId else {
             chatRequestVM.errorMessage = "Unable to determine the current user."
@@ -203,5 +200,6 @@ struct HomeView: View {
             .environmentObject(AuthViewModel.mock())
             .environmentObject(UserViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(AppState())
     }
 #endif
