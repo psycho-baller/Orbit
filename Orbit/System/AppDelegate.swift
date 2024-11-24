@@ -14,7 +14,8 @@ class AppDelegate: NSObject, UIApplicationDelegate,
     UNUserNotificationCenterDelegate
 {
     let logger = Logger(
-        subsystem: "com.cpsc575.orbit.pushnotifications", category: "AppDelegate")
+        subsystem: "com.cpsc575.orbit.pushnotifications",
+        category: "AppDelegate")
 
     let appState = AppState()
 
@@ -85,9 +86,12 @@ class AppDelegate: NSObject, UIApplicationDelegate,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         let userInfo = response.notification.request.content.userInfo
-        if let targetScreen = userInfo["targetScreen"] as? String {
+        print(userInfo, separator: "\n")
+        if // let targetScreen = userInfo["targetScreen"] as? String,
+        let requestId = userInfo["requestId"] as? String {  // Assume requestId is passed in the payload
             DispatchQueue.main.async {
-                self.appState.targetScreen = targetScreen
+                // self.appState.targetScreen = targetScreen
+                self.appState.selectedRequestId = requestId
             }
         }
         completionHandler()

@@ -9,15 +9,17 @@ import SwiftUI
 
 struct MeetUpRequestDetailsView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
-    //    @EnvironmentObject var messagingVM: MessagingViewModel
+    @EnvironmentObject var userVM: UserViewModel
     @Environment(\.dismiss) var dismiss
     var request: ChatRequestDocument
 
     var body: some View {
         VStack {
-            Text("Meet-up request from \(request.data.senderAccountId)")
-                .font(.headline)
-                .padding()
+            Text(
+                "Meet-up request from \(userVM.getUserName(from: request.data.senderAccountId))"
+            )
+            .font(.headline)
+            .padding()
 
             Text(request.data.message)
                 .padding()
@@ -58,3 +60,13 @@ struct MeetUpRequestDetailsView: View {
         }
     }
 }
+
+#if DEBUG
+    #Preview {
+        MeetUpRequestDetailsView(
+            request: (mockChatRequestDocument as? ChatRequestDocument)!
+        )
+        .environmentObject(ChatRequestViewModel.mock())
+        .environmentObject(UserViewModel.mock())
+    }
+#endif

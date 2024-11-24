@@ -13,6 +13,7 @@ class ChatRequestViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading = false
     @Published private var sentRequests: Set<String> = []
+    @Published var selectedRequest: ChatRequestDocument? = nil
 
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
@@ -38,9 +39,12 @@ class ChatRequestViewModel: ObservableObject {
             self.requests.append(requestDoc)
 
             try await notificationService.sendPushNotification(
-                to: request.receiverAccountId,
+                to: [request.receiverAccountId],
                 title: "meow",
-                body: requestDoc.data.message
+                body: requestDoc.data.message,
+                data: [
+                    "requestId": requestDoc.id
+                ]
             )
 
         } catch {
