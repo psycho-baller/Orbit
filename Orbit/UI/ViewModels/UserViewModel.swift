@@ -54,8 +54,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         )
         self.preciseLocationManager = PreciseLocationManager()
         preciseLocationManager?.delegate = self  // Set delegate to receive location updates
-            await fetchCurrentUser()
-            await subscribeToRealtimeUpdates()
+        await fetchCurrentUser()
+        await subscribeToRealtimeUpdates()
     }
 
     @MainActor
@@ -497,59 +497,59 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 name: "John Doe",
                 interests: ["Basketball", "Music"],
                 latitude: 51.078621,
-                longitude: -114.136719,
-                isInterestedToMeet: true,
+                longitude: 114.136719,
+                isInterestedToMeet: false,
                 currentAreaId: "990215865"
             )
 
             // Add mock users
-            viewModel.users = [
-                UserModel(
-                    accountId: "6726b1ef776f5badc4fe",
-                    name: "Jane Smith",
-                    interests: ["Reading", "Cooking"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "11223",
-                    name: "Michael Brown",
-                    interests: ["Video Games", "Art"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "33445",
-                    name: "Emily White",
-                    interests: ["Travel", "Movies"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "55667",
-                    name: "David Green",
-                    interests: ["Basketball", "Music", "Art"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "77889",
-                    name: "Sophia Black",
-                    interests: ["Hiking", "Photography"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-            ]
+            viewModel.users = []
+            //                UserModel(
+            //                    accountId: "6726b1ef776f5badc4fe",
+            //                    name: "Jane Smith",
+            //                    interests: ["Reading", "Cooking"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "11223",
+            //                    name: "Michael Brown",
+            //                    interests: ["Video Games", "Art"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "33445",
+            //                    name: "Emily White",
+            //                    interests: ["Travel", "Movies"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "55667",
+            //                    name: "David Green",
+            //                    interests: ["Basketball", "Music", "Art"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "77889",
+            //                    name: "Sophia Black",
+            //                    interests: ["Hiking", "Photography"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //            ]
             return viewModel
         }
     }

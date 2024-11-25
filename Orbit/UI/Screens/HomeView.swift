@@ -11,15 +11,22 @@ struct HomeView: View {
     @State private var selectedUser: UserModel? = nil
     @State private var isShowingChatRequests = false
     @State private var chatRequestListDetent: PresentationDetent = .medium
+    @State private var showLogoutAlert = false
 
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
             ZStack {
                 content
                     .navigationTitle(
-                        userVM.currentArea.map { "Users in \($0)" } ?? "Users"
+                        userVM.isOnCampus
+                            ? (userVM.currentArea.map { "Users in \($0)" }
+                                ?? "Users")
+                            : ""
                     )
-                    .navigationBarTitleDisplayMode(.automatic)
+
+                    .navigationBarTitleDisplayMode(
+                        userVM.isOnCampus ? .automatic : .inline
+                    )
                     .navigationBarItems(
                         trailing: HStack {
                             logoutButton
@@ -27,6 +34,8 @@ struct HomeView: View {
                                 .overlay(
                                     notificationBadge
                                 )
+                            settingsButton
+
                         }
                     )
                     .sheet(isPresented: $isShowingChatRequests) {
@@ -42,11 +51,15 @@ struct HomeView: View {
                         ChatRequestView(
                             sender: userVM.currentUser, receiver: user)
                     }
+                    .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
+                        HomeSettings()
+                            .presentationDetents([.fraction(0.7), .large])
+                            .presentationDragIndicator(.visible)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(ColorPalette.background(for: colorScheme))
-                //        .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .onAppear {
-                print("appearing")
                 Task {
                     await handleNotificationNavigation()
                 }
@@ -79,10 +92,12 @@ struct HomeView: View {
             ActivityIndicatorView().padding()
         } else if let error = userVM.error {
             failedView(error)
-        } else if userVM.isOnCampus || isPreviewMode {
+            //        } else if userVM.currentUser?.isInterestedToMeet == false {
+            //            NotInterestedToMeetView()
+        } else if userVM.isOnCampus {
             loadedView(userVM.filteredUsers)
         } else {
-            offCampusView()
+            OffCampusView()
         }
     }
 
@@ -113,11 +128,34 @@ struct HomeView: View {
 
     private var logoutButton: some View {
         Button(action: {
+            showLogoutAlert = true
             Task {
                 await authVM.logout()
             }
         }) {
             Image(systemName: "rectangle.portrait.and.arrow.right")
+                .font(.headline)
+                .foregroundColor(ColorPalette.accent(for: colorScheme))
+        }
+        .alert(isPresented: $showLogoutAlert) {
+            Alert(
+                title: Text("Confirm Logout"),
+                message: Text("Are you sure you want to log out?"),
+                primaryButton: .destructive(Text("Logout")) {
+                    Task {
+                        await authVM.logout()
+                    }
+                },
+                secondaryButton: .cancel()
+            )
+        }
+    }
+
+    private var settingsButton: some View {
+        Button(action: {
+            appState.isShowingHomeSettings = true
+        }) {
+            Image(systemName: "gearshape")
                 .font(.headline)
                 .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
@@ -148,19 +186,6 @@ struct HomeView: View {
         .background(ColorPalette.background(for: colorScheme))
     }
 
-    private func offCampusView() -> some View {
-        VStack {
-            Text("You are currently off-campus.")
-                .font(.title)
-                .foregroundColor(ColorPalette.accent(for: colorScheme))
-            Text("User list is available only on campus.")
-                .multilineTextAlignment(.center)
-                .padding()
-        }
-        .background(ColorPalette.background(for: colorScheme))
-        .padding()
-    }
-
     private func loadedView(_ users: [UserModel]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             SearchBar(
@@ -180,26 +205,30 @@ struct HomeView: View {
                 .shadow(radius: 3)
             }
 
-            ScrollView {
-                VStack(spacing: 16) {
-                    ForEach(userVM.filteredUsers) { user in
-                        UserCardView(
-                            user: user, currentUser: userVM.currentUser
-                        )
-                        .onTapGesture {
-                            selectedUser = user
+            if userVM.filteredUsers.isEmpty {
+                NoUsersAroundView()
+            } else {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        ForEach(userVM.filteredUsers) { user in
+                            UserCardView(
+                                user: user, currentUser: userVM.currentUser
+                            )
+                            .onTapGesture {
+                                selectedUser = user
+                            }
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
                         }
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-            }
-            .onAppear {
-                if !isPreviewMode {
-                    Task {
-                        await userVM.initialize()
-                        await loadRequests()
+                .onAppear {
+                    if !isPreviewMode {
+                        Task {
+                            await userVM.initialize()
+                            await loadRequests()
+                        }
                     }
                 }
             }
