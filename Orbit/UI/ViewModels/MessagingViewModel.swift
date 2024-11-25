@@ -244,7 +244,7 @@ class MessagingViewModel: ObservableObject {
 
     @MainActor
     func unsubscribeFromMessages() async {
-        await messagingService.unsubscribeFromMesages()
+        await messagingService.unsubscribeFromMessages()
     }
 
     /// Initializes the inbox: Fetches conversations and subscribes to new messages

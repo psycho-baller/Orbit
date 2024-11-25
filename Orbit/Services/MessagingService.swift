@@ -18,7 +18,7 @@ protocol MessagingServiceProtocol {
     func subscribeToMessages(
         conversationId: String?,
         onNewMessage: @escaping (MessageDocument) -> Void) async throws
-    func unsubscribeFromMesages() async
+    func unsubscribeFromMessages() async
     func markMessagesRead(conversationId: String) async throws
 }
 
@@ -146,7 +146,7 @@ class MessagingService: MessagingServiceProtocol {
         }
     }
 
-    func unsubscribeFromMesages() async {
+    func unsubscribeFromMessages() async {
         do {
             try await subscription?.close()
             subscription = nil
