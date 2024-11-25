@@ -244,7 +244,38 @@ class MessagingViewModel: ObservableObject {
 
     @MainActor
     func unsubscribeFromMessages() async {
-        await messagingService.unsubscribeFromMesages()
+        await messagingService.unsubscribeFromMessages()
+    }
+    
+    @MainActor
+    func subscribeToInboxMessages(
+        conversationId: String,
+        onNewMessage: @escaping (MessageDocument) -> Void
+    ) async {
+        do {
+            try await messagingService.subscribeToInboxMessages(
+                conversationId: conversationId,
+                onNewMessage: { newMessage in
+                    DispatchQueue.main.async {
+                        onNewMessage(newMessage)  // Safely call the optional closure
+                    }
+                }
+            )
+            print(
+                "MessagingViewModel - Subscribed to real-time messages for conversation Inbox: \(conversationId)"
+            )
+
+        } catch {
+            print(
+                "MessagingViewModel - Failed to subscribe to real-time messages for Inbox: \(error.localizedDescription)"
+            )
+        }
+
+    }
+    
+    @MainActor
+    func unsubscribeFromInboxMessages() async {
+        await messagingService.unsubscribeFromInboxMessages()
     }
 
     /// Initializes the inbox: Fetches conversations and subscribes to new messages
@@ -263,7 +294,7 @@ class MessagingViewModel: ObservableObject {
         self.conversations = fetchedConversations
         completion(fetchedConversations)
 
-        await subscribeToMessages(
+        await subscribeToInboxMessages(
             conversationId: "",
             onNewMessage: { newMessage in
                 DispatchQueue.main.async{
