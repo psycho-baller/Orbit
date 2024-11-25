@@ -33,8 +33,6 @@ struct HomeView: View {
                         MeetUpRequestsListView(
                             chatRequestListDetent: $chatRequestListDetent
                         )
-                        .environmentObject(chatRequestVM)
-                        .environmentObject(userVM)
                         .presentationDetents(
                             [.medium, .large], selection: $chatRequestListDetent
                         )
@@ -53,7 +51,7 @@ struct HomeView: View {
                     await handleNotificationNavigation()
                 }
             }
-            .onChange(of: appState.selectedRequestId) { requestId in
+            .onChange(of: appState.selectedRequestId) { _ in
                 Task {
                     await handleNotificationNavigation()
                 }
@@ -69,9 +67,9 @@ struct HomeView: View {
                 print("Selected request ID changed: ", requestId ?? "nil")
                 isShowingChatRequests = true
                 chatRequestListDetent = .large
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    chatRequestVM.selectedRequest = request
-//                }
+                //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                chatRequestVM.selectedRequest = request
+                //                }
             }
             appState.selectedRequestId = nil  // Reset after handling
         }
