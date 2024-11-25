@@ -28,7 +28,9 @@ class ChatRequestViewModel: ObservableObject {
 
     // Send a meet-up request
     @MainActor
-    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String) async {
+    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?)
+        async
+    {
         isLoading = true
         defer { isLoading = false }
 
@@ -40,7 +42,8 @@ class ChatRequestViewModel: ObservableObject {
 
             try await notificationService.sendPushNotification(
                 to: [request.receiverAccountId],
-                title: "\(senderName) wants to meet up!",
+                title:
+                    "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
                 body: requestDoc.data.message,
                 data: [
                     "requestId": requestDoc.id
