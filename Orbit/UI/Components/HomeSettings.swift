@@ -9,25 +9,30 @@ import SwiftUI
 
 struct HomeSettings: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var userVM: UserViewModel
 
     var body: some View {
         VStack {
             Text("Settings")
-                .font(.largeTitle)
+                .font(.title)
                 .padding()
-
-            // Add your configuration options here
-            Toggle("Enable Notifications", isOn: .constant(true))
-                .padding()
-
-            Button("Close") {
-                presentationMode.wrappedValue.dismiss()
-            }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(8)
+            Toggle(
+                "Receive meetup requests from other people",
+                isOn: Binding(
+                    get: { userVM.currentUser?.isInterestedToMeet ?? false },
+                    set: { _ in
+                        Task {
+                            await userVM.toggleIsInterestedToMeet()
+                        }
+                    }
+                )
+            )
+            .font(.headline)
         }
         .padding()
     }
+}
+#Preview {
+    HomeSettings()
+        .environmentObject(UserViewModel.mock())
 }

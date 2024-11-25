@@ -168,6 +168,46 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     }
 
     @MainActor
+    func toggleIsInterestedToMeet() async {
+        guard var currentUser = currentUser else {
+            print("No current user available to toggle isInterestedToMeet.")
+            return
+        }
+
+        // Toggle the `isInterestedToMeet` attribute
+        currentUser.isInterestedToMeet =
+            !(currentUser.isInterestedToMeet ?? false)
+
+        do {
+            // Update the user in the Appwrite database
+            print(
+                "Toggling isInterestedToMeet for user \(currentUser.accountId)."
+            )
+            guard
+                let updatedUserDocument =
+                    try await userManagementService.updateUser(
+                        accountId: currentUser.accountId,
+                        updatedUser: currentUser)
+            else {
+                throw NSError(
+                    domain: "User not found", code: 404, userInfo: nil)
+            }
+
+            // Update the `currentUser` property with the latest data
+            self.currentUser = currentUser
+
+            print(
+                "Successfully toggled isInterestedToMeet for user \(updatedUserDocument.id)."
+            )
+        } catch {
+            print(
+                "Error toggling isInterestedToMeet: \(error.localizedDescription)"
+            )
+            self.error = error.localizedDescription
+        }
+    }
+
+    @MainActor
     func fetchUsersInArea(areaId: String) async {
         guard areaId != lastFetchedAreaId else { return }  // Fetch only if area changed
         lastFetchedAreaId = areaId  // Update last fetched area
@@ -498,7 +538,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 interests: ["Basketball", "Music"],
                 latitude: 51.078621,
                 longitude: 114.136719,
-                isInterestedToMeet: false,
+                isInterestedToMeet: true,
                 currentAreaId: "990215865"
             )
 
