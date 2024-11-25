@@ -34,15 +34,20 @@ struct MessageView: View {
                     }
                     .onChange(of: msgVM.lastMessageId) { oldMessageId, newMessageId in
                         if let id = newMessageId {
-                            withAnimation {
-                                proxy.scrollTo(id, anchor: .bottom)
+                            DispatchQueue.main.async{
+                                withAnimation {
+                                    proxy.scrollTo(id, anchor: .bottom)
+                                }
                             }
+                           
                         }
                     }
                     .onAppear {
                         if let id = msgVM.lastMessageld.wrappedValue {
-                            withAnimation {
-                                proxy.scrollTo(id, anchor: .bottom)
+                            DispatchQueue.main.async{
+                                withAnimation {
+                                    proxy.scrollTo(id, anchor: .bottom)
+                                }
                             }
                         }
                     }
