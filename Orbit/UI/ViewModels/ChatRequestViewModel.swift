@@ -63,7 +63,7 @@ class ChatRequestViewModel: ObservableObject {
 
     // Fetch a specific meet-up request by ID
     @MainActor
-    func fetchMeetUpRequest(requestId: String) async {
+    func getMeetUpRequest(requestId: String) async -> ChatRequestDocument? {
         isLoading = true
         defer { isLoading = false }
 
@@ -71,13 +71,15 @@ class ChatRequestViewModel: ObservableObject {
             if let request = try await chatRequestService.getMeetUpRequest(
                 requestId: requestId)
             {
-                self.requests.append(request)
+                return request
             } else {
                 self.errorMessage = "Meet-up request not found."
+                throw NSError(domain: "ChatRequestViewModel", code: 404)
             }
         } catch {
             self.errorMessage =
                 "Error fetching meet-up request: \(error.localizedDescription)"
+            return nil
         }
     }
 

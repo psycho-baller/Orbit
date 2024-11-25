@@ -30,13 +30,15 @@ struct HomeView: View {
                         }
                     )
                     .sheet(isPresented: $isShowingChatRequests) {
-                        MeetUpRequestsListView(chatRequestListDetent: $chatRequestListDetent)
-                            .environmentObject(chatRequestVM)
-                            .environmentObject(userVM)
-                            .presentationDetents(
-                                [.medium, .large], selection: $chatRequestListDetent
-                            )
-                            .presentationDragIndicator(.visible)
+                        MeetUpRequestsListView(
+                            chatRequestListDetent: $chatRequestListDetent
+                        )
+                        .environmentObject(chatRequestVM)
+                        .environmentObject(userVM)
+                        .presentationDetents(
+                            [.medium, .large], selection: $chatRequestListDetent
+                        )
+                        .presentationDragIndicator(.visible)
                     }
                     .sheet(item: $selectedUser) { user in
                         ChatRequestView(
@@ -46,22 +48,30 @@ struct HomeView: View {
                 //        .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .onAppear {
-                handleNotificationNavigation()
+                print("appearing")
+                Task {
+                    await handleNotificationNavigation()
+                }
             }
-            .onChange(of: appState.selectedRequestId) { _ in
-                handleNotificationNavigation()
+            .onChange(of: appState.selectedRequestId) { requestId in
+                Task {
+                    await handleNotificationNavigation()
+                }
             }
         }
     }
 
-    private func handleNotificationNavigation() {
+    private func handleNotificationNavigation() async {
         if let requestId = appState.selectedRequestId {
-            if let request = chatRequestVM.requests.first(where: { $0.id == requestId }) {
+            if let request = await chatRequestVM.getMeetUpRequest(
+                requestId: requestId)
+            {
+                print("Selected request ID changed: ", requestId ?? "nil")
                 isShowingChatRequests = true
                 chatRequestListDetent = .large
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     chatRequestVM.selectedRequest = request
-                }
+//                }
             }
             appState.selectedRequestId = nil  // Reset after handling
         }

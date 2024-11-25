@@ -87,13 +87,34 @@ class AppDelegate: NSObject, UIApplicationDelegate,
     ) {
         let userInfo = response.notification.request.content.userInfo
         print(userInfo, separator: "\n")
-        if // let targetScreen = userInfo["targetScreen"] as? String,
-        let requestId = userInfo["requestId"] as? String {  // Assume requestId is passed in the payload
-            DispatchQueue.main.async {
-                // self.appState.targetScreen = targetScreen
-                self.appState.selectedRequestId = requestId
+
+        // Safely access the "aps" dictionary to retrieve standard notification fields
+        if let aps = userInfo["aps"] as? [String: Any] {
+            print("APS: \(aps)")
+
+            // Access standard APS fields like alert, badge, and sound
+            if let alert = aps["alert"] as? [String: Any] {
+                let alertBody = alert["body"] as? String ?? "No body"
+                let alertTitle = alert["title"] as? String ?? "No title"
+                print("Alert Body: \(alertBody)")
+                print("Alert Title: \(alertTitle)")
             }
+
+            // Access the "data" dictionary to extract the custom fields
+            if let data = aps["data"] as? [String: Any],
+                let requestId = data["requestId"] as? String {
+                print("requestId: \(requestId)", "data: \(data)", separator: "\n")
+
+                DispatchQueue.main.async {
+                    // self.appState.targetScreen = targetScreen
+                    self.appState.selectedRequestId = requestId
+                }
+            }
+        } else {
+            print("No APS dictionary found in userInfo")
         }
+
+
         completionHandler()
     }
 }
