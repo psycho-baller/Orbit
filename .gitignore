@@ -56,3 +56,5 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/app_archive
+
+.env

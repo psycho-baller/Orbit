@@ -1,0 +1,8 @@
+{
+  "Simulator Target Bundle": "com.cpsc575.orbit",
+  "aps": {
+    "alert": "Your notification message",
+    "sound": "default",
+    "badge": 1
+  }
+}
