@@ -15,14 +15,9 @@ class ChatRequestViewModel: ObservableObject {
     @Published private var sentRequests: Set<String> = []
 
     private let chatRequestService: ChatRequestServiceProtocol
-    private let notificationService: NotificationServiceProtocol
 
-    init(
-        chatRequestService: ChatRequestServiceProtocol = ChatRequestService(),
-        notificationService: NotificationServiceProtocol = NotificationService()
-    ) {
+    init(chatRequestService: ChatRequestServiceProtocol = ChatRequestService()) {
         self.chatRequestService = chatRequestService
-        self.notificationService = notificationService
     }
 
     // Send a meet-up request
@@ -37,15 +32,23 @@ class ChatRequestViewModel: ObservableObject {
             print(requestDoc)
             self.requests.append(requestDoc)
 
-            try await notificationService.sendPushNotification(
-                to: request.receiverAccountId,
-                title: "meow",
-                body: requestDoc.data.message
-            )
+            await sendPushNotification(
+                to: request.toAccountId,
+                message: "User \(request.fromAccountId) sent you a chat request.")
 
         } catch {
             self.errorMessage =
                 "Failed to send meet-up request: \(error.localizedDescription)"
+        }
+    }
+
+    // New function to send push notification
+    private func sendPushNotification(to accountId: String, message: String) async {
+        // Assuming you have a function in your chatRequestService to send notifications
+        do {
+            try await chatRequestService.sendPushNotification(to: accountId, message: message)
+        } catch {
+            print("Failed to send push notification: \(error.localizedDescription)")
         }
     }
 
