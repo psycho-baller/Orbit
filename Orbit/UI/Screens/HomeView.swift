@@ -134,9 +134,6 @@ struct HomeView: View {
     private var logoutButton: some View {
         Button(action: {
             showLogoutAlert = true
-            Task {
-                await authVM.logout()
-            }
         }) {
             Image(systemName: "rectangle.portrait.and.arrow.right")
                 .font(.headline)
