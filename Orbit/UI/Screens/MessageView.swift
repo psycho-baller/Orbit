@@ -59,13 +59,13 @@ struct MessageView: View {
                             msgVM.messages.sort { $0.createdAt < $1.createdAt }
                             msgVM.lastMessageId = newMessage.id
                         }
-//                        
-//                        Task{
-//                            if let currentUserId = userVM.currentUser?.accountId {
-//                                await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
-//                            }
-//                            
-//                        }
+                        
+                        Task{
+                            if let currentUserId = userVM.currentUser?.accountId {
+                                await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+                            }
+                            
+                        }
                     }
                         
                    
