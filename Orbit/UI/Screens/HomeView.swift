@@ -187,17 +187,17 @@ struct HomeView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
     }
-    
+
     private func hasPendingRequest(for user: UserModel) -> Bool {
         guard let currentUserId = userVM.currentUser?.accountId else { return false }
 
-            return chatRequestVM.requests.contains { request in
-                let receiverId = request.data.receiverAccountId
-                let senderId = request.data.senderAccountId
-                return receiverId == user.accountId
-                    && senderId == currentUserId
-                    && request.data.status == .pending
-            }
+        return chatRequestVM.requests.contains { request in
+            let receiverId = request.data.receiverAccountId
+            let senderId = request.data.senderAccountId
+            return receiverId == user.accountId
+                && senderId == currentUserId
+                && request.data.status == .pending
+        }
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
@@ -206,7 +206,7 @@ struct HomeView: View {
                 text: $userVM.searchText,
                 placeholder: "Search for a user"
             )
-            
+
             HStack {
                 InterestsHorizontalTags(
                     interests: userVM.allInterests,
@@ -246,6 +246,7 @@ struct HomeView: View {
                             }
                         }
                     }
+                    //                    }
                 }
             }
         }
