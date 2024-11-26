@@ -223,13 +223,13 @@ struct HomeView: View {
                     }
                     .padding(.horizontal)
                 }
-                .onAppear {
-                    if !isPreviewMode {
-                        Task {
-                            await userVM.initialize()
-                            await loadRequests()
-                        }
-                    }
+            }
+        }
+        .onAppear {
+            if !isPreviewMode {
+                Task {
+                    await userVM.initialize()
+                    await loadRequests()
                 }
             }
         }
