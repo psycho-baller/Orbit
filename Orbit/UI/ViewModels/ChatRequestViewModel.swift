@@ -20,6 +20,7 @@ class ChatRequestViewModel: ObservableObject {
             )
         }
     }
+    @Published var newConversationId: String? = nil
 
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
