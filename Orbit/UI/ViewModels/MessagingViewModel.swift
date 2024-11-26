@@ -7,10 +7,12 @@
 
 @preconcurrency import Appwrite
 import Appwrite
+import CoreLocation
 import Foundation
 import SwiftUI
 
-class MessagingViewModel: ObservableObject {
+class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
+    
     private var messagingService: MessagingServiceProtocol = MessagingService()
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -18,6 +20,15 @@ class MessagingViewModel: ObservableObject {
     @Published var conversations: [ConversationDetailModel] = []
     @Published var messages: [MessageDocument] = []
     @Published var lastMessageId: String? = nil
+    @Published var currentLocation: CLLocationCoordinate2D?
+    
+    func didUpdateLocation(latitude: Double, longitude: Double) {
+        print(
+            "MessagingViewModel - didUpdateLocation: Received location update - Latitude: \(latitude), Longitude: \(longitude)."
+        )
+        self.currentLocation = CLLocationCoordinate2D(
+            latitude: latitude, longitude: longitude)
+    }
     var lastMessageld: Binding<String?> {
         Binding(
             get: { self.lastMessageId },
@@ -98,6 +109,14 @@ class MessagingViewModel: ObservableObject {
                 "MessagingViewModel - createMessage failed \(error.localizedDescription)"
             )
         }
+    }
+    
+    @MainActor
+    func shareLocationAsMessage(
+        conversationId: String, senderAccountId: String) async {
+        // Assume location is turned on
+        let fmtLocation = "<[LOC|\(currentLocation?.latitude),\(currentLocation?.longitude)]>"
+        await createMessage(conversationId: conversationId, senderAccountId: senderAccountId, message: fmtLocation)
     }
 
     @MainActor
