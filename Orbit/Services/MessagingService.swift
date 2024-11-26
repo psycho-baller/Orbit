@@ -23,7 +23,7 @@ protocol MessagingServiceProtocol {
         onNewMessage: @escaping (MessageDocument) -> Void) async throws
     
     func unsubscribeFromMessages() async
-    func markMessagesRead(conversationId: String) async throws
+    func markMessagesRead(conversationId: String, currentAccountId: String) async throws
 }
 
 class MessagingService: MessagingServiceProtocol {
@@ -227,7 +227,7 @@ class MessagingService: MessagingServiceProtocol {
     }
 
 
-    func markMessagesRead(conversationId: String) async throws {  //get all messages in the particular conversation that are marked as isRead = false
+    func markMessagesRead(conversationId: String, currentAccountId: String) async throws {  //get all messages in the particular conversation that are marked as isRead = false
         let queries = [
             Query.equal("conversationId", value: conversationId),
             Query.equal("isRead", value: false),
@@ -243,19 +243,24 @@ class MessagingService: MessagingServiceProtocol {
         )
 
         for message in messages.documents {
+            
+            if message.data.senderAccountId != currentAccountId {
+                let updatedMessage = MessageModel(
+                    conversationId: message.data.conversationId,
+                    senderAccountId: message.data.senderAccountId,
+                    message: message.data.message,
+                    isRead: true
+                )
 
-            let updatedMessage = MessageModel(
-                conversationId: message.data.conversationId,
-                senderAccountId: message.data.senderAccountId,
-                message: message.data.message,
-                isRead: true
-            )
+                try await appwriteService.databases.updateDocument(
+                    databaseId: appwriteService.databaseId,
+                    collectionId: appwriteService.COLLECTION_ID_MESSAGES,
+                    documentId: message.id,
+                    data: updatedMessage.toJson())
+                
+            }
 
-            try await appwriteService.databases.updateDocument(
-                databaseId: appwriteService.databaseId,
-                collectionId: appwriteService.COLLECTION_ID_MESSAGES,
-                documentId: message.id,
-                data: updatedMessage.toJson())
+        
         }
 
     }

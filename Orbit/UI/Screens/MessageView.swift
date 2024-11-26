@@ -61,13 +61,16 @@ struct MessageView: View {
                         }
                         
                         Task{
-                            await msgVM.markMessagesRead(conversationId: conversationId)
+                            if let currentUserId = userVM.currentUser?.accountId {
+                                await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+                            }
+                            
                         }
                     }
                         
                    
                 }
-                await msgVM.markMessagesRead(conversationId: conversationId)
+                //await msgVM.markMessagesRead(conversationId: conversationId)
             }
         }
         .onDisappear {

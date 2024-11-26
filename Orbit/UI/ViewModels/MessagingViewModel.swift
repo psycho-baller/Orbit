@@ -336,10 +336,10 @@ class MessagingViewModel: ObservableObject {
     }
 
     @MainActor
-    func markMessagesRead(conversationId: String) async {
+    func markMessagesRead(conversationId: String, currentAccountId: String) async {
         do {
             try await messagingService.markMessagesRead(
-                conversationId: conversationId)
+                conversationId: conversationId, currentAccountId: currentAccountId)
             print(
                 "MessagingViewModel - marked all messages as read in conversation \(conversationId)"
             )
