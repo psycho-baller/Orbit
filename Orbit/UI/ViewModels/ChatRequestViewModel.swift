@@ -13,8 +13,13 @@ class ChatRequestViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading = false
     @Published private var sentRequests: Set<String> = []
-    @Published var selectedRequest: ChatRequestDocument? = nil
-    @Published var newConversationId: String? = nil
+    @Published var selectedRequest: ChatRequestDocument? = nil {
+        willSet {
+            print(
+                "selectedRequest is being set to: \(String(describing: newValue))"
+            )
+        }
+    }
 
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
@@ -22,8 +27,7 @@ class ChatRequestViewModel: ObservableObject {
 
     init(
         chatRequestService: ChatRequestServiceProtocol = ChatRequestService(),
-        notificationService: NotificationServiceProtocol = NotificationService(),
-        messagingService: MessagingServiceProtocol = MessagingService()
+        notificationService: NotificationServiceProtocol = NotificationService()
     ) {
         self.chatRequestService = chatRequestService
         self.notificationService = notificationService
@@ -100,13 +104,11 @@ class ChatRequestViewModel: ObservableObject {
                 if let index = self.requests.firstIndex(where: { $0.id == updatedRequest.id }) {
                     self.requests[index] = updatedRequest
                 }
-                
-                //create conversation
                 if response == .approved {
-                    let participants = [updatedRequest.data.senderAccountId, updatedRequest.data.receiverAccountId]
-                    let conversationData = ConversationModel(participants: participants)
-                    let conversation = try await messagingService.createConversation(conversationData)
-                    self.newConversationId = conversation.id
+                    print(
+                        "Meet-up request approved. Proceed to create conversation in messaging view model."
+                    )
+                    // Notify MessagingViewModel to create conversation if necessary
                 }
             }
         } catch {
@@ -147,5 +149,3 @@ class ChatRequestViewModel: ObservableObject {
         }
     }
 #endif
-
-
