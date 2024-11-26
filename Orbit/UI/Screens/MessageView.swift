@@ -23,7 +23,6 @@ struct MessageView: View {
                 ChatProfileTitle(
                     messagerName: messagerName, isInMessageView: true)
 
-                ScrollViewReader { proxy in
                     ScrollView {
                         ForEach($msgVM.messages, id: \.id) { $messageDocument in
                             if !messageDocument.data.senderAccountId.isEmpty {
@@ -32,26 +31,7 @@ struct MessageView: View {
                             }
                         }
                     }
-                    .onChange(of: msgVM.lastMessageId) { oldMessageId, newMessageId in
-                        if let id = newMessageId {
-                            DispatchQueue.main.async{
-                                withAnimation {
-                                    proxy.scrollTo(id, anchor: .bottom)
-                                }
-                            }
-                           
-                        }
-                    }
-                    .onAppear {
-                        if let id = msgVM.lastMessageld.wrappedValue {
-                            DispatchQueue.main.async{
-                                withAnimation {
-                                    proxy.scrollTo(id, anchor: .bottom)
-                                }
-                            }
-                        }
-                    }
-                }
+                    .defaultScrollAnchor(.bottom)
                 .padding(.top, 10)
                 .background(.white)
                 .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
