@@ -99,7 +99,7 @@ struct HomeView: View {
             failedView(error)
             //        } else if userVM.currentUser?.isInterestedToMeet == false {
             //            NotInterestedToMeetView()
-        } else if userVM.isOnCampus {
+        } else if userVM.isOnCampus || isPreviewMode {
             loadedView(userVM.filteredUsers)
         } else {
             OffCampusView()
@@ -203,7 +203,7 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 0) {
             SearchBar(
                 text: $userVM.searchText,
                 placeholder: "Search for a user"
@@ -221,9 +221,9 @@ struct HomeView: View {
                 .cornerRadius(10)
                 .shadow(radius: 3)
             }
-            
+
             PendingRequestsDropdown(isExpanded: $isPendingExpanded)
-             
+
             if userVM.filteredUsers.isEmpty {
                 NoUsersAroundView()
             } else {
