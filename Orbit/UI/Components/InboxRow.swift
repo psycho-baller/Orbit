@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct InboxRow: View {
+    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
     var messagerName: String
     var lastMessage: String
     var timestamp: String
@@ -36,6 +37,7 @@ struct InboxRow: View {
                
                 Text(messagerName)
                     .normalSemiBoldFont()
+                    .foregroundColor(ColorPalette.text(for: colorScheme))
                 
                 Text(lastMessage)
                     .regularFont()
@@ -52,10 +54,13 @@ struct InboxRow: View {
             .foregroundColor(.gray)
             
         }
-        .padding(.horizontal)
+        //.frame(maxWidth: .infinity)
+        //.background(ColorPalette.background(for: colorScheme))
+        .padding(.horizontal, 0)
         .frame(height: 72)
         
     }
+   
     
     //timestamp displayed beside the conversation will display time only if newest message was sent within the same day and will display date only if newest message was sent before current date
     func formatTimestamp(_ timestamp: String) -> String {

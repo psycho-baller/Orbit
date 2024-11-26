@@ -23,7 +23,7 @@ struct MessageBox: View {
                     .padding()
                     .background(
                         isReceived
-                            ? ColorPalette.lightGray(for: ColorScheme.light)
+                        ? Color(.systemGray5)
                             : ColorPalette.accent(for: ColorScheme.light)
                     )
                     .cornerRadius(20)
