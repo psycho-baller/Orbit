@@ -263,7 +263,6 @@ struct HomeView: View {
                     }
                 }
             }
-
         }
         .accentColor(ColorPalette.accent(for: colorScheme))
         .onAppear {

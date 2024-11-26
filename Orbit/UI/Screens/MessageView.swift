@@ -10,6 +10,7 @@ import SwiftUI
 struct MessageView: View {
     @EnvironmentObject private var msgVM: MessagingViewModel
     @EnvironmentObject private var userVM: UserViewModel
+    @Environment(\.colorScheme) var colorScheme
 
     @State private var newMessageText: String = ""
     @State private var scrollToId: String?  // Save the last message ID for scroll position
@@ -23,7 +24,6 @@ struct MessageView: View {
                 ChatProfileTitle(
                     messagerName: messagerName, isInMessageView: true)
 
-                ScrollViewReader { proxy in
                     ScrollView {
                         ForEach($msgVM.messages, id: \.id) { $messageDocument in
                             if !messageDocument.data.senderAccountId.isEmpty {
@@ -32,26 +32,12 @@ struct MessageView: View {
                             }
                         }
                     }
-                    .onChange(of: msgVM.lastMessageId) { oldMessageId, newMessageId in
-                        if let id = newMessageId {
-                            withAnimation {
-                                proxy.scrollTo(id, anchor: .bottom)
-                            }
-                        }
-                    }
-                    .onAppear {
-                        if let id = msgVM.lastMessageld.wrappedValue {
-                            withAnimation {
-                                proxy.scrollTo(id, anchor: .bottom)
-                            }
-                        }
-                    }
-                }
+                    .defaultScrollAnchor(.bottom)
                 .padding(.top, 10)
-                .background(.white)
+                .background(colorScheme == .light ? .white : ColorPalette.background(for: colorScheme))
                 .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
             }
-            .background(ColorPalette.accent(for: ColorScheme.light))
+            .background(colorScheme == .light ? ColorPalette.accent(for: ColorScheme.light) :ColorPalette.background(for: colorScheme))
 
             // Message Input Field
             MessageField(text: $newMessageText, onSend: sendMessage)
@@ -76,13 +62,18 @@ struct MessageView: View {
                         }
                         
                         Task{
-                            await msgVM.markMessagesRead(conversationId: conversationId)
+                            if let currentUserId = userVM.currentUser?.accountId {
+                                await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+                            }
+                            
                         }
                     }
                         
                    
                 }
-                await msgVM.markMessagesRead(conversationId: conversationId)
+                if let currentUserId = userVM.currentUser?.accountId {
+                    await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+                }
             }
         }
         .onDisappear {
