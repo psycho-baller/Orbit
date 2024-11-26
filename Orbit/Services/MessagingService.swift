@@ -49,8 +49,7 @@ class MessagingService: MessagingServiceProtocol {
         return document
     }
 
-    func createMessage(_ message: MessageModel) async throws -> MessageDocument
-    {
+    func createMessage(_ message: MessageModel) async throws -> MessageDocument {
         let document = try await appwriteService.databases.createDocument<
             MessageModel
         >(
