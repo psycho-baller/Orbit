@@ -45,7 +45,8 @@ struct InboxView: View {
             }
             .onDisappear {
                 Task {
-                   //await msgVM.unsubscribeFromMessages()
+                    print("InboxView - Unsubscribed from messages")
+                    await msgVM.unsubscribeFromInboxMessages()
                 }
             }
         }
