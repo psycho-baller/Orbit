@@ -190,6 +190,18 @@ struct HomeView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
     }
+    
+    private func hasPendingRequest(for user: UserModel) -> Bool {
+        guard let currentUserId = userVM.currentUser?.accountId else { return false }
+
+            return chatRequestVM.requests.contains { request in
+                let receiverId = request.data.receiverAccountId
+                let senderId = request.data.senderAccountId
+                return receiverId == user.accountId
+                    && senderId == currentUserId
+                    && request.data.status == .pending
+            }
+    }
 
     private func loadedView(_ users: [UserModel]) -> some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -197,7 +209,7 @@ struct HomeView: View {
                 text: $userVM.searchText,
                 placeholder: "Search for a user"
             )
-
+            
             HStack {
                 InterestsHorizontalTags(
                     interests: userVM.allInterests,
@@ -216,32 +228,25 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         ForEach(userVM.filteredUsers) { user in
-                            // Only show users we haven't sent requests to
-                            if !chatRequestVM.requests.contains(where: {
-                                request in
-                                request.data.receiverAccountId == user.accountId
-                                    && request.data.senderAccountId
-                                        == userVM.currentUser?.accountId
-                                    && request.data.status == .pending
-                            }) {
+                            if !hasPendingRequest(for: user) {
                                 UserCardView(
                                     user: user, currentUser: userVM.currentUser
                                 )
                                 .onTapGesture {
                                     selectedUser = user
                                 }
-                            }
-                            .cornerRadius(10)
+                                .cornerRadius(10)
                                 .shadow(radius: 3)
+                            }
                         }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
-                }
-                .onAppear {
-                    if !isPreviewMode {
-                        Task {
-                            await userVM.initialize()
-                            await loadRequests()
+                    .onAppear {
+                        if !isPreviewMode {
+                            Task {
+                                await userVM.initialize()
+                                await loadRequests()
+                            }
                         }
                     }
                 }
