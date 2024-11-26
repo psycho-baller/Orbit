@@ -14,45 +14,44 @@ class ChatRequestViewModel: ObservableObject {
     @Published var isLoading = false
     @Published private var sentRequests: Set<String> = []
     @Published var selectedRequest: ChatRequestDocument? = nil
+    @Published var newConversationId: String? = nil
 
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
+    private let messagingService: MessagingServiceProtocol
 
     init(
         chatRequestService: ChatRequestServiceProtocol = ChatRequestService(),
-        notificationService: NotificationServiceProtocol = NotificationService()
+        notificationService: NotificationServiceProtocol = NotificationService(),
+        messagingService: MessagingServiceProtocol = MessagingService()
     ) {
         self.chatRequestService = chatRequestService
         self.notificationService = notificationService
+        self.messagingService = messagingService
     }
 
     // Send a meet-up request
     @MainActor
-    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?)
-        async
-    {
+    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?) async {
         isLoading = true
         defer { isLoading = false }
 
         do {
-            let requestDoc = try await chatRequestService.sendMeetUpRequest(
-                request)
+            let requestDoc = try await chatRequestService.sendMeetUpRequest(request)
             print(requestDoc)
             self.requests.append(requestDoc)
+            self.sentRequests.insert(request.receiverAccountId)
 
             try await notificationService.sendPushNotification(
                 to: [request.receiverAccountId],
-                title:
-                    "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
+                title: "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
                 body: requestDoc.data.message,
                 data: [
                     "requestId": requestDoc.id
                 ]
             )
-
         } catch {
-            self.errorMessage =
-                "Failed to send meet-up request: \(error.localizedDescription)"
+            self.errorMessage = "Failed to send meet-up request: \(error.localizedDescription)"
         }
     }
 
@@ -95,25 +94,23 @@ class ChatRequestViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            if let updatedRequest =
-                try await chatRequestService.respondToMeetUpRequest(
-                    requestId: requestId, response: response)
+            if let updatedRequest = try await chatRequestService.respondToMeetUpRequest(
+                requestId: requestId, response: response)
             {
-                if let index = self.requests.firstIndex(where: {
-                    $0.id == updatedRequest.id
-                }) {
+                if let index = self.requests.firstIndex(where: { $0.id == updatedRequest.id }) {
                     self.requests[index] = updatedRequest
                 }
+                
+                //create conversation
                 if response == .approved {
-                    print(
-                        "Meet-up request approved. Proceed to create conversation in messaging view model."
-                    )
-                    // Notify MessagingViewModel to create conversation if necessary
+                    let participants = [updatedRequest.data.senderAccountId, updatedRequest.data.receiverAccountId]
+                    let conversationData = ConversationModel(participants: participants)
+                    let conversation = try await messagingService.createConversation(conversationData)
+                    self.newConversationId = conversation.id
                 }
             }
         } catch {
-            self.errorMessage =
-                "Failed to respond to request: \(error.localizedDescription)"
+            self.errorMessage = "Failed to respond to request: \(error.localizedDescription)"
         }
     }
 
@@ -140,9 +137,15 @@ class ChatRequestViewModel: ObservableObject {
 #if DEBUG
     extension ChatRequestViewModel {
         static func mock() -> ChatRequestViewModel {
-            let mockVM = ChatRequestViewModel()
+            let mockVM = ChatRequestViewModel(
+                chatRequestService: ChatRequestService(),
+                notificationService: NotificationService(),
+                messagingService: MessagingService()
+            )
             mockVM.requests = []
             return mockVM
         }
     }
 #endif
+
+

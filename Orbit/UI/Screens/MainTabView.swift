@@ -15,17 +15,17 @@ struct MainTabView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @Environment(\.colorScheme) var colorScheme
 
-    @State private var selectedIndex = 0
-    @State private var prevSelectedIndex = 0
+    @State private var selectedTab = 0
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             NavigationView {
                 HomeView()
             }
             .tabItem {
                 Label("Home", systemImage: "house.fill")
             }
+            .tag(0)
 
             NavigationView {
                 InboxView()
@@ -33,6 +33,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Messages", systemImage: "message.fill")
             }
+            .tag(1)
 
             NavigationView {
                 ExampleView2()
@@ -41,6 +42,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Tab 3", systemImage: "star.fill")
             }
+            .tag(2)
 
             NavigationView {
                 ExampleView3()
@@ -49,6 +51,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Tab 4", systemImage: "gearshape.fill")
             }
+            .tag(3)
 
             NavigationView {
                 if let user = authViewModel.user {
@@ -60,6 +63,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Profile", systemImage: "person.circle.fill")
             }
+            .tag(4)
         }
     }
 }
@@ -90,8 +94,10 @@ struct ExampleView3: View {
 struct MainTabView_Previews: PreviewProvider {
     static var previews: some View {
         MainTabView()
+            .environmentObject(AppState())
             .environmentObject(UserViewModel.mock())
             .environmentObject(AuthViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
     }
 }
+

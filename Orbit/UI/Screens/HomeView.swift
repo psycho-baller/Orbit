@@ -11,6 +11,7 @@ struct HomeView: View {
     @State private var selectedUser: UserModel? = nil
     @State private var isShowingChatRequests = false
     @State private var chatRequestListDetent: PresentationDetent = .medium
+    @State private var isPendingExpanded = false
 
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
@@ -20,15 +21,20 @@ struct HomeView: View {
                         userVM.currentArea.map { "Users in \($0)" } ?? "Users"
                     )
                     .navigationBarTitleDisplayMode(.automatic)
-                    .navigationBarItems(
-                        trailing: HStack {
+                    .toolbar {
+                        // Leading toolbar: Logout button
+                        ToolbarItem(placement: .navigationBarLeading) {
                             logoutButton
+                        }
+
+                        // Trailing toolbar: Notification button
+                        ToolbarItem(placement: .navigationBarTrailing) {
                             notificationButton
                                 .overlay(
                                     notificationBadge
                                 )
                         }
-                    )
+                    }
                     .sheet(isPresented: $isShowingChatRequests) {
                         MeetUpRequestsListView(
                             chatRequestListDetent: $chatRequestListDetent
@@ -36,14 +42,11 @@ struct HomeView: View {
                         .presentationDetents(
                             [.medium, .large], selection: $chatRequestListDetent
                         )
-                        .presentationDragIndicator(.visible)
                     }
                     .sheet(item: $selectedUser) { user in
                         ChatRequestView(
                             sender: userVM.currentUser, receiver: user)
                     }
-                    .background(ColorPalette.background(for: colorScheme))
-                //        .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .onAppear {
                 print("appearing")
@@ -51,7 +54,7 @@ struct HomeView: View {
                     await handleNotificationNavigation()
                 }
             }
-            .onChange(of: appState.selectedRequestId) { _ in
+            .onChange(of: appState.selectedRequestId) {
                 Task {
                     await handleNotificationNavigation()
                 }
@@ -64,7 +67,7 @@ struct HomeView: View {
             if let request = await chatRequestVM.getMeetUpRequest(
                 requestId: requestId)
             {
-                print("Selected request ID changed: ", requestId ?? "nil")
+                print("Selected request ID changed: ", requestId)
                 isShowingChatRequests = true
                 chatRequestListDetent = .large
                 //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -162,12 +165,13 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 16) {
             SearchBar(
-                text: $userVM.searchText, placeholder: "Search for a user"
+                text: $userVM.searchText,
+                placeholder: "Search for a user"
             )
-
-            HStack {
+            
+            HStack{
                 InterestsHorizontalTags(
                     interests: userVM.allInterests,
                     onTapInterest: { interest in
@@ -179,31 +183,33 @@ struct HomeView: View {
                 .cornerRadius(10)
                 .shadow(radius: 3)
             }
-
+            
+            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
+            
             ScrollView {
                 VStack(spacing: 16) {
                     ForEach(userVM.filteredUsers) { user in
-                        UserCardView(
-                            user: user, currentUser: userVM.currentUser
-                        )
-                        .onTapGesture {
-                            selectedUser = user
+
+                        // Only show users we haven't sent requests to
+                        if !chatRequestVM.requests.contains(where: { request in
+                            request.data.receiverAccountId == user.accountId &&
+                            request.data.senderAccountId == userVM.currentUser?.accountId &&
+                            request.data.status == .pending
+                        }) {
+                            UserCardView(
+                                user: user,
+                                currentUser: userVM.currentUser
+                            )
+                            .onTapGesture {
+                                selectedUser = user
+                            }
                         }
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
-                    }
-                }
-                .padding(.horizontal)
-            }
-            .onAppear {
-                if !isPreviewMode {
-                    Task {
-                        await userVM.initialize()
-                        await loadRequests()
                     }
                 }
             }
         }
+        .padding(.horizontal)
+        .background(ColorPalette.background(for: colorScheme))
     }
 
     private func loadRequests() async {
@@ -232,3 +238,10 @@ struct HomeView: View {
             .environmentObject(AppState())
     }
 #endif
+
+
+
+
+
+
+

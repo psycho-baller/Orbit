@@ -1,21 +1,19 @@
 //
-//  UserCardView.swift
+//  PendingUserCardView.swift
 //  Orbit
 //
-//  Created by Nathaniel D'Orazio on 2024-11-18.
+//  Created by Nathaniel D'Orazio on 2024-11-25.
 //
-
-import Foundation
 import SwiftUI
 
-struct UserCardView: View {
+struct PendingUserCardView: View {
     let user: UserModel
     let currentUser: UserModel?
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var isHidden = false
-
+    
     var body: some View {
         if !isHidden {
             SwipeView {
@@ -43,38 +41,16 @@ struct UserCardView: View {
                     }
                 }
                 .padding()
-                //            .frame(maxWidth: .infinity)
-                //            .background(.ultraThinMaterial)
                 .background(ColorPalette.main(for: colorScheme))
                 .cornerRadius(32)
-                //            .shadow(radius: 3)
-            } leadingActions: { _ in
+            } trailingActions: { _ in
                 SwipeAction {
-                sendQuickRequest()
-            } label: { isHighlighted in
-                VStack(spacing: 4) {
-                    Image(systemName: "hand.wave.fill")
-                        .font(.title2)
-                    Text("Request")
-                        .font(.caption)
-                }
-                .foregroundColor(.white)
-                .frame(width: 60)
-            } background: { isHighlighted in
-                ColorPalette.accent(for: colorScheme)
-                    .opacity(isHighlighted ? 0.8 : 1)
-            }
-            .allowSwipeToTrigger()
-            }
-            
-            trailingActions: { _ in
-                SwipeAction {
-                        isHidden = true
+                    cancelRequest()
                 } label: { isHighlighted in
                     VStack(spacing: 4) {
-                        Image(systemName: "xmark")
+                        Image(systemName: "xmark.circle")
                             .font(.title2)
-                        Text("Ignore")
+                        Text("Cancel")
                             .font(.caption)
                     }
                     .foregroundColor(.white)
@@ -85,29 +61,23 @@ struct UserCardView: View {
                 }
                 .allowSwipeToTrigger()
             }
-            .swipeOffsetCloseAnimation(stiffness: 500, damping: 600)
-            .swipeOffsetExpandAnimation(stiffness: 500, damping: 600)
-            .swipeOffsetTriggerAnimation(stiffness: 500, damping: 600)
             .swipeMinimumDistance(20)
         }
     }
-
-    private func sendQuickRequest() {
-        guard let senderAccountId = currentUser?.accountId else {
-            print("Error: Current user is nil.")
-            return
-        }
-
-        let request = ChatRequestModel(
-            senderAccountId: senderAccountId,
-            receiverAccountId: user.accountId,
-            message: "👋 Hi! Would you like to meet up?"
-        )
-
-        Task {
-            await chatRequestVM.sendMeetUpRequest(
-                request: request, from: currentUser?.name)
+    
+    private func cancelRequest() {
+        // Find the pending request for this user
+        if let request = chatRequestVM.requests.first(where: { request in
+            request.data.receiverAccountId == user.accountId &&
+            request.data.senderAccountId == currentUser?.accountId &&
+            request.data.status == .pending
+        }) {
+            Task {
+                await chatRequestVM.respondToMeetUpRequest(
+                    requestId: request.id,
+                    response: .declined
+                )
+            }
         }
     }
 }
-
