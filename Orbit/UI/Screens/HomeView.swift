@@ -189,7 +189,9 @@ struct HomeView: View {
     }
 
     private func hasPendingRequest(for user: UserModel) -> Bool {
-        guard let currentUserId = userVM.currentUser?.accountId else { return false }
+        guard let currentUserId = userVM.currentUser?.accountId else {
+            return false
+        }
 
         return chatRequestVM.requests.contains { request in
             let receiverId = request.data.receiverAccountId
@@ -238,15 +240,14 @@ struct HomeView: View {
                         }
                         .padding(.horizontal)
                     }
-                    .onAppear {
-                        if !isPreviewMode {
-                            Task {
-                                await userVM.initialize()
-                                await loadRequests()
-                            }
-                        }
-                    }
-                    //                    }
+                }
+            }
+        }
+        .onAppear {
+            if !isPreviewMode {
+                Task {
+                    await userVM.initialize()
+                    await loadRequests()
                 }
             }
         }
