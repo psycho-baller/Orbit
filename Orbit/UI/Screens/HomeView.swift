@@ -31,8 +31,6 @@ struct HomeView: View {
                     .toolbar {
                         // Leading toolbar: Logout button
                         ToolbarItem(placement: .navigationBarLeading) {
-                    .navigationBarItems(
-                        trailing: HStack {
                             logoutButton
                         }
 
@@ -199,8 +197,8 @@ struct HomeView: View {
                 text: $userVM.searchText,
                 placeholder: "Search for a user"
             )
-            
-            HStack{
+
+            HStack {
                 InterestsHorizontalTags(
                     interests: userVM.allInterests,
                     onTapInterest: { interest in
@@ -218,21 +216,23 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         ForEach(userVM.filteredUsers) { user in
-                                                       // Only show users we haven't sent requests to
-                        if !chatRequestVM.requests.contains(where: { request in
-                            request.data.receiverAccountId == user.accountId &&
-                            request.data.senderAccountId == userVM.currentUser?.accountId &&
-                            request.data.status == .pending
-                        }) {
-                            UserCardView(
-                                user: user, currentUser: userVM.currentUser
-                            )
-                            .onTapGesture {
-                                selectedUser = user
+                            // Only show users we haven't sent requests to
+                            if !chatRequestVM.requests.contains(where: {
+                                request in
+                                request.data.receiverAccountId == user.accountId
+                                    && request.data.senderAccountId
+                                        == userVM.currentUser?.accountId
+                                    && request.data.status == .pending
+                            }) {
+                                UserCardView(
+                                    user: user, currentUser: userVM.currentUser
+                                )
+                                .onTapGesture {
+                                    selectedUser = user
+                                }
                             }
-                        }
                             .cornerRadius(10)
-                            .shadow(radius: 3)
+                                .shadow(radius: 3)
                         }
                     }
                     .padding(.horizontal)
@@ -277,10 +277,3 @@ struct HomeView: View {
             .environmentObject(AppState())
     }
 #endif
-
-
-
-
-
-
-
