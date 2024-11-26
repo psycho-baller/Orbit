@@ -221,6 +221,9 @@ struct HomeView: View {
                 .cornerRadius(10)
                 .shadow(radius: 3)
             }
+            
+            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
+             
             if userVM.filteredUsers.isEmpty {
                 NoUsersAroundView()
             } else {
