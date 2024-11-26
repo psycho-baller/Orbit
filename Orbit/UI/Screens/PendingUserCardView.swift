@@ -17,27 +17,53 @@ struct PendingUserCardView: View {
     var body: some View {
         if !isHidden {
             SwipeView {
-                VStack(alignment: .leading, spacing: 8) {
-                    // User Name
-                    Text(user.name)
-                        .font(.title)
-                        .padding(.bottom, 1)
-                        .foregroundColor(ColorPalette.text(for: colorScheme))
-
-                    // User Interests
-                    if let interests = user.interests {
-                        InterestsHorizontalTags(
-                            interests: interests,
-                            onTapInterest: { interest in
-                                withAnimation {
-                                    userVM.toggleInterest(interest)
-                                }
-                            }
-                        )
+                HStack(spacing: 16) {
+                    // Profile Picture
+                    if let profileUrl = user.profilePictureUrl,
+                       let url = URL(string: profileUrl) {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 60, height: 60)
+                                .clipShape(Circle())
+                        } placeholder: {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 60, height: 60)
+                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        }
                     } else {
-                        Text("No interests available")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        // User Name
+                        Text(user.name)
+                            .font(.title)
+                            .padding(.bottom, 1)
+                            .foregroundColor(ColorPalette.text(for: colorScheme))
+
+                        // User Interests
+                        if let interests = user.interests {
+                            InterestsHorizontalTags(
+                                interests: interests,
+                                onTapInterest: { interest in
+                                    withAnimation {
+                                        userVM.toggleInterest(interest)
+                                    }
+                                }
+                            )
+                        } else {
+                            Text("No interests available")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
                 .padding()
@@ -81,3 +107,4 @@ struct PendingUserCardView: View {
         }
     }
 }
+

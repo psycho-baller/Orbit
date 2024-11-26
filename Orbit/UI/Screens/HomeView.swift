@@ -223,6 +223,7 @@ struct HomeView: View {
             }
 
             PendingRequestsDropdown(isExpanded: $isPendingExpanded)
+                .padding(.bottom, 16)
 
             if userVM.filteredUsers.isEmpty {
                 NoUsersAroundView()
@@ -241,7 +242,6 @@ struct HomeView: View {
                                 .shadow(radius: 3)
                             }
                         }
-                        .padding(.horizontal)
                     }
                 }
             }

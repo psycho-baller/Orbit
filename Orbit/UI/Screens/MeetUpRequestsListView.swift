@@ -12,9 +12,11 @@ struct MeetUpRequestsListView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @Binding var chatRequestListDetent: PresentationDetent
+    @Environment(\.dismiss) var dismiss
+    @State private var navigateToChat = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 ColorPalette.lightGray(for: colorScheme)
                     .ignoresSafeArea()
@@ -54,7 +56,7 @@ struct MeetUpRequestsListView: View {
                                 .font(.subheadline)
                                 .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                                 .multilineTextAlignment(.center)
-                                .padding(.horizontal)
+                                .padding(.horizontal, 50)
                         }
                         .frame(maxHeight: .infinity)
                     } else {
@@ -67,14 +69,13 @@ struct MeetUpRequestsListView: View {
                                                 chatRequestVM.selectedRequest = request
                                                 chatRequestListDetent = .large
                                             }
-                                    } leadingActions: { _ in
+                                    } leadingActions: { context in
                                         SwipeAction {
                                             Task {
                                                 await chatRequestVM.respondToMeetUpRequest(
                                                     requestId: request.id,
                                                     response: .approved
                                                 )
-                                                
                                             }
                                         } label: { isHighlighted in
                                             VStack(spacing: 4) {
@@ -90,7 +91,7 @@ struct MeetUpRequestsListView: View {
                                                 .opacity(isHighlighted ? 0.8 : 1)
                                         }
                                         .allowSwipeToTrigger()
-                                    } trailingActions: { _ in
+                                    } trailingActions: { context in
                                         SwipeAction {
                                             Task {
                                                 await chatRequestVM.respondToMeetUpRequest(
@@ -119,8 +120,7 @@ struct MeetUpRequestsListView: View {
                                     .swipeMinimumDistance(20)
                                 }
                             }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 24)
+                            .padding(.horizontal, 24)
                         }
                     }
                 }
@@ -134,6 +134,21 @@ struct MeetUpRequestsListView: View {
             MeetUpRequestDetailsView(request: request)
                 .presentationDetents([.medium, .large])
         }
+        .onChange(of: chatRequestVM.newConversationId) { oldValue, newValue in
+            if newValue != nil {
+                navigateToChat = true
+                dismiss()
+            }
+        }
+        .navigationDestination(isPresented: $navigateToChat) {
+            if let conversationId = chatRequestVM.newConversationId,
+               let request = chatRequestVM.selectedRequest {
+                MessageView(
+                    conversationId: conversationId,
+                    messagerName: userVM.getUserName(from: request.data.senderAccountId)
+                )
+            }
+        }
     }
 }
 
@@ -143,17 +158,47 @@ struct MeetUpRequestRow: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("From: \(userVM.getUserName(from: request.data.senderAccountId))")
-                .font(.title)
-                .padding(.bottom, 1)
-                .foregroundColor(ColorPalette.text(for: colorScheme))
+        HStack(spacing: 16) { 
+            // Profile Picture
+            if let user = userVM.users.first(where: { $0.accountId == request.data.senderAccountId }),
+               let profileUrl = user.profilePictureUrl,
+               let url = URL(string: profileUrl) {
+                AsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 60, height: 60)
+                        .clipShape(Circle())
+                } placeholder: {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                }
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 60, height: 60)
+                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+            }
 
-            Text(request.data.message)
-                .font(.body)
-                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+            // Text Content
+            VStack(alignment: .leading, spacing: 8) {
+                Text("From: \(userVM.getUserName(from: request.data.senderAccountId))")
+                    .font(.title)
+                    .padding(.top, 4)
+                    .foregroundColor(ColorPalette.text(for: colorScheme))
+
+                Text(request.data.message)
+                    .font(.body)
+                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                    .padding(.top, 5)
+            }
         }
-        .frame(maxWidth: .infinity)
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading) // Align content to the left
         .background(ColorPalette.main(for: colorScheme))
         .cornerRadius(24)
     }
@@ -166,4 +211,7 @@ struct MeetUpRequestRow: View {
         .environmentObject(ChatRequestViewModel.mock())
         .environmentObject(UserViewModel.mock())
 }
+
+
+
 

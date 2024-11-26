@@ -106,25 +106,34 @@ class ChatRequestViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            if let updatedRequest =
-                try await chatRequestService.respondToMeetUpRequest(
-                    requestId: requestId, response: response)
+            if let updatedRequest = try await chatRequestService.respondToMeetUpRequest(
+                requestId: requestId, response: response)
             {
                 if let index = self.requests.firstIndex(where: {
                     $0.id == updatedRequest.id
                 }) {
                     self.requests[index] = updatedRequest
                 }
+                
                 if response == .approved {
-                    print(
-                        "Meet-up request approved. Proceed to create conversation in messaging view model."
+                    print("Meet-up request approved. Creating conversation...")
+                    let participants = [
+                        updatedRequest.data.senderAccountId,
+                        updatedRequest.data.receiverAccountId
+                    ]
+                    do {
+                     let newConversation = try await messagingService.createConversation(
+                        ConversationModel(participants: participants)
                     )
-                    // Notify MessagingViewModel to create conversation if necessary
+                        self.newConversationId = newConversation.id
+                        print("Created new conversation with ID: \(newConversation.id)")
+                    } catch {
+                        print("Failed to create a new conversation: \(error.localizedDescription)")
+                    }
                 }
             }
         } catch {
-            self.errorMessage =
-                "Failed to respond to request: \(error.localizedDescription)"
+            self.errorMessage = "Failed to respond to request: \(error.localizedDescription)"
         }
     }
 
@@ -157,3 +166,5 @@ class ChatRequestViewModel: ObservableObject {
         }
     }
 #endif
+
+

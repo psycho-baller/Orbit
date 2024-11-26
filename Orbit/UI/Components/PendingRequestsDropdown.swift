@@ -45,7 +45,7 @@ struct PendingRequestsDropdown: View {
                     Spacer()
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .font(.caption)
-                        .foregroundColor(ColorPalette.accent(for: colorScheme))
+                        .foregroundColor(ColorPalette.text(for: colorScheme))
                 }
                 .padding(.vertical, 8)
                 .foregroundColor(ColorPalette.text(for: colorScheme))
