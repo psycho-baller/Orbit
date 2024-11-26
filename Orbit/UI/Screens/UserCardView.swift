@@ -22,7 +22,8 @@ struct UserCardView: View {
                 HStack(spacing: 16) {
                     // Profile Picture
                     if let profileUrl = user.profilePictureUrl,
-                       let url = URL(string: profileUrl) {
+                        let url = URL(string: profileUrl)
+                    {
                         AsyncImage(url: url) { image in
                             image
                                 .resizable()
@@ -34,22 +35,25 @@ struct UserCardView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 60, height: 60)
-                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
                         }
                     } else {
                         Image(systemName: "person.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60, height: 60)
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
                     }
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
                         // User Name
                         Text(user.name)
                             .font(.title)
                             .padding(.bottom, 1)
-                            .foregroundColor(ColorPalette.text(for: colorScheme))
+                            .foregroundColor(Color.accentColor)
 
                         // User Interests
                         if let interests = user.interests {
@@ -73,26 +77,24 @@ struct UserCardView: View {
                 .cornerRadius(32)
             } leadingActions: { _ in
                 SwipeAction {
-                sendQuickRequest()
-            } label: { isHighlighted in
-                VStack(spacing: 4) {
-                    Image(systemName: "hand.wave.fill")
-                        .font(.title2)
-                    Text("Request")
-                        .font(.caption)
+                    sendQuickRequest()
+                } label: { isHighlighted in
+                    VStack(spacing: 4) {
+                        Image(systemName: "hand.wave.fill")
+                            .font(.title2)
+                        Text("Request")
+                            .font(.caption)
+                    }
+                    .foregroundColor(.white)
+                    .frame(width: 60)
+                } background: { isHighlighted in
+                    ColorPalette.accent(for: colorScheme)
+                        .opacity(isHighlighted ? 0.8 : 1)
                 }
-                .foregroundColor(.white)
-                .frame(width: 60)
-            } background: { isHighlighted in
-                ColorPalette.accent(for: colorScheme)
-                    .opacity(isHighlighted ? 0.8 : 1)
-            }
-            .allowSwipeToTrigger()
-            }
-            
-            trailingActions: { _ in
+                .allowSwipeToTrigger()
+            } trailingActions: { _ in
                 SwipeAction {
-                        isHidden = true
+                    isHidden = true
                 } label: { isHighlighted in
                     VStack(spacing: 4) {
                         Image(systemName: "xmark")
@@ -133,5 +135,3 @@ struct UserCardView: View {
         }
     }
 }
-
-

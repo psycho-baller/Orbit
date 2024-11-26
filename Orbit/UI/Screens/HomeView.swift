@@ -19,14 +19,15 @@ struct HomeView: View {
             ZStack {
                 content
                     .navigationTitle(
-                        userVM.isOnCampus
+                        userVM.isOnCampus || isPreviewMode
                             ? (userVM.currentArea.map { "Users in \($0)" }
                                 ?? "Users")
                             : ""
                     )
 
                     .navigationBarTitleDisplayMode(
-                        userVM.isOnCampus ? .automatic : .inline
+                        userVM.isOnCampus || isPreviewMode
+                            ? .automatic : .inline
                     )
                     .toolbar {
                         // Leading toolbar: Logout button
@@ -40,8 +41,10 @@ struct HomeView: View {
                                 .overlay(
                                     notificationBadge
                                 )
-                            settingsButton
 
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            settingsButton
                         }
                     }
                     .sheet(isPresented: $isShowingChatRequests) {
@@ -51,15 +54,30 @@ struct HomeView: View {
                         .presentationDetents(
                             [.medium, .large], selection: $chatRequestListDetent
                         )
+                        .background(.ultraThinMaterial)
+                        .overlay(
+                            ColorPalette.background(for: colorScheme).opacity(
+                                0.1))
                     }
                     .sheet(item: $selectedUser) { user in
                         ChatRequestView(
-                            sender: userVM.currentUser, receiver: user)
+                            sender: userVM.currentUser, receiver: user
+                        )
+                        .background(.ultraThinMaterial)
+                        .overlay(
+                            ColorPalette.background(for: colorScheme).opacity(
+                                0.1))
                     }
                     .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
                         HomeSettings()
                             .presentationDetents([.fraction(0.7), .large])
                             .presentationDragIndicator(.visible)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(.ultraThinMaterial)
+                            .overlay(
+                                ColorPalette.background(for: colorScheme)
+                                    .opacity(0.1)
+                            )
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(ColorPalette.background(for: colorScheme))
@@ -111,7 +129,7 @@ struct HomeView: View {
         Button(action: {
             isShowingChatRequests = true
         }) {
-            Image(systemName: "bell")
+            Image(systemName: "tray")
                 .font(.headline)
                 .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
@@ -203,6 +221,7 @@ struct HomeView: View {
     }
 
     private func loadedView(_ users: [UserModel]) -> some View {
+
         VStack(alignment: .leading, spacing: 0) {
             SearchBar(
                 text: $userVM.searchText,
@@ -233,19 +252,20 @@ struct HomeView: View {
                         ForEach(userVM.filteredUsers) { user in
                             if !hasPendingRequest(for: user) {
                                 UserCardView(
-                                    user: user, currentUser: userVM.currentUser
+                                    user: user,
+                                    currentUser: userVM.currentUser
                                 )
                                 .onTapGesture {
                                     selectedUser = user
                                 }
-                                .cornerRadius(10)
-                                .shadow(radius: 3)
                             }
                         }
                     }
                 }
             }
+
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
         .onAppear {
             if !isPreviewMode {
                 Task {

@@ -13,14 +13,15 @@ struct PendingUserCardView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var isHidden = false
-    
+
     var body: some View {
         if !isHidden {
             SwipeView {
                 HStack(spacing: 16) {
                     // Profile Picture
                     if let profileUrl = user.profilePictureUrl,
-                       let url = URL(string: profileUrl) {
+                        let url = URL(string: profileUrl)
+                    {
                         AsyncImage(url: url) { image in
                             image
                                 .resizable()
@@ -32,22 +33,25 @@ struct PendingUserCardView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 60, height: 60)
-                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
                         }
                     } else {
                         Image(systemName: "person.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60, height: 60)
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
                     }
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
                         // User Name
                         Text(user.name)
                             .font(.title)
                             .padding(.bottom, 1)
-                            .foregroundColor(ColorPalette.text(for: colorScheme))
+                            .foregroundColor(.accentColor)
 
                         // User Interests
                         if let interests = user.interests {
@@ -90,13 +94,13 @@ struct PendingUserCardView: View {
             .swipeMinimumDistance(20)
         }
     }
-    
+
     private func cancelRequest() {
         // Find the pending request for this user
         if let request = chatRequestVM.requests.first(where: { request in
-            request.data.receiverAccountId == user.accountId &&
-            request.data.senderAccountId == currentUser?.accountId &&
-            request.data.status == .pending
+            request.data.receiverAccountId == user.accountId
+                && request.data.senderAccountId == currentUser?.accountId
+                && request.data.status == .pending
         }) {
             Task {
                 await chatRequestVM.respondToMeetUpRequest(
@@ -107,4 +111,3 @@ struct PendingUserCardView: View {
         }
     }
 }
-

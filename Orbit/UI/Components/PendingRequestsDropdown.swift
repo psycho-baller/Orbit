@@ -12,21 +12,21 @@ struct PendingRequestsDropdown: View {
     @EnvironmentObject private var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @Binding var isExpanded: Bool
-    
+
     /// Only include pending requests where a request has been sent
     var pendingRequests: [UserModel] {
         // Get all users that we have sent requests to
         let sentToUserIds = chatRequestVM.requests.filter { request in
-            request.data.status == .pending &&
-            request.data.senderAccountId == userVM.currentUser?.accountId
+            request.data.status == .pending
+                && request.data.senderAccountId == userVM.currentUser?.accountId
         }.map { $0.data.receiverAccountId }
-        
+
         // Get the corresponding UserModel objects
         return userVM.filteredUsers.filter { user in
             sentToUserIds.contains(user.accountId)
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Header button
@@ -36,39 +36,34 @@ struct PendingRequestsDropdown: View {
                 }
             }) {
                 HStack {
-                    Text("Pending Requests")
-                        .font(.headline)
-                    if !pendingRequests.isEmpty {
-                        Text("(\(pendingRequests.count))")
-                            .foregroundColor(ColorPalette.text(for: colorScheme))
-                    }
+                    Text(
+                        pendingRequests.isEmpty
+                            ? "No Pending Requests"
+                            : "^[\(pendingRequests.count) Pending Request](inflect: true)"
+                    )
+                    .font(.headline)
                     Spacer()
-                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .font(.caption)
-                        .foregroundColor(ColorPalette.text(for: colorScheme))
+                    Image(
+                        systemName: isExpanded ? "chevron.up" : "chevron.down"
+                    )
+                    .font(.caption)
+                    .foregroundColor(ColorPalette.text(for: colorScheme))
                 }
                 .padding(.vertical, 8)
                 .foregroundColor(ColorPalette.text(for: colorScheme))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            
-            if isExpanded {
+
+            if isExpanded && !pendingRequests.isEmpty {
                 VStack(spacing: 16) {
-                    if pendingRequests.isEmpty {
-                        Text("No pending requests")
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                            .padding(.vertical, 8)
-                    } else {
-                        ForEach(pendingRequests) { user in
-                            PendingUserCardView(
-                                user: user,
-                                currentUser: userVM.currentUser
-                            )
-                            .cornerRadius(10)
-                            .shadow(radius: 3)
-                            .transition(.opacity.combined(with: .move(edge: .top)))
-                        }
+                    ForEach(pendingRequests) { user in
+                        PendingUserCardView(
+                            user: user,
+                            currentUser: userVM.currentUser
+                        )
+                        .transition(
+                            .opacity.combined(with: .move(edge: .top)))
                     }
                 }
                 .padding(.horizontal, 16)
@@ -80,5 +75,3 @@ struct PendingRequestsDropdown: View {
         .animation(.spring(), value: isExpanded)
     }
 }
-
-
