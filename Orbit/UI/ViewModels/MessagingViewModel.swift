@@ -85,11 +85,12 @@ class MessagingViewModel: ObservableObject {
             message: message
         )
         do {
-            let createdMessage = try await messagingService.createMessage(newMessage)
-            
+            let createdMessage = try await messagingService.createMessage(
+                newMessage)
+
             DispatchQueue.main.async {
                 self.messages.append(createdMessage)
-                self.messages.sort {$0.createdAt < $1.createdAt}
+                self.messages.sort { $0.createdAt < $1.createdAt }
                 self.lastMessageId = createdMessage.id
             }
         } catch {
@@ -246,15 +247,13 @@ class MessagingViewModel: ObservableObject {
     func unsubscribeFromMessages() async {
         await messagingService.unsubscribeFromMessages()
     }
-    
+
     @MainActor
     func subscribeToInboxMessages(
-        conversationId: String,
         onNewMessage: @escaping (MessageDocument) -> Void
     ) async {
         do {
             try await messagingService.subscribeToInboxMessages(
-                conversationId: conversationId,
                 onNewMessage: { newMessage in
                     DispatchQueue.main.async {
                         onNewMessage(newMessage)  // Safely call the optional closure
@@ -262,7 +261,7 @@ class MessagingViewModel: ObservableObject {
                 }
             )
             print(
-                "MessagingViewModel - Subscribed to real-time messages for conversation Inbox: \(conversationId)"
+                "MessagingViewModel - Subscribed to real-time messages for conversation Inbox"
             )
 
         } catch {
@@ -272,7 +271,7 @@ class MessagingViewModel: ObservableObject {
         }
 
     }
-    
+
     @MainActor
     func unsubscribeFromInboxMessages() async {
         await messagingService.unsubscribeFromInboxMessages()
@@ -291,55 +290,68 @@ class MessagingViewModel: ObservableObject {
 
         print("Fetching conversations for user ID: \(userId)")
         var fetchedConversations = await getConversationDetails(userId)
-        fetchedConversations.sort {$0.timestamp > $1.timestamp}
+        fetchedConversations.sort { $0.timestamp > $1.timestamp }
         self.conversations = fetchedConversations
         completion(fetchedConversations)
 
         await subscribeToInboxMessages(
-            conversationId: "",
             onNewMessage: { newMessage in
-                DispatchQueue.main.async{
-                    print("MessagingViewModel - Received new message for Inbox: \(newMessage.data.message)")
-                    
-                    if let index = self.conversations.firstIndex(where: {$0.id == newMessage.data.conversationId}) {
+                DispatchQueue.main.async {
+                    print(
+                        "MessagingViewModel - Received new message for Inbox: \(newMessage.data.message)"
+                    )
+
+                    if let index = self.conversations.firstIndex(where: {
+                        $0.id == newMessage.data.conversationId
+                    }) {
                         var updatedConversation = self.conversations[index]
                         updatedConversation.update(with: newMessage)
-                        updatedConversation.timestamp = self.formatTimestamp(newMessage.createdAt)
-                                          
+                        updatedConversation.timestamp = self.formatTimestamp(
+                            newMessage.createdAt)
+
                         self.conversations.remove(at: index)
                         self.conversations.insert(updatedConversation, at: 0)
                     } else {
-                        Task{
-                            if let newConversation = await self.fetchConversationDetail(accountId: userId, conversationId: newMessage.data.conversationId) {
+                        Task {
+                            if let newConversation =
+                                await self.fetchConversationDetail(
+                                    accountId: userId,
+                                    conversationId: newMessage.data
+                                        .conversationId)
+                            {
                                 DispatchQueue.main.async {
-                                self.conversations.insert(newConversation, at: 0)
+                                    self.conversations.insert(
+                                        newConversation, at: 0)
                                 }
                             }
                         }
-                                        
+
                     }
 
                     /*self.conversations = self.conversations.map { conversation in
                         var mutableConversation = conversation  // Create a mutable copy
                         if mutableConversation.id == newMessage.data.conversationId
                         {
-                         
+
                             mutableConversation.update(with: newMessage)  // Mutate the copy
                             mutableConversation.timestamp = self.formatTimestamp(newMessage.createdAt)
                         }
                         return mutableConversation
                     } */
-                    
+
                 }
-             
+
             })
     }
 
     @MainActor
-    func markMessagesRead(conversationId: String, currentAccountId: String) async {
+    func markMessagesRead(conversationId: String, currentAccountId: String)
+        async
+    {
         do {
             try await messagingService.markMessagesRead(
-                conversationId: conversationId, currentAccountId: currentAccountId)
+                conversationId: conversationId,
+                currentAccountId: currentAccountId)
             print(
                 "MessagingViewModel - marked all messages as read in conversation \(conversationId)"
             )

@@ -15,15 +15,16 @@ protocol MessagingServiceProtocol {
     func getMessages(_ conversationId: String, _ numOfMessages: Int)
         async throws -> [MessageDocument]
     func getParticipants(for conversationId: String) async throws -> [String]
-    func subscribeToInboxMessages(conversationId: String?,
-                                  onNewMessage: @escaping (MessageDocument) -> Void) async throws
+    func subscribeToInboxMessages(
+        onNewMessage: @escaping (MessageDocument) -> Void) async throws
     func unsubscribeFromInboxMessages() async
     func subscribeToMessages(
         conversationId: String,
         onNewMessage: @escaping (MessageDocument) -> Void) async throws
-    
+
     func unsubscribeFromMessages() async
-    func markMessagesRead(conversationId: String, currentAccountId: String) async throws
+    func markMessagesRead(conversationId: String, currentAccountId: String)
+        async throws
 }
 
 class MessagingService: MessagingServiceProtocol {
@@ -98,58 +99,48 @@ class MessagingService: MessagingServiceProtocol {
     }
 
     func subscribeToInboxMessages(
-        conversationId: String? = nil,
         onNewMessage: @escaping (MessageDocument) -> Void
-    ) async throws{
+    ) async throws {
 
-        inboxSubscription = try await AppwriteService.shared.realtime2.subscribe(
-            channels: [
-                "databases.\(AppwriteService.shared.databaseId).collections.messages.documents"
-            ]
-        ) { event in
-            //print("MessagingService - Received event for Inbox: \(event)")
-            Task {
-                print("MessagingService - Received event for Inbox: \(event)")
-                if let payload = event.payload {
-                    do {
-                        if let documentId = payload["$id"] as? String {
+        inboxSubscription = try await AppwriteService.shared.realtime2
+            .subscribe(
+                channels: [
+                    "databases.\(AppwriteService.shared.databaseId).collections.messages.documents"
+                ]
+            ) { event in
+                //print("MessagingService - Received event for Inbox: \(event)")
+                Task {
+                    print(
+                        "MessagingService - Received event for Inbox: \(event)")
+                    if let payload = event.payload {
+                        do {
+                            if let documentId = payload["$id"] as? String {
 
-                            let document: MessageDocument? = try await self.appwriteService
-                                .databases.getDocument(
-                                    databaseId: self.appwriteService.databaseId,
-                                    collectionId: self.appwriteService
-                                        .COLLECTION_ID_MESSAGES,
-                                    documentId: documentId,
-                                    nestedType: MessageModel.self
-                                )
-                            if let document = document {
-                                onNewMessage(document)
-                            }
-                            /*
-                            if conversationId != nil {
-                                if document.data.conversationId == conversationId {
-                                    print(
-                                        "MessagingService - New Message for \(conversationId)"
+                                let document: MessageDocument? =
+                                    try await self.appwriteService
+                                    .databases.getDocument(
+                                        databaseId: self.appwriteService
+                                            .databaseId,
+                                        collectionId: self.appwriteService
+                                            .COLLECTION_ID_MESSAGES,
+                                        documentId: documentId,
+                                        nestedType: MessageModel.self
                                     )
+                                if let document = document {
                                     onNewMessage(document)
                                 }
-                            } else {
-                                onNewMessage(document)
-                            } */
-                          
-                            
+                            }
+                            print(
+                                "MessagingService - Subscribed to realtime messsages for conversations in Inbox"
+                            )
+                        } catch {
+                            print(
+                                "MessagingService - Failed to decode message: \(error.localizedDescription)"
+                            )
                         }
-                        print(
-                            "MessagingService - Subscribed to realtime messsages for conversations in Inbox: \(conversationId ?? "some conversation")"
-                        )
-                    } catch {
-                        print(
-                            "MessagingService - Failed to decode message: \(error.localizedDescription)"
-                        )
                     }
                 }
             }
-        }
     }
 
     func unsubscribeFromInboxMessages() async {
@@ -162,57 +153,60 @@ class MessagingService: MessagingServiceProtocol {
             )
         }
     }
-    
-    
+
     func subscribeToMessages(
         conversationId: String,
         onNewMessage: @escaping (MessageDocument) -> Void
     ) async throws {
 
-        messagesSubscription = try await AppwriteService.shared.realtime2.subscribe(
-            channels: [
-                "databases.\(AppwriteService.shared.databaseId).collections.messages.documents"
-            ]
-        ) { event in
-            //print("MessagingService - Received event for messages: \(event)")
-            Task {
-                print("MessagingService - Received event for messages: \(event)")
-                if let payload = event.payload {
-                    do {
-                        if let documentId = payload["$id"] as? String {
+        messagesSubscription = try await AppwriteService.shared.realtime2
+            .subscribe(
+                channels: [
+                    "databases.\(AppwriteService.shared.databaseId).collections.messages.documents"
+                ]
+            ) { event in
+                //print("MessagingService - Received event for messages: \(event)")
+                Task {
+                    print(
+                        "MessagingService - Received event for messages: \(event)"
+                    )
+                    if let payload = event.payload {
+                        do {
+                            if let documentId = payload["$id"] as? String {
 
-                            let document = try await self.appwriteService
-                                .databases.getDocument(
-                                    databaseId: self.appwriteService.databaseId,
-                                    collectionId: self.appwriteService
-                                        .COLLECTION_ID_MESSAGES,
-                                    documentId: documentId,
-                                    nestedType: MessageModel.self
-                                )
-                            
-                            //onNewMessage(document)
-                    
-                                if document.data.conversationId == conversationId {
+                                let document = try await self.appwriteService
+                                    .databases.getDocument(
+                                        databaseId: self.appwriteService
+                                            .databaseId,
+                                        collectionId: self.appwriteService
+                                            .COLLECTION_ID_MESSAGES,
+                                        documentId: documentId,
+                                        nestedType: MessageModel.self
+                                    )
+
+                                //onNewMessage(document)
+
+                                if document.data.conversationId
+                                    == conversationId
+                                {
                                     print(
                                         "MessagingService - New Message for \(conversationId)"
                                     )
                                     onNewMessage(document)
                                 }
-                            
-                          
-                            
+
+                            }
+                            print(
+                                "MessagingService - Subscribed to realtime messsages for conversation: \(conversationId)"
+                            )
+                        } catch {
+                            print(
+                                "MessagingService - Failed to decode message: \(error.localizedDescription)"
+                            )
                         }
-                        print(
-                            "MessagingService - Subscribed to realtime messsages for conversation: \(conversationId)"
-                        )
-                    } catch {
-                        print(
-                            "MessagingService - Failed to decode message: \(error.localizedDescription)"
-                        )
                     }
                 }
             }
-        }
     }
 
     func unsubscribeFromMessages() async {
@@ -226,8 +220,9 @@ class MessagingService: MessagingServiceProtocol {
         }
     }
 
-
-    func markMessagesRead(conversationId: String, currentAccountId: String) async throws {  //get all messages in the particular conversation that are marked as isRead = false
+    func markMessagesRead(conversationId: String, currentAccountId: String)
+        async throws
+    {  //get all messages in the particular conversation that are marked as isRead = false
         let queries = [
             Query.equal("conversationId", value: conversationId),
             Query.equal("isRead", value: false),
@@ -243,7 +238,7 @@ class MessagingService: MessagingServiceProtocol {
         )
 
         for message in messages.documents {
-            
+
             if message.data.senderAccountId != currentAccountId {
                 let updatedMessage = MessageModel(
                     conversationId: message.data.conversationId,
@@ -257,10 +252,9 @@ class MessagingService: MessagingServiceProtocol {
                     collectionId: appwriteService.COLLECTION_ID_MESSAGES,
                     documentId: message.id,
                     data: updatedMessage.toJson())
-                
+
             }
 
-        
         }
 
     }
