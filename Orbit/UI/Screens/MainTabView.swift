@@ -36,24 +36,6 @@ struct MainTabView: View {
             .tag(1)
 
             NavigationView {
-                ExampleView2()
-                    .navigationTitle("Tab 3")
-            }
-            .tabItem {
-                Label("Tab 3", systemImage: "star.fill")
-            }
-            .tag(2)
-
-            NavigationView {
-                ExampleView3()
-                    .navigationTitle("Tab 4")
-            }
-            .tabItem {
-                Label("Tab 4", systemImage: "gearshape.fill")
-            }
-            .tag(3)
-
-            NavigationView {
                 if let user = authViewModel.user {
                     ProfileView()
                 } else {
@@ -63,7 +45,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Profile", systemImage: "person.circle.fill")
             }
-            .tag(4)
+            .tag(2)
         }
     }
 }
@@ -100,4 +82,3 @@ struct MainTabView_Previews: PreviewProvider {
             .environmentObject(ChatRequestViewModel.mock())
     }
 }
-
