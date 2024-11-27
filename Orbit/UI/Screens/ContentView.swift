@@ -6,67 +6,80 @@
 //  Copyright © 2019 Alexey Naumov. All rights reserved.
 //
 
+// Main ContentView with Splash Screen and Authentication Logic
 import Combine
 import SwiftUI
 
-// Main ContentView with Splash Screen and Authentication Logic
 struct ContentView: View {
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var userVM: UserViewModel
-    @State var isOneSecondAfterLaunch = false
+    @EnvironmentObject var appState: AppState
     @State private var showSplashScreen = true
-    @Environment(\.colorScheme) var colorScheme  // Detect light/dark mode
+    @State private var isOneSecondAfterLaunch = false
 
     var body: some View {
         ZStack {
             if showSplashScreen {
                 SplashScreenView(isActive: $showSplashScreen)
             } else {
-                NavigationView {
-                    ZStack {
-                        if authVM.isLoggedIn {
-                            MainTabView()
-                        }
-                        if !authVM.isLoggedIn && !authVM.isLoading {
-                            LoginView()
-                                .transition(
-                                    .asymmetric(
-                                        insertion: isOneSecondAfterLaunch
-                                            ? .move(edge: .leading)
-                                            : .scale,
-                                        removal: .move(edge: .leading))
-                                )
-                        }
+                NavigationStack(path: $appState.navigationPath) {
+                    if authVM.isLoggedIn {
+                        MainTabView()
+                            .navigationDestination(for: String.self) { screen in
+                                navigateToView(screen: screen)
+                            }
+                    } else if !authVM.isLoggedIn && !authVM.isLoading {
+                        LoginView()
+                            .navigationDestination(for: String.self) { screen in
+                                navigateToView(screen: screen)
+                            }
+                            .transition(
+                                .asymmetric(
+                                    insertion: isOneSecondAfterLaunch
+                                        ? .move(edge: .leading)
+                                        : .scale,
+                                    removal: .move(edge: .leading))
+                            )
                     }
-                    .animation(.easeInOut, value: authVM.isLoggedIn || authVM.isLoading)
                 }
+                .animation(
+                    .easeInOut, value: authVM.isLoggedIn || authVM.isLoading
+                )
                 .onAppear {
                     Task {
                         await authVM.initialize()
-                        // Wait for 1 second after splash
-                        try await Task.sleep(nanoseconds: 1 * 1_000_000_000)
+                        try await Task.sleep(nanoseconds: 1_000_000_000)
                         isOneSecondAfterLaunch = true
                     }
                 }
             }
         }
     }
-}
 
+    @ViewBuilder
+    func navigateToView(screen: String) -> some View {
+        switch screen {
+        case "ProfileScreen":
+            ProfileView()
+        default:
+            Text("Unknown Destination")
+        }
+    }
+}
 
 // Splash Screen with Loading Icon
 struct SplashScreenView: View {
-    @Binding var isActive: Bool // Use binding to change from splash to content
+    @Binding var isActive: Bool  // Use binding to change from splash to content
     @State private var isAnimating = false
     @State private var showT = false
     @State private var showI = false
     @State private var showB = false
     @State private var showR = false
     @Environment(\.colorScheme) var colorScheme  // Detect light/dark mode
-    
+
     var body: some View {
         ZStack {
-            ColorPalette.background(for: colorScheme) // Background color
+            ColorPalette.background(for: colorScheme)  // Background color
                 .ignoresSafeArea()  // Make sure it covers the whole screen
             VStack {
                 HStack(spacing: 0) {
@@ -78,38 +91,44 @@ struct SplashScreenView: View {
                         .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .offset(x: isAnimating ? 30 : 41, y: -3)
                         .scaleEffect(isAnimating ? 3 : 6)
-                        .animation(.easeInOut(duration: 1.5).delay(0.4), value: isAnimating)
-                   
+                        .animation(
+                            .easeInOut(duration: 1.5).delay(0.4),
+                            value: isAnimating)
+
                     // Remaining letters ("rbit"), revealed one by one
                     Text("r")
                         .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showR ? 1 : 0)
                         .offset(x: -14)
-                        .animation(.easeInOut(duration: 0.3).delay(0.9), value: showR)
-                    
+                        .animation(
+                            .easeInOut(duration: 0.3).delay(0.9), value: showR)
+
                     Text("b")
                         .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showB ? 1 : 0)
                         .offset(x: -14)
-                        .animation(.easeInOut(duration: 0.3).delay(0.8), value: showB)
-                    
+                        .animation(
+                            .easeInOut(duration: 0.3).delay(0.8), value: showB)
+
                     Text("i")
                         .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showI ? 1 : 0)
                         .offset(x: -14)
-                        .animation(.easeInOut(duration: 0.3).delay(0.7), value: showI)
-                    
+                        .animation(
+                            .easeInOut(duration: 0.3).delay(0.7), value: showI)
+
                     Text("t")
                         .font(.custom("Bahnschrift", size: 72))
                         .foregroundColor(ColorPalette.accent(for: colorScheme))
                         .opacity(showT ? 1 : 0)
                         .offset(x: -14)
-                        .animation(.easeInOut(duration: 0.3).delay(0.6), value: showT)
+                        .animation(
+                            .easeInOut(duration: 0.3).delay(0.6), value: showT)
                 }
-                
+
                 // Loading indicator below the logo
                 ProgressView("Loading...")
                     .foregroundColor(ColorPalette.text(for: colorScheme))
@@ -124,7 +143,7 @@ struct SplashScreenView: View {
                     showB = true
                     showR = true
                 }
-                
+
                 // Automatically switch to the main screen after the animation
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     withAnimation(.easeInOut(duration: 0.5)) {
@@ -139,13 +158,13 @@ struct SplashScreenView: View {
 // MARK: - Preview
 
 #if DEBUG
-    #Preview{
+    #Preview {
         ContentView()
             .environmentObject(AuthViewModel())
             .environmentObject(UserViewModel())
+            .environmentObject(AppState())
     }
 #endif
-
 
 //MARK: ORIGINAL CODE
 

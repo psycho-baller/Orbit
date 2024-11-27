@@ -8,7 +8,9 @@
 import Foundation
 
 protocol NotificationServiceProtocol {
-    func sendPushNotification(to accountId: String, title: String, body: String)
+    func sendPushNotification(
+        to accountIds: [String], title: String, body: String,
+        data: [String: Any])
         async throws
 
 }
@@ -22,7 +24,10 @@ class NotificationService: NotificationServiceProtocol {
         //        self.messagingService = appwriteService.messaging
     }
 
-    func sendPushNotification(to accountId: String, title: String, body: String)
+    func sendPushNotification(
+        to accountIds: [String], title: String, body: String,
+        data: [String: Any]
+    )
         async throws
     {
         // Construct the json body for the push notification
@@ -31,10 +36,9 @@ class NotificationService: NotificationServiceProtocol {
                 "title": title,
                 "body": body,
             ],
-            "data": [
-                "userIds": [accountId]
-            ],
-            // "DeviceToken": "",
+            "userIds": accountIds,
+            "data": data,
+                // "DeviceToken": "",
         ]
 
         // Convert the dictionary to JSON data
