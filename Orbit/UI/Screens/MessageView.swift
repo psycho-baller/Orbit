@@ -10,6 +10,10 @@ import SwiftUI
 struct MessageView: View {
     @EnvironmentObject private var msgVM: MessagingViewModel
     @EnvironmentObject private var userVM: UserViewModel
+<<<<<<< HEAD
+=======
+    @Environment(\.colorScheme) var colorScheme
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
 
     @State private var newMessageText: String = ""
     @State private var scrollToId: String?  // Save the last message ID for scroll position
@@ -23,7 +27,10 @@ struct MessageView: View {
                 ChatProfileTitle(
                     messagerName: messagerName, isInMessageView: true)
 
+<<<<<<< HEAD
                 ScrollViewReader { proxy in
+=======
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
                     ScrollView {
                         ForEach($msgVM.messages, id: \.id) { $messageDocument in
                             if !messageDocument.data.senderAccountId.isEmpty {
@@ -32,6 +39,7 @@ struct MessageView: View {
                             }
                         }
                     }
+<<<<<<< HEAD
                     .onChange(of: msgVM.lastMessageId) { oldMessageId, newMessageId in
                         if let id = newMessageId {
                             withAnimation {
@@ -52,6 +60,14 @@ struct MessageView: View {
                 .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
             }
             .background(ColorPalette.accent(for: ColorScheme.light))
+=======
+                    .defaultScrollAnchor(.bottom)
+                .padding(.top, 10)
+                .background(colorScheme == .light ? .white : ColorPalette.background(for: colorScheme))
+                .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
+            }
+            .background(colorScheme == .light ? ColorPalette.accent(for: ColorScheme.light) :ColorPalette.background(for: colorScheme))
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
 
             // Message Input Field
             MessageField(text: $newMessageText, onSend: sendMessage)
@@ -76,13 +92,26 @@ struct MessageView: View {
                         }
                         
                         Task{
+<<<<<<< HEAD
                             await msgVM.markMessagesRead(conversationId: conversationId)
+=======
+                            if let currentUserId = userVM.currentUser?.accountId {
+                                await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+                            }
+                            
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
                         }
                     }
                         
                    
                 }
+<<<<<<< HEAD
                 await msgVM.markMessagesRead(conversationId: conversationId)
+=======
+                if let currentUserId = userVM.currentUser?.accountId {
+                    await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+                }
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
             }
         }
         .onDisappear {

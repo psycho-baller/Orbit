@@ -22,7 +22,10 @@ struct MainTabView: View {
         TabView {
             NavigationView {
                 HomeView()
+<<<<<<< HEAD
                     .navigationTitle("Home")
+=======
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
             }
             .tabItem {
                 Label("Home", systemImage: "house.fill")

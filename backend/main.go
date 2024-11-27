@@ -20,12 +20,21 @@ type Message struct {
 }
 
 type Data struct {
+<<<<<<< HEAD
 	UserIds []string `json:"userIds"`
 	TargetScreen string `json:"targetScreen"`
+=======
+	RequestId	string `json:"requestId"`
+	// TargetScreen string `json:"targetScreen"`
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
 }
 
 type RequestData struct {
 	Message Message `json:"message"`
+<<<<<<< HEAD
+=======
+	UserIds []string `json:"userIds"`
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
 	Data    Data    `json:"data"`
 	// DeviceToken string `json:"deviceToken"`
 }
@@ -52,7 +61,11 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 		// Combine the values into a single string with new line separators
 		combinedString := requestData.Message.Title + "\n" +
 		requestData.Message.Body + "\n" +
+<<<<<<< HEAD
 		strings.Join(requestData.Data.UserIds, ", ") + "\n"
+=======
+		strings.Join(requestData.UserIds, ", ") + "\n"
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
 		// + requestData.DeviceToken
 		Context.Log("Data parsed successfully:\n" + combinedString)
 	}
@@ -60,8 +73,13 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 	// Send a notification
 	messaging := appwrite.NewMessaging(client)
 	response, err := messaging.CreatePush(id.Unique(), requestData.Message.Title, requestData.Message.Body,
+<<<<<<< HEAD
 		messaging.WithCreatePushUsers(requestData.Data.UserIds),
 		messaging.WithCreatePushData(requestData.Data.TargetScreen),
+=======
+		messaging.WithCreatePushUsers(requestData.UserIds),
+		messaging.WithCreatePushData(requestData.Data),
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
 	)
 
 	if err != nil {

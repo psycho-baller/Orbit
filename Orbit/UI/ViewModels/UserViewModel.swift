@@ -54,8 +54,13 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         )
         self.preciseLocationManager = PreciseLocationManager()
         preciseLocationManager?.delegate = self  // Set delegate to receive location updates
+<<<<<<< HEAD
             await fetchCurrentUser()
             await subscribeToRealtimeUpdates()
+=======
+        await fetchCurrentUser()
+        await subscribeToRealtimeUpdates()
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
     }
 
     @MainActor
@@ -168,6 +173,49 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     }
 
     @MainActor
+<<<<<<< HEAD
+=======
+    func toggleIsInterestedToMeet() async {
+        guard var currentUser = currentUser else {
+            print("No current user available to toggle isInterestedToMeet.")
+            return
+        }
+
+        // Toggle the `isInterestedToMeet` attribute
+        currentUser.isInterestedToMeet =
+            !(currentUser.isInterestedToMeet ?? false)
+
+        do {
+            // Update the user in the Appwrite database
+            print(
+                "Toggling isInterestedToMeet for user \(currentUser.accountId)."
+            )
+            guard
+                let updatedUserDocument =
+                    try await userManagementService.updateUser(
+                        accountId: currentUser.accountId,
+                        updatedUser: currentUser)
+            else {
+                throw NSError(
+                    domain: "User not found", code: 404, userInfo: nil)
+            }
+
+            // Update the `currentUser` property with the latest data
+            self.currentUser = currentUser
+
+            print(
+                "Successfully toggled isInterestedToMeet for user \(updatedUserDocument.id)."
+            )
+        } catch {
+            print(
+                "Error toggling isInterestedToMeet: \(error.localizedDescription)"
+            )
+            self.error = error.localizedDescription
+        }
+    }
+
+    @MainActor
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
     func fetchUsersInArea(areaId: String) async {
         guard areaId != lastFetchedAreaId else { return }  // Fetch only if area changed
         lastFetchedAreaId = areaId  // Update last fetched area
@@ -497,12 +545,17 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 name: "John Doe",
                 interests: ["Basketball", "Music"],
                 latitude: 51.078621,
+<<<<<<< HEAD
                 longitude: -114.136719,
+=======
+                longitude: 114.136719,
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
                 isInterestedToMeet: true,
                 currentAreaId: "990215865"
             )
 
             // Add mock users
+<<<<<<< HEAD
             viewModel.users = [
                 UserModel(
                     accountId: "6726b1ef776f5badc4fe",
@@ -550,6 +603,55 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                     currentAreaId: "990215865"
                 ),
             ]
+=======
+            viewModel.users = []
+            //                UserModel(
+            //                    accountId: "6726b1ef776f5badc4fe",
+            //                    name: "Jane Smith",
+            //                    interests: ["Reading", "Cooking"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "11223",
+            //                    name: "Michael Brown",
+            //                    interests: ["Video Games", "Art"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "33445",
+            //                    name: "Emily White",
+            //                    interests: ["Travel", "Movies"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "55667",
+            //                    name: "David Green",
+            //                    interests: ["Basketball", "Music", "Art"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //                UserModel(
+            //                    accountId: "77889",
+            //                    name: "Sophia Black",
+            //                    interests: ["Hiking", "Photography"],
+            //                    latitude: 51.078621,
+            //                    longitude: -114.136719,
+            //                    isInterestedToMeet: true,
+            //                    currentAreaId: "990215865"
+            //                ),
+            //            ]
+>>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
             return viewModel
         }
     }
