@@ -47,13 +47,15 @@ struct PendingRequestsDropdown: View {
                         systemName: isExpanded ? "chevron.up" : "chevron.down"
                     )
                     .font(.caption)
-                    .foregroundColor(ColorPalette.text(for: colorScheme))
                 }
                 .padding(.vertical, 8)
                 .foregroundColor(ColorPalette.text(for: colorScheme))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .disabled(pendingRequests.isEmpty)
+            .opacity(
+                pendingRequests.isEmpty ? 0.5 : 1)
 
             if isExpanded && !pendingRequests.isEmpty {
                 VStack(spacing: 16) {
@@ -70,7 +72,7 @@ struct PendingRequestsDropdown: View {
                 .padding(.vertical, 16)
             }
         }
-        .background(ColorPalette.lightGray(for: colorScheme))
+        .background(LightGrayOrMaterial())
         .cornerRadius(32)
         .animation(.spring(), value: isExpanded)
     }
