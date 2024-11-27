@@ -16,6 +16,17 @@ struct OrbitApp: App {
     @StateObject var msgVM = MessagingViewModel()
     @StateObject var chatRequestVM = ChatRequestViewModel()
 
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundEffect = UIBlurEffect(
+            style: .systemUltraThinMaterial)  // Material background
+        appearance.backgroundColor = UIColor.clear  // You can adjust this if needed
+
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
