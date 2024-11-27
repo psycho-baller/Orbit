@@ -29,6 +29,62 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
         self.currentLocation = CLLocationCoordinate2D(
             latitude: latitude, longitude: longitude)
     }
+    
+    let coordinateFormat = "<[LOC|{latitude},{longitude}]>"
+    
+    func encodeCoordinate(_ coordinate: CLLocationCoordinate2D) -> String {
+        let formattedString = coordinateFormat
+            .replacingOccurrences(of: "{latitude}", with: "\(coordinate.latitude)")
+            .replacingOccurrences(of: "{longitude}", with: "\(coordinate.longitude)")
+        return formattedString
+    }
+    
+    func decodeCoordinate(from string: String) -> CLLocationCoordinate2D? {
+        // Create a regular expression pattern based on the global format
+        let latitudePattern = "(-?\\d+\\.\\d+)"
+        let longitudePattern = "(-?\\d+\\.\\d+)"
+        
+        // Escape special regex characters in the format and replace placeholders with patterns
+        let escapedFormat = NSRegularExpression.escapedPattern(for: coordinateFormat)
+            .replacingOccurrences(of: "\\{latitude\\}", with: latitudePattern)
+            .replacingOccurrences(of: "\\{longitude\\}", with: longitudePattern)
+        
+        let pattern = "^" + escapedFormat + "$"
+        let regex = try? NSRegularExpression(pattern: pattern)
+        let nsString = string as NSString
+        let results = regex?.matches(in: string, range: NSRange(location: 0, length: nsString.length))
+        
+        guard let match = results?.first else { return nil }
+        
+        // Extract latitude and longitude from the match
+        let latitudeRange = match.range(at: 1)
+        let longitudeRange = match.range(at: 2)
+        
+        guard let latitude = Double(nsString.substring(with: latitudeRange)),
+              let longitude = Double(nsString.substring(with: longitudeRange)) else {
+            return nil
+        }
+        
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    func isValidCoordinateFormat(_ string: String) -> Bool {
+        // Create a regular expression pattern based on the global format
+        let latitudePattern = "(-?\\d+\\.\\d+)"
+        let longitudePattern = "(-?\\d+\\.\\d+)"
+        
+        // Escape special regex characters in the format and replace placeholders with patterns
+        let escapedFormat = NSRegularExpression.escapedPattern(for: coordinateFormat)
+            .replacingOccurrences(of: "\\{latitude\\}", with: latitudePattern)
+            .replacingOccurrences(of: "\\{longitude\\}", with: longitudePattern)
+        
+        let pattern = "^" + escapedFormat + "$"
+        let regex = try? NSRegularExpression(pattern: pattern)
+        let range = NSRange(location: 0, length: string.utf16.count)
+        
+        return regex?.firstMatch(in: string, options: [], range: range) != nil
+    }
+    
     var lastMessageld: Binding<String?> {
         Binding(
             get: { self.lastMessageId },
@@ -111,13 +167,7 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
         }
     }
     
-    @MainActor
-    func shareLocationAsMessage(
-        conversationId: String, senderAccountId: String) async {
-        // Assume location is turned on
-        let fmtLocation = "<[LOC|\(currentLocation?.latitude),\(currentLocation?.longitude)]>"
-        await createMessage(conversationId: conversationId, senderAccountId: senderAccountId, message: fmtLocation)
-    }
+   
 
     @MainActor
     func getMessages(_ conversationId: String, _ numOfMessages: Int = 100) async
