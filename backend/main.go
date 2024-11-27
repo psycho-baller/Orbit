@@ -20,13 +20,12 @@ type Message struct {
 }
 
 type Data struct {
-	RequestId	string `json:"requestId"`
-	// TargetScreen string `json:"targetScreen"`
+	UserIds []string `json:"userIds"`
+	TargetScreen string `json:"targetScreen"`
 }
 
 type RequestData struct {
 	Message Message `json:"message"`
-	UserIds []string `json:"userIds"`
 	Data    Data    `json:"data"`
 	// DeviceToken string `json:"deviceToken"`
 }
@@ -53,7 +52,7 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 		// Combine the values into a single string with new line separators
 		combinedString := requestData.Message.Title + "\n" +
 		requestData.Message.Body + "\n" +
-		strings.Join(requestData.UserIds, ", ") + "\n"
+		strings.Join(requestData.Data.UserIds, ", ") + "\n"
 		// + requestData.DeviceToken
 		Context.Log("Data parsed successfully:\n" + combinedString)
 	}
@@ -61,8 +60,8 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 	// Send a notification
 	messaging := appwrite.NewMessaging(client)
 	response, err := messaging.CreatePush(id.Unique(), requestData.Message.Title, requestData.Message.Body,
-		messaging.WithCreatePushUsers(requestData.UserIds),
-		messaging.WithCreatePushData(requestData.Data),
+		messaging.WithCreatePushUsers(requestData.Data.UserIds),
+		messaging.WithCreatePushData(requestData.Data.TargetScreen),
 	)
 
 	if err != nil {

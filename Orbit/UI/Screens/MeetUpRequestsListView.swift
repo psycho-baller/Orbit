@@ -11,15 +11,10 @@ struct MeetUpRequestsListView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
-    @Binding var chatRequestListDetent: PresentationDetent
+    @State private var swipedRequestId: String?
 
     var body: some View {
-        //        NavigationStack {
         VStack {
-            Text("Meetup Requests")
-                .font(.headline)
-                .padding()
-
             if let error = chatRequestVM.errorMessage {
                 VStack {
                     Text("Error")
@@ -42,27 +37,13 @@ struct MeetUpRequestsListView: View {
                 }
             } else {
                 List {
-
                     ForEach(chatRequestVM.requests) { request in
                         MeetUpRequestRow(request: request)
-                            .onTapGesture {
-                                print("sheet tap")
-                                chatRequestVM.selectedRequest = request  // Open details sheet
-                                chatRequestListDetent = .large
-                            }
-                        //                    NavigationLink(
-                        //                        destination: MeetUpRequestDetailsView(request: request)
-                        //                    ) {
-                        //                        MeetUpRequestRow(request: request)
-                        //                    }
+
                     }
                 }
-                .listStyle(.plain)
+                //                .navigationTitle("Meet-Up Requests")
             }
-        }
-        .sheet(item: $chatRequestVM.selectedRequest) { request in
-            MeetUpRequestDetailsView(request: request)
-                .presentationDetents([.medium, .large])
         }
     }
 }
@@ -107,9 +88,6 @@ struct MeetUpRequestRow: View {
             }
             .tint(.red)
         }
-        //        .onTapGesture {
-        //
-        //        }
     }
     private func acceptRequest(_ request: ChatRequestDocument) {
         Task {
@@ -127,9 +105,7 @@ struct MeetUpRequestRow: View {
 }
 
 #Preview {
-    @Previewable @State var previewDetent: PresentationDetent = .medium
-
-    MeetUpRequestsListView(chatRequestListDetent: $previewDetent)
-        .environmentObject(ChatRequestViewModel.mock())
+    MeetUpRequestsListView()
+        .environmentObject(ChatRequestViewModel())
         .environmentObject(UserViewModel.mock())
 }

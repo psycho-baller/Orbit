@@ -77,8 +77,7 @@ struct UserCardView: View {
         )
 
         Task {
-            await chatRequestVM.sendMeetUpRequest(
-                request: request, from: currentUser?.name)
+            await chatRequestVM.sendMeetUpRequest(request: request)
             chatRequestVM.markRequestSent(to: user.accountId)  // Mark request as sent
         }
     }

@@ -13,7 +13,6 @@ class ChatRequestViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading = false
     @Published private var sentRequests: Set<String> = []
-    @Published var selectedRequest: ChatRequestDocument? = nil
 
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
@@ -28,9 +27,7 @@ class ChatRequestViewModel: ObservableObject {
 
     // Send a meet-up request
     @MainActor
-    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?)
-        async
-    {
+    func sendMeetUpRequest(request: ChatRequestModel) async {
         isLoading = true
         defer { isLoading = false }
 
@@ -41,13 +38,9 @@ class ChatRequestViewModel: ObservableObject {
             self.requests.append(requestDoc)
 
             try await notificationService.sendPushNotification(
-                to: [request.receiverAccountId],
-                title:
-                    "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
-                body: requestDoc.data.message,
-                data: [
-                    "requestId": requestDoc.id
-                ]
+                to: request.receiverAccountId,
+                title: "meow",
+                body: requestDoc.data.message
             )
 
         } catch {
@@ -66,7 +59,7 @@ class ChatRequestViewModel: ObservableObject {
 
     // Fetch a specific meet-up request by ID
     @MainActor
-    func getMeetUpRequest(requestId: String) async -> ChatRequestDocument? {
+    func fetchMeetUpRequest(requestId: String) async {
         isLoading = true
         defer { isLoading = false }
 
@@ -74,15 +67,13 @@ class ChatRequestViewModel: ObservableObject {
             if let request = try await chatRequestService.getMeetUpRequest(
                 requestId: requestId)
             {
-                return request
+                self.requests.append(request)
             } else {
                 self.errorMessage = "Meet-up request not found."
-                throw NSError(domain: "ChatRequestViewModel", code: 404)
             }
         } catch {
             self.errorMessage =
                 "Error fetching meet-up request: \(error.localizedDescription)"
-            return nil
         }
     }
 

@@ -11,7 +11,6 @@ import CoreLocation
 struct MessageView: View {
     @EnvironmentObject private var msgVM: MessagingViewModel
     @EnvironmentObject private var userVM: UserViewModel
-    @Environment(\.colorScheme) var colorScheme
 
     @State private var newMessageText: String = ""
     @State private var scrollToId: String?  // Save the last message ID for scroll position
@@ -44,6 +43,7 @@ struct MessageView: View {
                 ChatProfileTitle(
                     messagerName: messagerName, isInMessageView: true)
 
+                ScrollViewReader { proxy in
                     ScrollView {
                         ForEach($msgVM.messages, id: \.id) { $messageDocument in
                             if !messageDocument.data.senderAccountId.isEmpty {
@@ -52,12 +52,26 @@ struct MessageView: View {
                             }
                         }
                     }
-                    .defaultScrollAnchor(.bottom)
+                    .onChange(of: msgVM.lastMessageId) { oldMessageId, newMessageId in
+                        if let id = newMessageId {
+                            withAnimation {
+                                proxy.scrollTo(id, anchor: .bottom)
+                            }
+                        }
+                    }
+                    .onAppear {
+                        if let id = msgVM.lastMessageld.wrappedValue {
+                            withAnimation {
+                                proxy.scrollTo(id, anchor: .bottom)
+                            }
+                        }
+                    }
+                }
                 .padding(.top, 10)
-                .background(colorScheme == .light ? .white : ColorPalette.background(for: colorScheme))
+                .background(.white)
                 .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
             }
-            .background(colorScheme == .light ? ColorPalette.accent(for: ColorScheme.light) :ColorPalette.background(for: colorScheme))
+            .background(ColorPalette.accent(for: ColorScheme.light))
 
             // Message Input Field
             MessageField(text: $newMessageText, onSend: sendMessage)
@@ -82,18 +96,13 @@ struct MessageView: View {
                         }
                         
                         Task{
-                            if let currentUserId = userVM.currentUser?.accountId {
-                                await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
-                            }
-                            
+                            await msgVM.markMessagesRead(conversationId: conversationId)
                         }
                     }
                         
                    
                 }
-                if let currentUserId = userVM.currentUser?.accountId {
-                    await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
-                }
+                await msgVM.markMessagesRead(conversationId: conversationId)
             }
         }
         .onDisappear {

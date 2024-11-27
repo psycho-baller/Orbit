@@ -11,7 +11,6 @@ struct InboxView: View {
     @EnvironmentObject private var msgVM: MessagingViewModel
     @EnvironmentObject private var userVM: UserViewModel
     @State private var showNewMessageView = false
-    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
 
     var body: some View {
         NavigationStack {
@@ -23,7 +22,6 @@ struct InboxView: View {
                     MessagesList(conversations: msgVM.conversations)
                 }
             }
-            .background(ColorPalette.background(for: colorScheme))
             .frame(maxWidth: .infinity)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -31,7 +29,6 @@ struct InboxView: View {
                         Text("Messages")
                             .largeBoldFont()
                     }
-                    .foregroundColor(ColorPalette.text(for: colorScheme))
                 }
             }
             .onAppear {
@@ -48,12 +45,10 @@ struct InboxView: View {
             }
             .onDisappear {
                 Task {
-                    print("InboxView - Unsubscribed from messages")
-                    await msgVM.unsubscribeFromInboxMessages()
+                   //await msgVM.unsubscribeFromMessages()
                 }
             }
         }
-        .background(ColorPalette.background(for: colorScheme))
-        .accentColor(.white)
+        .background(ColorPalette.background(for: ColorScheme.light))
     }
 }
