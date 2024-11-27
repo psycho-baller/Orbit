@@ -105,17 +105,10 @@ struct ColorPalette {
     }
 
     static func lightGray(for colorScheme: ColorScheme) -> Color {
-        let backgroundType: BackgroundType =
+        return
             colorScheme == .dark
-            ? .material(Material.ultraThin)  // Material effect for dark mode
-            : .color(Color(hex: "#96CBD4"))  // Color for light mode
-
-        switch backgroundType {
-        case .color(let color):
-            return color
-        case .material(let material):
-            return material as! Color
-        }
+            ? Color(hex: "2C3E50")
+            : Color(hex: "#96CBD4")
     }
 
     static func secondaryText(for colorScheme: ColorScheme) -> Color {
