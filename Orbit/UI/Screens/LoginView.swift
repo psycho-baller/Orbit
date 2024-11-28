@@ -90,8 +90,8 @@ struct LoginView: View {
             .regularFont()
             .foregroundColor(.white)
             .padding()
-            .frame(width: 300, height: 50)
-            .background(ColorPalette.button(for: colorScheme))
+            .frame(maxWidth: .infinity, maxHeight: 50)
+            .background(ColorPalette.accent(for: colorScheme))
             .cornerRadius(16.0)
 
             HStack {
