@@ -11,6 +11,7 @@ import Foundation
 import SwiftUI
 
 class MessagingViewModel: ObservableObject {
+    static let shared = MessagingViewModel()
     private var messagingService: MessagingServiceProtocol = MessagingService()
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()

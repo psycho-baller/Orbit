@@ -11,6 +11,7 @@ struct HomeView: View {
     @State private var selectedUser: UserModel? = nil
     @State private var isShowingChatRequests = false
     @State private var chatRequestListDetent: PresentationDetent = .medium
+    @State private var isPendingExpanded = false
     @State private var showLogoutAlert = false
 
     var body: some View {
@@ -18,26 +19,34 @@ struct HomeView: View {
             ZStack {
                 content
                     .navigationTitle(
-                        userVM.isOnCampus
+                        userVM.isOnCampus || isPreviewMode
                             ? (userVM.currentArea.map { "Users in \($0)" }
                                 ?? "Users")
                             : ""
                     )
 
                     .navigationBarTitleDisplayMode(
-                        userVM.isOnCampus ? .automatic : .inline
+                        userVM.isOnCampus || isPreviewMode
+                            ? .automatic : .inline
                     )
-                    .navigationBarItems(
-                        trailing: HStack {
+                    .toolbar {
+                        // Leading toolbar: Logout button
+                        ToolbarItem(placement: .navigationBarLeading) {
                             logoutButton
+                        }
+
+                        // Trailing toolbar: Notification button
+                        ToolbarItem(placement: .navigationBarTrailing) {
                             notificationButton
                                 .overlay(
                                     notificationBadge
                                 )
-                            settingsButton
 
                         }
-                    )
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            settingsButton
+                        }
+                    }
                     .sheet(isPresented: $isShowingChatRequests) {
                         MeetUpRequestsListView(
                             chatRequestListDetent: $chatRequestListDetent
@@ -45,26 +54,35 @@ struct HomeView: View {
                         .presentationDetents(
                             [.medium, .large], selection: $chatRequestListDetent
                         )
-                        .presentationDragIndicator(.visible)
+                        .presentationBackground(.ultraThinMaterial)
                     }
                     .sheet(item: $selectedUser) { user in
                         ChatRequestView(
-                            sender: userVM.currentUser, receiver: user)
+                            sender: userVM.currentUser, receiver: user
+                        )
+                        .presentationBackground(.thinMaterial)
+                        .presentationDetents(
+                            [.medium, .large]
+                        )
                     }
                     .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
                         HomeSettings()
                             .presentationDetents([.fraction(0.7), .large])
                             .presentationDragIndicator(.visible)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .presentationBackground(
+                                colorScheme == .dark
+                                    ? .thinMaterial : .ultraThinMaterial)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(ColorPalette.background(for: colorScheme))
+                //                    .background(ColorPalette.background(for: colorScheme))
             }
             .onAppear {
                 Task {
                     await handleNotificationNavigation()
                 }
             }
-            .onChange(of: appState.selectedRequestId) { _ in
+            .onChange(of: appState.selectedRequestId) {
                 Task {
                     await handleNotificationNavigation()
                 }
@@ -77,7 +95,7 @@ struct HomeView: View {
             if let request = await chatRequestVM.getMeetUpRequest(
                 requestId: requestId)
             {
-                print("Selected request ID changed: ", requestId ?? "nil")
+                print("Selected request ID changed: ", requestId)
                 isShowingChatRequests = true
                 chatRequestListDetent = .large
                 //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -94,7 +112,7 @@ struct HomeView: View {
             failedView(error)
             //        } else if userVM.currentUser?.isInterestedToMeet == false {
             //            NotInterestedToMeetView()
-        } else if userVM.isOnCampus {
+        } else if userVM.isOnCampus || isPreviewMode {
             loadedView(userVM.filteredUsers)
         } else {
             OffCampusView()
@@ -106,7 +124,7 @@ struct HomeView: View {
         Button(action: {
             isShowingChatRequests = true
         }) {
-            Image(systemName: "bell")
+            Image(systemName: "tray")
                 .font(.headline)
                 .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
@@ -129,9 +147,6 @@ struct HomeView: View {
     private var logoutButton: some View {
         Button(action: {
             showLogoutAlert = true
-            Task {
-                await authVM.logout()
-            }
         }) {
             Image(systemName: "rectangle.portrait.and.arrow.right")
                 .font(.headline)
@@ -178,7 +193,7 @@ struct HomeView: View {
             }) {
                 Text("Retry")
                     .padding()
-                    .background(ColorPalette.button(for: colorScheme))
+                    .background(ColorPalette.accent(for: colorScheme))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
@@ -186,10 +201,26 @@ struct HomeView: View {
         .background(ColorPalette.background(for: colorScheme))
     }
 
+    private func hasPendingRequest(for user: UserModel) -> Bool {
+        guard let currentUserId = userVM.currentUser?.accountId else {
+            return false
+        }
+
+        return chatRequestVM.requests.contains { request in
+            let receiverId = request.data.receiverAccountId
+            let senderId = request.data.senderAccountId
+            return receiverId == user.accountId
+                && senderId == currentUserId
+                && request.data.status == .pending
+        }
+    }
+
     private func loadedView(_ users: [UserModel]) -> some View {
+
         VStack(alignment: .leading, spacing: 0) {
             SearchBar(
-                text: $userVM.searchText, placeholder: "Search for a user"
+                text: $userVM.searchText,
+                placeholder: "Search for a user"
             )
 
             HStack {
@@ -201,9 +232,10 @@ struct HomeView: View {
                         }
                     }
                 )
-                .cornerRadius(10)
-                .shadow(radius: 3)
             }
+
+            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
+                .padding(.bottom, 16)
 
             if userVM.filteredUsers.isEmpty {
                 NoUsersAroundView()
@@ -211,20 +243,21 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         ForEach(userVM.filteredUsers) { user in
-                            UserCardView(
-                                user: user, currentUser: userVM.currentUser
-                            )
-                            .onTapGesture {
-                                selectedUser = user
+                            if !hasPendingRequest(for: user) {
+                                UserCardView(
+                                    user: user,
+                                    currentUser: userVM.currentUser
+                                )
+                                .onTapGesture {
+                                    selectedUser = user
+                                }
                             }
-                            .cornerRadius(10)
-                            .shadow(radius: 3)
                         }
                     }
-                    .padding(.horizontal)
                 }
             }
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
         .onAppear {
             if !isPreviewMode {
                 Task {
@@ -233,6 +266,8 @@ struct HomeView: View {
                 }
             }
         }
+        .padding(.horizontal)
+        .background(ColorPalette.background(for: colorScheme))
     }
 
     private func loadRequests() async {

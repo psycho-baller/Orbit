@@ -21,21 +21,22 @@ struct InterestsHorizontalTags: View {
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
                         .background(
-                            userVM.selectedInterests.contains(interest)
-                            ? ColorPalette.accent(for: colorScheme)  // Selected interest background
-                            : ColorPalette.lightGray(for: colorScheme)   // Non-selected interest background
+                            Group {
+                                if userVM.selectedInterests.contains(interest) {
+                                    ColorPalette.accent(for: colorScheme)
+                                        .opacity(0.4)  // Selected interest background
+                                } else {
+                                    LightGrayOrMaterial()
+                                }
+                            }
+                            // Non-selected interest background
                         )
                         .foregroundColor(
                             userVM.selectedInterests.contains(interest)
-                             ? ColorPalette.text(for: colorScheme)         // Text color for selected
-                            : ColorPalette.secondaryText(for: colorScheme) // Text color for non-selected
-                             )
-                        .clipShape(Capsule())
-                        .shadow(
-                            color: userVM.selectedInterests.contains(interest)
-                            ? ColorPalette.accent(for: colorScheme).opacity(0.5) : .clear, radius: 5, x: 0,
-                            y: 4
+                                ? ColorPalette.text(for: colorScheme)  // Text color for selected
+                                : ColorPalette.secondaryText(for: colorScheme)
                         )
+                        .clipShape(Capsule())
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 onTapInterest(interest)

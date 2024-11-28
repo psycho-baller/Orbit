@@ -13,17 +13,28 @@ class ChatRequestViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading = false
     @Published private var sentRequests: Set<String> = []
-    @Published var selectedRequest: ChatRequestDocument? = nil
+    @Published var selectedRequest: ChatRequestDocument? = nil {
+        willSet {
+            print(
+                "selectedRequest is being set to: \(String(describing: newValue))"
+            )
+        }
+    }
+    @Published var newConversationId: String? = nil
 
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
+    private let messagingService: MessagingServiceProtocol
 
     init(
         chatRequestService: ChatRequestServiceProtocol = ChatRequestService(),
-        notificationService: NotificationServiceProtocol = NotificationService()
+        notificationService: NotificationServiceProtocol =
+            NotificationService(),
+        messagingService: MessagingServiceProtocol = MessagingService()
     ) {
         self.chatRequestService = chatRequestService
         self.notificationService = notificationService
+        self.messagingService = messagingService
     }
 
     // Send a meet-up request
@@ -39,6 +50,7 @@ class ChatRequestViewModel: ObservableObject {
                 request)
             print(requestDoc)
             self.requests.append(requestDoc)
+            self.sentRequests.insert(request.receiverAccountId)
 
             try await notificationService.sendPushNotification(
                 to: [request.receiverAccountId],
@@ -49,7 +61,6 @@ class ChatRequestViewModel: ObservableObject {
                     "requestId": requestDoc.id
                 ]
             )
-
         } catch {
             self.errorMessage =
                 "Failed to send meet-up request: \(error.localizedDescription)"
@@ -95,25 +106,34 @@ class ChatRequestViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            if let updatedRequest =
-                try await chatRequestService.respondToMeetUpRequest(
-                    requestId: requestId, response: response)
+            if let updatedRequest = try await chatRequestService.respondToMeetUpRequest(
+                requestId: requestId, response: response)
             {
                 if let index = self.requests.firstIndex(where: {
                     $0.id == updatedRequest.id
                 }) {
                     self.requests[index] = updatedRequest
                 }
+                
                 if response == .approved {
-                    print(
-                        "Meet-up request approved. Proceed to create conversation in messaging view model."
+                    print("Meet-up request approved. Creating conversation...")
+                    let participants = [
+                        updatedRequest.data.senderAccountId,
+                        updatedRequest.data.receiverAccountId
+                    ]
+                    do {
+                     let newConversation = try await messagingService.createConversation(
+                        ConversationModel(participants: participants)
                     )
-                    // Notify MessagingViewModel to create conversation if necessary
+                        self.newConversationId = newConversation.id
+                        print("Created new conversation with ID: \(newConversation.id)")
+                    } catch {
+                        print("Failed to create a new conversation: \(error.localizedDescription)")
+                    }
                 }
             }
         } catch {
-            self.errorMessage =
-                "Failed to respond to request: \(error.localizedDescription)"
+            self.errorMessage = "Failed to respond to request: \(error.localizedDescription)"
         }
     }
 
@@ -146,3 +166,5 @@ class ChatRequestViewModel: ObservableObject {
         }
     }
 #endif
+
+

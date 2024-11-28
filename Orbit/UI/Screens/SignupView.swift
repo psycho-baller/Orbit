@@ -44,7 +44,8 @@ struct SignupView: View {
                     Text("Create an account")
                         .largeLightFont()
                         .padding(.bottom)
-                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .foregroundColor(
+                            ColorPalette.secondaryText(for: colorScheme))
                     Spacer()
                 }
                 .padding(.bottom, 30)
@@ -99,10 +100,11 @@ struct SignupView: View {
                     }
                 }
                 .regularFont()
-                .foregroundColor(ColorPalette.text(for: colorScheme))
                 .padding()
+                .foregroundColor(.white)
+
                 .frame(maxWidth: .infinity, maxHeight: 60)
-                .background(ColorPalette.button(for: colorScheme))
+                .background(ColorPalette.accent(for: colorScheme))
                 .cornerRadius(16.0)
 
                 Spacer()

@@ -21,7 +21,7 @@ struct InboxRow: View {
                 Spacer()
                 if !isRead {
                     Circle()
-                        .fill(ColorPalette.button(for: ColorScheme.light))
+                        .fill(ColorPalette.accent(for: ColorScheme.light))
                         .frame(width: 10, height: 10)
                 }
                 Spacer()

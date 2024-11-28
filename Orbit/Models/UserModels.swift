@@ -23,6 +23,7 @@ struct UserModel: Codable, Identifiable, Equatable {
     var isInterestedToMeet: Bool?
     var conversations: [String]?
     var currentAreaId: String?  // References Area collection
+    var profilePictureUrl: String?
 
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
@@ -32,7 +33,7 @@ struct UserModel: Codable, Identifiable, Equatable {
         accountId: String, name: String, interests: [String]? = nil,
         latitude: Double? = nil, longitude: Double? = nil,
         isInterestedToMeet: Bool? = nil, conversations: [String]? = nil,
-        currentAreaId: String? = nil
+        currentAreaId: String? = nil, profilePictureUrl: String? = nil
     ) {
         self.accountId = accountId
         self.name = name
@@ -42,7 +43,7 @@ struct UserModel: Codable, Identifiable, Equatable {
         self.isInterestedToMeet = isInterestedToMeet
         self.conversations = conversations
         self.currentAreaId = currentAreaId
-
+        self.profilePictureUrl = profilePictureUrl
     }
     func update(
         name: String? = nil,
@@ -92,3 +93,4 @@ struct TimeRangeConfig: Codable {
 }
 
 typealias UserDocument = AppwriteModels.Document<UserModel>
+

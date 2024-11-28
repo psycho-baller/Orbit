@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var allInterests = ["Basketball", "Video Games", "Music", "Reading", "Cooking", "Art", "Travel", "Movies"] // Sample interests
+    @State private var allInterests = [
+        "Basketball", "Video Games", "Music", "Reading", "Cooking", "Art",
+        "Travel", "Movies",
+    ]  // Sample interests
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var showingBottomSheet = false  // Controls the bottom sheet visibility
@@ -17,14 +20,16 @@ struct ProfileView: View {
 
     var body: some View {
         VStack {
-                    Image(systemName: "person.crop.circle.fill")
-                        .resizable()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2))
-                        .padding()
-            
-            
+            Image(systemName: "person.crop.circle.fill")
+                .resizable()
+                .frame(width: 120, height: 120)
+                .clipShape(Circle())
+                .overlay(
+                    Circle().stroke(
+                        ColorPalette.accent(for: colorScheme), lineWidth: 2)
+                )
+                .padding()
+
             // Display user's name
             if let name = userViewModel.currentUser?.name {
                 Text(name)
@@ -34,27 +39,28 @@ struct ProfileView: View {
                     .foregroundColor(ColorPalette.text(for: colorScheme))
             } else {
                 Text("Loading user data...")
-                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                    .foregroundColor(
+                        ColorPalette.secondaryText(for: colorScheme))
             }
-            
+
             // Display selected interests
             Text("Your Interests")
                 .font(.headline)
                 .padding()
                 .foregroundColor(ColorPalette.text(for: colorScheme))
-            
+
             GeometryReader { geometry in
                 WrappingHStack(
                     items: userViewModel.currentUser?.interests ?? [],
                     availableWidth: geometry.size.width,
-                    selectedInterests: .constant([]), // Display only, no selection here
+                    selectedInterests: .constant([]),  // Display only, no selection here
                     toggleInterest: { _ in },
                     isEditing: false,
                     showingBottomSheet: $showingBottomSheet
                 )
             }
             .padding()
-            
+
         }
         .onAppear {
             // Load user's existing interests into the view
@@ -67,22 +73,29 @@ struct ProfileView: View {
                 selectedInterests = interests
             }
         }
-        .sheet(isPresented: $showingBottomSheet, onDismiss: {
-            Task {
-                await userViewModel.updateUserInterests(interests: selectedInterests)
+        .sheet(
+            isPresented: $showingBottomSheet,
+            onDismiss: {
+                Task {
+                    await userViewModel.updateUserInterests(
+                        interests: selectedInterests)
+                }
             }
-        }) {
-        InterestsSelectionView(
-            allInterests: allInterests,
-            selectedInterests: $selectedInterests,
-            showingBottomSheet: $showingBottomSheet
-        )
-        .presentationDetents([.fraction(0.4)]) // Bottom sheet takes half the screen
-    }
+        ) {
+            InterestsSelectionView(
+                allInterests: allInterests,
+                selectedInterests: $selectedInterests,
+                showingBottomSheet: $showingBottomSheet
+            )
+            .presentationDetents([.fraction(0.4)])  // Bottom sheet takes half the screen
+        }
         .navigationTitle("Profile")
         .background(
             LinearGradient(
-                gradient: Gradient(colors: [ColorPalette.background(for: colorScheme), ColorPalette.main(for: colorScheme)]),
+                gradient: Gradient(colors: [
+                    ColorPalette.background(for: colorScheme),
+                    ColorPalette.main(for: colorScheme),
+                ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -105,7 +118,7 @@ struct InterestsSelectionView: View {
                 .font(.headline)
                 .padding()
                 .foregroundColor(ColorPalette.text(for: colorScheme))
-            
+
             ScrollView {
                 GeometryReader { geometry in
                     WrappingHStack(
@@ -122,7 +135,7 @@ struct InterestsSelectionView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
     }
-    
+
     // Toggle the selected interest
     func toggleInterest(_ interest: String) {
         if let index = selectedInterests.firstIndex(of: interest) {
@@ -163,26 +176,31 @@ struct WrappingHStack: View {
             ForEach(items, id: \.self) { item in
                 itemView(for: item)
                     .padding([.horizontal, .vertical], 4)
-                    .alignmentGuide(.leading, computeValue: { d in
-                        if (abs(width - d.width) > availableWidth) {
-                            width = 0
-                            height -= d.height
+                    .alignmentGuide(
+                        .leading,
+                        computeValue: { d in
+                            if abs(width - d.width) > availableWidth {
+                                width = 0
+                                height -= d.height
+                            }
+                            let result = width
+                            if item == self.items.last! {
+                                width = 0
+                            } else {
+                                width -= d.width
+                            }
+                            return result
                         }
-                        let result = width
-                        if item == self.items.last! {
-                            width = 0
-                        } else {
-                            width -= d.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: { _ in
-                        let result = height
-                        if item == self.items.last! {
-                            height = 0
-                        }
-                        return result
-                    })
+                    )
+                    .alignmentGuide(
+                        .top,
+                        computeValue: { _ in
+                            let result = height
+                            if item == self.items.last! {
+                                height = 0
+                            }
+                            return result
+                        })
             }
         }
         .background(viewHeightReader($totalHeight))
@@ -193,24 +211,28 @@ struct WrappingHStack: View {
             .padding(.vertical, 8)
             .padding(.horizontal, 12)
             .background(
-                isEditing ?
-                (selectedInterests.contains(item) ? ColorPalette.accent(for: colorScheme) : ColorPalette.lightGray(for: colorScheme)) :
-                    ColorPalette.accent(for: colorScheme)
+                isEditing
+                    ? (selectedInterests.contains(item)
+                        ? ColorPalette.accent(for: colorScheme)
+                        : ColorPalette.lightGray(for: colorScheme))
+                    : ColorPalette.accent(for: colorScheme)
             )
             .clipShape(Capsule())
             .foregroundColor(
-                isEditing ?
-                (selectedInterests.contains(item) ? ColorPalette.text(for: colorScheme) : .black) :
-                    ColorPalette.text(for: colorScheme)
-                )
+                isEditing
+                    ? (selectedInterests.contains(item)
+                        ? ColorPalette.text(for: colorScheme) : .black)
+                    : ColorPalette.text(for: colorScheme)
+            )
             .shadow(
                 color: selectedInterests.contains(item)
-                ? ColorPalette.accent(for: colorScheme).opacity(0.5) : .clear, radius: 5, x: 0,
+                    ? ColorPalette.accent(for: colorScheme).opacity(0.5)
+                    : .clear, radius: 5, x: 0,
                 y: 4
             )
             .onTapGesture {
                 toggleInterest(item)
-                if !isEditing{
+                if !isEditing {
                     showingBottomSheet = true
                 }
             }
