@@ -92,6 +92,7 @@ struct SignupView: View {
 
                             try await retryUserCreation(userData: myUser)
                             print("Account and user created successfully")
+                            presentationMode.wrappedValue.dismiss()  // close the signup view
                         } catch {
                             // Handle potential failures and roll back account creation
                             print("Error: \(error.localizedDescription)")
