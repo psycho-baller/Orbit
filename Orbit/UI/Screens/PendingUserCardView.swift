@@ -63,10 +63,6 @@ struct PendingUserCardView: View {
                                     }
                                 }
                             )
-                        } else {
-                            Text("No interests available")
-                                .font(.caption)
-                                .foregroundColor(.gray)
                         }
                     }
                 }
