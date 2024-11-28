@@ -9,6 +9,7 @@
 import Appwrite
 import Foundation
 import SwiftUI
+import CoreLocation
 
 class MessagingViewModel: ObservableObject {
     static let shared = MessagingViewModel()
