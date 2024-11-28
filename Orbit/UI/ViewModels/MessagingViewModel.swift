@@ -7,11 +7,12 @@
 
 @preconcurrency import Appwrite
 import Appwrite
+import CoreLocation
 import Foundation
 import SwiftUI
 import CoreLocation
 
-class MessagingViewModel: ObservableObject {
+class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
     static let shared = MessagingViewModel()
     private var messagingService: MessagingServiceProtocol = MessagingService()
     private var userManagementService: UserManagementServiceProtocol =
@@ -21,23 +22,30 @@ class MessagingViewModel: ObservableObject {
     @Published var messages: [MessageDocument] = []
     @Published var lastMessageId: String? = nil
     @Published var currentLocation: CLLocationCoordinate2D?
+    var lastMessageld: Binding<String?> {
+        Binding(
+            get: { self.lastMessageId },
+            set: { self.lastMessageId = $0 }
+        )
+    }
     
     func didUpdateLocation(latitude: Double, longitude: Double) {
-        print(
-            "MessagingViewModel - didUpdateLocation: Received location update - Latitude: \(latitude), Longitude: \(longitude)."
-        )
-        self.currentLocation = CLLocationCoordinate2D(
-            latitude: latitude, longitude: longitude)
-    }
+          print(
+              "MessagingViewModel - didUpdateLocation: Received location update - Latitude: \(latitude), Longitude: \(longitude)."
+          )
+          self.currentLocation = CLLocationCoordinate2D(
+              latitude: latitude, longitude: longitude)
+      }
+      
+      let coordinateFormat = "<[LOC|{latitude},{longitude}]>"
+      
+      func encodeCoordinate(_ coordinate: CLLocationCoordinate2D) -> String {
+          let formattedString = coordinateFormat
+              .replacingOccurrences(of: "{latitude}", with: "\(coordinate.latitude)")
+              .replacingOccurrences(of: "{longitude}", with: "\(coordinate.longitude)")
+          return formattedString
+      }
     
-    let coordinateFormat = "<[LOC|{latitude},{longitude}]>"
-    
-    func encodeCoordinate(_ coordinate: CLLocationCoordinate2D) -> String {
-        let formattedString = coordinateFormat
-            .replacingOccurrences(of: "{latitude}", with: "\(coordinate.latitude)")
-            .replacingOccurrences(of: "{longitude}", with: "\(coordinate.longitude)")
-        return formattedString
-    }
     
     func decodeCoordinate(from string: String) -> CLLocationCoordinate2D? {
         // Create a regular expression pattern based on the global format
@@ -69,28 +77,21 @@ class MessagingViewModel: ObservableObject {
     }
     
     func isValidCoordinateFormat(_ string: String) -> Bool {
-        // Create a regular expression pattern based on the global format
-        let latitudePattern = "(-?\\d+\\.\\d+)"
-        let longitudePattern = "(-?\\d+\\.\\d+)"
-        
-        // Escape special regex characters in the format and replace placeholders with patterns
-        let escapedFormat = NSRegularExpression.escapedPattern(for: coordinateFormat)
-            .replacingOccurrences(of: "\\{latitude\\}", with: latitudePattern)
-            .replacingOccurrences(of: "\\{longitude\\}", with: longitudePattern)
-        
-        let pattern = "^" + escapedFormat + "$"
-        let regex = try? NSRegularExpression(pattern: pattern)
-        let range = NSRange(location: 0, length: string.utf16.count)
-        
-        return regex?.firstMatch(in: string, options: [], range: range) != nil
-    }
-    
-    var lastMessageld: Binding<String?> {
-        Binding(
-            get: { self.lastMessageId },
-            set: { self.lastMessageId = $0 }
-        )
-    }
+          // Create a regular expression pattern based on the global format
+          let latitudePattern = "(-?\\d+\\.\\d+)"
+          let longitudePattern = "(-?\\d+\\.\\d+)"
+          
+          // Escape special regex characters in the format and replace placeholders with patterns
+          let escapedFormat = NSRegularExpression.escapedPattern(for: coordinateFormat)
+              .replacingOccurrences(of: "\\{latitude\\}", with: latitudePattern)
+              .replacingOccurrences(of: "\\{longitude\\}", with: longitudePattern)
+          
+          let pattern = "^" + escapedFormat + "$"
+          let regex = try? NSRegularExpression(pattern: pattern)
+          let range = NSRange(location: 0, length: string.utf16.count)
+          
+          return regex?.firstMatch(in: string, options: [], range: range) != nil
+      }
 
     @MainActor
     func getConversations(_ accountId: String) async -> [String] {
