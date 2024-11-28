@@ -16,6 +16,9 @@
 		0088BFE32CD890B2002B4B9D /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0088BFE22CD890B2002B4B9D /* InboxView.swift */; };
 		0088BFE52CD8E691002B4B9D /* InboxRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0088BFE42CD8E690002B4B9D /* InboxRow.swift */; };
 		0088BFE72CD8EB04002B4B9D /* MessagesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0088BFE62CD8EB04002B4B9D /* MessagesList.swift */; };
+		00AC33C02CF7E44F000761BF /* LocationChoosingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AC33BF2CF7E44F000761BF /* LocationChoosingView.swift */; };
+		00AC33C42CF7F320000761BF /* MapPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AC33C32CF7F320000761BF /* MapPreview.swift */; };
+		00AC33C62CF8461D000761BF /* FullMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AC33C52CF8461D000761BF /* FullMapView.swift */; };
 		0669F94A2CD1CCA30031D154 /* MessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F9492CD1CCA30031D154 /* MessagingService.swift */; };
 		0669F94C2CD6C6460031D154 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F94B2CD6C6460031D154 /* MessageModel.swift */; };
 		0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669F94D2CD6CEB10031D154 /* ConversationModel.swift */; };
@@ -105,6 +108,9 @@
 		0088BFE22CD890B2002B4B9D /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
 		0088BFE42CD8E690002B4B9D /* InboxRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxRow.swift; sourceTree = "<group>"; };
 		0088BFE62CD8EB04002B4B9D /* MessagesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesList.swift; sourceTree = "<group>"; };
+		00AC33BF2CF7E44F000761BF /* LocationChoosingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationChoosingView.swift; sourceTree = "<group>"; };
+		00AC33C32CF7F320000761BF /* MapPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPreview.swift; sourceTree = "<group>"; };
+		00AC33C52CF8461D000761BF /* FullMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullMapView.swift; sourceTree = "<group>"; };
 		0669F9492CD1CCA30031D154 /* MessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingService.swift; sourceTree = "<group>"; };
 		0669F94B2CD6C6460031D154 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		0669F94D2CD6CEB10031D154 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
@@ -257,6 +263,8 @@
 				0088BFE02CD85A92002B4B9D /* ChatProfileView.swift */,
 				0088BFE22CD890B2002B4B9D /* InboxView.swift */,
 				61129BC62CEC10D10076C793 /* UserCardView.swift */,
+				00AC33BF2CF7E44F000761BF /* LocationChoosingView.swift */,
+				00AC33C52CF8461D000761BF /* FullMapView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -276,6 +284,7 @@
 				0088BFDE2CD853E0002B4B9D /* MessageField.swift */,
 				0088BFE42CD8E690002B4B9D /* InboxRow.swift */,
 				0088BFE62CD8EB04002B4B9D /* MessagesList.swift */,
+				00AC33C32CF7F320000761BF /* MapPreview.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -563,6 +572,7 @@
 				259CB2812CC0460400C9F285 /* UserManagementService.swift in Sources */,
 				25E1ABC32CD00FAD00F27722 /* AreaModel.swift in Sources */,
 				259CB2982CC0465600C9F285 /* HomeView.swift in Sources */,
+				00AC33C62CF8461D000761BF /* FullMapView.swift in Sources */,
 				000AE7432CD5E71700431CDB /* ChatProfileTitle.swift in Sources */,
 				25F1BDAF2CF2656B0036D7E1 /* NotificationService.swift in Sources */,
 				61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */,
@@ -582,6 +592,7 @@
 				259CB27E2CC0460400C9F285 /* PreciseLocationManagerDelegate.swift in Sources */,
 				0088BFDF2CD853E0002B4B9D /* MessageField.swift in Sources */,
 				259CB2A72CC047D000C9F285 /* Extensions.swift in Sources */,
+				00AC33C02CF7E44F000761BF /* LocationChoosingView.swift in Sources */,
 				25D90B0B2CE6EB3800463D67 /* ChatRequestViewModel.swift in Sources */,
 				259CB2992CC0465600C9F285 /* SignupView.swift in Sources */,
 				005518CF2CE6E5A000F3E92B /* ConversationDetailModel.swift in Sources */,
@@ -596,6 +607,7 @@
 				25F5B9CB2CEE5A0D0062438B /* Helpers.swift in Sources */,
 				259CB2822CC0460400C9F285 /* AppwriteService.swift in Sources */,
 				61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */,
+				00AC33C42CF7F320000761BF /* MapPreview.swift in Sources */,
 				252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */,
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,
 				61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */,
