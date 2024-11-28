@@ -47,6 +47,7 @@ struct MainTabView: View {
             }
             .tag(2)
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 }
 
@@ -72,13 +73,14 @@ struct ExampleView3: View {
     }
 }
 
-// Preview for MainTabView
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
+#if DEBUG
+    #Preview {
+
         MainTabView()
             .environmentObject(AppState())
             .environmentObject(UserViewModel.mock())
             .environmentObject(AuthViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
+
     }
-}
+#endif
