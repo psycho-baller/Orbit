@@ -13,10 +13,6 @@ class ChatRequestViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading = false
     @Published private var sentRequests: Set<String> = []
-<<<<<<< HEAD
-=======
-    @Published var selectedRequest: ChatRequestDocument? = nil
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
 
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
@@ -31,13 +27,7 @@ class ChatRequestViewModel: ObservableObject {
 
     // Send a meet-up request
     @MainActor
-<<<<<<< HEAD
     func sendMeetUpRequest(request: ChatRequestModel) async {
-=======
-    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?)
-        async
-    {
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
         isLoading = true
         defer { isLoading = false }
 
@@ -48,19 +38,9 @@ class ChatRequestViewModel: ObservableObject {
             self.requests.append(requestDoc)
 
             try await notificationService.sendPushNotification(
-<<<<<<< HEAD
                 to: request.receiverAccountId,
                 title: "meow",
                 body: requestDoc.data.message
-=======
-                to: [request.receiverAccountId],
-                title:
-                    "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
-                body: requestDoc.data.message,
-                data: [
-                    "requestId": requestDoc.id
-                ]
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
             )
 
         } catch {
@@ -79,11 +59,7 @@ class ChatRequestViewModel: ObservableObject {
 
     // Fetch a specific meet-up request by ID
     @MainActor
-<<<<<<< HEAD
     func fetchMeetUpRequest(requestId: String) async {
-=======
-    func getMeetUpRequest(requestId: String) async -> ChatRequestDocument? {
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
         isLoading = true
         defer { isLoading = false }
 
@@ -91,24 +67,13 @@ class ChatRequestViewModel: ObservableObject {
             if let request = try await chatRequestService.getMeetUpRequest(
                 requestId: requestId)
             {
-<<<<<<< HEAD
                 self.requests.append(request)
             } else {
                 self.errorMessage = "Meet-up request not found."
-=======
-                return request
-            } else {
-                self.errorMessage = "Meet-up request not found."
-                throw NSError(domain: "ChatRequestViewModel", code: 404)
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
             }
         } catch {
             self.errorMessage =
                 "Error fetching meet-up request: \(error.localizedDescription)"
-<<<<<<< HEAD
-=======
-            return nil
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
         }
     }
 

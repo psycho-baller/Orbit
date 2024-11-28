@@ -12,14 +12,8 @@ struct ChatRequestView: View {
     let sender: UserModel?
     let receiver: UserModel
     @Environment(\.dismiss) var dismiss
-<<<<<<< HEAD
     @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
-=======
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var chatRequestVM: ChatRequestViewModel
-//    @EnvironmentObject var userVM: UserViewModel
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
     @State private var message = ""
 
     var body: some View {
@@ -44,11 +38,7 @@ struct ChatRequestView: View {
                         message: message
                     )
                     Task {
-<<<<<<< HEAD
                         await chatRequestVM.sendMeetUpRequest(request: request)
-=======
-                        await chatRequestVM.sendMeetUpRequest(request: request, from: sender?.name)
->>>>>>> 9b6bc2c846a02363d4b56dec9632693ab73e3aac
                         dismiss()
                     }
                 }) {
