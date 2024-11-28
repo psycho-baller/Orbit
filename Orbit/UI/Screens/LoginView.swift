@@ -67,65 +67,60 @@ struct LoginView: View {
                 }
                 .padding(.bottom, 30)
 
-                TextField("E-mail", text: self.$email)
-                    .padding()
-                    .background(ColorPalette.lightGray(for: colorScheme))
-                    .cornerRadius(16.0)
-                    .textInputAutocapitalization(.never)
-                
+            TextField("E-mail", text: $email)
+                .padding()
+                .background(ColorPalette.lightGray(for: colorScheme))
+                .cornerRadius(16.0)
+                .textInputAutocapitalization(.never)
 
-                SecureField("Password", text: self.$password)
-                    .padding()
-                    .background(ColorPalette.lightGray(for: colorScheme))
-                    .cornerRadius(16.0)
-                    .textInputAutocapitalization(.never)
-                
-                Spacer().frame(height: 16)
+            SecureField("Password", text: $password)
+                .padding()
+                .background(ColorPalette.lightGray(for: colorScheme))
+                .cornerRadius(16.0)
+                .textInputAutocapitalization(.never)
 
-                Button("Login") {
-                    Task {
-                        await authVM.login(email: email, password: password)
-                        // check if user was logged in. If yes,
-                        // update currentUser from UserViewModel
-                        if let currentUserAccountId = authVM.user?.id {
-                            await userVM.updateCurrentUser(accountId: currentUserAccountId)
-                        }
+            Spacer().frame(height: 16)
+
+            Button("Login") {
+                Task {
+                    await authVM.login(email: email, password: password)
+                    if let currentUserAccountId = authVM.user?.id {
+                        await userVM.updateCurrentUser(
+                            accountId: currentUserAccountId)
                     }
                 }
-                .regularFont()
-                .foregroundColor(.white)
-                .padding()
-                .frame(width: 300, height: 50)
-                .background(ColorPalette.button(for: colorScheme))
-                .cornerRadius(16.0)
-
-                HStack {
-                    Text("Anonymous Login")
-                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                        .onTapGesture {
-                            Task {
-                                await authVM.loginAnonymous()
-                            }
-                        }
-                    Text(".")
-                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                    Text("Signup")
-                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                        .onTapGesture {
-                            isActiveSignup = true
-                        }
-                }
-                .regularFont()
-                .padding(.top, 30)
-                Spacer()
-
             }
-            .padding([.leading, .trailing], 40)
+            .regularFont()
+            .foregroundColor(.white)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: 50)
+            .background(ColorPalette.accent(for: colorScheme))
+            .cornerRadius(16.0)
 
+            HStack {
+                Text("Anonymous Login")
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    .onTapGesture {
+                        Task { await authVM.loginAnonymous() }
+                    }
+                Text(".")
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                Text("Signup")
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    .onTapGesture {
+                        isActiveSignup = true
+
+                    }
+            }
+            .regularFont()
+            .padding(.top, 30)
+
+            Spacer()
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarHidden(true)
-        .background(ColorPalette.background(for: colorScheme))
+        .padding([.leading, .trailing], 40)
+        // .navigationBarTitleDisplayMode(.inline)
+        // .navigationBarHidden(true)
+        // .background(ColorPalette.background(for: colorScheme))
     }
     //    }
 }
