@@ -24,6 +24,7 @@
 		250F9B6D2CF52A7100B734FF /* UpdateSettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250F9B6C2CF52A7100B734FF /* UpdateSettingsButton.swift */; };
 		250F9B6F2CF52CA800B734FF /* OffCampusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250F9B6E2CF52CA100B734FF /* OffCampusView.swift */; };
 		250F9B712CF5310800B734FF /* NotInterestedToMeetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250F9B702CF5310800B734FF /* NotInterestedToMeetView.swift */; };
+		25117F6A2CF772DB00ACE9C8 /* LightGrayOrMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */; };
 		252746E62CE82AC800365712 /* MeetUpRequestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */; };
 		252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */; };
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
@@ -31,6 +32,7 @@
 		258769852CF4CAC900D4D4EA /* NoUsersAroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258769842CF4CABF00D4D4EA /* NoUsersAroundView.swift */; };
 		258769872CF4CD9B00D4D4EA /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258769862CF4CD9B00D4D4EA /* LoadingIndicator.swift */; };
 		2588CC852CCBF1FC00891879 /* CustomMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2588CC842CCBF1FC00891879 /* CustomMenu.swift */; };
+		2590D8A12CF7E43200D9E35D /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2590D8A02CF7E42C00D9E35D /* Views.swift */; };
 		259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2252CC02F0D00C9F285 /* Appwrite */; };
 		259CB2292CC02F2500C9F285 /* EnvironmentOverrides in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2282CC02F2500C9F285 /* EnvironmentOverrides */; };
 		259CB27E2CC0460400C9F285 /* PreciseLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CB2792CC0460400C9F285 /* PreciseLocationManagerDelegate.swift */; };
@@ -120,6 +122,7 @@
 		250F9B6C2CF52A7100B734FF /* UpdateSettingsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSettingsButton.swift; sourceTree = "<group>"; };
 		250F9B6E2CF52CA100B734FF /* OffCampusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffCampusView.swift; sourceTree = "<group>"; };
 		250F9B702CF5310800B734FF /* NotInterestedToMeetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotInterestedToMeetView.swift; sourceTree = "<group>"; };
+		25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGrayOrMaterial.swift; sourceTree = "<group>"; };
 		252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestDetailsView.swift; sourceTree = "<group>"; };
 		252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestsListView.swift; sourceTree = "<group>"; };
 		2553B44C2CF00AF000E14E2B /* Orbit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Orbit.entitlements; sourceTree = "<group>"; };
@@ -127,6 +130,7 @@
 		258769842CF4CABF00D4D4EA /* NoUsersAroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoUsersAroundView.swift; sourceTree = "<group>"; };
 		258769862CF4CD9B00D4D4EA /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		2588CC842CCBF1FC00891879 /* CustomMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMenu.swift; sourceTree = "<group>"; };
+		2590D8A02CF7E42C00D9E35D /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		259CB2792CC0460400C9F285 /* PreciseLocationManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreciseLocationManagerDelegate.swift; sourceTree = "<group>"; };
 		259CB27A2CC0460400C9F285 /* AccountManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManagementService.swift; sourceTree = "<group>"; };
 		259CB27C2CC0460400C9F285 /* UserManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserManagementService.swift; sourceTree = "<group>"; };
@@ -285,6 +289,7 @@
 		259CB28D2CC0465600C9F285 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */,
 				6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */,
 				250F9B6C2CF52A7100B734FF /* UpdateSettingsButton.swift */,
 				258769862CF4CD9B00D4D4EA /* LoadingIndicator.swift */,
@@ -322,6 +327,7 @@
 		259CB2A42CC047D000C9F285 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				2590D8A02CF7E42C00D9E35D /* Views.swift */,
 				25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */,
 				25F5B9CA2CEE5A090062438B /* Helpers.swift */,
 				25ECBA1B2CD0390600256104 /* DataLoader.swift */,
@@ -611,6 +617,7 @@
 				259CB2A82CC047D000C9F285 /* LazyList.swift in Sources */,
 				000AE7492CD5F5DD00431CDB /* MessageBox.swift in Sources */,
 				25D90B0D2CE6EC3100463D67 /* ChatRequestView.swift in Sources */,
+				25117F6A2CF772DB00ACE9C8 /* LightGrayOrMaterial.swift in Sources */,
 				259CB2952CC0465600C9F285 /* AuthViewModel.swift in Sources */,
 				258769872CF4CD9B00D4D4EA /* LoadingIndicator.swift in Sources */,
 				259CB27E2CC0460400C9F285 /* PreciseLocationManagerDelegate.swift in Sources */,
@@ -627,6 +634,7 @@
 				250F9B6D2CF52A7100B734FF /* UpdateSettingsButton.swift in Sources */,
 				25ECBA202CD1B1F300256104 /* UserLocationModel.swift in Sources */,
 				0088BFE72CD8EB04002B4B9D /* MessagesList.swift in Sources */,
+				2590D8A12CF7E43200D9E35D /* Views.swift in Sources */,
 				259CB2A32CC046F300C9F285 /* UserModels.swift in Sources */,
 				25ECBA1C2CD0390600256104 /* DataLoader.swift in Sources */,
 				25F5B9CB2CEE5A0D0062438B /* Helpers.swift in Sources */,
