@@ -19,6 +19,7 @@ struct InboxView: View {
                 if msgVM.conversations.isEmpty {
                     ProgressView("Loading Messages")
                         .padding()
+                        .background(ColorPalette.background(for: colorScheme))
                 } else {
                     MessagesList(conversations: msgVM.conversations)
                 }
