@@ -6,8 +6,8 @@
 //
 
 import Appwrite
-import SwiftUI
 import Foundation
+import SwiftUI
 
 extension Text {
     func largeSemiBoldFont() -> Text {
@@ -35,11 +35,10 @@ extension View {
     func regularFont() -> some View {
         self.font(.custom("Poppins", size: 16))
     }
-    func cornerRadius( radius: CGFloat, corners: UIRectCorner) -> some View {
+    func cornerRadius(radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }
-
 
 extension Color {
     init(hex: String) {
@@ -80,20 +79,19 @@ extension Color {
     }
 }
 struct ColorPalette {
-
     static func main(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
-            ? Color(hex: "#0A2342") : Color(hex: "#1E90FF")  // Dark Navy Blue for Dark Mode, Sky Blue for Light Mode
+            ? Color(hex: "#0E1E38") : Color(hex: "#AADFE5")  // Dark Navy Blue for Dark Mode, Sky Blue for Light Mode (#E0F5F8)
     }
 
     static func accent(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
-            ? Color(hex: "#1C3A77") : Color(hex: "#4682B4")  // Lighter Navy for Dark Mode, Steel Blue for Light Mode
+            ? Color(hex: "#00D1D7") : Color(hex: "#006F8E")  // dark: 00D1D7 or 00FFFF or 00B4D8
     }
 
     static func background(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
-            ? Color(hex: "#0A1B30") : Color(hex: "#C4EBF2")  // Deep Blue Background for Dark Mode, Cyan for Light Mode
+            ? Color(hex: "#0A0F2C") : Color(hex: "#C4EBF2")  // Deep Blue Background for Dark Mode, Cyan for Light Mode
     }
 
     static func text(for colorScheme: ColorScheme) -> Color {
@@ -102,22 +100,35 @@ struct ColorPalette {
     }
 
     static func lightGray(for colorScheme: ColorScheme) -> Color {
+        return
+            colorScheme == .dark
+            ? Color(hex: "#2C3E50")
+            : Color(hex: "#96CBD4")
+    }
+
+    static func disabled(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
-            ? Color(hex: "#2C3E50") : Color(hex: "#B0E0E6")  // Dark Gray for Dark Mode, Powder Blue for Light Mode
+            ? Color(hex: "#BDBDBD") : Color(hex: "#BDBDBD")
+    }
+
+    static func success(for colorScheme: ColorScheme) -> Color {
+        return colorScheme == .dark
+            ? Color(hex: "#00E676") : Color(hex: "#00B864")  // 4CAF50
+    }
+
+    static func warning(for colorScheme: ColorScheme) -> Color {
+        return colorScheme == .dark
+            ? Color(hex: "#FFCC00") : Color(hex: "#FFCC00")
+    }
+
+    static func error(for colorScheme: ColorScheme) -> Color {
+        return colorScheme == .dark
+            ? Color(hex: "#FF4D4D") : Color(hex: "#FF4D4D")
     }
 
     static func secondaryText(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
-            ? Color(hex: "#A2B9D2") : Color(hex: "#5F9EA0")  // Soft Blue for Dark Mode, Cadet Blue for Light Mode
-    }
-
-    static func button(for colorScheme: ColorScheme) -> Color {
-        return colorScheme == .dark
-            ? Color(hex: "#0077BE") : Color(hex: "#4682B4")  // Brighter Blue Buttons for both modes
-    }
-    static func selectedItem(for colorScheme: ColorScheme) -> Color {
-        return colorScheme == .dark
-            ? Color(hex: "#1E90FF") : Color(hex: "#00509E")
+            ? Color(hex: "#ACC9E3") : Color(hex: "#448c89")  // Soft Blue for Dark Mode, Cadet Blue for Light Mode
     }
 }
 
@@ -163,9 +174,11 @@ where T: Identifiable, T.ID == String {
 struct RoundedCorner: Shape {
     var radius: CGFloat = .infinity
     var corners: UIRectCorner = .allCorners
-    
+
     func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let path = UIBezierPath(
+            roundedRect: rect, byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
     }
 }

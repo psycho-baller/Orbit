@@ -7,11 +7,9 @@
 
 import SwiftUI
 
-
 struct ChatProfileTitle: View {
     let messagerName: String
     var isInMessageView: Bool
-    
     var body: some View {
         VStack(spacing: 10){
             Image(.alienorbit)
@@ -26,14 +24,13 @@ struct ChatProfileTitle: View {
             VStack(alignment: .leading){
                 Text(messagerName)
                     .normalSemiBoldFont()
-                   
+
             }
-            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .center)
-            
+            .frame(maxWidth: .infinity, alignment: .center)
+
         }
         .padding()
-        
-        
+
     }
 }
 

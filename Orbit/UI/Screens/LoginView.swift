@@ -115,10 +115,26 @@ struct LoginView: View {
                             isActiveSignup = true
                         }
                 }
-                .regularFont()
-                .padding(.top, 30)
-                Spacer()
+            }
+            .regularFont()
+            .foregroundColor(.white)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: 50)
+            .background(ColorPalette.accent(for: colorScheme))
+            .cornerRadius(16.0)
 
+            HStack {
+                Text("Anonymous Login")
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    .onTapGesture {
+                        Task { await authVM.loginAnonymous() }
+                    }
+                Text(".")
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                Text("Signup")
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    .onTapGesture {
+                        isActiveSignup = true
             }
             .padding([.leading, .trailing], 40)
 

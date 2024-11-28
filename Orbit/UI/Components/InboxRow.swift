@@ -17,7 +17,7 @@ struct InboxRow: View {
         HStack(alignment: .top, spacing: 12){
             if !isRead {
                 Circle()
-                    .fill(ColorPalette.button(for: ColorScheme.light))
+                    .fill(ColorPalette.accent(for: ColorScheme.light))
                     .frame(width: 10, height: 10)
             }
             Image(systemName: "person.circle.fill")

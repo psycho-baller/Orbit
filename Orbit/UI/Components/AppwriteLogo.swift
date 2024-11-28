@@ -17,7 +17,7 @@ struct AppwriteLogo<Content: View>: View {
                 HStack {
                     Spacer()
                     Image("bg")
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(.blue)
                 }
                 Spacer()
             }.ignoresSafeArea()

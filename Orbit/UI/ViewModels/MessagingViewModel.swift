@@ -12,7 +12,6 @@ import Foundation
 import SwiftUI
 
 class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
-    
     private var messagingService: MessagingServiceProtocol = MessagingService()
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
