@@ -193,7 +193,7 @@ struct HomeView: View {
             }) {
                 Text("Retry")
                     .padding()
-                    .background(ColorPalette.button(for: colorScheme))
+                    .background(ColorPalette.accent(for: colorScheme))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }

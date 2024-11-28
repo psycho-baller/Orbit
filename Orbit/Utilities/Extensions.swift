@@ -79,11 +79,6 @@ extension Color {
     }
 }
 struct ColorPalette {
-    enum BackgroundType {
-        case color(Color)
-        case material(Any)
-    }
-
     static func main(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
             ? Color(hex: "#0E1E38") : Color(hex: "#AADFE5")  // Dark Navy Blue for Dark Mode, Sky Blue for Light Mode (#E0F5F8)
@@ -134,15 +129,6 @@ struct ColorPalette {
     static func secondaryText(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
             ? Color(hex: "#ACC9E3") : Color(hex: "#448c89")  // Soft Blue for Dark Mode, Cadet Blue for Light Mode
-    }
-
-    static func button(for colorScheme: ColorScheme) -> Color {
-        return colorScheme == .dark
-            ? Color(hex: "#0077BE") : Color(hex: "#4682B4")  // Brighter Blue Buttons for both modes
-    }
-    static func selectedItem(for colorScheme: ColorScheme) -> Color {
-        return colorScheme == .dark
-            ? Color(hex: "#1E90FF") : Color(hex: "#00509E")
     }
 }
 
