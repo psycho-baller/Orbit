@@ -23,7 +23,7 @@ struct MessageBox: View {
                     .padding()
                     .background(
                         isReceived
-                        ? Color(.systemGray5)
+                            ? Color(.systemGray5)
                             : ColorPalette.accent(for: ColorScheme.light)
                     )
                     .cornerRadius(20)
@@ -43,13 +43,13 @@ struct MessageBox: View {
 
         }
         .frame(
-            maxWidth: /*@START_MENU_TOKEN@*/ .infinity /*@END_MENU_TOKEN@*/,
+            maxWidth: .infinity,
             alignment: isReceived ? .leading : .trailing
         )
         .padding(isReceived ? .leading : .trailing)
         .padding(.horizontal, 10)
     }
-    
+
     func formatTimestamp(_ timestamp: String) -> String {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [
@@ -67,13 +67,5 @@ struct MessageBox: View {
 
         return "Unknown"
     }
-    
-    
+
 }
-
-
-
-
-
-
-

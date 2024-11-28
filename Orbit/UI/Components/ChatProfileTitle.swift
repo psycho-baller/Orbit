@@ -7,33 +7,29 @@
 
 import SwiftUI
 
-
 struct ChatProfileTitle: View {
     let messagerName: String
     var isInMessageView: Bool
     var onProfileImageTap: (() -> Void)?
-    
+
     var body: some View {
-        VStack(spacing: 0){
-                Image(.alienorbit)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: isInMessageView ? 40 : 100, height:  isInMessageView ? 40 : 100 )
-                    .cornerRadius(50)
-          
-            
-        
-            VStack(alignment: .leading){
+        VStack(spacing: 0) {
+            Image(.alienorbit)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: isInMessageView ? 40 : 100, height: isInMessageView ? 40 : 100)
+                .cornerRadius(50)
+
+            VStack(alignment: .leading) {
                 Text(messagerName)
                     .normalSemiBoldFont()
-                   
+
             }
-            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .center)
-            
+            .frame(maxWidth: .infinity, alignment: .center)
+
         }
         .padding()
-        
-        
+
     }
 }
 
