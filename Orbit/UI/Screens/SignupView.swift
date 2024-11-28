@@ -103,10 +103,12 @@ struct SignupView: View {
                 .regularFont()
                 .padding()
                 .foregroundColor(.white)
-
                 .frame(maxWidth: .infinity, maxHeight: 60)
                 .background(ColorPalette.accent(for: colorScheme))
                 .cornerRadius(16.0)
+
+                TermsAndPrivacyView(forButtonLabel: "Create account")
+                    .padding(.top)
 
                 Spacer()
             }
@@ -114,6 +116,8 @@ struct SignupView: View {
             .navigationBarHidden(true)
         }
         .background(ColorPalette.background(for: colorScheme))
+        .accentColor(ColorPalette.accent(for: colorScheme))
+
     }
     func retryUserCreation(userData: UserModel, retries: Int = 3) async throws {
         var attempts = 0

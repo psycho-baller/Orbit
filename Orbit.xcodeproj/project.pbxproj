@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,6 +28,7 @@
 		252746E62CE82AC800365712 /* MeetUpRequestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */; };
 		252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */; };
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
+		2585DFF02CF8E400003F3B7F /* TermsAndPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2585DFEF2CF8E400003F3B7F /* TermsAndPrivacyView.swift */; };
 		258769832CF4C82700D4D4EA /* HomeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258769822CF4C82700D4D4EA /* HomeSettings.swift */; };
 		258769852CF4CAC900D4D4EA /* NoUsersAroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258769842CF4CABF00D4D4EA /* NoUsersAroundView.swift */; };
 		258769872CF4CD9B00D4D4EA /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258769862CF4CD9B00D4D4EA /* LoadingIndicator.swift */; };
@@ -126,6 +127,7 @@
 		252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestDetailsView.swift; sourceTree = "<group>"; };
 		252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestsListView.swift; sourceTree = "<group>"; };
 		2553B44C2CF00AF000E14E2B /* Orbit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Orbit.entitlements; sourceTree = "<group>"; };
+		2585DFEF2CF8E400003F3B7F /* TermsAndPrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndPrivacyView.swift; sourceTree = "<group>"; };
 		258769822CF4C82700D4D4EA /* HomeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSettings.swift; sourceTree = "<group>"; };
 		258769842CF4CABF00D4D4EA /* NoUsersAroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoUsersAroundView.swift; sourceTree = "<group>"; };
 		258769862CF4CD9B00D4D4EA /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 		259CB28D2CC0465600C9F285 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2585DFEF2CF8E400003F3B7F /* TermsAndPrivacyView.swift */,
 				25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */,
 				6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */,
 				250F9B6C2CF52A7100B734FF /* UpdateSettingsButton.swift */,
@@ -642,6 +645,7 @@
 				61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */,
 				252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */,
 				250F9B6F2CF52CA800B734FF /* OffCampusView.swift in Sources */,
+				2585DFF02CF8E400003F3B7F /* TermsAndPrivacyView.swift in Sources */,
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,
 				61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */,
 			);

@@ -96,14 +96,14 @@ struct LoginView: View {
 
             HStack {
                 Text("Anonymous Login")
-                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    .foregroundColor(.accentColor)
                     .onTapGesture {
                         Task { await authVM.loginAnonymous() }
                     }
                 Text(".")
-                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    .foregroundColor(.accentColor)
                 Text("Signup")
-                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    .foregroundColor(.accentColor)
                     .onTapGesture {
                         isActiveSignup = true
 
@@ -111,10 +111,13 @@ struct LoginView: View {
             }
             .regularFont()
             .padding(.top, 30)
+            .padding(.bottom)
 
+            TermsAndPrivacyView(forButtonLabel: "Login")
             Spacer()
         }
         .padding([.leading, .trailing], 40)
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 }
 
