@@ -257,7 +257,6 @@ struct HomeView: View {
                 }
             }
         }
-        .accentColor(ColorPalette.accent(for: colorScheme))
         .onAppear {
             if !isPreviewMode {
                 Task {
@@ -289,10 +288,14 @@ struct HomeView: View {
 // MARK: - Preview
 #if DEBUG
     #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
         HomeView()
             .environmentObject(AuthViewModel.mock())
             .environmentObject(UserViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
             .environmentObject(AppState())
+            .accentColor(ColorPalette.accent(for: colorScheme))
+
     }
 #endif
