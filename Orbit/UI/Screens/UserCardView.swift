@@ -65,10 +65,6 @@ struct UserCardView: View {
                                     }
                                 }
                             )
-                        } else {
-                            Text("No interests available")
-                                .font(.caption)
-                                .foregroundColor(.gray)
                         }
                     }
                 }
@@ -97,9 +93,9 @@ struct UserCardView: View {
                     isHidden = true
                 } label: { isHighlighted in
                     VStack(spacing: 4) {
-                        Image(systemName: "xmark")
+                        Image(systemName: "xmark.circle")
                             .font(.title2)
-                        Text("Ignore")
+                        Text("Hide")
                             .font(.caption)
                     }
                     .foregroundColor(.white)
