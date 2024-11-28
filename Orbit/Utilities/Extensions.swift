@@ -107,13 +107,33 @@ struct ColorPalette {
     static func lightGray(for colorScheme: ColorScheme) -> Color {
         return
             colorScheme == .dark
-            ? Color(hex: "2C3E50")
+            ? Color(hex: "#2C3E50")
             : Color(hex: "#96CBD4")
+    }
+
+    static func disabled(for colorScheme: ColorScheme) -> Color {
+        return colorScheme == .dark
+            ? Color(hex: "#BDBDBD") : Color(hex: "#BDBDBD")
+    }
+
+    static func success(for colorScheme: ColorScheme) -> Color {
+        return colorScheme == .dark
+            ? Color(hex: "#00E676") : Color(hex: "#00B864")  // 4CAF50
+    }
+
+    static func warning(for colorScheme: ColorScheme) -> Color {
+        return colorScheme == .dark
+            ? Color(hex: "#FFCC00") : Color(hex: "#FFCC00")
+    }
+
+    static func error(for colorScheme: ColorScheme) -> Color {
+        return colorScheme == .dark
+            ? Color(hex: "#FF4D4D") : Color(hex: "#FF4D4D")
     }
 
     static func secondaryText(for colorScheme: ColorScheme) -> Color {
         return colorScheme == .dark
-            ? Color(hex: "#A2B9D2") : Color(hex: "#5F9EA0")  // Soft Blue for Dark Mode, Cadet Blue for Light Mode
+            ? Color(hex: "#ACC9E3") : Color(hex: "#448c89")  // Soft Blue for Dark Mode, Cadet Blue for Light Mode
     }
 
     static func button(for colorScheme: ColorScheme) -> Color {
