@@ -54,33 +54,28 @@ struct HomeView: View {
                         .presentationDetents(
                             [.medium, .large], selection: $chatRequestListDetent
                         )
-                        .background(.ultraThinMaterial)
-                        .overlay(
-                            ColorPalette.background(for: colorScheme).opacity(
-                                0.1))
+                        .presentationBackground(.ultraThinMaterial)
                     }
                     .sheet(item: $selectedUser) { user in
                         ChatRequestView(
                             sender: userVM.currentUser, receiver: user
                         )
-                        .background(.ultraThinMaterial)
-                        .overlay(
-                            ColorPalette.background(for: colorScheme).opacity(
-                                0.1))
+                        .presentationBackground(.thinMaterial)
+                        .presentationDetents(
+                            [.medium, .large]
+                        )
                     }
                     .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
                         HomeSettings()
                             .presentationDetents([.fraction(0.7), .large])
                             .presentationDragIndicator(.visible)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(.ultraThinMaterial)
-                            .overlay(
-                                ColorPalette.background(for: colorScheme)
-                                    .opacity(0.1)
-                            )
+                            .presentationBackground(
+                                colorScheme == .dark
+                                    ? .thinMaterial : .ultraThinMaterial)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(ColorPalette.background(for: colorScheme))
+                //                    .background(ColorPalette.background(for: colorScheme))
             }
             .onAppear {
                 Task {
@@ -237,8 +232,6 @@ struct HomeView: View {
                         }
                     }
                 )
-                .cornerRadius(10)
-                .shadow(radius: 3)
             }
 
             PendingRequestsDropdown(isExpanded: $isPendingExpanded)
