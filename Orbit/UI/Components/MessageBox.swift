@@ -64,7 +64,7 @@ struct MessageBox: View {
                             }
                             
                         }
-                        .background(Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea())
+                        
                 } else {
                     //regular messages
                     Text(messageDocument.data.message)
