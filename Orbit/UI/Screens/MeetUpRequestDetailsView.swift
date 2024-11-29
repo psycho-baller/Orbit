@@ -15,42 +15,51 @@ struct MeetUpRequestDetailsView: View {
     @EnvironmentObject var appState: AppState
     @State private var showChat = false
     var request: ChatRequestDocument
-    
     var body: some View {
         NavigationStack {
             HStack(alignment: .top, spacing: 0) {
                 // Profile Picture
-                if let user = userVM.users.first(where: { $0.accountId == request.data.senderAccountId }),
-                   let profileUrl = user.profilePictureUrl,
-                   let url = URL(string: profileUrl) {
+                if let user = userVM.users.first(where: {
+                    $0.accountId == request.data.senderAccountId
+                }),
+                    let profileUrl = user.profilePictureUrl,
+                    let url = URL(string: profileUrl)
+                {
                     AsyncImage(url: url) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 100, height: 100)
                             .clipShape(Circle())
-                            .overlay(Circle().stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2))
+                            .overlay(
+                                Circle().stroke(
+                                    ColorPalette.accent(for: colorScheme),
+                                    lineWidth: 2))
                     } placeholder: {
                         Image(systemName: "person.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 100, height: 100)
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
                     }
                 } else {
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 100, height: 100)
-                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .foregroundColor(
+                            ColorPalette.secondaryText(for: colorScheme))
                 }
-                
+
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Meet-up request from \(userVM.getUserName(from: request.data.senderAccountId))")
-                        .font(.headline)
-                    
+                    Text(
+                        "Meet-up request from \(userVM.getUserName(from: request.data.senderAccountId))"
+                    )
+                    .font(.headline)
+
                     Text(request.data.message)
-                    
+
                     HStack {
                         Button("Approve") {
                             Task {
@@ -61,7 +70,7 @@ struct MeetUpRequestDetailsView: View {
                             }
                         }
                         .buttonStyle(.borderedProminent)
-                        
+
                         Button("Decline") {
                             Task {
                                 await chatRequestVM.respondToMeetUpRequest(
@@ -105,9 +114,3 @@ struct MeetUpRequestDetailsView: View {
         .environmentObject(UserViewModel.mock())
     }
 #endif
-
-
-
-
-
-

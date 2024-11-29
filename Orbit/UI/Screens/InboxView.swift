@@ -19,6 +19,7 @@ struct InboxView: View {
                 if msgVM.conversations.isEmpty {
                     ProgressView("Loading Messages")
                         .padding()
+                        .background(ColorPalette.background(for: colorScheme))
                 } else {
                     MessagesList(conversations: msgVM.conversations)
                 }
@@ -55,6 +56,6 @@ struct InboxView: View {
             }
         }
         .background(ColorPalette.background(for: colorScheme))
-        .accentColor(.white)
+        .accentColor(ColorPalette.text(for: colorScheme))
     }
 }

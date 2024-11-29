@@ -246,6 +246,3 @@ struct MeetUpRequestRow: View {
         .environmentObject(ChatRequestViewModel.mock())
         .environmentObject(UserViewModel.mock())
 }
-
-
-
