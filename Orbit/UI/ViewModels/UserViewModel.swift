@@ -260,8 +260,11 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 || (user.interests != nil
                     && !Set(user.interests!).intersection(selectedInterestsSet)
                         .isEmpty)
+            
+            //Filter out current user
+            let isNotCurrentUser = user.accountId != currentUser?.accountId
 
-            return matchesSearchText && matchesInterests
+            return matchesSearchText && matchesInterests && isNotCurrentUser
         }
     }
 

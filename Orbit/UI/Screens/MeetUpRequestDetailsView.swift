@@ -12,9 +12,9 @@ struct MeetUpRequestDetailsView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var appState: AppState
+    @State private var showChat = false
     var request: ChatRequestDocument
-    
-    @State private var navigateToChat = false
     
     var body: some View {
         NavigationStack {
@@ -77,18 +77,20 @@ struct MeetUpRequestDetailsView: View {
             }
             .padding()
         }
-        .onChange(of: chatRequestVM.newConversationId) { oldValue, newValue in
+        .onChange(of: chatRequestVM.newConversationId) { _, newValue in
             if newValue != nil {
-                navigateToChat = true
+                showChat = true
                 dismiss()
             }
         }
-        .navigationDestination(isPresented: $navigateToChat) {
+        .sheet(isPresented: $showChat) {
             if let conversationId = chatRequestVM.newConversationId {
-                MessageView(
-                    conversationId: conversationId,
-                    messagerName: userVM.getUserName(from: request.data.senderAccountId)
-                )
+                NavigationStack {
+                    MessageView(
+                        conversationId: conversationId,
+                        messagerName: userVM.getUserName(from: request.data.senderAccountId)
+                    )
+                }
             }
         }
     }
@@ -103,6 +105,8 @@ struct MeetUpRequestDetailsView: View {
         .environmentObject(UserViewModel.mock())
     }
 #endif
+
+
 
 
 

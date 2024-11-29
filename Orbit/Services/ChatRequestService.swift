@@ -9,16 +9,10 @@ import Appwrite
 import Foundation
 
 protocol ChatRequestServiceProtocol {
-    func sendMeetUpRequest(_ request: ChatRequestModel) async throws
-        -> ChatRequestDocument
-    func getMeetUpRequest(requestId: String) async throws
-        -> ChatRequestDocument?
-    func respondToMeetUpRequest(
-        requestId: String, response: ChatRequestModel.RequestStatus
-    ) async throws -> ChatRequestDocument?
-    func getMeetUpRequests(
-        userId: String, limit: Int?, offset: Int?
-    ) async throws -> [ChatRequestDocument]
+    func getMeetUpRequests(userId: String, limit: Int?, offset: Int?) async throws -> [ChatRequestDocument]
+    func getMeetUpRequest(requestId: String) async throws -> ChatRequestDocument?
+    func sendMeetUpRequest(_ request: ChatRequestModel) async throws -> ChatRequestDocument
+    func updateMeetUpRequestStatus(requestId: String, status: ChatRequestModel.RequestStatus) async throws -> ChatRequestDocument
 }
 
 class ChatRequestService: ChatRequestServiceProtocol {
@@ -29,10 +23,22 @@ class ChatRequestService: ChatRequestServiceProtocol {
     func sendMeetUpRequest(_ request: ChatRequestModel) async throws
         -> ChatRequestDocument
     {
-        print("Sending meet-up request...")
-        let document = try await appwriteService.databases.createDocument<
-            ChatRequestModel
-        >(
+        // Check if there's already a pending request for this receiver
+        let existingRequests = try await getMeetUpRequests(userId: request.receiverAccountId)
+        let hasPendingRequest = existingRequests.contains { existing in
+            existing.data.senderAccountId == request.senderAccountId &&
+            existing.data.status == .pending
+        }
+        
+        if hasPendingRequest {
+            throw NSError(
+                domain: "ChatRequestService",
+                code: 400,
+                userInfo: [NSLocalizedDescriptionKey: "You already have a pending request with this user."]
+            )
+        }
+        
+        let response = try await appwriteService.databases.createDocument<ChatRequestModel>(
             databaseId: appwriteService.databaseId,
             collectionId: collectionId,
             documentId: ID.unique(),
@@ -46,9 +52,10 @@ class ChatRequestService: ChatRequestServiceProtocol {
                 //                .update(Role.user(request.senderId))  // Sender can receive updates
                 //            ]
         )
-
-        print("Created meet-up request: \(document)")
-        return document
+        
+        print("Created meet-up request: \(response.data)")
+        
+        return response
     }
 
     // Retrieve a meet-up request by its ID
@@ -67,14 +74,10 @@ class ChatRequestService: ChatRequestServiceProtocol {
     }
 
     // Respond to a meet-up request (approve/decline)
-    func respondToMeetUpRequest(
-        requestId: String, response: ChatRequestModel.RequestStatus
-    ) async throws -> ChatRequestDocument? {
-        let updatedData = ["status": response.rawValue]
-
-        let document = try await appwriteService.databases.updateDocument<
-            ChatRequestModel
-        >(
+    func updateMeetUpRequestStatus(requestId: String, status: ChatRequestModel.RequestStatus) async throws -> ChatRequestDocument {
+        let updatedData = ["status": status.rawValue]
+        
+        return try await appwriteService.databases.updateDocument(
             databaseId: appwriteService.databaseId,
             collectionId: collectionId,
             documentId: requestId,
@@ -82,23 +85,30 @@ class ChatRequestService: ChatRequestServiceProtocol {
             permissions: nil,
             nestedType: ChatRequestModel.self
         )
-
-        return document
     }
 
     // Get meetup requests for a user
     func getMeetUpRequests(
         userId: String, limit: Int? = nil, offset: Int? = nil
     ) async throws -> [ChatRequestDocument] {
-        let queries = Query.equal("receiverAccountId", value: userId)
-        let response = try await appwriteService.databases.listDocuments<
-            ChatRequestModel
-        >(
+        let receiverQuery = Query.equal("receiverAccountId", value: userId)
+        let senderQuery = Query.equal("senderAccountId", value: userId)
+        let statusQuery = Query.equal("status", value: "pending")
+        let userQuery = Query.or([receiverQuery, senderQuery])
+        
+        let response = try await appwriteService.databases.listDocuments<ChatRequestModel>(
             databaseId: appwriteService.databaseId,
             collectionId: collectionId,
-            queries: [queries],
+            queries: [userQuery, statusQuery],
             nestedType: ChatRequestModel.self
         )
+        print("Service fetched \(response.documents.count) documents for user \(userId)")
         return response.documents
     }
 }
+
+
+
+
+
+

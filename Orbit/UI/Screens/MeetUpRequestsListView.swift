@@ -13,11 +13,16 @@ struct MeetUpRequestsListView: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var chatRequestListDetent: PresentationDetent
     @Environment(\.dismiss) var dismiss
-    @State private var navigateToChat = false
-
+    
+    private func refreshRequests() {
+        guard let userId = userVM.currentUser?.accountId else { return }
+        Task {
+            await chatRequestVM.fetchRequestsForUser(userId: userId)
+        }
+    }
+    
     var body: some View {
         NavigationStack {
-            //            ZStack {
             VStack(spacing: 0) {
                 if let error = chatRequestVM.errorMessage {
                     VStack {
@@ -40,7 +45,7 @@ struct MeetUpRequestsListView: View {
                         .tint(ColorPalette.accent(for: colorScheme))
                         .padding()
                     }
-                } else if chatRequestVM.requests.isEmpty {
+                } else if chatRequestVM.incomingRequests.filter({ $0.data.status == .pending }).isEmpty {
                     VStack(spacing: 16) {
                         Image(systemName: "tray")
                             .font(.system(size: 70))
@@ -69,12 +74,11 @@ struct MeetUpRequestsListView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 16) {
-                            ForEach(chatRequestVM.requests) { request in
+                            ForEach(chatRequestVM.incomingRequests.filter { $0.data.status == .pending }) { request in
                                 SwipeView {
                                     MeetUpRequestRow(request: request)
                                         .onTapGesture {
-                                            chatRequestVM.selectedRequest =
-                                                request
+                                            chatRequestVM.selectedRequest = request
                                             chatRequestListDetent = .large
                                         }
                                 } leadingActions: { context in
@@ -143,34 +147,34 @@ struct MeetUpRequestsListView: View {
                     }
                 }
             }
-            //            }
             .navigationTitle("Meetup Requests")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                refreshRequests()
+            }
         }
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(32)
         .sheet(item: $chatRequestVM.selectedRequest) { request in
-            MeetUpRequestDetailsView(request: request)
-                .presentationDetents([.medium, .large])
-        }
-        .onChange(of: chatRequestVM.newConversationId) { oldValue, newValue in
-            if newValue != nil {
-                navigateToChat = true
-                dismiss()
+            NavigationStack {
+                MeetUpRequestDetailsView(request: request)
+            }
+            .presentationDetents([.medium, .large])
+            .sheet(isPresented: Binding(
+                get: { chatRequestVM.newConversationId != nil },
+                set: { if !$0 { chatRequestVM.newConversationId = nil } }
+            )) {
+                if let conversationId = chatRequestVM.newConversationId,
+                   let request = chatRequestVM.selectedRequest {
+                    NavigationStack {
+                        MessageView(
+                            conversationId: conversationId,
+                            messagerName: userVM.getUserName(from: request.data.senderAccountId)
+                        )
+                    }
+                }
             }
         }
-        .navigationDestination(isPresented: $navigateToChat) {
-            if let conversationId = chatRequestVM.newConversationId,
-                let request = chatRequestVM.selectedRequest
-            {
-                MessageView(
-                    conversationId: conversationId,
-                    messagerName: userVM.getUserName(
-                        from: request.data.senderAccountId)
-                )
-            }
-        }
-
     }
 }
 
@@ -242,3 +246,6 @@ struct MeetUpRequestRow: View {
         .environmentObject(ChatRequestViewModel.mock())
         .environmentObject(UserViewModel.mock())
 }
+
+
+

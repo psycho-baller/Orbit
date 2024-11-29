@@ -132,8 +132,8 @@ struct HomeView: View {
 
     private var notificationBadge: some View {
         Group {
-            if chatRequestVM.requests.count > 0 {
-                Text("\(chatRequestVM.requests.count)")
+            if chatRequestVM.incomingRequests.count > 0 {
+                Text("\(chatRequestVM.incomingRequests.count)")
                     .font(.caption2)
                     .padding(5)
                     .foregroundColor(.white)
@@ -277,11 +277,7 @@ struct HomeView: View {
         }
 
         print("Loading requests for user: \(currentUserId)")
-
         await chatRequestVM.fetchRequestsForUser(userId: currentUserId)
-        print(
-            "Requests loaded successfully: \(chatRequestVM.requests.count) requests found."
-        )
     }
 }
 
@@ -299,3 +295,4 @@ struct HomeView: View {
 
     }
 #endif
+
