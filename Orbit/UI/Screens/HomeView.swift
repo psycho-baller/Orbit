@@ -20,8 +20,8 @@ struct HomeView: View {
                 content
                     .navigationTitle(
                         userVM.isOnCampus || isPreviewMode
-                            ? (userVM.currentArea.map { "Users in \($0)" }
-                                ?? "Users")
+                            ? (userVM.currentArea.map { "Astronauts in \($0)" }
+                                ?? "Astronauts around you")
                             : ""
                     )
 
