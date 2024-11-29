@@ -105,32 +105,64 @@ struct MessageView: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
-        .sheet(isPresented: $isLocationChoicePresented) {
-            if let currentLocation = userVM.currentLocation {
-                LocationChoosingView(
-                    initialCoordinate: currentLocation,
-                    pinLocation:Binding(get: { msgVM.currentLocation ?? currentLocation },
-                                        set: { msgVM.currentLocation = $0
-                                            
-                                            /*newCoordinate in
-                                            msgVM.currentLocation = newCoordinate
-                                            newMessageText = msgVM.encodeCoordinate(newCoordinate)
-                                            sendMessage()
-                                    
-                                            print("The new coordinate is \(newCoordinate)") */
-                                         }
-                                        ),
-                    onShareLocation: { selectedLocation in
-                        isLocationChoicePresented = false
-                        newMessageText = msgVM.encodeCoordinate(selectedLocation)
-                        sendMessage()
-                        print("The new coordinate is \(selectedLocation)")
+        .sheet(isPresented: $isLocationChoicePresented) {  //sheet for location sharing
+            ZStack{
+                Color(ColorPalette.background(for: colorScheme))
+                    .ignoresSafeArea(.all)
+                
+                VStack(spacing: 0){
+                    HStack {
+                        Button("Close"){
+                            isLocationChoicePresented = false
+                        }
+                        .foregroundColor(colorScheme == .light ? .black : .white)
+        
+                        Spacer()
                     }
-                )
-            } else {
-                Text("Cannot determine location")
+                    .overlay(
+                        Text("Location")
+                            .normalSemiBoldFont()
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    
+                    )
+                    .padding()
+                    .background(ColorPalette.background(for: colorScheme).ignoresSafeArea(.all))
+                    
+                    if let currentLocation = userVM.currentLocation {
+                        LocationChoosingView(
+                            initialCoordinate: currentLocation,
+                            pinLocation:Binding(get: { msgVM.currentLocation ?? currentLocation },
+                                                set: { msgVM.currentLocation = $0
+                                                    
+                                                    /*newCoordinate in
+                                                    msgVM.currentLocation = newCoordinate
+                                                    newMessageText = msgVM.encodeCoordinate(newCoordinate)
+                                                    sendMessage()
+                                            
+                                                    print("The new coordinate is \(newCoordinate)") */
+                                                 }
+                                                ),
+                            onShareLocation: { selectedLocation in
+                                isLocationChoicePresented = false
+                                newMessageText = msgVM.encodeCoordinate(selectedLocation)
+                                sendMessage()
+                                print("The new coordinate is \(selectedLocation)")
+                            }
+                        )
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea(.all))
+                    } else {
+                        Text("Cannot determine location")
+                    }
+                    
+                    
+                }
+                
             }
+            
         }
+        .background(Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea())
+        
     }
     private func sendMessage() {
         Task {
