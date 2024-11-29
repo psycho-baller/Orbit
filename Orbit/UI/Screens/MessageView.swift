@@ -27,25 +27,7 @@ struct MessageView: View {
     var body: some View {
         VStack {
             VStack {
-                Button("Get Conversations") {
-                    Task {
-                        let coordinate = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
-
-                        // Encoding
-                        let encodedString = msgVM.encodeCoordinate(coordinate)
-                        print(encodedString) // Output: <[LOC|37.7749,-122.4194]>
-
-                        // Decoding
-                        if let decodedCoordinate = msgVM.decodeCoordinate(from: encodedString) {
-                            print("Decoded Coordinate: \(decodedCoordinate.latitude), \(decodedCoordinate.longitude)")
-                        }
-
-                        // Validation
-                        print(msgVM.isValidCoordinateFormat(encodedString)) // Output: true
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.green)
+               
                 // Chat Header
                 ChatProfileTitle(
                     messagerName: messagerName, isInMessageView: true)
