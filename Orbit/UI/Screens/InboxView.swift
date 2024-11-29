@@ -44,6 +44,7 @@ struct InboxView: View {
                         for: userVM.currentUser?.accountId
                     ) { fetchedConversations in
                         msgVM.conversations = fetchedConversations
+                        print("Debug", fetchedConversations)
                     }
                 }
             }
