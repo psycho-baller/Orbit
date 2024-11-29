@@ -146,6 +146,17 @@ struct MeetUpRequestsListView: View {
             //            }
             .navigationTitle("Meetup Requests")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(isPresented: $navigateToChat) {
+                if let conversationId = chatRequestVM.newConversationId,
+                    let request = chatRequestVM.selectedRequest
+                {
+                    MessageView(
+                        conversationId: conversationId,
+                        messagerName: userVM.getUserName(
+                            from: request.data.senderAccountId)
+                    )
+                }
+            }
         }
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(32)
@@ -159,18 +170,6 @@ struct MeetUpRequestsListView: View {
                 dismiss()
             }
         }
-        .navigationDestination(isPresented: $navigateToChat) {
-            if let conversationId = chatRequestVM.newConversationId,
-                let request = chatRequestVM.selectedRequest
-            {
-                MessageView(
-                    conversationId: conversationId,
-                    messagerName: userVM.getUserName(
-                        from: request.data.senderAccountId)
-                )
-            }
-        }
-
     }
 }
 
