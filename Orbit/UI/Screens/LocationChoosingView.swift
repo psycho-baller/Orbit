@@ -8,7 +8,9 @@
 import SwiftUI
 import MapKit
 
+//used in the MessageView for users to choose a location to share
 struct LocationChoosingView: View {
+    @Environment(\.colorScheme) var colorScheme
     @State private var cameraPosition: MapCameraPosition
     @Binding private var pinLocation: CLLocationCoordinate2D
     var onShareLocation: (CLLocationCoordinate2D) -> Void
@@ -21,6 +23,7 @@ struct LocationChoosingView: View {
     
     var body: some View {
         VStack{
+          
             MapReader{ reader in
                 Map(position: $cameraPosition, interactionModes: .all) {
                     Annotation("Selected Location", coordinate: pinLocation){
@@ -38,8 +41,8 @@ struct LocationChoosingView: View {
                     
                 }
                 .mapStyle(.standard)
-                .frame(height: 400)
-                .cornerRadius(10)
+                .frame(height: 500)
+                //.cornerRadius(10)
                 
             }
          
@@ -49,8 +52,13 @@ struct LocationChoosingView: View {
 
             }
             .buttonStyle(.borderedProminent)
+            .foregroundColor(ColorPalette.text(for: colorScheme))
+            .tint(ColorPalette.main(for: colorScheme))
+            .padding()
+            
             
         }
+        .background(ColorPalette.background(for: colorScheme))
     }
     
   
