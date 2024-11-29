@@ -237,13 +237,15 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
                     $0.createdAt < $1.createdAt
                 })
             else { return nil }
+            
 
             return ConversationDetailModel(
                 id: conversationId,
                 messagerName: messagerName,
                 lastMessage: lastMessage.data.message,
                 timestamp: formatTimestamp(lastMessage.createdAt),
-                isRead: lastMessage.data.isRead ?? false
+                isRead: lastMessage.data.isRead ?? false, 
+                lastSenderId: lastMessage.data.senderAccountId
             )
         } catch {
             print("Failed to process conversation \(conversationId): \(error)")
