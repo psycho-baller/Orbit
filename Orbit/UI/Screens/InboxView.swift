@@ -55,6 +55,6 @@ struct InboxView: View {
             }
         }
         .background(ColorPalette.background(for: colorScheme))
-        .accentColor(.white)
+        .accentColor(ColorPalette.text(for: colorScheme))
     }
 }
