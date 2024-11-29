@@ -25,45 +25,43 @@ class ChatRequestViewModel: ObservableObject {
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
     private let messagingService: MessagingServiceProtocol
+    private let userManagementService: UserManagementServiceProtocol
 
     init(
         chatRequestService: ChatRequestServiceProtocol = ChatRequestService(),
         notificationService: NotificationServiceProtocol =
             NotificationService(),
-        messagingService: MessagingServiceProtocol = MessagingService()
+        messagingService: MessagingServiceProtocol = MessagingService(),
+        userManagementService: UserManagementServiceProtocol = UserManagementService()
     ) {
         self.chatRequestService = chatRequestService
         self.notificationService = notificationService
         self.messagingService = messagingService
+        self.userManagementService = userManagementService
     }
 
     // Send a meet-up request
     @MainActor
-    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?)
-        async
-    {
-        isLoading = true
-        defer { isLoading = false }
-
+    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?) async {
         do {
-            let requestDoc = try await chatRequestService.sendMeetUpRequest(
-                request)
-            print(requestDoc)
-            self.requests.append(requestDoc)
-            self.sentRequests.insert(request.receiverAccountId)
-
+            print("Sending meet-up request...")
+            let requestDoc = try await chatRequestService.sendMeetUpRequest(request)
+            print("Created meet-up request: \(requestDoc)")
+            
+            // Add to sent requests tracking
+            markRequestSent(to: request.receiverAccountId)
+            
+            // Send push notification
             try await notificationService.sendPushNotification(
                 to: [request.receiverAccountId],
-                title:
-                    "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
-                body: requestDoc.data.message,
+                title: "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
+                body: request.message,
                 data: [
                     "requestId": requestDoc.id
                 ]
             )
         } catch {
-            self.errorMessage =
-                "Failed to send meet-up request: \(error.localizedDescription)"
+            self.errorMessage = "Failed to send meet-up request: \(error.localizedDescription)"
         }
     }
 
@@ -99,40 +97,64 @@ class ChatRequestViewModel: ObservableObject {
 
     // Approve or decline a meet-up request
     @MainActor
-    func respondToMeetUpRequest(
-        requestId: String, response: ChatRequestModel.RequestStatus
-    ) async {
-        isLoading = true
-        defer { isLoading = false }
-
+    func respondToMeetUpRequest(requestId: String, response: ChatRequestModel.RequestStatus) async {
         do {
+            print("DEBUG: Starting request response process for requestId: \(requestId)")
             if let updatedRequest = try await chatRequestService.respondToMeetUpRequest(
                 requestId: requestId, response: response)
             {
-                if let index = self.requests.firstIndex(where: {
-                    $0.id == updatedRequest.id
-                }) {
-                    self.requests[index] = updatedRequest
-                }
+                print("DEBUG: Request updated successfully")
+                
+                // Remove the request immediately from local list
+                self.requests.removeAll { $0.id == requestId }
                 
                 if response == .approved {
-                    print("Meet-up request approved. Creating conversation...")
+                    print("DEBUG: Request approved, creating conversation")
                     let participants = [
                         updatedRequest.data.senderAccountId,
                         updatedRequest.data.receiverAccountId
                     ]
+                    print("DEBUG: Participants: \(participants)")
+                    
+                    let conversationModel = ConversationModel(participants: participants)
                     do {
-                     let newConversation = try await messagingService.createConversation(
-                        ConversationModel(participants: participants)
-                    )
+                        let newConversation = try await messagingService.createConversation(conversationModel)
+                        print("DEBUG: Created conversation with ID: \(newConversation.id)")
+                        
+                        // Update both users' conversation lists
+                        for participant in participants {
+                            try await updateUserConversations(userId: participant, conversationId: newConversation.id)
+                        }
+                        
+                        // Create initial system message
+                        let systemMessage = MessageModel(
+                            conversationId: newConversation.id,
+                            senderAccountId: "system",
+                            message: "Conversation started",
+                            isRead: true
+                        )
+                        _ = try await messagingService.createMessage(systemMessage)
+                        
                         self.newConversationId = newConversation.id
-                        print("Created new conversation with ID: \(newConversation.id)")
+                        
+                        // Initialize inbox for both participants
+                        for participant in participants {
+                            print("DEBUG: Initializing inbox for participant: \(participant)")
+                            await MessagingViewModel.shared.initializeInbox(for: participant) { conversations in
+                                print("DEBUG: Inbox initialized for \(participant) with \(conversations.count) conversations")
+                            }
+                        }
+                        
+                        // Refresh requests list for both participants
+                        await fetchRequestsForUser(userId: updatedRequest.data.senderAccountId)
+                        await fetchRequestsForUser(userId: updatedRequest.data.receiverAccountId)
                     } catch {
-                        print("Failed to create a new conversation: \(error.localizedDescription)")
+                        print("DEBUG: Failed to create conversation: \(error)")
                     }
                 }
             }
         } catch {
+            print("DEBUG: Failed to respond to request: \(error)")
             self.errorMessage = "Failed to respond to request: \(error.localizedDescription)"
         }
     }
@@ -151,6 +173,19 @@ class ChatRequestViewModel: ObservableObject {
                 "Failed to load requests: \(error.localizedDescription)"
             print("Error loading requests: \(error.localizedDescription)")
 
+        }
+    }
+
+    @MainActor
+    private func updateUserConversations(userId: String, conversationId: String) async throws {
+        if let userModel = try await userManagementService.getUser(userId) {
+            var conversations = userModel.data.conversations ?? []
+            if !conversations.contains(conversationId) {
+                conversations.append(conversationId)
+                let updatedUser = userModel.data.update(conversations: conversations)
+                try await userManagementService.updateUser(accountId: userId, updatedUser: updatedUser)
+                print("DEBUG: Updated conversations for user \(userId): \(conversations)")
+            }
         }
     }
 

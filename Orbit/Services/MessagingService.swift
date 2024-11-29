@@ -25,6 +25,7 @@ protocol MessagingServiceProtocol {
     func unsubscribeFromMessages() async
     func markMessagesRead(conversationId: String, currentAccountId: String)
         async throws
+    func conversationExists(_ conversationId: String) async throws -> Bool
 }
 
 class MessagingService: MessagingServiceProtocol {
@@ -256,6 +257,20 @@ class MessagingService: MessagingServiceProtocol {
 
         }
 
+    }
+
+    func conversationExists(_ conversationId: String) async throws -> Bool {
+        do {
+            _ = try await appwriteService.databases.getDocument(
+                databaseId: appwriteService.databaseId,
+                collectionId: appwriteService.COLLECTION_ID_CONVERSATIONS,
+                documentId: conversationId,
+                nestedType: ConversationModel.self
+            )
+            return true
+        } catch {
+            return false
+        }
     }
 
 }

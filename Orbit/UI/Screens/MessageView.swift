@@ -88,8 +88,10 @@ struct MessageView: View {
         Task {
             if let senderId = userVM.currentUser?.accountId {
                 await msgVM.createMessage(
-                    conversationId: conversationId, senderAccountId: senderId,
-                    message: newMessageText)
+                    conversationId: conversationId,
+                    senderAccountId: senderId,
+                    message: newMessageText
+                )
                 newMessageText = ""
             }
         }

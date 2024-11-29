@@ -8,45 +8,39 @@
 import SwiftUI
 
 struct MessagesList: View {
-    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environmen
-    var conversations: [ConversationDetailModel]  //input
-
+    @Environment(\.colorScheme) var colorScheme
+    var conversations: [ConversationDetailModel]
     
     var body: some View {
-   
-            
-            List{
-                ForEach(conversations){conversation in
-                    NavigationLink(destination: MessageView(conversationId: conversation.id, messagerName: conversation.messagerName)
-                    ){
-                        HStack{
-                            InboxRow(
-                                messagerName: conversation.messagerName,
-                                lastMessage: conversation.lastMessage,
-                                timestamp: conversation.timestamp,
-                                isRead: conversation.isRead
-                            )
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                       
-                        
-                        
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(conversations) { conversation in
+                    NavigationLink(
+                        destination: MessageView(
+                            conversationId: conversation.id,
+                            messagerName: conversation.messagerName
+                        )
+                    ) {
+                        InboxRow(
+                            messagerName: conversation.messagerName,
+                            lastMessage: conversation.lastMessage,
+                            timestamp: conversation.timestamp,
+                            isRead: conversation.isRead
+                        )
+                        .padding(.vertical, 8)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(PlainButtonStyle())
                     
-                    .listRowBackground(ColorPalette.background(for: colorScheme))
-                    
-                    
-                    
+                    Divider()
+                        .background(ColorPalette.secondaryText(for: colorScheme))
                 }
             }
-            .listStyle(PlainListStyle())
-            .frame(height: UIScreen.main.bounds.height - 120)
-            //.scrollContentBackground(.hidden)
-            //.background(ColorPalette.background(for: colorScheme))
-           
-            
-            
+            .padding(.horizontal)
+            .padding(.top, 8)
         }
+        .scrollIndicators(.hidden)
+    }
 }
 
 #Preview {

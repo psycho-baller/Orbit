@@ -46,58 +46,51 @@ class MessagingViewModel: ObservableObject {
     }
 
     @MainActor
-    func createConversation(_ participants: [String]) async {
+    func createConversation(_ participants: [String]) async -> String? {
         do {
-            // Create entry in conversation table
+            print("DEBUG: Starting conversation creation for participants: \(participants)")
             let conversationData = ConversationModel(participants: participants)
-            let conversationEntry =
-                try await messagingService.createConversation(conversationData)
-
-            // Add conversation id to users
+            let conversationEntry = try await messagingService.createConversation(conversationData)
+            print("DEBUG: Created conversation entry with ID: \(conversationEntry.id)")
+            
+            // Update users' conversation lists
             for accountId in participants {
-                if let userModel = try await userManagementService.getUser(
-                    accountId)
-                {
-                    if let conversations = userModel.data.conversations {
-                        var newConversations = conversations
-                        newConversations.append(conversationEntry.id)
-                        let newUserModel = userModel.data.update(
-                            conversations: newConversations
-                        )
-                        try await userManagementService.updateUser(
-                            accountId: accountId, updatedUser: newUserModel)
+                print("DEBUG: Updating conversation list for user: \(accountId)")
+                if let userModel = try await userManagementService.getUser(accountId) {
+                    var conversations = userModel.data.conversations ?? []
+                    if !conversations.contains(conversationEntry.id) {
+                        conversations.append(conversationEntry.id)
+                        let updatedUser = userModel.data.update(conversations: conversations)
+                        try await userManagementService.updateUser(accountId: accountId, updatedUser: updatedUser)
+                        print("DEBUG: Updated user \(accountId) with conversations: \(conversations)")
                     }
                 }
             }
-        } catch {
-            print(
-                "MessagingViewModel - createConversation failed \(error.localizedDescription)"
+            
+            // Create initial system message
+            let systemMessage = MessageModel(
+                conversationId: conversationEntry.id,
+                senderAccountId: "system",
+                message: "Conversation started"
             )
-        }
-    }
-
-    @MainActor
-    func createMessage(
-        conversationId: String, senderAccountId: String, message: String
-    ) async {
-        let newMessage = MessageModel(
-            conversationId: conversationId,
-            senderAccountId: senderAccountId,
-            message: message
-        )
-        do {
-            let createdMessage = try await messagingService.createMessage(
-                newMessage)
-
-            DispatchQueue.main.async {
-                self.messages.append(createdMessage)
-                self.messages.sort { $0.createdAt < $1.createdAt }
-                self.lastMessageId = createdMessage.id
+            _ = try await messagingService.createMessage(systemMessage)
+            print("DEBUG: Created initial system message")
+            
+            // Force refresh conversations for both participants
+            for accountId in participants {
+                let conversationDetails = await getConversationDetails(accountId)
+                if accountId == participants[0] {  // Only update UI for current user
+                    DispatchQueue.main.async {
+                        self.conversations = conversationDetails
+                        print("DEBUG: Updated conversations list with \(conversationDetails.count) conversations")
+                    }
+                }
             }
+            
+            return conversationEntry.id
         } catch {
-            print(
-                "MessagingViewModel - createMessage failed \(error.localizedDescription)"
-            )
+            print("DEBUG: Failed to create conversation: \(error)")
+            return nil
         }
     }
 
@@ -151,41 +144,46 @@ class MessagingViewModel: ObservableObject {
         return conversationDetails.sorted { $0.timestamp > $1.timestamp }
     }
 
-    @MainActor
-    private func fetchConversationDetail(
-        accountId: String, conversationId: String
-    ) async -> ConversationDetailModel? {
-        do {
-            let participants = try await messagingService.getParticipants(
-                for: conversationId)
-            guard
-                let otherParticipantId = participants.first(where: {
-                    $0 != accountId
-                })
-            else { return nil }
-
-            let messagerName = await getParticipantName(otherParticipantId)
-            let messages = try await messagingService.getMessages(
-                conversationId, 100)
-            guard
-                let lastMessage = messages.max(by: {
-                    $0.createdAt < $1.createdAt
-                })
-            else { return nil }
-
-            return ConversationDetailModel(
-                id: conversationId,
-                messagerName: messagerName,
-                lastMessage: lastMessage.data.message,
-                timestamp: formatTimestamp(lastMessage.createdAt),
-                isRead: lastMessage.data.isRead ?? false
-            )
-        } catch {
-            print("Failed to process conversation \(conversationId): \(error)")
+   @MainActor
+private func fetchConversationDetail(
+    accountId: String, conversationId: String
+) async -> ConversationDetailModel? {
+    do {
+        print("DEBUG: Fetching conversation detail for ID: \(conversationId)")
+        
+        guard try await messagingService.conversationExists(conversationId) else {
+            print("DEBUG: Conversation \(conversationId) no longer exists")
             return nil
         }
+        
+        let participants = try await messagingService.getParticipants(for: conversationId)
+        print("DEBUG: Found participants: \(participants)")
+        
+        guard let otherParticipantId = participants.first(where: { $0 != accountId }) else {
+            print("DEBUG: Could not find other participant")
+            return nil
+        }
+        
+        let messagerName = await getParticipantName(otherParticipantId)
+        print("DEBUG: Got participant name: \(messagerName)")
+        
+        let messages = try await messagingService.getMessages(conversationId, 100)
+        print("DEBUG: Found \(messages.count) messages")
+        
+        return ConversationDetailModel(
+            id: conversationId,
+            messagerName: messagerName,
+            lastMessage: messages.last?.data.message ?? "No messages yet",
+            timestamp: messages.last.map { formatTimestamp($0.createdAt) } ?? "Just now",
+            isRead: messages.last?.data.isRead ?? true
+        )
+    } catch {
+        print("DEBUG: Error fetching conversation detail: \(error)")
+        return nil
     }
-
+}
+    
+    
     private func getParticipantName(_ participantId: String) async -> String {
         do {
             if let user = try await userManagementService.getUser(participantId)
@@ -285,64 +283,29 @@ class MessagingViewModel: ObservableObject {
         completion: @escaping ([ConversationDetailModel]) -> Void
     ) async {
         guard let userId = userId else {
-            print("User ID not found")
+            print("DEBUG: Initialize inbox failed - User ID not found")
             return
         }
 
-        print("Fetching conversations for user ID: \(userId)")
-        var fetchedConversations = await getConversationDetails(userId)
-        fetchedConversations.sort { $0.timestamp > $1.timestamp }
-        self.conversations = fetchedConversations
-        completion(fetchedConversations)
+        print("DEBUG: Initializing inbox for user: \(userId)")
+        
+        // Get user's conversation list directly
+        if let userModel = try? await userManagementService.getUser(userId) {
+            print("DEBUG: User conversations from database: \(userModel.data.conversations ?? [])")
+        }
+        
+        let fetchedConversations = await getConversationDetails(userId)
+        print("DEBUG: Fetched conversation details: \(fetchedConversations.map { $0.id })")
+        
+        DispatchQueue.main.async {
+            self.conversations = fetchedConversations
+            print("DEBUG: Updated conversations in ViewModel for \(userId): \(self.conversations.count)")
+            completion(fetchedConversations)
+        }
 
-        await subscribeToInboxMessages(
-            onNewMessage: { newMessage in
-                DispatchQueue.main.async {
-                    print(
-                        "MessagingViewModel - Received new message for Inbox: \(newMessage.data.message)"
-                    )
-
-                    if let index = self.conversations.firstIndex(where: {
-                        $0.id == newMessage.data.conversationId
-                    }) {
-                        var updatedConversation = self.conversations[index]
-                        updatedConversation.update(with: newMessage)
-                        updatedConversation.timestamp = self.formatTimestamp(
-                            newMessage.createdAt)
-
-                        self.conversations.remove(at: index)
-                        self.conversations.insert(updatedConversation, at: 0)
-                    } else {
-                        Task {
-                            if let newConversation =
-                                await self.fetchConversationDetail(
-                                    accountId: userId,
-                                    conversationId: newMessage.data
-                                        .conversationId)
-                            {
-                                DispatchQueue.main.async {
-                                    self.conversations.insert(
-                                        newConversation, at: 0)
-                                }
-                            }
-                        }
-
-                    }
-
-                    /*self.conversations = self.conversations.map { conversation in
-                        var mutableConversation = conversation  // Create a mutable copy
-                        if mutableConversation.id == newMessage.data.conversationId
-                        {
-
-                            mutableConversation.update(with: newMessage)  // Mutate the copy
-                            mutableConversation.timestamp = self.formatTimestamp(newMessage.createdAt)
-                        }
-                        return mutableConversation
-                    } */
-
-                }
-
-            })
+        await subscribeToInboxMessages(onNewMessage: { newMessage in
+            print("DEBUG: Received new message: \(newMessage.id) for conversation: \(newMessage.data.conversationId)")
+        })
     }
 
     @MainActor
@@ -360,6 +323,25 @@ class MessagingViewModel: ObservableObject {
             print(
                 "MessagingViewModel - failed to mark messages as read: \(error.localizedDescription)"
             )
+        }
+    }
+
+    @MainActor
+    func createMessage(conversationId: String, senderAccountId: String, message: String) async {
+        do {
+            let messageData = MessageModel(
+                conversationId: conversationId,
+                senderAccountId: senderAccountId,
+                message: message,
+                isRead: false
+            )
+            let messageDoc = try await messagingService.createMessage(messageData)
+            print("DEBUG: Created message: \(messageDoc.id) in conversation: \(conversationId)")
+            
+            // Force refresh the conversation details
+            await initializeInbox(for: senderAccountId) { _ in }
+        } catch {
+            print("MessagingViewModel - createMessage failed: \(error.localizedDescription)")
         }
     }
 

@@ -12,12 +12,13 @@ struct MeetUpRequestDetailsView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    var request: ChatRequestDocument
+    let request: ChatRequestDocument
     
     @State private var navigateToChat = false
     
     var body: some View {
         NavigationStack {
+            VStack{
             HStack(alignment: .top, spacing: 0) {
                 // Profile Picture
                 if let user = userVM.users.first(where: { $0.accountId == request.data.senderAccountId }),
@@ -92,6 +93,19 @@ struct MeetUpRequestDetailsView: View {
             }
         }
     }
+    .presentationDragIndicator(.visible)
+        .presentationCornerRadius(32)
+        .sheet(item: $chatRequestVM.selectedRequest) { request in
+            MeetUpRequestDetailsView(request: request)
+                .presentationDetents([.medium, .large])
+        }
+        .onChange(of: chatRequestVM.newConversationId) { oldValue, newValue in
+            if newValue != nil {
+                navigateToChat = true
+                dismiss()
+            }
+        }
+    }
 }
 
 #if DEBUG
@@ -103,6 +117,7 @@ struct MeetUpRequestDetailsView: View {
         .environmentObject(UserViewModel.mock())
     }
 #endif
+
 
 
 
