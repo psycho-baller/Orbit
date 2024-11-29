@@ -15,61 +15,61 @@ struct MainTabView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @Environment(\.colorScheme) var colorScheme
 
-    @State private var selectedTab = 0
+    //@State private var selectedTab = 0
+
+    @State private var selectedIndex = 0
+    @State private var prevSelectedIndex = 0
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            NavigationView {
-                HomeView()
-            }
-            .tabItem {
-                Label("Home", systemImage: "house.fill")
-            }
-            .tag(0)
-
-            NavigationView {
-                InboxView()
-            }
-            .tabItem {
-                Label("Messages", systemImage: "message.fill")
-            }
-            .tag(1)
-
-            NavigationView {
-                if let user = authViewModel.user {
-                    ProfileView()
-                } else {
-                    Text("Please log in to view your profile.")
+        ZStack(alignment: .bottom) {
+            VStack {
+                if selectedIndex == 0 {
+                    NavigationView {
+                        HomeView()
+                    }
+                } else if selectedIndex == 1 {
+                    NavigationView {
+                        InboxView()
+                    }
+                } else if selectedIndex == 2 {
+                    NavigationView {
+                        ProfileView()
+                    }
                 }
             }
-            .tabItem {
-                Label("Profile", systemImage: "person.circle.fill")
+
+            // Animated Tab Bar
+            AnimatedTabBar(
+                selectedIndex: $selectedIndex,
+                prevSelectedIndex: $prevSelectedIndex
+            ) {
+                tabButtonAt(0, icon: "house.fill", title: "Home")
+                tabButtonAt(1, icon: "message.fill", title: "Messages")
+                tabButtonAt(2, icon: "person.fill", title: "Profile")
             }
-            .tag(2)
+            .cornerRadius(16)
+            .selectedColor(ColorPalette.text(for: colorScheme))
+            .unselectedColor(ColorPalette.secondaryText(for: colorScheme))
+            .ballColor(ColorPalette.text(for: colorScheme))
+            .verticalPadding(20)
+//            .ballTrajectory(.straight)
+//            .ballAnimation(.interpolatingSpring(stiffness: 130, damping: 15))
+//            .indentAnimation(.easeOut(duration: 0.3))
+            .barColor(ColorPalette.background(for: colorScheme))
         }
         .accentColor(ColorPalette.accent(for: colorScheme))
+        .edgesIgnoringSafeArea(.bottom)
     }
-}
 
-// Example views for other tabs
-struct ExampleView1: View {
-    var body: some View {
-        Text("Content for Tab 2")
-            .navigationTitle("Tab 2")
-    }
-}
-
-struct ExampleView2: View {
-    var body: some View {
-        Text("Content for Tab 3")
-            .navigationTitle("Tab 3")
-    }
-}
-
-struct ExampleView3: View {
-    var body: some View {
-        Text("Content for Tab 4")
-            .navigationTitle("Tab 4")
+    // Helper function to create tab buttons with icons and titles
+    func tabButtonAt(_ index: Int, icon: String, title: String) -> some View {
+        VStack {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+            Text(title)
+                .font(.caption)
+        }
+        .scaleEffect(selectedIndex == index ? 1.15 : 1.0)  // Add scale effect for selected tab
     }
 }
 
@@ -81,6 +81,7 @@ struct ExampleView3: View {
             .environmentObject(UserViewModel.mock())
             .environmentObject(AuthViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(MessagingViewModel())
 
     }
 #endif

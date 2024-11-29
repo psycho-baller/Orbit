@@ -266,7 +266,17 @@ struct HomeView: View {
             }
         }
         .padding(.horizontal)
-        .background(ColorPalette.background(for: colorScheme))
+        //.background(ColorPalette.background(for: colorScheme))
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    ColorPalette.background(for: colorScheme),
+                    ColorPalette.main(for: colorScheme),
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 
     private func loadRequests() async {
