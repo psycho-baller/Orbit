@@ -245,7 +245,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         let selectedInterestsSet = Set(selectedInterests)
 
         return users.filter { user in
-            //            guard user.accountId != currentUser?.accountId else { return false }
+            guard user.accountId != currentUser?.accountId else { return false }
             guard user.isInterestedToMeet ?? false else { return false }
 
             let matchesSearchText =
@@ -260,11 +260,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 || (user.interests != nil
                     && !Set(user.interests!).intersection(selectedInterestsSet)
                         .isEmpty)
-            
-            //Filter out current user
-            let isNotCurrentUser = user.accountId != currentUser?.accountId
 
-            return matchesSearchText && matchesInterests && isNotCurrentUser
+            return matchesSearchText && matchesInterests
         }
     }
 
