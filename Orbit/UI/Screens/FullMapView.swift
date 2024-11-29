@@ -25,8 +25,8 @@ struct FullMapView: View {
                 UserAnnotation()  //real time location marker for current user
             }
             .mapStyle(.standard)
-            .frame(height: 400)
-            .cornerRadius(10)
+            .frame(height: 500)
+            //.cornerRadius(10)
             
             Spacer()
         }
