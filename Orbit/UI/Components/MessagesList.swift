@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct MessagesList: View {
-    @Environment(\.colorScheme) var colorScheme
-    var conversations: [ConversationDetailModel]
+    @EnvironmentObject private var userVM: UserViewModel
+    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
+    var conversations: [ConversationDetailModel]  //input
+    
+
     
     var body: some View {
         ScrollView {
@@ -45,7 +48,7 @@ struct MessagesList: View {
 
 #Preview {
     MessagesList(conversations: [
-        ConversationDetailModel(id: "conv1", messagerName: "John Doe", lastMessage: "Hey, how's it going?", timestamp: "Today", isRead: false),
-        ConversationDetailModel(id: "conv2", messagerName: "Jane Smith", lastMessage: "Can we meet tomorrow?", timestamp: "Yesterday", isRead: false)
+        ConversationDetailModel(id: "conv1", messagerName: "John Doe", lastMessage: "Hey, how's it going?", timestamp: "Today", isRead: false, lastSenderId: "845673845"),
+        ConversationDetailModel(id: "conv2", messagerName: "Jane Smith", lastMessage: "Can we meet tomorrow?", timestamp: "Yesterday", isRead: false, lastSenderId: "285782564")
     ])
 }
