@@ -152,14 +152,11 @@ struct MessageView: View {
                         LocationChoosingView(
                             initialCoordinate: currentLocation,
                             pinLocation:Binding(get: { msgVM.currentLocation ?? currentLocation },
-                                                set: { msgVM.currentLocation = $0
-                                                    
-                                                    /*newCoordinate in
+                                                set: { newCoordinate in
                                                     msgVM.currentLocation = newCoordinate
-                                                    newMessageText = msgVM.encodeCoordinate(newCoordinate)
-                                                    sendMessage()
-                                            
-                                                    print("The new coordinate is \(newCoordinate)") */
+                                                    //msgVM.currentLocation = $0
+                                                    
+                                                
                                                  }
                                                 ),
                             onShareLocation: { selectedLocation in
@@ -182,6 +179,12 @@ struct MessageView: View {
             
         }
         .background(Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea())
+        .onChange(of: isLocationChoicePresented) { wasPresented, isPresented in
+            if let currentLocation = userVM.currentLocation {
+                msgVM.currentLocation = currentLocation
+            }
+        } //ensures that when location choosing view is opened, the sharing pin begins at current user location
+        
         
     }
     private func sendMessage() {
