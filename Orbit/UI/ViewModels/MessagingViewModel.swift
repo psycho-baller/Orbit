@@ -211,7 +211,7 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
         return conversationDetails.sorted { $0.timestamp > $1.timestamp }
     }
 
-   @MainActor
+@MainActor
 private func fetchConversationDetail(
     accountId: String, conversationId: String
 ) async -> ConversationDetailModel? {
