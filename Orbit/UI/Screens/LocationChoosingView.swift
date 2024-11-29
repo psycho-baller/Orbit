@@ -26,6 +26,7 @@ struct LocationChoosingView: View {
           
             MapReader{ reader in
                 Map(position: $cameraPosition, interactionModes: .all) {
+                    UserAnnotation()  //current user location pin
                     Annotation("Selected Location", coordinate: pinLocation){
                         Image(systemName: "mappin.and.ellipse")
                             .resizable()

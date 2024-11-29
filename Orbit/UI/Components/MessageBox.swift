@@ -14,7 +14,7 @@ struct MessageBox: View {
     @EnvironmentObject var msgVM: MessagingViewModel
     @State private var showTime = false
     @State var isReceived = false
-    
+    @Environment(\.colorScheme) var colorScheme
     @Binding var sharedLocation: CLLocationCoordinate2D?
     @State private var showFullMap = false
 
@@ -34,8 +34,37 @@ struct MessageBox: View {
                             showFullMap = true
                         }
                         .sheet(isPresented: $showFullMap){
-                            FullMapView(sharedLocation: location)
+                            ZStack{
+                                Color(ColorPalette.background(for: colorScheme))
+                                    .ignoresSafeArea(.all)
+                                
+                                VStack(spacing: 0){
+                                    HStack {
+                                        Button("Close"){
+                                            showFullMap = false
+                                        }
+                                        .foregroundColor(colorScheme == .light ? .black : .white)
+                        
+                                        Spacer()
+                                    }
+                                    .overlay(
+                                        Text("Shared Location")
+                                            .normalSemiBoldFont()
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                    
+                                    )
+                                    .padding()
+                                    .background(ColorPalette.background(for: colorScheme).ignoresSafeArea(.all))
+                                    
+                                
+                                    FullMapView(sharedLocation: location)
+                                    
+                                }
+                                
+                            }
+                            
                         }
+                        .background(Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea())
                 } else {
                     //regular messages
                     Text(messageDocument.data.message)
