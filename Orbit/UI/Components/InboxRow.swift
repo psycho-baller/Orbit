@@ -13,13 +13,14 @@ struct InboxRow: View {
     var lastMessage: String
     var timestamp: String
     var isRead: Bool
+    var isCurrentUserSender: Bool
     
     var body: some View {
         HStack(alignment: .top, spacing: 12){
             let formattedTimeStamp = formatTimestamp(timestamp)
             VStack{
                 Spacer()
-                if !isRead {
+                if !isRead && !isCurrentUserSender {  //only display as new message for the receiver who has not read message yet
                     Circle()
                         .fill(ColorPalette.accent(for: ColorScheme.light))
                         .frame(width: 10, height: 10)
