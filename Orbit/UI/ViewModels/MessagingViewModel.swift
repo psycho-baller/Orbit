@@ -242,7 +242,8 @@ private func fetchConversationDetail(
             messagerName: messagerName,
             lastMessage: messages.last?.data.message ?? "No messages yet",
             timestamp: messages.last.map { formatTimestamp($0.createdAt) } ?? "Just now",
-            isRead: messages.last?.data.isRead ?? true
+            isRead: messages.last?.data.isRead ?? true,
+            lastSenderId: messages.last?.data.senderAccountId ?? ""
         )
     } catch {
         print("DEBUG: Error fetching conversation detail: \(error)")

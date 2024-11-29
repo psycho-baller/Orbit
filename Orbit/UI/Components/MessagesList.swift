@@ -28,7 +28,8 @@ struct MessagesList: View {
                             messagerName: conversation.messagerName,
                             lastMessage: conversation.lastMessage,
                             timestamp: conversation.timestamp,
-                            isRead: conversation.isRead
+                            isRead: conversation.isRead,
+                            isCurrentUserSender: conversation.lastSenderId == userVM.currentUser?.accountId
                         )
                         .padding(.vertical, 8)
                         .contentShape(Rectangle())
