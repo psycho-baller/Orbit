@@ -22,47 +22,46 @@ struct ContentView: View {
             if showSplashScreen {
                 SplashScreenView(isActive: $showSplashScreen)
             } else {
-                NavigationStack(path: $appState.navigationPath) {
-                    if authVM.isLoggedIn {
-                        MainTabView()
-                            .navigationDestination(for: String.self) { screen in
-                                navigateToView(screen: screen)
-                            }
-                    } else if !authVM.isLoggedIn && !authVM.isLoading {
-                        LoginView()
-                            .navigationDestination(for: String.self) { screen in
-                                navigateToView(screen: screen)
-                            }
-                            .transition(
-                                .asymmetric(
-                                    insertion: isOneSecondAfterLaunch
-                                        ? .move(edge: .leading)
-                                        : .scale,
-                                    removal: .move(edge: .leading))
-                            )
-                    }
+                if authVM.isLoggedIn {
+                    MainTabView()
+                } else if !authVM.isLoggedIn && !authVM.isLoading {
+                    LoginView()
+                        //                            .navigationDestination(for: String.self) { screen in
+                        //                                navigateToView(screen: screen)
+                        //                            }
+                        .transition(
+                            .asymmetric(
+                                insertion: isOneSecondAfterLaunch
+                                    ? .move(edge: .leading)
+                                    : .scale,
+                                removal: .move(edge: .leading))
+                        )
                 }
-                .animation(
-                    .easeInOut, value: authVM.isLoggedIn || authVM.isLoading
-                )
-                .onAppear {
-                    Task {
-                        await authVM.initialize()
-                        try await Task.sleep(nanoseconds: 1_000_000_000)
-                        isOneSecondAfterLaunch = true
-                    }
-                }
+            }
+        }
+        .animation(
+            .easeInOut, value: authVM.isLoggedIn || authVM.isLoading
+        )
+        .onAppear {
+            Task {
+                await authVM.initialize()
+                try await Task.sleep(nanoseconds: 1_000_000_000)
+                isOneSecondAfterLaunch = true
             }
         }
     }
 
     @ViewBuilder
-    func navigateToView(screen: String) -> some View {
+    func navigateToView(screen: MainViewTabs) -> some View {
         switch screen {
-        case "ProfileScreen":
+        case .home:
+            HomeView()
+        case .messages:
+            InboxView()
+        case .profile:
             ProfileView()
-        default:
-            Text("Unknown Destination")
+        //        default:
+        //            Text("Unknown Destination")
         }
     }
 }
