@@ -167,12 +167,13 @@ class ChatRequestViewModel: ObservableObject {
                 self.newConversationId = conversation.id
 
                 // Update both users' conversation lists
-                //                await messagingViewModel.createConversation(
-                //                    participants)
+                try await addConversationToUser(
+                    userId: participants[0], conversationId: conversation.id)
+                try await addConversationToUser(
+                    userId: participants[1], conversationId: conversation.id)
                 let receiverName =
                     try await userManagementService.getUser(
                         updatedRequest.data.receiverAccountId)?.data.name ?? ""
-                #warning("Make this go to the chat screen")
                 try await notificationService.sendPushNotification(
                     to: [updatedRequest.data.senderAccountId],
                     title: "Request Approved!",
@@ -198,7 +199,7 @@ class ChatRequestViewModel: ObservableObject {
     }
 
     @MainActor
-    func updateUserConversations(
+    func addConversationToUser(
         userId: String, conversationId: String
     ) async throws {
         if let userModel = try await userManagementService.getUser(
