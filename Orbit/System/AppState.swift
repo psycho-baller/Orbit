@@ -5,11 +5,13 @@
 //  Created by Rami Maalouf on 2024-11-23.
 //
 
+import Combine
 import Foundation
 import SwiftUI
 
 class AppState: ObservableObject {
-    @Published var navigationPath = NavigationPath()  // Manages the navigation stack
+    @Published var selectedTab: MainViewTabs = .home
+    @Published var messagesNavigationPath: [ConversationDetailModel] = []
     @Published var targetScreen: String? = nil  // Tracks the target screen for deep links
     @Published var selectedRequestId: String? = nil
     @Published var isShowingHomeSettings = false
