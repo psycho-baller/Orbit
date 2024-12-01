@@ -91,7 +91,8 @@ class ChatRequestViewModel: ObservableObject {
                     "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
                 body: request.message,
                 data: [
-                    "requestId": requestDoc.id
+                    "requestId": requestDoc.id,
+                    "type": "newMeetupRequest",
                 ]
             )
         } catch {
@@ -166,17 +167,24 @@ class ChatRequestViewModel: ObservableObject {
                 self.newConversationId = conversation.id
 
                 // Update both users' conversation lists
-//                await messagingViewModel.createConversation(
-//                    participants)
-
+                //                await messagingViewModel.createConversation(
+                //                    participants)
+                let receiverName =
+                    try await userManagementService.getUser(
+                        updatedRequest.data.receiverAccountId)?.data.name ?? ""
+                #warning("Make this go to the chat screen")
                 try await notificationService.sendPushNotification(
                     to: [updatedRequest.data.senderAccountId],
                     title: "Request Approved!",
                     body:
-                        "Your meet-up request has been approved. Start chatting!",
+                        "Your meet-up request to \(receiverName) has been approved. Start chatting!",
                     data: [
-                        "conversationId": conversation.id,
-                        "type": "request_approved",
+                        "conversation": [
+                            "id": conversation.id,
+                            "receiverName": receiverName,
+                            "senderId": updatedRequest.data.senderAccountId,
+                        ],
+                        "type": "requestApproved",
                     ]
                 )
             }
