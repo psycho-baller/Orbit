@@ -9,7 +9,8 @@
 import Foundation
 
 protocol MessagingServiceProtocol {
-    func createConversation(_ conversation: ConversationModel) async throws
+    func findOrCreateConversation(_ conversation: ConversationModel)
+        async throws
         -> ConversationDocument
     func createMessage(_ message: MessageModel) async throws -> MessageDocument
     func getMessages(_ conversationId: String, _ numOfMessages: Int)
@@ -33,7 +34,10 @@ class MessagingService: MessagingServiceProtocol {
     private var inboxSubscription: RealtimeSubscription?
     private var messagesSubscription: RealtimeSubscription?
 
-    func createConversation(_ conversation: ConversationModel) async throws
+    /// Only call this function within the service. In most cases, we wanna first check if the conversation already exists in the collection before creating a new one
+    /// - Parameter conversation: conversation data (basically just the participants)
+    private func createConversation(_ conversation: ConversationModel)
+        async throws
         -> ConversationDocument
     {
         let document = try await appwriteService.databases.createDocument<
@@ -50,7 +54,45 @@ class MessagingService: MessagingServiceProtocol {
         return document
     }
 
-    func createMessage(_ message: MessageModel) async throws -> MessageDocument {
+    func findOrCreateConversation(
+        _ conversation: ConversationModel
+    ) async throws -> ConversationDocument {
+        let participants = conversation.participants
+        // Step 1: Query for existing conversations with the same participants
+        let queries = [
+            Query.contains("participants", value: participants),
+            Query.limit(1),  // Limit to one match
+        ]
+
+        // Attempt to find an existing conversation
+        let existingConversations = try await appwriteService.databases
+            .listDocuments<
+                ConversationModel
+            >(
+                databaseId: appwriteService.databaseId,
+                collectionId: appwriteService.COLLECTION_ID_CONVERSATIONS,
+                queries: queries,
+                nestedType: ConversationModel.self
+            )
+
+        // Step 2: If an existing conversation is found, return it
+        if let existingConversation = existingConversations.documents.first {
+            print("Found existing conversation: \(existingConversation)")
+            return existingConversation
+        }
+
+        // Step 3: If no conversation is found, create a new one
+        let newConversation = ConversationModel(
+            participants: participants
+        )
+
+        let createdConversation = try await createConversation(newConversation)
+        print("Created new conversation: \(createdConversation)")
+        return createdConversation
+    }
+
+    func createMessage(_ message: MessageModel) async throws -> MessageDocument
+    {
         let document = try await appwriteService.databases.createDocument<
             MessageModel
         >(

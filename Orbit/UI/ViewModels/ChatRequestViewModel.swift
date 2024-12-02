@@ -160,9 +160,10 @@ class ChatRequestViewModel: ObservableObject {
 
                 // Create conversation and get its ID directly
                 let conversationData = ConversationModel(
-                    participants: participants)
+                    participants: participants
+                )
                 let conversation =
-                    try await messagingService.createConversation(
+                    try await messagingService.findOrCreateConversation(
                         conversationData)
                 self.newConversationId = conversation.id
 
