@@ -44,8 +44,6 @@ class ChatRequestViewModel: ObservableObject {
 
     private func updateFilteredRequests() {
         guard let userId = activeUserId else { return }
-        // Sort documents in place by createdAt
-        requests.sort { $0.createdAt > $1.createdAt }
         incomingRequests = requests.filter { request in
             request.data.receiverAccountId == userId
         }
@@ -84,7 +82,7 @@ class ChatRequestViewModel: ObservableObject {
 
             // Add to sent requests tracking
             //            markRequestSent(to: request.receiverAccountId)
-            self.requests.append(requestDoc)
+            self.requests.insert(requestDoc, at: 0)
 
             // Send push notification
             try await notificationService.sendPushNotification(
