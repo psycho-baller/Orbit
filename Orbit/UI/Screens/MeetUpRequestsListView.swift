@@ -10,17 +10,58 @@ import SwiftUI
 struct MeetUpRequestsListView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var userVM: UserViewModel
+    @EnvironmentObject var appState: AppState
     @Environment(\.colorScheme) var colorScheme
     @Binding var chatRequestListDetent: PresentationDetent
     @Environment(\.dismiss) var dismiss
-    
+
     private func refreshRequests() {
         guard let userId = userVM.currentUser?.accountId else { return }
         Task {
             await chatRequestVM.fetchRequestsForUser(userId: userId)
         }
     }
-    
+
+    private func approveRequest(request: ChatRequestDocument) async {
+        let receiverName = userVM.getUserName(
+            from: request.data.receiverAccountId)
+        dismiss()
+        if let conversation =
+            await chatRequestVM
+            .respondToMeetUpRequest(
+                requestId: request.id,
+                receiverName: receiverName,
+                response: .approved
+            )
+        {
+
+            appState.selectedTab = .messages
+            appState.messagesNavigationPath.append(
+                ConversationDetailModel(
+                    id: conversation.id,
+                    messagerName: receiverName,
+                    lastMessage: "",
+                    timestamp: "Today",
+                    isRead: false,
+                    lastSenderId: request.data.senderAccountId
+                )
+            )
+        }
+    }
+
+    private func declineRequest(request: ChatRequestDocument) async {
+        let receiverName =
+            userVM.getUserName(
+                from: request.data
+                    .receiverAccountId)
+        await chatRequestVM
+            .respondToMeetUpRequest(
+                requestId: request.id,
+                receiverName: receiverName,
+                response: .declined
+            )
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -45,7 +86,9 @@ struct MeetUpRequestsListView: View {
                         .tint(ColorPalette.accent(for: colorScheme))
                         .padding()
                     }
-                } else if chatRequestVM.incomingRequests.filter({ $0.data.status == .pending }).isEmpty {
+                } else if chatRequestVM.incomingRequests.filter({
+                    $0.data.status == .pending
+                }).isEmpty {
                     VStack(spacing: 16) {
                         Image(systemName: "tray")
                             .font(.system(size: 70))
@@ -74,21 +117,23 @@ struct MeetUpRequestsListView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 16) {
-                            ForEach(chatRequestVM.incomingRequests.filter { $0.data.status == .pending }) { request in
+                            ForEach(
+                                chatRequestVM.incomingRequests.filter {
+                                    $0.data.status == .pending
+                                }
+                            ) { request in
                                 SwipeView {
                                     MeetUpRequestRow(request: request)
                                         .onTapGesture {
-                                            chatRequestVM.selectedRequest = request
+                                            chatRequestVM.selectedRequest =
+                                                request
                                             chatRequestListDetent = .large
                                         }
                                 } leadingActions: { context in
                                     SwipeAction {
                                         Task {
-                                            await chatRequestVM
-                                                .respondToMeetUpRequest(
-                                                    requestId: request.id,
-                                                    response: .approved
-                                                )
+                                            await approveRequest(
+                                                request: request)
                                         }
                                     } label: { isHighlighted in
                                         VStack(spacing: 4) {
@@ -109,11 +154,8 @@ struct MeetUpRequestsListView: View {
                                 } trailingActions: { context in
                                     SwipeAction {
                                         Task {
-                                            await chatRequestVM
-                                                .respondToMeetUpRequest(
-                                                    requestId: request.id,
-                                                    response: .declined
-                                                )
+                                            await declineRequest(
+                                                request: request)
                                         }
                                     } label: { isHighlighted in
                                         VStack(spacing: 4) {
@@ -157,23 +199,12 @@ struct MeetUpRequestsListView: View {
         .presentationCornerRadius(32)
         .sheet(item: $chatRequestVM.selectedRequest) { request in
             NavigationStack {
-                MeetUpRequestDetailsView(request: request)
+                MeetUpRequestDetailsView(
+                    request: request, approveRequest: approveRequest,
+                    declineRequest: declineRequest)
             }
             .presentationDetents([.medium, .large])
-            .sheet(isPresented: Binding(
-                get: { chatRequestVM.newConversationId != nil },
-                set: { if !$0 { chatRequestVM.newConversationId = nil } }
-            )) {
-                if let conversationId = chatRequestVM.newConversationId,
-                   let request = chatRequestVM.selectedRequest {
-                    NavigationStack {
-                        MessageView(
-                            conversationId: conversationId,
-                            messagerName: userVM.getUserName(from: request.data.senderAccountId)
-                        )
-                    }
-                }
-            }
+
         }
     }
 }
