@@ -33,7 +33,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     private var preciseLocationManager: PreciseLocationManager?
     private var campusLocationManager: CampusLocationManager
     private let areaData: [Area]  // Load JSON area data
-    private var lastFetchedAreaId: String?  // Track last fetched area
+    var lastFetchedAreaId: String?
+    var lastFetchedTimestamp: Date?
     private var subscribeToLocationUpdates: RealtimeSubscription?
 
     init(
@@ -209,18 +210,39 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     @MainActor
     func fetchUsersInArea(areaId: String) async {
-        guard areaId != lastFetchedAreaId else { return }  // Fetch only if area changed
-        lastFetchedAreaId = areaId  // Update last fetched area
+        // Initialize lastFetchedTimestamp if it's nil
+        if lastFetchedTimestamp == nil {
+            self.lastFetchedAreaId = areaId
+            self.lastFetchedTimestamp = Date()
+        }
 
+        guard let lastFetchedTimestamp = lastFetchedTimestamp else {
+            // This guard should only ever fail if something goes wrong after initialization.
+            return
+        }
+        let currentTime = Date()
+        let timeDifference = currentTime.timeIntervalSince(lastFetchedTimestamp)
+
+        guard areaId != lastFetchedAreaId || timeDifference > 60 else {
+            // If the area hasn't changed and it's been less than a minute, skip the fetch
+            print(
+                "Area hasn't changed or hasn't been a minute since last fetch.")
+            return
+        }
+
+        // Proceed with the fetch as area has changed or it's been more than a minute
+        self.lastFetchedAreaId = areaId
+        self.lastFetchedTimestamp = currentTime
         print(
             "UserViewModel - fetchUsersInArea: Fetching users in area \(areaId)"
         )
 
-        //        isLoading = true
+        let surroundingAreas = getSurroundingAreas(areaId: areaId)
         do {
-            let userDocuments = try await userManagementService.listUsersInArea(
-                areaId)
-            self.users = userDocuments.map { $0.data }
+            let userDocuments =
+                try await userManagementService.listUsersInAreas(
+                    surroundingAreas.map(\.id))
+            self.users = userDocuments.map(\.data)
             print(
                 "UserViewModel - fetchUsersInArea: Successfully fetched \(self.users.count) users."
             )
@@ -230,7 +252,32 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             )
             self.error = error.localizedDescription
         }
-        //        isLoading = false
+    }
+
+    func getSurroundingAreas(areaId: String, _ radius: Int = 75) -> [Area] {
+        // get the coordinateas of my area
+        // Ensure the radius is in kilometers
+        let radiusInKm = Double(radius) / 1000.0
+
+        // Get the coordinates of the current area
+        guard let myArea = areaData.first(where: { $0.id == areaId }) else {
+            print(
+                "UserViewModel - getSurroundingAreas: Could not find my area.")
+            return []
+        }
+
+        // Filter areas within the radius
+        let surroundingAreas = areaData.filter { area in
+            // Calculate the distance between the current area and each area
+            let distance = myArea.distance(from: area)
+            return distance <= radiusInKm
+        }
+
+        print(
+            "UserViewModel - getSurroundingAreas: Found \(surroundingAreas.count) areas."
+        )
+        print(surroundingAreas.map(\.name))
+        return surroundingAreas
     }
 
     // Aggregate unique interests from all users

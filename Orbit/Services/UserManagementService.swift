@@ -18,7 +18,7 @@ protocol UserManagementServiceProtocol {
         -> UserDocument?
     func deleteUser(_ accountId: String) async throws
     func listUsers(queries: [String]?) async throws -> [UserDocument]
-    func listUsersInArea(_ areaId: String) async throws -> [UserDocument]
+    func listUsersInAreas(_ areaIds: [String]) async throws -> [UserDocument]
 }
 
 class UserManagementService: UserManagementServiceProtocol {
@@ -138,9 +138,16 @@ class UserManagementService: UserManagementServiceProtocol {
         return documents.documents
     }
 
-    // List Users with similar areaId
-    func listUsersInArea(_ areaId: String) async throws -> [UserDocument] {
-        let query = Query.equal("currentAreaId", value: areaId)
+    func listUsersInAreas(_ areaIds: [String]) async throws -> [UserDocument] {
+        var query: String
+        if areaIds.count == 1 {
+            query = Query.equal("currentAreaId", value: areaIds.first ?? "")
+        } else {
+            query = Query.or(
+                areaIds.map { areaId in
+                    Query.equal("currentAreaId", value: areaId)
+                })
+        }
         return try await listUsers(queries: [query])
     }
 }
