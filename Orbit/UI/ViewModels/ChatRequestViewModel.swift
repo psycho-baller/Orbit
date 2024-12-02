@@ -44,6 +44,8 @@ class ChatRequestViewModel: ObservableObject {
 
     private func updateFilteredRequests() {
         guard let userId = activeUserId else { return }
+        // Sort documents in place by createdAt
+        requests.sort { $0.createdAt > $1.createdAt }
         incomingRequests = requests.filter { request in
             request.data.receiverAccountId == userId
         }
@@ -131,11 +133,11 @@ class ChatRequestViewModel: ObservableObject {
     }
 
     // MARK: - Respond to a Meet-Up Request
-
     @MainActor
     func respondToMeetUpRequest(
-        requestId: String, response: ChatRequestModel.RequestStatus
-    ) async {
+        requestId: String, receiverName: String,
+        response: ChatRequestModel.RequestStatus
+    ) async -> ConversationDocument? {
         isLoading = true
         defer { isLoading = false }
 
@@ -172,9 +174,6 @@ class ChatRequestViewModel: ObservableObject {
                     userId: participants[0], conversationId: conversation.id)
                 try await addConversationToUser(
                     userId: participants[1], conversationId: conversation.id)
-                let receiverName =
-                    try await userManagementService.getUser(
-                        updatedRequest.data.receiverAccountId)?.data.name ?? ""
                 try await notificationService.sendPushNotification(
                     to: [updatedRequest.data.senderAccountId],
                     title: "Request Approved!",
@@ -189,6 +188,7 @@ class ChatRequestViewModel: ObservableObject {
                         "type": "requestApproved",
                     ]
                 )
+                return conversation
             }
         } catch {
             self.errorMessage =
@@ -197,6 +197,7 @@ class ChatRequestViewModel: ObservableObject {
                 "Error responding to request: \(error.localizedDescription)"
             )
         }
+        return nil
     }
 
     @MainActor

@@ -14,6 +14,8 @@ struct MeetUpRequestDetailsView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var showChat = false
     var request: ChatRequestDocument
+    var approveRequest: (ChatRequestDocument) async -> Void
+    var declineRequest: (ChatRequestDocument) async -> Void
     var body: some View {
         NavigationStack {
             VStack {
@@ -63,22 +65,17 @@ struct MeetUpRequestDetailsView: View {
 
                         HStack {
                             Button("Approve") {
+                                dismiss()
                                 Task {
-                                    await chatRequestVM.respondToMeetUpRequest(
-                                        requestId: request.id,
-                                        response: .approved
-                                    )
+                                    await approveRequest(request)
                                 }
                             }
                             .buttonStyle(.borderedProminent)
 
                             Button("Decline") {
+                                dismiss()
                                 Task {
-                                    await chatRequestVM.respondToMeetUpRequest(
-                                        requestId: request.id,
-                                        response: .declined
-                                    )
-                                    dismiss()
+                                    await declineRequest(request)
                                 }
                             }
                             .buttonStyle(.bordered)
@@ -111,7 +108,13 @@ struct MeetUpRequestDetailsView: View {
 #if DEBUG
     #Preview {
         MeetUpRequestDetailsView(
-            request: (mockChatRequestDocument as? ChatRequestDocument)!
+            request: (mockChatRequestDocument as? ChatRequestDocument)!,
+            approveRequest: { _ in
+                print("Approveds")
+            },
+            declineRequest: { _ in
+                print("Declined")
+            }
         )
         .environmentObject(ChatRequestViewModel.mock())
         .environmentObject(UserViewModel.mock())
