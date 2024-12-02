@@ -96,6 +96,6 @@ struct InboxView: View {
                 await msgVM.unsubscribeFromInboxMessages()
             }
         }
-        .accentColor(.white)
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 }
