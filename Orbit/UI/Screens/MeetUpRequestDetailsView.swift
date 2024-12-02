@@ -12,30 +12,41 @@ struct MeetUpRequestDetailsView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var appState: AppState
     @State private var showChat = false
     var request: ChatRequestDocument
+    var approveRequest: (ChatRequestDocument) async -> Void
+    var declineRequest: (ChatRequestDocument) async -> Void
     var body: some View {
         NavigationStack {
-            HStack(alignment: .top, spacing: 0) {
-                // Profile Picture
-                if let user = userVM.users.first(where: {
-                    $0.accountId == request.data.senderAccountId
-                }),
-                    let profileUrl = user.profilePictureUrl,
-                    let url = URL(string: profileUrl)
-                {
-                    AsyncImage(url: url) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .overlay(
-                                Circle().stroke(
-                                    ColorPalette.accent(for: colorScheme),
-                                    lineWidth: 2))
-                    } placeholder: {
+            VStack {
+                HStack(alignment: .top, spacing: 0) {
+                    // Profile Picture
+                    if let user = userVM.users.first(where: {
+                        $0.accountId == request.data.senderAccountId
+                    }),
+                        let profileUrl = user.profilePictureUrl,
+                        let url = URL(string: profileUrl)
+                    {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 100, height: 100)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle().stroke(
+                                        ColorPalette.accent(for: colorScheme),
+                                        lineWidth: 2))
+                        } placeholder: {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 100, height: 100)
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
+                        }
+                    } else {
                         Image(systemName: "person.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -43,62 +54,51 @@ struct MeetUpRequestDetailsView: View {
                             .foregroundColor(
                                 ColorPalette.secondaryText(for: colorScheme))
                     }
-                } else {
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(
-                            ColorPalette.secondaryText(for: colorScheme))
-                }
 
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(
-                        "Meet-up request from \(userVM.getUserName(from: request.data.senderAccountId))"
-                    )
-                    .font(.headline)
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text(
+                            "Meet-up request from \(userVM.getUserName(from: request.data.senderAccountId))"
+                        )
+                        .font(.headline)
 
-                    Text(request.data.message)
+                        Text(request.data.message)
 
-                    HStack {
-                        Button("Approve") {
-                            Task {
-                                await chatRequestVM.respondToMeetUpRequest(
-                                    requestId: request.id,
-                                    response: .approved
-                                )
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
-
-                        Button("Decline") {
-                            Task {
-                                await chatRequestVM.respondToMeetUpRequest(
-                                    requestId: request.id,
-                                    response: .declined
-                                )
+                        HStack {
+                            Button("Approve") {
                                 dismiss()
+                                Task {
+                                    await approveRequest(request)
+                                }
                             }
+                            .buttonStyle(.borderedProminent)
+
+                            Button("Decline") {
+                                dismiss()
+                                Task {
+                                    await declineRequest(request)
+                                }
+                            }
+                            .buttonStyle(.bordered)
                         }
-                        .buttonStyle(.bordered)
                     }
                 }
+                .padding()
             }
-            .padding()
-        }
-        .onChange(of: chatRequestVM.newConversationId) { _, newValue in
-            if newValue != nil {
-                showChat = true
-                dismiss()
+            .onChange(of: chatRequestVM.newConversationId) { _, newValue in
+                if newValue != nil {
+                    showChat = true
+                    dismiss()
+                }
             }
-        }
-        .sheet(isPresented: $showChat) {
-            if let conversationId = chatRequestVM.newConversationId {
-                NavigationStack {
-                    MessageView(
-                        conversationId: conversationId,
-                        messagerName: userVM.getUserName(from: request.data.senderAccountId)
-                    )
+            .sheet(isPresented: $showChat) {
+                if let conversationId = chatRequestVM.newConversationId {
+                    NavigationStack {
+                        MessageView(
+                            conversationId: conversationId,
+                            messagerName: userVM.getUserName(
+                                from: request.data.senderAccountId)
+                        )
+                    }
                 }
             }
         }
@@ -108,7 +108,13 @@ struct MeetUpRequestDetailsView: View {
 #if DEBUG
     #Preview {
         MeetUpRequestDetailsView(
-            request: (mockChatRequestDocument as? ChatRequestDocument)!
+            request: (mockChatRequestDocument as? ChatRequestDocument)!,
+            approveRequest: { _ in
+                print("Approveds")
+            },
+            declineRequest: { _ in
+                print("Declined")
+            }
         )
         .environmentObject(ChatRequestViewModel.mock())
         .environmentObject(UserViewModel.mock())

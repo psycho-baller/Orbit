@@ -101,6 +101,7 @@ struct PendingUserCardView: View {
             Task {
                 await chatRequestVM.respondToMeetUpRequest(
                     requestId: request.id,
+                    receiverName: "",
                     response: .declined
                 )
             }

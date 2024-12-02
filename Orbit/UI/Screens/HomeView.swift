@@ -15,14 +15,15 @@ struct HomeView: View {
     @State private var showLogoutAlert = false
 
     var body: some View {
-        NavigationStack(path: $appState.navigationPath) {
+        NavigationView {
             ZStack {
                 content
                     .navigationTitle(
-                        userVM.isOnCampus || isPreviewMode
-                            ? (userVM.currentArea.map { "Astronauts in \($0)" }
-                                ?? "Astronauts around you")
-                            : ""
+                        "Astronauts around you"
+                        //                        userVM.isOnCampus || isPreviewMode
+                        //                            ? (userVM.currentArea.map { "\($0)" }
+                        //                                ?? "Astronauts around you")
+                        //                            : ""
                     )
 
                     .navigationBarTitleDisplayMode(
@@ -295,4 +296,3 @@ struct HomeView: View {
 
     }
 #endif
-

@@ -10,7 +10,7 @@ import SwiftUI
 
 class ChatRequestViewModel: ObservableObject {
     @Published var requests: [ChatRequestDocument] = [] {
-        didSet { //Called when requests is modified
+        didSet {  //Called when requests is modified
             updateFilteredRequests()
         }
     }
@@ -20,27 +20,32 @@ class ChatRequestViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var selectedRequest: ChatRequestDocument?
     @Published var newConversationId: String?
-    
+
     private let chatRequestService: ChatRequestServiceProtocol
     private let notificationService: NotificationServiceProtocol
     private let messagingService: MessagingServiceProtocol
-    private let messagingViewModel: MessagingViewModel
+    private let userManagementService: UserManagementServiceProtocol
     private var activeUserId: String?
-    
+
     init(
         chatRequestService: ChatRequestServiceProtocol = ChatRequestService(),
-        notificationService: NotificationServiceProtocol = NotificationService(),
+        notificationService: NotificationServiceProtocol =
+            NotificationService(),
         messagingService: MessagingServiceProtocol = MessagingService(),
-        messagingViewModel: MessagingViewModel = MessagingViewModel()
+        userManagementService: UserManagementServiceProtocol =
+            UserManagementService()
+
     ) {
         self.chatRequestService = chatRequestService
         self.notificationService = notificationService
         self.messagingService = messagingService
-        self.messagingViewModel = messagingViewModel
+        self.userManagementService = userManagementService
     }
-    
+
     private func updateFilteredRequests() {
         guard let userId = activeUserId else { return }
+        // Sort documents in place by createdAt
+        requests.sort { $0.createdAt > $1.createdAt }
         incomingRequests = requests.filter { request in
             request.data.receiverAccountId == userId
         }
@@ -48,38 +53,48 @@ class ChatRequestViewModel: ObservableObject {
             request.data.senderAccountId == userId
         }
     }
-    
+
     @MainActor
     func fetchRequestsForUser(userId: String) async {
         do {
             self.activeUserId = userId
-            let fetchedRequestsDocuments = try await chatRequestService.getMeetUpRequests(
-                userId: userId, limit: nil, offset: nil)
+            let fetchedRequestsDocuments =
+                try await chatRequestService.getMeetUpRequests(
+                    userId: userId, limit: nil, offset: nil)
             DispatchQueue.main.async {
                 self.requests = fetchedRequestsDocuments
             }
         } catch {
-            self.errorMessage = "Failed to load requests: \(error.localizedDescription)"
+            self.errorMessage =
+                "Failed to load requests: \(error.localizedDescription)"
         }
     }
-    
+
     // MARK: - Send a Meet-Up Request
 
     @MainActor
-    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?) async {
-        isLoading = true
-        defer { isLoading = false }
-
+    func sendMeetUpRequest(request: ChatRequestModel, from senderName: String?)
+        async
+    {
         do {
-            let requestDoc = try await chatRequestService.sendMeetUpRequest(request)
+            print("Sending meet-up request...")
+            let requestDoc = try await chatRequestService.sendMeetUpRequest(
+                request)
+            print("Created meet-up request: \(requestDoc)")
+
+            // Add to sent requests tracking
+            //            markRequestSent(to: request.receiverAccountId)
             self.requests.append(requestDoc)
 
+            // Send push notification
             try await notificationService.sendPushNotification(
                 to: [request.receiverAccountId],
-                title: "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
-                body: requestDoc.data.message,
+                title:
+                    "New meet-up request\(senderName.map { " from \($0)" } ?? "")",
+                body: request.message,
                 data: [
-                    "requestId": requestDoc.id
+                    "requestId": requestDoc.id,
+                    "type": "newMeetupRequest",
                 ]
             )
         } catch {
@@ -87,9 +102,11 @@ class ChatRequestViewModel: ObservableObject {
                 "Failed to send meet-up request: \(error.localizedDescription)"
         }
     }
-    
+
     func hasSentRequest(to accountId: String) -> Bool {
-        return outgoingRequests.contains { $0.data.receiverAccountId == accountId }
+        return outgoingRequests.contains {
+            $0.data.receiverAccountId == accountId
+        }
     }
 
     // MARK: - Fetch a Specific Meet-Up Request
@@ -100,7 +117,9 @@ class ChatRequestViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            if let request = try await chatRequestService.getMeetUpRequest(requestId: requestId) {
+            if let request = try await chatRequestService.getMeetUpRequest(
+                requestId: requestId)
+            {
                 return request
             } else {
                 self.errorMessage = "Meet-up request not found."
@@ -113,72 +132,96 @@ class ChatRequestViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Outgoing Pending Requests for Dropdown
-
-    @MainActor
-    func fetchOutgoingPendingRequests(userId: String) async {
-        do {
-            let fetchedRequests = try await chatRequestService.getMeetUpRequests(
-                userId: userId, limit: nil, offset: nil
-            )
-            DispatchQueue.main.async {
-                self.outgoingRequests = fetchedRequests.filter { request in
-                    request.data.status == .pending &&
-                    request.data.senderAccountId == userId
-                }
-            }
-        } catch {
-            self.errorMessage =
-                "Failed to load outgoing pending requests: \(error.localizedDescription)"
-            print("Error loading outgoing pending requests: \(error.localizedDescription)")
-        }
-    }
-
     // MARK: - Respond to a Meet-Up Request
-
     @MainActor
-    func respondToMeetUpRequest(requestId: String, response: ChatRequestModel.RequestStatus) async {
+    func respondToMeetUpRequest(
+        requestId: String, receiverName: String,
+        response: ChatRequestModel.RequestStatus
+    ) async -> ConversationDocument? {
         isLoading = true
         defer { isLoading = false }
-        
+
         do {
-            let updatedRequest = try await chatRequestService.updateMeetUpRequestStatus(
-                requestId: requestId,
-                status: response
-            )
-            
-            if let index = requests.firstIndex(where: { $0.id == requestId }) {
+            let updatedRequest =
+                try await chatRequestService.updateMeetUpRequestStatus(
+                    requestId: requestId,
+                    status: response
+                )
+
+            if let index = requests.firstIndex(where: {
+                $0.id == requestId
+            }) {
                 requests[index] = updatedRequest
             }
-            
+
             if response == .approved {
-                let participants = [updatedRequest.data.senderAccountId, updatedRequest.data.receiverAccountId]
-                
+                let participants = [
+                    updatedRequest.data.senderAccountId,
+                    updatedRequest.data.receiverAccountId,
+                ]
+
                 // Create conversation and get its ID directly
-                let conversationData = ConversationModel(participants: participants)
-                let conversation = try await messagingService.createConversation(conversationData)
+                let conversationData = ConversationModel(
+                    participants: participants
+                )
+                let conversation =
+                    try await messagingService.findOrCreateConversation(
+                        conversationData)
                 self.newConversationId = conversation.id
-                
+
                 // Update both users' conversation lists
-                await messagingViewModel.createConversation(participants)
-                
+                try await addConversationToUser(
+                    userId: participants[0], conversationId: conversation.id)
+                try await addConversationToUser(
+                    userId: participants[1], conversationId: conversation.id)
                 try await notificationService.sendPushNotification(
                     to: [updatedRequest.data.senderAccountId],
                     title: "Request Approved!",
-                    body: "Your meet-up request has been approved. Start chatting!",
+                    body:
+                        "Your meet-up request to \(receiverName) has been approved. Start chatting!",
                     data: [
-                        "conversationId": conversation.id,
-                        "type": "request_approved"
+                        "conversation": [
+                            "id": conversation.id,
+                            "receiverName": receiverName,
+                            "senderId": updatedRequest.data.senderAccountId,
+                        ],
+                        "type": "requestApproved",
                     ]
                 )
+                return conversation
             }
         } catch {
-            self.errorMessage = "Failed to respond to request: \(error.localizedDescription)"
-            print("Error responding to request: \(error.localizedDescription)")
+            self.errorMessage =
+                "Failed to respond to request: \(error.localizedDescription)"
+            print(
+                "Error responding to request: \(error.localizedDescription)"
+            )
         }
+        return nil
+    }
+
+    @MainActor
+    func addConversationToUser(
+        userId: String, conversationId: String
+    ) async throws {
+        if let userModel = try await userManagementService.getUser(
+            userId)
+        {
+            var conversations = userModel.data.conversations ?? []
+            if !conversations.contains(conversationId) {
+                conversations.append(conversationId)
+                let updatedUser = userModel.data.update(
+                    conversations: conversations)
+                try await userManagementService.updateUser(
+                    accountId: userId, updatedUser: updatedUser)
+                print(
+                    "DEBUG: Updated conversations for user \(userId): \(conversations)"
+                )
+            }
+        }
+
     }
 }
-
 // MARK: - Mock for SwiftUI Preview
 #if DEBUG
     extension ChatRequestViewModel {
@@ -190,13 +233,3 @@ class ChatRequestViewModel: ObservableObject {
         }
     }
 #endif
-
-
-
-
-
-
-
-
-
-
