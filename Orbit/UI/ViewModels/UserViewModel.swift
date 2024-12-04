@@ -101,8 +101,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     //Get the User's name from their ID. (Used for chat requests)
     func getUserName(from id: String) -> String {
-        if let user = users.first(where: { $0.accountId == id }) {
-            return user.name
+        //        space inefficient
+        if let userFromLocal = allUsers.first(where: { $0.accountId == id }) {
+            return userFromLocal.name
         }
         return "Unknown"
     }

@@ -189,7 +189,7 @@ struct MeetUpRequestsListView: View {
                     }
                 }
             }
-            .navigationTitle("Meetup Requests")
+            .navigationTitle("Meet-up Requests")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 refreshRequests()
@@ -204,6 +204,7 @@ struct MeetUpRequestsListView: View {
                     declineRequest: declineRequest)
             }
             .presentationDetents([.medium, .large])
+            .presentationBackground(.ultraThinMaterial)
 
         }
     }
@@ -249,7 +250,7 @@ struct MeetUpRequestRow: View {
             // Text Content
             VStack(alignment: .leading, spacing: 8) {
                 Text(
-                    "From: \(userVM.getUserName(from: request.data.senderAccountId))"
+                    "\(userVM.getUserName(from: request.data.senderAccountId))"
                 )
                 .font(.title)
                 .padding(.top, 4)
