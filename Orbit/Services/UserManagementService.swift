@@ -139,6 +139,9 @@ class UserManagementService: UserManagementServiceProtocol {
     }
 
     func listUsersInAreas(_ areaIds: [String]) async throws -> [UserDocument] {
+        if areaIds.count == 0 {
+            return []
+        }
         var query: String
         if areaIds.count == 1 {
             query = Query.equal("currentAreaId", value: areaIds.first ?? "")

@@ -226,18 +226,17 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     }
 
     @MainActor
-    func fetchUsersInArea(areaId: String) async {
+    func updateSurroundingUsers(areaId: String) async {
         // Initialize lastFetchedTimestamp if it's nil
+        let currentTime = Date()
         if lastFetchedTimestamp == nil {
-            self.lastFetchedAreaId = areaId
-            self.lastFetchedTimestamp = Date()
+            self.lastFetchedTimestamp = currentTime
         }
 
-        guard let lastFetchedTimestamp = lastFetchedTimestamp else {
+        guard let lastFetchedTimestamp = self.lastFetchedTimestamp else {
             // This guard should only ever fail if something goes wrong after initialization.
             return
         }
-        let currentTime = Date()
         let timeDifference = currentTime.timeIntervalSince(lastFetchedTimestamp)
 
         guard areaId != lastFetchedAreaId || timeDifference > 60 else {
@@ -272,22 +271,28 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     }
 
     func getSurroundingAreas(areaId: String, _ radius: Int = 75) -> [Area] {
-        // get the coordinateas of my area
-        // Ensure the radius is in kilometers
-        let radiusInKm = Double(radius) / 1000.0
-
         // Get the coordinates of the current area
-        guard let myArea = areaData.first(where: { $0.id == areaId }) else {
-            print(
-                "UserViewModel - getSurroundingAreas: Could not find my area.")
+        let myArea = areaData.first(where: { $0.id == areaId })
+
+        guard let myLatitude = self.currentLocation?.latitude ?? myArea?.lat,
+            let myLongitude = self.currentLocation?.longitude ?? myArea?.lon
+        else {
             return []
         }
 
+        let myLocation = CLLocation(
+            latitude: myLatitude,
+            longitude: myLongitude
+        )
+
         // Filter areas within the radius
         let surroundingAreas = areaData.filter { area in
+            let areaLocation = CLLocation(
+                latitude: area.lat, longitude: area.lon)
             // Calculate the distance between the current area and each area
-            let distance = myArea.distance(from: area)
-            return distance <= radiusInKm
+            let distance = myLocation.distance(
+                from: areaLocation)
+            return distance <= Double(radius)
         }
 
         print(
@@ -378,7 +383,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             Task {
                 await updateUserGeneralLocation(areaId: nearestArea.id)
                 if !isPreviewMode {
-                    await fetchUsersInArea(areaId: nearestArea.id)
+                    await updateSurroundingUsers(areaId: nearestArea.id)
                 }
             }
         }
