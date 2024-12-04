@@ -26,6 +26,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var selectedRadius: Double = 10.0
     @Published var isOnCampus = false  // Track if the user is inside campus
+    @Published var allUsers: [UserModel] = []
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -57,6 +58,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         preciseLocationManager?.delegate = self  // Set delegate to receive location updates
         await fetchCurrentUser()
         await subscribeToRealtimeUpdates()
+        self.allUsers = await getAllUsers()
     }
 
     @MainActor
@@ -79,7 +81,22 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             )
             self.error = error.localizedDescription
         }
+    }
 
+    /// Get all users in the DB
+    func getAllUsers() async -> [UserModel] {
+        do {
+            let allUsers = try await userManagementService.listUsers(queries: [
+                Query.equal("isInterestedToMeet", value: true)
+            ])
+            return allUsers.map(\.data)
+
+        } catch {
+            print(
+                "UserViewModel - Source: getAllUsers - Error: \(error.localizedDescription)"
+            )
+        }
+        return []
     }
 
     //Get the User's name from their ID. (Used for chat requests)

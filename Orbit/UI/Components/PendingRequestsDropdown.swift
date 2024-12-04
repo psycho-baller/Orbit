@@ -16,9 +16,9 @@ struct PendingRequestsDropdown: View {
     var pendingRequests: [UserModel] {
         let sentToUserIds = chatRequestVM.outgoingRequests.filter { request in
             request.data.status == .pending
-        }.map { $0.data.receiverAccountId }
+        }.map(\.data.receiverAccountId)
 
-        return userVM.filteredUsers.filter { user in
+        return userVM.allUsers.filter { user in
             sentToUserIds.contains(user.accountId)
         }
     }
