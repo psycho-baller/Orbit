@@ -54,6 +54,7 @@ class ChatRequestViewModel: ObservableObject {
 
     @MainActor
     func fetchRequestsForUser(userId: String) async {
+        #warning("this should be a subscription")
         do {
             self.activeUserId = userId
             let fetchedRequestsDocuments =
