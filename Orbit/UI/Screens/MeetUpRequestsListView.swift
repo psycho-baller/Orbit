@@ -271,10 +271,12 @@ struct MeetUpRequestRow: View {
     }
 }
 
-#Preview {
-    @Previewable @State var previewDetent: PresentationDetent = .medium
+#if DEBUG
+    #Preview {
+        @Previewable @State var previewDetent: PresentationDetent = .medium
 
-    MeetUpRequestsListView(chatRequestListDetent: $previewDetent)
-        .environmentObject(ChatRequestViewModel.mock())
-        .environmentObject(UserViewModel.mock())
-}
+        MeetUpRequestsListView(chatRequestListDetent: $previewDetent)
+            .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(UserViewModel.mock())
+    }
+#endif

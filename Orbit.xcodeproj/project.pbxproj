@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -882,6 +882,7 @@
 				DEVELOPMENT_ASSET_PATHS = Orbit/Resources;
 				DEVELOPMENT_TEAM = 3V2UU7RRK9;
 				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = NO;
 				"INFOPLIST_FILE[sdk=*]" = "$(SRCROOT)/Orbit/Resources/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Orbit;

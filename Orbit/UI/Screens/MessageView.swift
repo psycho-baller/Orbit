@@ -5,15 +5,15 @@
 //  Created by Devon Tran on 2024-11-01.
 //
 
-import SwiftUI
 import CoreLocation
 import MapKit
+import SwiftUI
 
 struct MessageView: View {
     @EnvironmentObject private var msgVM: MessagingViewModel
     @EnvironmentObject private var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
-    
+
     @State private var isLocationChoicePresented: Bool = false
     @State private var sharedLocation: CLLocationCoordinate2D?
     //@State private var selectedLocation: CLLocationCoordinate2D?
@@ -23,48 +23,54 @@ struct MessageView: View {
     let conversationId: String
     let messagerName: String
 
-
     var body: some View {
         VStack {
             VStack {
-               
+
                 // Chat Header
                 ChatProfileTitle(
                     messagerName: messagerName, isInMessageView: true)
 
-                    ScrollView {
-                        ForEach($msgVM.messages, id: \.id) { $messageDocument in
-                            if !messageDocument.data.senderAccountId.isEmpty {
-                                MessageBox(
-                                    messageDocument: messageDocument,
-                                    sharedLocation: $sharedLocation
-                                )
-                                    .id(messageDocument.id)  // Assign unique ID to each message
-                            }
+                ScrollView {
+                    ForEach($msgVM.messages, id: \.id) { $messageDocument in
+                        if !messageDocument.data.senderAccountId.isEmpty {
+                            MessageBox(
+                                messageDocument: messageDocument,
+                                sharedLocation: $sharedLocation
+                            )
+                            .id(messageDocument.id)  // Assign unique ID to each message
                         }
                     }
-                    .defaultScrollAnchor(.bottom)
-                    .padding(.bottom, 10)
-                    .background(colorScheme == .light ? .white : ColorPalette.background(for: colorScheme))
-                    .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
+                }
+                .defaultScrollAnchor(.bottom)
+                .padding(.bottom, 10)
+                .background(
+                    colorScheme == .light
+                        ? .white : ColorPalette.background(for: colorScheme)
+                )
+                .cornerRadius(radius: 30, corners: [.topLeft, .topRight])
             }
-            .background(colorScheme == .light ? ColorPalette.accent(for: ColorScheme.light) : ColorPalette.background(for: colorScheme))
-            
-            HStack{
-                Button(action: {isLocationChoicePresented.toggle()})
-                {
+            .background(
+                colorScheme == .light
+                    ? ColorPalette.accent(for: ColorScheme.light)
+                    : ColorPalette.background(for: colorScheme))
+
+            HStack {
+                Button(action: { isLocationChoicePresented.toggle() }) {
                     Image(systemName: "mappin.and.ellipse.circle.fill")
-                        .foregroundColor(colorScheme == .light ? .white : Color(.systemGray5))
+                        .foregroundColor(
+                            colorScheme == .light ? .white : Color(.systemGray5)
+                        )
                         .padding(10)
                         .background(ColorPalette.accent(for: ColorScheme.light))
                         .cornerRadius(50)
                 }
                 .padding(.leading, 10)
-                
+
                 // Message Input Field
                 MessageField(text: $newMessageText, onSend: sendMessage)
             }
-       
+
         }
         .onAppear {
             Task {
@@ -73,9 +79,10 @@ struct MessageView: View {
                 await msgVM.subscribeToMessages(
                     conversationId: conversationId
                 ) { newMessage in
-                    DispatchQueue.main.async{
+                    DispatchQueue.main.async {
                         print(
-                            "MessageView - Received new message: \(newMessage.data.message)")
+                            "MessageView - Received new message: \(newMessage.data.message)"
+                        )
 
                         if !msgVM.messages.contains(where: {
                             $0.id == newMessage.id
@@ -84,19 +91,23 @@ struct MessageView: View {
                             msgVM.messages.sort { $0.createdAt < $1.createdAt }
                             msgVM.lastMessageId = newMessage.id
                         }
-                        
-                        Task{
-                            if let currentUserId = userVM.currentUser?.accountId {
-                                await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+
+                        Task {
+                            if let currentUserId = userVM.currentUser?.accountId
+                            {
+                                await msgVM.markMessagesRead(
+                                    conversationId: conversationId,
+                                    currentAccountId: currentUserId)
                             }
-                            
+
                         }
                     }
-                        
-                   
+
                 }
                 if let currentUserId = userVM.currentUser?.accountId {
-                    await msgVM.markMessagesRead(conversationId: conversationId, currentAccountId: currentUserId)
+                    await msgVM.markMessagesRead(
+                        conversationId: conversationId,
+                        currentAccountId: currentUserId)
                 }
             }
         }
@@ -108,66 +119,75 @@ struct MessageView: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .sheet(isPresented: $isLocationChoicePresented) {  //sheet for location sharing
-            ZStack{
+            ZStack {
                 Color(ColorPalette.background(for: colorScheme))
                     .ignoresSafeArea(.all)
-                
-                VStack(spacing: 0){
+
+                VStack(spacing: 0) {
                     HStack {
-                        Button("Close"){
+                        Button("Close") {
                             isLocationChoicePresented = false
                         }
-                        .foregroundColor(colorScheme == .light ? .black : .white)
-        
+                        .foregroundColor(
+                            colorScheme == .light ? .black : .white)
+
                         Spacer()
                     }
                     .overlay(
                         Text("Location")
                             .normalSemiBoldFont()
                             .frame(maxWidth: .infinity, alignment: .center)
-                    
+
                     )
                     .padding()
-                    .background(ColorPalette.background(for: colorScheme).ignoresSafeArea(.all))
-                    
+                    .background(
+                        ColorPalette.background(for: colorScheme)
+                            .ignoresSafeArea(.all))
+
                     if let currentLocation = userVM.currentLocation {
                         LocationChoosingView(
                             initialCoordinate: currentLocation,
-                            pinLocation:Binding(get: { msgVM.currentLocation ?? currentLocation },
-                                                set: { newCoordinate in
-                                                    msgVM.currentLocation = newCoordinate
-                                                    //msgVM.currentLocation = $0
-                                                    
-                                                
-                                                 }
-                                                ),
+                            pinLocation: Binding(
+                                get: {
+                                    msgVM.currentLocation ?? currentLocation
+                                },
+                                set: { newCoordinate in
+                                    msgVM.currentLocation = newCoordinate
+                                    //msgVM.currentLocation = $0
+
+                                }
+                            ),
                             onShareLocation: { selectedLocation in
                                 isLocationChoicePresented = false
-                                newMessageText = msgVM.encodeCoordinate(selectedLocation)
+                                newMessageText = msgVM.encodeCoordinate(
+                                    selectedLocation)
                                 sendMessage()
-                                print("The new coordinate is \(selectedLocation)")
+                                print(
+                                    "The new coordinate is \(selectedLocation)")
                             }
                         )
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea(.all))
+                        .background(
+                            Color(ColorPalette.background(for: colorScheme))
+                                .ignoresSafeArea(.all))
                     } else {
                         Text("Cannot determine location")
                     }
-                    
-                    
+
                 }
-                
+
             }
-            
+
         }
-        .background(Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea())
+        .background(
+            Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea()
+        )
         .onChange(of: isLocationChoicePresented) { wasPresented, isPresented in
             if let currentLocation = userVM.currentLocation {
                 msgVM.currentLocation = currentLocation
             }
-        } //ensures that when location choosing view is opened, the sharing pin begins at current user location
-        
-        
+        }  //ensures that when location choosing view is opened, the sharing pin begins at current user location
+
     }
     private func sendMessage() {
         Task {
@@ -182,12 +202,13 @@ struct MessageView: View {
         }
     }
 }
-
-#Preview {
-    MessageView(
-        conversationId: "exampleConversationId",
-        messagerName: "Allen the Alien"
-    )
-    .environmentObject(UserViewModel.mock())
-    .environmentObject(MessagingViewModel())
-}
+#if DEBUG
+    #Preview {
+        MessageView(
+            conversationId: "exampleConversationId",
+            messagerName: "Allen the Alien"
+        )
+        .environmentObject(UserViewModel.mock())
+        .environmentObject(MessagingViewModel())
+    }
+#endif
