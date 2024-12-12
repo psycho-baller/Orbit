@@ -8,50 +8,52 @@
 import SwiftUI
 
 struct MessagesList: View {
-    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environmen
+    @EnvironmentObject private var userVM: UserViewModel
+    @EnvironmentObject var appState: AppState
+    @Environment(\.colorScheme) var colorScheme  // Access color scheme from environment
     var conversations: [ConversationDetailModel]  //input
 
-    
     var body: some View {
-   
-            
-            List{
-                ForEach(conversations){conversation in
-                    NavigationLink(destination: MessageView(conversationId: conversation.id, messagerName: conversation.messagerName)
-                    ){
-                        HStack{
-                            InboxRow(
-                                messagerName: conversation.messagerName,
-                                lastMessage: conversation.lastMessage,
-                                timestamp: conversation.timestamp,
-                                isRead: conversation.isRead
-                            )
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                       
-                        
-                        
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(conversations) { conversation in
+                    Button {
+                        appState.messagesNavigationPath.append(conversation)
+                    } label: {
+                        InboxRow(
+                            messagerName: conversation.messagerName,
+                            lastMessage: conversation.lastMessage,
+                            timestamp: conversation.timestamp,
+                            isRead: conversation.isRead,
+                            isCurrentUserSender: conversation.lastSenderId
+                                == userVM.currentUser?.accountId
+                        )
+                        .padding(.vertical, 8)
+                        .contentShape(Rectangle())
                     }
-                    
-                    .listRowBackground(ColorPalette.background(for: colorScheme))
-                    
-                    
-                    
+                    .buttonStyle(PlainButtonStyle())
+
+                    Divider()
+                        .background(
+                            ColorPalette.secondaryText(for: colorScheme))
                 }
             }
-            .listStyle(PlainListStyle())
-            .frame(height: UIScreen.main.bounds.height - 120)
-            //.scrollContentBackground(.hidden)
-            //.background(ColorPalette.background(for: colorScheme))
-           
-            
-            
+            .padding(.horizontal)
+            .padding(.top, 8)
         }
+        .scrollIndicators(.hidden)
+    }
 }
 
 #Preview {
     MessagesList(conversations: [
-        ConversationDetailModel(id: "conv1", messagerName: "John Doe", lastMessage: "Hey, how's it going?", timestamp: "Today", isRead: false),
-        ConversationDetailModel(id: "conv2", messagerName: "Jane Smith", lastMessage: "Can we meet tomorrow?", timestamp: "Yesterday", isRead: false)
+        ConversationDetailModel(
+            id: "conv1", messagerName: "John Doe",
+            lastMessage: "Hey, how's it going?", timestamp: "Today",
+            isRead: false, lastSenderId: "845673845"),
+        ConversationDetailModel(
+            id: "conv2", messagerName: "Jane Smith",
+            lastMessage: "Can we meet tomorrow?", timestamp: "Yesterday",
+            isRead: false, lastSenderId: "285782564"),
     ])
 }
