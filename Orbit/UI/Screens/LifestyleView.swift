@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct LifestyleView: View {
+    @EnvironmentObject var userVM: UserViewModel
     @StateObject private var viewModel = LifestyleViewModel()
-    @State private var showProfileView = false  // State to navigate to next screen
+    @State private var showHomeScreen = false  // State to navigate to next screen
     
     // Define the grid layout for three columns
     let columns = [
@@ -55,9 +56,35 @@ struct LifestyleView: View {
                 
                 // Navigation button to the next screen
                 Button(action: {
-                    showProfileView = true  // Navigate to next screen
+                    let selectedAnswers = viewModel.questions.flatMap { question in
+                        question.options.filter { $0.isSelected }.map { $0.title }
+                    }
+
+                    Task {
+                        await userVM.saveOnboardingData(
+                            profileQuestions: nil,  // Already handled in previous screens
+                            socialStyle: nil,       // Already handled in previous screens
+                            interactionPreferences: nil,  // Already handled in previous screens
+                            friendshipValues: nil,  // Already handled in previous screens
+                            socialSituations: nil,  // Already handled in previous screens
+                            lifestylePreferences: selectedAnswers  // Final screen data
+                        )
+
+                        // Mark onboarding as complete
+                        userVM.currentUser?.hasCompletedOnboarding = true  // Update locally
+                        await userVM.saveOnboardingData(
+                            profileQuestions: userVM.currentUser?.profileQuestions,
+                            socialStyle: userVM.currentUser?.socialStyle,
+                            interactionPreferences: userVM.currentUser?.interactionPreferences,
+                            friendshipValues: userVM.currentUser?.friendshipValues,
+                            socialSituations: userVM.currentUser?.socialSituations,
+                            lifestylePreferences: userVM.currentUser?.lifestylePreferences
+                        )
+                    }
+
+                    showHomeScreen = true
                 }) {
-                    Text("Next")
+                    Text("Finish")
                         .font(.headline)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -65,16 +92,18 @@ struct LifestyleView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+
+
                 .background(
                     NavigationLink(
-                        destination: ProfileView()
-                            .environmentObject(UserViewModel())  // Inject UserViewModel
-                            .environmentObject(AuthViewModel()), // Inject AuthViewModel
-                        isActive: $showProfileView
+                        destination: HomeView()
+                            .environmentObject(userVM),  // Pass UserViewModel
+                        isActive: $showHomeScreen
                     ) {
                         EmptyView()
                     }
                 )
+
                 
             }
         }

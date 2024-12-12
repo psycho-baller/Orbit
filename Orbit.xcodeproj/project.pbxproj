@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,7 +27,7 @@
 		25117F6A2CF772DB00ACE9C8 /* LightGrayOrMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */; };
 		252746E62CE82AC800365712 /* MeetUpRequestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */; };
 		252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */; };
-		2553B44E2CF019E500E14E2B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2553B44D2CF019E500E14E2B /* AppDelegate.swift */; };
+		2553B44E2CF019E500E14E2B /* (null) in Sources */ = {isa = PBXBuildFile; };
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
 		2585DFF02CF8E400003F3B7F /* TermsAndPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2585DFEF2CF8E400003F3B7F /* TermsAndPrivacyView.swift */; };
 		258769832CF4C82700D4D4EA /* HomeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258769822CF4C82700D4D4EA /* HomeSettings.swift */; };
@@ -87,7 +87,6 @@
 		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
 		61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137602CC4AFD600E7BA6C /* ProfileView.swift */; };
 		61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137622CC4B02C00E7BA6C /* ImagePicker.swift */; };
-		AE36B84B2CF2D62400C7078F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE36B84A2CF2D62400C7078F /* OnboardingView.swift */; };
 		AE36B84D2CF2D64C00C7078F /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE36B84C2CF2D64C00C7078F /* OnboardingViewModel.swift */; };
 		AE36B84F2CF2D67400C7078F /* ProfileQuestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE36B84E2CF2D67400C7078F /* ProfileQuestionsView.swift */; };
 		AE36B8512CF2D69100C7078F /* ProfileQuestionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE36B8502CF2D69100C7078F /* ProfileQuestionsViewModel.swift */; };
@@ -209,7 +208,6 @@
 		61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = BAHNSCHRIFT.TTF; sourceTree = "<group>"; };
 		61E137602CC4AFD600E7BA6C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		61E137622CC4B02C00E7BA6C /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
-		AE36B84A2CF2D62400C7078F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		AE36B84C2CF2D64C00C7078F /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		AE36B84E2CF2D67400C7078F /* ProfileQuestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileQuestionsView.swift; sourceTree = "<group>"; };
 		AE36B8502CF2D69100C7078F /* ProfileQuestionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileQuestionsViewModel.swift; sourceTree = "<group>"; };
@@ -263,7 +261,6 @@
 			isa = PBXGroup;
 			children = (
 				25F1BDAE2CF2656B0036D7E1 /* NotificationService.swift */,
-				2553B44D2CF019E500E14E2B /* AppDelegate.swift */,
 				0669F9492CD1CCA30031D154 /* MessagingService.swift */,
 				25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */,
 				259CB2792CC0460400C9F285 /* PreciseLocationManagerDelegate.swift */,
@@ -315,8 +312,8 @@
 				259CB2882CC0465600C9F285 /* MainTabView.swift */,
 				259CB2892CC0465600C9F285 /* LoginView.swift */,
 				259CB28A2CC0465600C9F285 /* HomeView.swift */,
-				25D90B0C2CE6EC3000463D67 /* ChatRequestView.swift */,
 				259CB28B2CC0465600C9F285 /* SignupView.swift */,
+				25D90B0C2CE6EC3000463D67 /* ChatRequestView.swift */,
 				259CB28C2CC0465600C9F285 /* ContentView.swift */,
 				0669F9552CD6D87C0031D154 /* MessagesView.swift */,
 				61E137602CC4AFD600E7BA6C /* ProfileView.swift */,
@@ -324,7 +321,6 @@
 				0088BFE02CD85A92002B4B9D /* ChatProfileView.swift */,
 				0088BFE22CD890B2002B4B9D /* InboxView.swift */,
 				61129BC62CEC10D10076C793 /* UserCardView.swift */,
-				AE36B84A2CF2D62400C7078F /* OnboardingView.swift */,
 				AE36B84E2CF2D67400C7078F /* ProfileQuestionsView.swift */,
 				AE36B8522CF2D6C900C7078F /* SocialStyleView.swift */,
 				AE36B8542CF2D6CE00C7078F /* FriendshipValuesView.swift */,
@@ -693,7 +689,6 @@
 				005518CF2CE6E5A000F3E92B /* ConversationDetailModel.swift in Sources */,
 				0669F94C2CD6C6460031D154 /* MessageModel.swift in Sources */,
 				AE36B85F2CF2D6ED00C7078F /* SocialStyleViewModel.swift in Sources */,
-				AE36B84B2CF2D62400C7078F /* OnboardingView.swift in Sources */,
 				259CB2A32CC046F300C9F285 /* UserModels.swift in Sources */,
 				0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */,
 				0088BFE52CD8E691002B4B9D /* InboxRow.swift in Sources */,
@@ -714,7 +709,7 @@
 				259CB29F2CC0465600C9F285 /* ActivityIndicatorView.swift in Sources */,
 				AE36B86D2CF2D79B00C7078F /* ProfileQuestionsModel.swift in Sources */,
 				61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */,
-				2553B44E2CF019E500E14E2B /* AppDelegate.swift in Sources */,
+				2553B44E2CF019E500E14E2B /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,7 +897,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = Orbit/Resources;
-				DEVELOPMENT_TEAM = 3V2UU7RRK9;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				"INFOPLIST_FILE[sdk=*]" = "$(SRCROOT)/Orbit/Resources/Info.plist";
@@ -935,7 +930,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = Orbit/Resources;
-				DEVELOPMENT_TEAM = 3V2UU7RRK9;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				"INFOPLIST_FILE[sdk=*]" = "$(SRCROOT)/Orbit/Resources/Info.plist";
