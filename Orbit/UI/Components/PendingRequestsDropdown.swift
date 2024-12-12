@@ -13,16 +13,12 @@ struct PendingRequestsDropdown: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var isExpanded: Bool
 
-    /// Only include pending requests where a request has been sent
     var pendingRequests: [UserModel] {
-        // Get all users that we have sent requests to
-        let sentToUserIds = chatRequestVM.requests.filter { request in
+        let sentToUserIds = chatRequestVM.outgoingRequests.filter { request in
             request.data.status == .pending
-                && request.data.senderAccountId == userVM.currentUser?.accountId
-        }.map { $0.data.receiverAccountId }
+        }.map(\.data.receiverAccountId)
 
-        // Get the corresponding UserModel objects
-        return userVM.filteredUsers.filter { user in
+        return userVM.allUsers.filter { user in
             sentToUserIds.contains(user.accountId)
         }
     }
@@ -54,8 +50,7 @@ struct PendingRequestsDropdown: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .disabled(pendingRequests.isEmpty)
-            .opacity(
-                pendingRequests.isEmpty ? 0.5 : 1)
+            .opacity(pendingRequests.isEmpty ? 0.5 : 1)
 
             if isExpanded && !pendingRequests.isEmpty {
                 VStack(spacing: 16) {

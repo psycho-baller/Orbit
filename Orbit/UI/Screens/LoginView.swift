@@ -19,14 +19,13 @@ struct LoginView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        NavigationStack(path: $appState.navigationPath) {
+        NavigationView {
             AppwriteLogo {
                 loginContent  // Use the shared loginContent to avoid duplication
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
             .background(ColorPalette.background(for: colorScheme))
-
         }
     }
 

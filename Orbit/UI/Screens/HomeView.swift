@@ -15,14 +15,15 @@ struct HomeView: View {
     @State private var showLogoutAlert = false
 
     var body: some View {
-        NavigationStack(path: $appState.navigationPath) {
+        NavigationView {
             ZStack {
                 content
                     .navigationTitle(
-                        userVM.isOnCampus || isPreviewMode
-                            ? (userVM.currentArea.map { "Users in \($0)" }
-                                ?? "Users")
-                            : ""
+                        "Astronauts around you"
+                        //                        userVM.isOnCampus || isPreviewMode
+                        //                            ? (userVM.currentArea.map { "\($0)" }
+                        //                                ?? "Astronauts around you")
+                        //                            : ""
                     )
 
                     .navigationBarTitleDisplayMode(
@@ -132,8 +133,8 @@ struct HomeView: View {
 
     private var notificationBadge: some View {
         Group {
-            if chatRequestVM.requests.count > 0 {
-                Text("\(chatRequestVM.requests.count)")
+            if chatRequestVM.incomingRequests.count > 0 {
+                Text("\(chatRequestVM.incomingRequests.count)")
                     .font(.caption2)
                     .padding(5)
                     .foregroundColor(.white)
@@ -201,16 +202,16 @@ struct HomeView: View {
         .background(ColorPalette.background(for: colorScheme))
     }
 
-    private func hasPendingRequest(for user: UserModel) -> Bool {
+    private func hasPendingRequest(for userInQuestion: UserModel) -> Bool {
         guard let currentUserId = userVM.currentUser?.accountId else {
             return false
         }
 
         return chatRequestVM.requests.contains { request in
-            let receiverId = request.data.receiverAccountId
-            let senderId = request.data.senderAccountId
-            return receiverId == user.accountId
-                && senderId == currentUserId
+            let requestReceiverId = request.data.receiverAccountId
+            let requestSenderId = request.data.senderAccountId
+            return requestReceiverId == userInQuestion.accountId
+                && requestSenderId == currentUserId
                 && request.data.status == .pending
         }
     }
@@ -277,11 +278,7 @@ struct HomeView: View {
         }
 
         print("Loading requests for user: \(currentUserId)")
-
         await chatRequestVM.fetchRequestsForUser(userId: currentUserId)
-        print(
-            "Requests loaded successfully: \(chatRequestVM.requests.count) requests found."
-        )
     }
 }
 

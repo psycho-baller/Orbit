@@ -182,3 +182,7 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+
+extension Double {
+    var degreesToRadians: Double { return self * .pi / 180 }
+}

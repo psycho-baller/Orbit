@@ -32,7 +32,9 @@ struct HomeSettings: View {
         .padding()
     }
 }
-#Preview {
-    HomeSettings()
-        .environmentObject(UserViewModel.mock())
-}
+#if DEBUG
+    #Preview {
+        HomeSettings()
+            .environmentObject(UserViewModel.mock())
+    }
+#endif
