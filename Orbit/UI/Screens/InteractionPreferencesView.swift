@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct InteractionPreferencesView: View {
+    @EnvironmentObject var userVM: UserViewModel
     @StateObject private var viewModel = InteractionPreferencesViewModel()
     @State private var showSocialSituations = false  // State to navigate to next screen
 
@@ -55,7 +56,20 @@ struct InteractionPreferencesView: View {
                 
                 // Navigation button to the next screen
                 Button(action: {
-                    showSocialSituations = true  // Navigate to next screen
+                    let selectedAnswers = viewModel.questions.flatMap { question in
+                        question.options.filter { $0.isSelected }.map { $0.title }
+                    }
+                    Task {
+                        await userVM.saveOnboardingData(
+                            profileQuestions: nil,
+                            socialStyle: nil,
+                            interactionPreferences: selectedAnswers,
+                            friendshipValues: nil,
+                            socialSituations: nil,
+                            lifestylePreferences: nil
+                        )
+                    }
+                    showSocialSituations = true
                 }) {
                     Text("Next")
                         .font(.headline)
@@ -65,6 +79,7 @@ struct InteractionPreferencesView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+
                 .background(
                     NavigationLink("", destination: SocialSituationsView(), isActive: $showSocialSituations)
                 )

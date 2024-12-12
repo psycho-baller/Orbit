@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SocialStyleView: View {
+    @EnvironmentObject var userVM: UserViewModel
     @StateObject private var viewModel = SocialStyleViewModel()
     @State private var showFriendshipValues = false  // State to navigate to next screen
 
@@ -55,7 +56,20 @@ struct SocialStyleView: View {
                 
                 // Navigation button to the next screen
                 Button(action: {
-                    showFriendshipValues = true  // Navigate to next screen
+                    let selectedAnswers = viewModel.questions.flatMap { question in
+                        question.options.filter { $0.isSelected }.map { $0.title }
+                    }
+                    Task {
+                        await userVM.saveOnboardingData(
+                            profileQuestions: nil,
+                            socialStyle: selectedAnswers,
+                            interactionPreferences: nil,
+                            friendshipValues: nil,
+                            socialSituations: nil,
+                            lifestylePreferences: nil
+                        )
+                    }
+                    showFriendshipValues = true
                 }) {
                     Text("Next")
                         .font(.headline)
