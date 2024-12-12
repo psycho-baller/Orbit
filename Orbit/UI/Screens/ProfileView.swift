@@ -251,10 +251,11 @@ struct WrappingHStack: View {
 
 // MARK: - Preview
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
+#if DEBUG
+    #Preview {
         ProfileView()
             .environmentObject(AuthViewModel())
             .environmentObject(UserViewModel.mock())
+
     }
-}
+#endif

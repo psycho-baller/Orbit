@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct MessageBox: View {
     var messageDocument: MessageDocument
     @EnvironmentObject var userVM: UserViewModel
+    @EnvironmentObject var msgVM: MessagingViewModel
     @State private var showTime = false
     @State var isReceived = false
+    @Environment(\.colorScheme) var colorScheme
+    @Binding var sharedLocation: CLLocationCoordinate2D?
+    @State private var showFullMap = false
 
     var body: some View {
         let isReceived =
@@ -19,15 +24,60 @@ struct MessageBox: View {
             != userVM.currentUser?.accountId
         VStack(alignment: isReceived ? .leading : .trailing) {
             HStack {
-                Text(messageDocument.data.message)
-                    .padding()
-                    .background(
-                        isReceived
+                //for messages that are locations
+                if let location = msgVM.decodeCoordinate(from: messageDocument.data.message){
+                    MapPreview(location: location)
+                        .frame(width: 200, height: 150)
+                        .cornerRadius(15)
+                        .onTapGesture {
+                            sharedLocation = location
+                            showFullMap = true
+                        }
+                        .sheet(isPresented: $showFullMap){
+                            ZStack{
+                                Color(ColorPalette.background(for: colorScheme))
+                                    .ignoresSafeArea(.all)
+                                
+                                VStack(spacing: 0){
+                                    HStack {
+                                        Button("Close"){
+                                            showFullMap = false
+                                        }
+                                        .foregroundColor(colorScheme == .light ? .black : .white)
+                        
+                                        Spacer()
+                                    }
+                                    .overlay(
+                                        Text("Shared Location")
+                                            .normalSemiBoldFont()
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                    
+                                    )
+                                    .padding()
+                                    .background(ColorPalette.background(for: colorScheme).ignoresSafeArea(.all))
+                                    
+                                
+                                    FullMapView(sharedLocation: location)
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                } else {
+                    //regular messages
+                    Text(messageDocument.data.message)
+                        .padding()
+                        .background(
+                            isReceived
                             ? Color(.systemGray5)
-                            : ColorPalette.accent(for: ColorScheme.light)
-                    )
-                    .cornerRadius(20)
-                    .regularFont()
+                                : ColorPalette.accent(for: ColorScheme.light)
+                        )
+                        .cornerRadius(20)
+                        .regularFont()
+                    
+                }
             }
             .frame(maxWidth: 300, alignment: isReceived ? .leading : .trailing)
             .onTapGesture {
