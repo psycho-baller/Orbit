@@ -100,6 +100,8 @@ struct SignupView: View {
 
                             try await retryUserCreation(userData: myUser)
                             print("Account and user created successfully")
+                            presentationMode.wrappedValue.dismiss()  // close the signup view
+
 
                             // Navigate to onboarding flow
                             navigateToOnboarding = true
