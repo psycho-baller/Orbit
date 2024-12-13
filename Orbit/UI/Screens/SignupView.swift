@@ -33,7 +33,7 @@ struct SignupView: View {
                 .padding([.top, .bottom], 30)
 
                 HStack {
-                    Text("Join Millions of\n other users!")
+                    Text("Join Orbit and become\nan Astronaut!")
                         .largeSemiBoldFont()
                         .foregroundColor(ColorPalette.text(for: colorScheme))
                     Spacer()
@@ -42,7 +42,7 @@ struct SignupView: View {
                 Spacer().frame(height: 10)
 
                 HStack {
-                    Text("Create an account")
+                    Text("Join the community")
                         .largeLightFont()
                         .padding(.bottom)
                         .foregroundColor(
@@ -100,6 +100,11 @@ struct SignupView: View {
 
                             try await retryUserCreation(userData: myUser)
                             print("Account and user created successfully")
+<<<<<<< HEAD
+=======
+                            presentationMode.wrappedValue.dismiss()  // close the signup view
+
+>>>>>>> 6d51f6dbf8b60f0080ef565d5d332c23e0dc6580
 
                             // Navigate to onboarding flow
                             navigateToOnboarding = true
@@ -118,7 +123,7 @@ struct SignupView: View {
                 .background(ColorPalette.accent(for: colorScheme))
                 .cornerRadius(16.0)
 
-                TermsAndPrivacyView(forButtonLabel: "Create account")
+                TermsAndPrivacyView(forButtonLabel: "Join the community")
                     .padding(.top)
 
                 Spacer()

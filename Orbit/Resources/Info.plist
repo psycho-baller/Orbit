@@ -34,9 +34,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Please allow me to stalk you🥹</string>
+	<string>We need access to your location to show you nearby astronauts.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need access to your location to show nearby users.</string>
+	<string>We need access to your location to show you nearby astronauts.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>EnvironmentOverrides screenshots saving</string>
 	<key>UIAppFonts</key>

@@ -26,6 +26,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var selectedRadius: Double = 10.0
     @Published var isOnCampus = false  // Track if the user is inside campus
+    @Published var allUsers: [UserModel] = []
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -33,7 +34,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     private var preciseLocationManager: PreciseLocationManager?
     private var campusLocationManager: CampusLocationManager
     private let areaData: [Area]  // Load JSON area data
-    private var lastFetchedAreaId: String?  // Track last fetched area
+    var lastFetchedAreaId: String?
+    var lastFetchedTimestamp: Date?
     private var subscribeToLocationUpdates: RealtimeSubscription?
 
     init(
@@ -56,6 +58,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         preciseLocationManager?.delegate = self  // Set delegate to receive location updates
         await fetchCurrentUser()
         await subscribeToRealtimeUpdates()
+        self.allUsers = await getAllUsers()
     }
 
     @MainActor
@@ -78,7 +81,75 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             )
             self.error = error.localizedDescription
         }
+    }
+    
+    @MainActor
+    func saveOnboardingData(
+        profileQuestions: [String]?,
+        socialStyle: [String]?,
+        interactionPreferences: [String]?,
+        friendshipValues: [String]?,
+        socialSituations: [String]?,
+        lifestylePreferences: [String]?,
+        markComplete: Bool = false
+    ) async {
+        guard var currentUser = currentUser else {
+            print("Error: No current user found.")
+            return
+        }
 
+        // Update the user's onboarding data locally
+        currentUser.profileQuestions = profileQuestions
+        currentUser.socialStyle = socialStyle
+        currentUser.interactionPreferences = interactionPreferences
+        currentUser.friendshipValues = friendshipValues
+        currentUser.socialSituations = socialSituations
+        currentUser.lifestylePreferences = lifestylePreferences
+
+        if markComplete {
+            currentUser.hasCompletedOnboarding = true
+        }
+
+        do {
+            // Retrieve the correct document ID
+            guard let userDocument = try await userManagementService.getUser(currentUser.accountId) else {
+                print("Error: Unable to find user document.")
+                return
+            }
+
+            // Update the user in Appwrite database
+            let updatedDocument = try await AppwriteService.shared.databases.updateDocument(
+                databaseId: AppwriteService.shared.databaseId,
+                collectionId: "users",
+                documentId: userDocument.id,  // Use correct documentId
+                data: currentUser.toJson()
+            )
+
+            print("Onboarding data saved successfully for user: \(updatedDocument.id)")
+            self.currentUser = currentUser  // Update local currentUser
+        } catch {
+            print("Error saving onboarding data: \(error.localizedDescription)")
+            self.error = error.localizedDescription
+        }
+    }
+
+
+
+
+    /// Get all users in the DB
+    func getAllUsers() async -> [UserModel] {
+        do {
+            let allUsers = try await userManagementService.listUsers(queries: [
+                Query.equal("isInterestedToMeet", value: true)
+            ])
+            return allUsers.map(\.data)
+
+        } catch {
+            print(
+                "UserViewModel - Source: getAllUsers - Error: \(error.localizedDescription)"
+            )
+        }
+        return []
     }
     
     @MainActor
@@ -136,8 +207,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     //Get the User's name from their ID. (Used for chat requests)
     func getUserName(from id: String) -> String {
-        if let user = users.first(where: { $0.accountId == id }) {
-            return user.name
+        //        space inefficient
+        if let userFromLocal = allUsers.first(where: { $0.accountId == id }) {
+            return userFromLocal.name
         }
         return "Unknown"
     }
@@ -266,19 +338,39 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     }
 
     @MainActor
-    func fetchUsersInArea(areaId: String) async {
-        guard areaId != lastFetchedAreaId else { return }  // Fetch only if area changed
-        lastFetchedAreaId = areaId  // Update last fetched area
+    func updateSurroundingUsers(areaId: String) async {
+        // Initialize lastFetchedTimestamp if it's nil
+        let currentTime = Date()
+        if lastFetchedTimestamp == nil {
+            self.lastFetchedTimestamp = currentTime
+        }
 
+        guard let lastFetchedTimestamp = self.lastFetchedTimestamp else {
+            // This guard should only ever fail if something goes wrong after initialization.
+            return
+        }
+        let timeDifference = currentTime.timeIntervalSince(lastFetchedTimestamp)
+
+        guard areaId != lastFetchedAreaId || timeDifference > 60 else {
+            // If the area hasn't changed and it's been less than a minute, skip the fetch
+            print(
+                "Area hasn't changed or hasn't been a minute since last fetch.")
+            return
+        }
+
+        // Proceed with the fetch as area has changed or it's been more than a minute
+        self.lastFetchedAreaId = areaId
+        self.lastFetchedTimestamp = currentTime
         print(
             "UserViewModel - fetchUsersInArea: Fetching users in area \(areaId)"
         )
 
-        //        isLoading = true
+        let surroundingAreas = getSurroundingAreas(areaId: areaId)
         do {
-            let userDocuments = try await userManagementService.listUsersInArea(
-                areaId)
-            self.users = userDocuments.map { $0.data }
+            let userDocuments =
+                try await userManagementService.listUsersInAreas(
+                    surroundingAreas.map(\.id))
+            self.users = userDocuments.map(\.data)
             print(
                 "UserViewModel - fetchUsersInArea: Successfully fetched \(self.users.count) users."
             )
@@ -288,7 +380,38 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             )
             self.error = error.localizedDescription
         }
-        //        isLoading = false
+    }
+
+    func getSurroundingAreas(areaId: String, _ radius: Int = 75) -> [Area] {
+        // Get the coordinates of the current area
+        let myArea = areaData.first(where: { $0.id == areaId })
+
+        guard let myLatitude = self.currentLocation?.latitude ?? myArea?.lat,
+            let myLongitude = self.currentLocation?.longitude ?? myArea?.lon
+        else {
+            return []
+        }
+
+        let myLocation = CLLocation(
+            latitude: myLatitude,
+            longitude: myLongitude
+        )
+
+        // Filter areas within the radius
+        let surroundingAreas = areaData.filter { area in
+            let areaLocation = CLLocation(
+                latitude: area.lat, longitude: area.lon)
+            // Calculate the distance between the current area and each area
+            let distance = myLocation.distance(
+                from: areaLocation)
+            return distance <= Double(radius)
+        }
+
+        print(
+            "UserViewModel - getSurroundingAreas: Found \(surroundingAreas.count) areas."
+        )
+        print(surroundingAreas.map(\.name))
+        return surroundingAreas
     }
 
     // Aggregate unique interests from all users
@@ -303,7 +426,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         let selectedInterestsSet = Set(selectedInterests)
 
         return users.filter { user in
-            //            guard user.accountId != currentUser?.accountId else { return false }
+            guard user.accountId != currentUser?.accountId else { return false }
             guard user.isInterestedToMeet ?? false else { return false }
 
             let matchesSearchText =
@@ -372,7 +495,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             Task {
                 await updateUserGeneralLocation(areaId: nearestArea.id)
                 if !isPreviewMode {
-                    await fetchUsersInArea(areaId: nearestArea.id)
+                    await updateSurroundingUsers(areaId: nearestArea.id)
                 }
             }
         }
