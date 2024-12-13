@@ -10,14 +10,60 @@ import SwiftUI
 struct MeetUpRequestsListView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var userVM: UserViewModel
+    @EnvironmentObject var appState: AppState
     @Environment(\.colorScheme) var colorScheme
     @Binding var chatRequestListDetent: PresentationDetent
     @Environment(\.dismiss) var dismiss
-    @State private var navigateToChat = false
+
+    private func refreshRequests() {
+        guard let userId = userVM.currentUser?.accountId else { return }
+        Task {
+            await chatRequestVM.fetchRequestsForUser(userId: userId)
+        }
+    }
+
+    private func approveRequest(request: ChatRequestDocument) async {
+        let receiverName = userVM.getUserName(
+            from: request.data.receiverAccountId)
+        dismiss()
+        if let conversation =
+            await chatRequestVM
+            .respondToMeetUpRequest(
+                requestId: request.id,
+                receiverName: receiverName,
+                response: .approved
+            )
+        {
+
+            appState.selectedTab = .messages
+            appState.messagesNavigationPath.append(
+                ConversationDetailModel(
+                    id: conversation.id,
+                    messagerName: receiverName,
+                    lastMessage: "",
+                    timestamp: "Today",
+                    isRead: false,
+                    lastSenderId: request.data.senderAccountId
+                )
+            )
+        }
+    }
+
+    private func declineRequest(request: ChatRequestDocument) async {
+        let receiverName =
+            userVM.getUserName(
+                from: request.data
+                    .receiverAccountId)
+        await chatRequestVM
+            .respondToMeetUpRequest(
+                requestId: request.id,
+                receiverName: receiverName,
+                response: .declined
+            )
+    }
 
     var body: some View {
         NavigationStack {
-            //            ZStack {
             VStack(spacing: 0) {
                 if let error = chatRequestVM.errorMessage {
                     VStack {
@@ -40,7 +86,9 @@ struct MeetUpRequestsListView: View {
                         .tint(ColorPalette.accent(for: colorScheme))
                         .padding()
                     }
-                } else if chatRequestVM.requests.isEmpty {
+                } else if chatRequestVM.incomingRequests.filter({
+                    $0.data.status == .pending
+                }).isEmpty {
                     VStack(spacing: 16) {
                         Image(systemName: "tray")
                             .font(.system(size: 70))
@@ -69,7 +117,11 @@ struct MeetUpRequestsListView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 16) {
-                            ForEach(chatRequestVM.requests) { request in
+                            ForEach(
+                                chatRequestVM.incomingRequests.filter {
+                                    $0.data.status == .pending
+                                }
+                            ) { request in
                                 SwipeView {
                                     MeetUpRequestRow(request: request)
                                         .onTapGesture {
@@ -80,11 +132,8 @@ struct MeetUpRequestsListView: View {
                                 } leadingActions: { context in
                                     SwipeAction {
                                         Task {
-                                            await chatRequestVM
-                                                .respondToMeetUpRequest(
-                                                    requestId: request.id,
-                                                    response: .approved
-                                                )
+                                            await approveRequest(
+                                                request: request)
                                         }
                                     } label: { isHighlighted in
                                         VStack(spacing: 4) {
@@ -105,11 +154,8 @@ struct MeetUpRequestsListView: View {
                                 } trailingActions: { context in
                                     SwipeAction {
                                         Task {
-                                            await chatRequestVM
-                                                .respondToMeetUpRequest(
-                                                    requestId: request.id,
-                                                    response: .declined
-                                                )
+                                            await declineRequest(
+                                                request: request)
                                         }
                                     } label: { isHighlighted in
                                         VStack(spacing: 4) {
@@ -143,34 +189,24 @@ struct MeetUpRequestsListView: View {
                     }
                 }
             }
-            //            }
-            .navigationTitle("Meetup Requests")
+            .navigationTitle("Meet-up Requests")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                refreshRequests()
+            }
         }
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(32)
         .sheet(item: $chatRequestVM.selectedRequest) { request in
-            MeetUpRequestDetailsView(request: request)
-                .presentationDetents([.medium, .large])
-        }
-        .onChange(of: chatRequestVM.newConversationId) { oldValue, newValue in
-            if newValue != nil {
-                navigateToChat = true
-                dismiss()
+            NavigationStack {
+                MeetUpRequestDetailsView(
+                    request: request, approveRequest: approveRequest,
+                    declineRequest: declineRequest)
             }
-        }
-        .navigationDestination(isPresented: $navigateToChat) {
-            if let conversationId = chatRequestVM.newConversationId,
-                let request = chatRequestVM.selectedRequest
-            {
-                MessageView(
-                    conversationId: conversationId,
-                    messagerName: userVM.getUserName(
-                        from: request.data.senderAccountId)
-                )
-            }
-        }
+            .presentationDetents([.medium, .large])
+            .presentationBackground(.ultraThinMaterial)
 
+        }
     }
 }
 
@@ -214,7 +250,7 @@ struct MeetUpRequestRow: View {
             // Text Content
             VStack(alignment: .leading, spacing: 8) {
                 Text(
-                    "From: \(userVM.getUserName(from: request.data.senderAccountId))"
+                    "\(userVM.getUserName(from: request.data.senderAccountId))"
                 )
                 .font(.title)
                 .padding(.top, 4)
@@ -235,10 +271,12 @@ struct MeetUpRequestRow: View {
     }
 }
 
-#Preview {
-    @Previewable @State var previewDetent: PresentationDetent = .medium
+#if DEBUG
+    #Preview {
+        @Previewable @State var previewDetent: PresentationDetent = .medium
 
-    MeetUpRequestsListView(chatRequestListDetent: $previewDetent)
-        .environmentObject(ChatRequestViewModel.mock())
-        .environmentObject(UserViewModel.mock())
-}
+        MeetUpRequestsListView(chatRequestListDetent: $previewDetent)
+            .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(UserViewModel.mock())
+    }
+#endif

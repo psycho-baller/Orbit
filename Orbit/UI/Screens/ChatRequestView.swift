@@ -100,26 +100,29 @@ struct ChatRequestView: View {
         .padding(.top)  // Optional, to give a bit of space at the top
         //        .frame(maxWidth: .infinity, maxHeight: .infinity)
         //        .cornerRadius(15)
-        .alert(
-            "Error", isPresented: .constant(chatRequestVM.errorMessage != nil)
-        ) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(chatRequestVM.errorMessage ?? "")
-        }
+        //        .alert(
+        //            "Error", isPresented: .constant(chatRequestVM.errorMessage != nil)
+        //        ) {
+        //            Button("OK", role: .cancel) {}
+        //        } message: {
+        //            Text(chatRequestVM.errorMessage ?? "")
+        //        }
     }
 }
-
-#Preview {
-    let sender = UserModel(
-        accountId: "1", name: "John", interests: ["Swift", "iOS", "Coding"],
-        latitude: 40.7127, longitude: -74.0059, isInterestedToMeet: true,
-        conversations: ["1", "2", "3"], currentAreaId: "1")
-    let receiver = UserModel(
-        accountId: "2", name: "Jane", interests: ["Swift", "iOS", "Coding"],
-        latitude: 40.7127, longitude: -74.0059,
-        isInterestedToMeet: true,
-        conversations: ["1", "2", "3"], currentAreaId: "1")
-    ChatRequestView(sender: sender, receiver: receiver)
-        .environmentObject(ChatRequestViewModel.mock())
-}
+#if DEBUG
+    #Preview {
+        let sender = UserModel(
+            accountId: "1", name: "John",
+            interests: ["Swift", "iOS", "Coding"],
+            latitude: 40.7127, longitude: -74.0059, isInterestedToMeet: true,
+            conversations: ["1", "2", "3"], currentAreaId: "1")
+        let receiver = UserModel(
+            accountId: "2", name: "Jane",
+            interests: ["Swift", "iOS", "Coding"],
+            latitude: 40.7127, longitude: -74.0059,
+            isInterestedToMeet: true,
+            conversations: ["1", "2", "3"], currentAreaId: "1")
+        ChatRequestView(sender: sender, receiver: receiver)
+            .environmentObject(ChatRequestViewModel.mock())
+    }
+#endif

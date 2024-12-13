@@ -100,20 +100,85 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                 print("Alert Title: \(alertTitle)")
             }
 
-            // Access the "data" dictionary to extract the custom fields
-            if let data = aps["data"] as? [String: Any],
-                let requestId = data["requestId"] as? String {
-                print("requestId: \(requestId)", "data: \(data)", separator: "\n")
+            // Check if the "data" key exists and is a dictionary
+            if let data = aps["data"] as? [String: Any] {
+                print("Data dictionary: \(data)")
 
-                DispatchQueue.main.async {
-                    // self.appState.targetScreen = targetScreen
-                    self.appState.selectedRequestId = requestId
+                // Check if the "type" key exists in the "data" dictionary
+                if let notificationType = data["type"] as? String {
+                    print("Notification type: \(notificationType)")
+
+                    DispatchQueue.main.async {
+                        switch notificationType {
+                        case "requestApproved":
+                            // Check if "conversation" exists and is a dictionary
+                            if let conversation = data["conversation"]
+                                as? [String: String]
+                            {
+                                print("Conversation details: \(conversation)")
+
+                                if let conversationId = conversation["id"],
+                                    let receiverName = conversation[
+                                        "receiverName"],
+                                    let senderId = conversation["senderId"]
+                                {
+                                    print("Conversation ID: \(conversationId)")
+                                    print("Receiver Name: \(receiverName)")
+                                    print("Sender ID: \(senderId)")
+
+                                    self.appState.selectedTab = .messages
+                                    self.appState.messagesNavigationPath.append(
+                                        ConversationDetailModel(
+                                            id: conversationId,
+                                            messagerName: receiverName,
+                                            lastMessage: "",
+                                            timestamp: "Today",
+                                            isRead: false,
+                                            lastSenderId: senderId
+                                        )
+                                    )
+                                    print(
+                                        "Navigation path updated for conversation."
+                                    )
+                                } else {
+                                    print(
+                                        "Missing conversation fields (id, receiverName, senderId)."
+                                    )
+                                }
+                            } else {
+                                print(
+                                    "Failed to parse 'conversation' from data.")
+                            }
+
+                        case "newMeetupRequest":
+                            // Check if "requestId" exists
+                            if let requestId = data["requestId"] as? String {
+                                print("Request ID: \(requestId)")
+                                self.appState.selectedTab = .home
+                                self.appState.selectedRequestId = requestId
+                                print(
+                                    "Navigation path updated for meet-up request."
+                                )
+                            } else {
+                                print("Missing 'requestId' in data.")
+                            }
+
+                        default:
+                            print(
+                                "Unhandled notification type: \(notificationType)"
+                            )
+                        }
+                    }
+                } else {
+                    print("'type' key missing or invalid in data.")
                 }
+            } else {
+                print("'data' key missing or invalid in userInfo.")
             }
+
         } else {
             print("No APS dictionary found in userInfo")
         }
-
 
         completionHandler()
     }
