@@ -82,59 +82,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             self.error = error.localizedDescription
         }
     }
-    
-    @MainActor
-    func saveOnboardingData(
-        profileQuestions: [String]?,
-        socialStyle: [String]?,
-        interactionPreferences: [String]?,
-        friendshipValues: [String]?,
-        socialSituations: [String]?,
-        lifestylePreferences: [String]?,
-        markComplete: Bool = false
-    ) async {
-        guard var currentUser = currentUser else {
-            print("Error: No current user found.")
-            return
-        }
-
-        // Update the user's onboarding data locally
-        currentUser.profileQuestions = profileQuestions
-        currentUser.socialStyle = socialStyle
-        currentUser.interactionPreferences = interactionPreferences
-        currentUser.friendshipValues = friendshipValues
-        currentUser.socialSituations = socialSituations
-        currentUser.lifestylePreferences = lifestylePreferences
-
-        if markComplete {
-            currentUser.hasCompletedOnboarding = true
-        }
-
-        do {
-            // Retrieve the correct document ID
-            guard let userDocument = try await userManagementService.getUser(currentUser.accountId) else {
-                print("Error: Unable to find user document.")
-                return
-            }
-
-            // Update the user in Appwrite database
-            let updatedDocument = try await AppwriteService.shared.databases.updateDocument(
-                databaseId: AppwriteService.shared.databaseId,
-                collectionId: "users",
-                documentId: userDocument.id,  // Use correct documentId
-                data: currentUser.toJson()
-            )
-
-            print("Onboarding data saved successfully for user: \(updatedDocument.id)")
-            self.currentUser = currentUser  // Update local currentUser
-        } catch {
-            print("Error saving onboarding data: \(error.localizedDescription)")
-            self.error = error.localizedDescription
-        }
-    }
-
-
-
 
     /// Get all users in the DB
     func getAllUsers() async -> [UserModel] {
