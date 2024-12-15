@@ -131,26 +131,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
 
         do {
-            // Retrieve the correct document ID
-            guard
-                let userDocument = try await userManagementService.getUser(
-                    currentUser.accountId)
-            else {
-                print("Error: Unable to find user document.")
-                return
-            }
-
-            // Update the user in Appwrite database
-            let updatedDocument = try await AppwriteService.shared.databases
-                .updateDocument(
-                    databaseId: AppwriteService.shared.databaseId,
-                    collectionId: "users",
-                    documentId: userDocument.id,  // Use correct documentId
-                    data: currentUser.toJson()
-                )
-
+            let updatedDocument = try await userManagementService.updateUser(
+                accountId: currentUser.accountId, updatedUser: currentUser)
             print(
-                "Onboarding data saved successfully for user: \(updatedDocument.id)"
+                "Onboarding data saved successfully for user: \(updatedDocument?.id)"
             )
             self.currentUser = currentUser  // Update local currentUser
         } catch {
