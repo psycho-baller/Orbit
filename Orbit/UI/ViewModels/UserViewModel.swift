@@ -56,13 +56,12 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         )
         self.preciseLocationManager = PreciseLocationManager()
         preciseLocationManager?.delegate = self  // Set delegate to receive location updates
-        await fetchCurrentUser()
         await subscribeToRealtimeUpdates()
         self.allUsers = await getAllUsers()
     }
 
     @MainActor
-    private func fetchCurrentUser() async {
+    func fetchCurrentUser() async {
 
         do {
             if let user = try await userManagementService.getCurrentUser() {
@@ -98,7 +97,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
         return []
     }
-    
+
     @MainActor
     func saveOnboardingData(
         profileQuestions: [String]?,
@@ -115,12 +114,17 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
 
         // Update the user's onboarding data locally
-        currentUser.profileQuestions = profileQuestions
-        currentUser.socialStyle = socialStyle
-        currentUser.interactionPreferences = interactionPreferences
-        currentUser.friendshipValues = friendshipValues
-        currentUser.socialSituations = socialSituations
-        currentUser.lifestylePreferences = lifestylePreferences
+        currentUser.profileQuestions =
+            profileQuestions ?? currentUser.profileQuestions
+        currentUser.socialStyle = socialStyle ?? currentUser.socialStyle
+        currentUser.interactionPreferences =
+            interactionPreferences ?? currentUser.interactionPreferences
+        currentUser.friendshipValues =
+            friendshipValues ?? currentUser.friendshipValues
+        currentUser.socialSituations =
+            socialSituations ?? currentUser.socialSituations
+        currentUser.lifestylePreferences =
+            lifestylePreferences ?? currentUser.lifestylePreferences
 
         if markComplete {
             currentUser.hasCompletedOnboarding = true
@@ -128,29 +132,32 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
         do {
             // Retrieve the correct document ID
-            guard let userDocument = try await userManagementService.getUser(currentUser.accountId) else {
+            guard
+                let userDocument = try await userManagementService.getUser(
+                    currentUser.accountId)
+            else {
                 print("Error: Unable to find user document.")
                 return
             }
 
             // Update the user in Appwrite database
-            let updatedDocument = try await AppwriteService.shared.databases.updateDocument(
-                databaseId: AppwriteService.shared.databaseId,
-                collectionId: "users",
-                documentId: userDocument.id,  // Use correct documentId
-                data: currentUser.toJson()
-            )
+            let updatedDocument = try await AppwriteService.shared.databases
+                .updateDocument(
+                    databaseId: AppwriteService.shared.databaseId,
+                    collectionId: "users",
+                    documentId: userDocument.id,  // Use correct documentId
+                    data: currentUser.toJson()
+                )
 
-            print("Onboarding data saved successfully for user: \(updatedDocument.id)")
+            print(
+                "Onboarding data saved successfully for user: \(updatedDocument.id)"
+            )
             self.currentUser = currentUser  // Update local currentUser
         } catch {
             print("Error saving onboarding data: \(error.localizedDescription)")
             self.error = error.localizedDescription
         }
     }
-
-
-
 
     //Get the User's name from their ID. (Used for chat requests)
     func getUserName(from id: String) -> String {
@@ -161,9 +168,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         return "Unknown"
     }
 
-    
-    
-    
     // setCurrentUser
     @MainActor
     func updateCurrentUser(accountId: String) async {
@@ -222,8 +226,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
     }
 
-    
-    
     @MainActor
     func deleteUser(id: String) async {
         do {
