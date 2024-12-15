@@ -56,13 +56,12 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         )
         self.preciseLocationManager = PreciseLocationManager()
         preciseLocationManager?.delegate = self  // Set delegate to receive location updates
-        await fetchCurrentUser()
         await subscribeToRealtimeUpdates()
         self.allUsers = await getAllUsers()
     }
 
     @MainActor
-    private func fetchCurrentUser() async {
+    func fetchCurrentUser() async {
 
         do {
             if let user = try await userManagementService.getCurrentUser() {
@@ -97,6 +96,51 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             )
         }
         return []
+    }
+
+    @MainActor
+    func saveOnboardingData(
+        profileQuestions: [String]?,
+        socialStyle: [String]?,
+        interactionPreferences: [String]?,
+        friendshipValues: [String]?,
+        socialSituations: [String]?,
+        lifestylePreferences: [String]?,
+        markComplete: Bool = false
+    ) async {
+        guard var currentUser = currentUser else {
+            print("Error: No current user found.")
+            return
+        }
+
+        // Update the user's onboarding data locally
+        currentUser.profileQuestions =
+            profileQuestions ?? currentUser.profileQuestions
+        currentUser.socialStyle = socialStyle ?? currentUser.socialStyle
+        currentUser.interactionPreferences =
+            interactionPreferences ?? currentUser.interactionPreferences
+        currentUser.friendshipValues =
+            friendshipValues ?? currentUser.friendshipValues
+        currentUser.socialSituations =
+            socialSituations ?? currentUser.socialSituations
+        currentUser.lifestylePreferences =
+            lifestylePreferences ?? currentUser.lifestylePreferences
+
+        if markComplete {
+            currentUser.hasCompletedOnboarding = true
+        }
+
+        do {
+            let updatedDocument = try await userManagementService.updateUser(
+                accountId: currentUser.accountId, updatedUser: currentUser)
+            print(
+                "Onboarding data saved successfully for user: \(updatedDocument?.id)"
+            )
+            self.currentUser = currentUser  // Update local currentUser
+        } catch {
+            print("Error saving onboarding data: \(error.localizedDescription)")
+            self.error = error.localizedDescription
+        }
     }
 
     //Get the User's name from their ID. (Used for chat requests)

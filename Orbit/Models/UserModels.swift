@@ -25,15 +25,36 @@ struct UserModel: Codable, Identifiable, Equatable {
     var currentAreaId: String?  // References Area collection
     var profilePictureUrl: String?
 
+    // Onboarding-related fields
+    var profileQuestions: [String]?          // To store answers to Profile Questions
+    var socialStyle: [String]?               // To store answers to Social Style
+    var interactionPreferences: [String]?    // To store Interaction Preferences
+    var friendshipValues: [String]?          // To store Friendship Values
+    var socialSituations: [String]?          // To store Social Situations
+    var lifestylePreferences: [String]?      // To store Lifestyle Preferences
+    var hasCompletedOnboarding: Bool? = false // Indicates if onboarding is completed
+
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
     }
 
     init(
-        accountId: String, name: String, interests: [String]? = nil,
-        latitude: Double? = nil, longitude: Double? = nil,
-        isInterestedToMeet: Bool? = nil, conversations: [String]? = nil,
-        currentAreaId: String? = nil, profilePictureUrl: String? = nil
+        accountId: String,
+        name: String,
+        interests: [String]? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil,
+        isInterestedToMeet: Bool? = nil,
+        conversations: [String]? = nil,
+        currentAreaId: String? = nil,
+        profilePictureUrl: String? = nil,
+        profileQuestions: [String]? = nil,
+        socialStyle: [String]? = nil,
+        interactionPreferences: [String]? = nil,
+        friendshipValues: [String]? = nil,
+        socialSituations: [String]? = nil,
+        lifestylePreferences: [String]? = nil,
+        hasCompletedOnboarding: Bool? = false
     ) {
         self.accountId = accountId
         self.name = name
@@ -44,14 +65,30 @@ struct UserModel: Codable, Identifiable, Equatable {
         self.conversations = conversations
         self.currentAreaId = currentAreaId
         self.profilePictureUrl = profilePictureUrl
+        self.profileQuestions = profileQuestions
+        self.socialStyle = socialStyle
+        self.interactionPreferences = interactionPreferences
+        self.friendshipValues = friendshipValues
+        self.socialSituations = socialSituations
+        self.lifestylePreferences = lifestylePreferences
+        self.hasCompletedOnboarding = hasCompletedOnboarding
     }
+
+
+
     func update(
         name: String? = nil,
         interests: [String]? = nil,
         latitude: Double? = nil,
         longitude: Double? = nil,
         isInterestedToMeet: Bool? = nil,
-        conversations: [String]? = nil
+        conversations: [String]? = nil,
+        profileQuestions: [String]? = nil,
+        socialStyle: [String]? = nil,
+        interactionPreferences: [String]? = nil,
+        friendshipValues: [String]? = nil,
+        socialSituations: [String]? = nil,
+        lifestylePreferences: [String]? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,  // accountId stays the same
@@ -60,9 +97,19 @@ struct UserModel: Codable, Identifiable, Equatable {
             latitude: latitude ?? self.latitude,
             longitude: longitude ?? self.longitude,
             isInterestedToMeet: isInterestedToMeet ?? self.isInterestedToMeet,
-            conversations: conversations ?? self.conversations
+            conversations: conversations ?? self.conversations,
+            currentAreaId: self.currentAreaId,  // currentAreaId remains unchanged
+            profilePictureUrl: self.profilePictureUrl,  // profilePictureUrl remains unchanged
+            profileQuestions: profileQuestions ?? self.profileQuestions,
+            socialStyle: socialStyle ?? self.socialStyle,
+            interactionPreferences: interactionPreferences ?? self.interactionPreferences,
+            friendshipValues: friendshipValues ?? self.friendshipValues,
+            socialSituations: socialSituations ?? self.socialSituations,
+            lifestylePreferences: lifestylePreferences ?? self.lifestylePreferences
         )
     }
+}
+
 
     var profileImageURL: URL?
     var inactiveAreas: [Int] = []  // Array of area_id references
@@ -84,7 +131,7 @@ struct UserModel: Codable, Identifiable, Equatable {
     //    let friends: [String]?
     //    let profilePictureId: String?  // Reference to the File ID
     //    let settings: Settings?
-}
+
 
 struct TimeRangeConfig: Codable {
     var dayOfWeek: Int  // 0 is monday, 1 is tuesday, and so on

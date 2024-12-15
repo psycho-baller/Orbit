@@ -23,7 +23,7 @@ struct ContentView: View {
                 SplashScreenView(isActive: $showSplashScreen)
             } else {
                 if authVM.isLoggedIn {
-                    MainTabView()
+                    LoggedInView()
                 } else if !authVM.isLoggedIn && !authVM.isLoading {
                     LoginView()
                         //                            .navigationDestination(for: String.self) { screen in

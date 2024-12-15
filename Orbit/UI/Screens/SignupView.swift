@@ -11,6 +11,7 @@ struct SignupView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var name = ""
+    @State private var navigateToOnboarding = false
 
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var userVM: UserViewModel
@@ -68,12 +69,14 @@ struct SignupView: View {
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
                 Spacer().frame(height: 16)
+
                 Button("Create account") {
                     Task {
                         do {
                             // Step 1: Create account using auth
                             let newUser = try await authVM.create(
-                                name: name, email: email, password: password)
+                                name: name, email: email, password: password
+                            )
 
                             // Step 2: Ensure the account creation was successful
                             guard let userId = newUser?.id,
@@ -87,12 +90,20 @@ struct SignupView: View {
                             let myUser = UserModel(
                                 accountId: userId,
                                 name: userName,
-                                interests: nil
+                                interests: nil,
+                                profileQuestions: [],
+                                socialStyle: [],
+                                interactionPreferences: [],
+                                friendshipValues: [],
+                                socialSituations: [],
+                                lifestylePreferences: []
                             )
 
                             try await retryUserCreation(userData: myUser)
                             print("Account and user created successfully")
                             presentationMode.wrappedValue.dismiss()  // close the signup view
+
+                            // Navigate to onboarding flow
                         } catch {
                             // Handle potential failures and roll back account creation
                             print("Error: \(error.localizedDescription)")
@@ -100,6 +111,7 @@ struct SignupView: View {
                         }
                     }
                 }
+
                 .regularFont()
                 .padding()
                 .foregroundColor(.white)
@@ -114,11 +126,12 @@ struct SignupView: View {
             }
             .padding([.leading, .trailing], 27.5)
             .navigationBarHidden(true)
+
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))
-
     }
+
     func retryUserCreation(userData: UserModel, retries: Int = 3) async throws {
         var attempts = 0
         while attempts < retries {
