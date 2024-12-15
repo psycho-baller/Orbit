@@ -11,7 +11,7 @@ struct ProfileQuestionsView: View {
     @EnvironmentObject var userVM: UserViewModel
     @ObservedObject var onboardingVM: OnboardingViewModel
     @Environment(\.colorScheme) var colorScheme  // Detect system color scheme
-    @StateObject private var profileQuestionsViewModel =
+    @StateObject private var viewModel =
         ProfileQuestionsViewModel()
 
     // Define the grid layout for three columns
@@ -44,7 +44,7 @@ struct ProfileQuestionsView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 30) {
                         // Loop through each question
-                        ForEach(profileQuestionsViewModel.questions) {
+                        ForEach(viewModel.questions) {
                             question in
                             VStack(alignment: .leading, spacing: 12) {
                                 Text(question.text)
@@ -79,7 +79,7 @@ struct ProfileQuestionsView: View {
                                             )
                                             .cornerRadius(10)
                                             .onTapGesture {
-                                                profileQuestionsViewModel
+                                                viewModel
                                                     .toggleSelection(
                                                         for: option,
                                                         in: question)
@@ -95,9 +95,10 @@ struct ProfileQuestionsView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        onboardingVM.navigationPath.append(OnboardingViewModel.OnboardingStep.socialStyle)
+                        onboardingVM.navigationPath.append(
+                            OnboardingViewModel.OnboardingStep.socialStyle)
 
-                        let selectedAnswers = profileQuestionsViewModel
+                        let selectedAnswers = viewModel
                             .questions.flatMap {
                                 question in
                                 question.options.filter { $0.isSelected }.map {
@@ -134,11 +135,15 @@ struct ProfileQuestionsView: View {
                 .background(ColorPalette.background(for: colorScheme))  // Add background color to footer
             }
         }
+        .onAppear {
+            // Update the ViewModel with the correct user data
+            viewModel.loadQuestions(with: userVM.currentUser)
+        }
     }
 
     private func canProceed() -> Bool {
         // Ensure at least one option is selected for each question
-        return profileQuestionsViewModel.questions.allSatisfy { question in
+        return viewModel.questions.allSatisfy { question in
             question.options.contains { $0.isSelected }
         }
     }

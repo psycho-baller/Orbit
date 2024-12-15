@@ -9,6 +9,7 @@ import SwiftUI
 
 // Onboarding Data Model
 class OnboardingViewModel: ObservableObject {
+    
     @Published var navigationPath = NavigationPath()  // Store the stack path
     @Published var onboardingData: OnboardingData = OnboardingData()
     @Published var hasCompletedOnboarding = false  // Tracks if onboarding is completed

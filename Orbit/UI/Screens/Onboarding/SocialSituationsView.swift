@@ -132,6 +132,10 @@ struct SocialSituationsView: View {
                 .background(ColorPalette.background(for: colorScheme))  // Add background color to footer
             }
         }
+        .onAppear {
+            // Update the ViewModel with the correct user data
+            viewModel.loadQuestions(with: userVM.currentUser)
+        }
     }
 
     private func canProceed() -> Bool {

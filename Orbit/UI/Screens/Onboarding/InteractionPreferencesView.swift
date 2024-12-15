@@ -17,7 +17,7 @@ struct InteractionPreferencesView: View {
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible()),
     ]
 
     var body: some View {
@@ -37,7 +37,7 @@ struct InteractionPreferencesView: View {
                         .padding(.top, 15)
                         .padding(.bottom, 20)
                 }
-                .background(ColorPalette.background(for: colorScheme)) // Keep header static
+                .background(ColorPalette.background(for: colorScheme))  // Keep header static
 
                 // Scrollable Content
                 ScrollView {
@@ -48,7 +48,9 @@ struct InteractionPreferencesView: View {
                                 Text(question.text)
                                     .font(.headline)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                    .foregroundColor(
+                                        ColorPalette.secondaryText(
+                                            for: colorScheme))
 
                                 // Use LazyVGrid for a multi-column layout with three columns
                                 LazyVGrid(columns: columns, spacing: 12) {
@@ -56,12 +58,27 @@ struct InteractionPreferencesView: View {
                                         Text(option.title)
                                             .padding(.horizontal, 12)
                                             .padding(.vertical, 8)
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                            .background(option.isSelected ? ColorPalette.accent(for: colorScheme) : ColorPalette.lightGray(for: colorScheme))
-                                            .foregroundColor(option.isSelected ? .white : ColorPalette.text(for: colorScheme))
+                                            .frame(
+                                                maxWidth: .infinity,
+                                                alignment: .center
+                                            )
+                                            .background(
+                                                option.isSelected
+                                                    ? ColorPalette.accent(
+                                                        for: colorScheme)
+                                                    : ColorPalette.lightGray(
+                                                        for: colorScheme)
+                                            )
+                                            .foregroundColor(
+                                                option.isSelected
+                                                    ? .white
+                                                    : ColorPalette.text(
+                                                        for: colorScheme)
+                                            )
                                             .cornerRadius(10)
                                             .onTapGesture {
-                                                viewModel.toggleSelection(for: option, in: question)
+                                                viewModel.toggleSelection(
+                                                    for: option, in: question)
                                             }
                                     }
                                 }
@@ -76,10 +93,14 @@ struct InteractionPreferencesView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        let selectedAnswers = viewModel.questions.flatMap { question in
-                            question.options.filter { $0.isSelected }.map { $0.title }
+                        let selectedAnswers = viewModel.questions.flatMap {
+                            question in
+                            question.options.filter { $0.isSelected }.map {
+                                $0.title
+                            }
                         }
-                        onboardingVM.navigationPath.append(OnboardingViewModel.OnboardingStep.socialSituations)
+                        onboardingVM.navigationPath.append(
+                            OnboardingViewModel.OnboardingStep.socialSituations)
                         Task {
                             await userVM.saveOnboardingData(
                                 profileQuestions: nil,
@@ -95,7 +116,11 @@ struct InteractionPreferencesView: View {
                             .font(.headline)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(canProceed() ? ColorPalette.accent(for: colorScheme) : ColorPalette.lightGray(for: colorScheme))
+                            .background(
+                                canProceed()
+                                    ? ColorPalette.accent(for: colorScheme)
+                                    : ColorPalette.lightGray(for: colorScheme)
+                            )
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -105,6 +130,10 @@ struct InteractionPreferencesView: View {
                 .padding(.bottom, 20)  // Ensure some spacing at the bottom
                 .background(ColorPalette.background(for: colorScheme))  // Add background color to footer
             }
+        }
+        .onAppear {
+            // Update the ViewModel with the correct user data
+            viewModel.loadQuestions(with: userVM.currentUser)
         }
     }
 
