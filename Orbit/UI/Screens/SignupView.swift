@@ -80,7 +80,8 @@ struct SignupView: View {
 
                             // Step 2: Ensure the account creation was successful
                             guard let userId = newUser?.id,
-                                  let userName = newUser?.name else {
+                                let userName = newUser?.name
+                            else {
                                 print("Error: User ID or Name is nil")
                                 return
                             }
@@ -103,7 +104,6 @@ struct SignupView: View {
                             presentationMode.wrappedValue.dismiss()  // close the signup view
 
                             // Navigate to onboarding flow
-                            navigateToOnboarding = true
                         } catch {
                             // Handle potential failures and roll back account creation
                             print("Error: \(error.localizedDescription)")
@@ -127,14 +127,6 @@ struct SignupView: View {
             .padding([.leading, .trailing], 27.5)
             .navigationBarHidden(true)
 
-            NavigationLink(
-                destination: ProfileQuestionsView() // Onboarding starts here
-                    .environmentObject(userVM)
-                    .environmentObject(authVM),
-                isActive: $navigateToOnboarding
-            ) {
-                EmptyView()
-            }
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))
