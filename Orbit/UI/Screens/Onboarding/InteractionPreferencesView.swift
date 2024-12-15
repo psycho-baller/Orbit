@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct InteractionPreferencesView: View {
+    @ObservedObject var onboardingVM: OnboardingViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme  // Detect system color scheme
     @StateObject private var viewModel = InteractionPreferencesViewModel()
-    @State private var showSocialSituations = false  // State to navigate to the next screen
 
     // Define the grid layout for three columns
     let columns = [
@@ -79,6 +79,7 @@ struct InteractionPreferencesView: View {
                         let selectedAnswers = viewModel.questions.flatMap { question in
                             question.options.filter { $0.isSelected }.map { $0.title }
                         }
+                        onboardingVM.navigationPath.append(OnboardingViewModel.OnboardingStep.socialSituations)
                         Task {
                             await userVM.saveOnboardingData(
                                 profileQuestions: nil,
@@ -89,7 +90,6 @@ struct InteractionPreferencesView: View {
                                 lifestylePreferences: nil
                             )
                         }
-                        showSocialSituations = true
                     }) {
                         Text("Next")
                             .font(.headline)
@@ -101,15 +101,6 @@ struct InteractionPreferencesView: View {
                     }
                     .disabled(!canProceed())
                     .padding(.horizontal)
-                    .background(
-                        NavigationLink(
-                            destination: SocialSituationsView()
-                                .environmentObject(userVM),
-                            isActive: $showSocialSituations
-                        ) {
-                            EmptyView()
-                        }
-                    )
                 }
                 .padding(.bottom, 20)  // Ensure some spacing at the bottom
                 .background(ColorPalette.background(for: colorScheme))  // Add background color to footer
@@ -127,7 +118,7 @@ struct InteractionPreferencesView: View {
 
 struct InteractionPreferencesView_Previews: PreviewProvider {
     static var previews: some View {
-        InteractionPreferencesView()
+        InteractionPreferencesView(onboardingVM: OnboardingViewModel())
             .environmentObject(UserViewModel())
     }
 }

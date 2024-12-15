@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct LifestyleView: View {
+    @ObservedObject var onboardingVM: OnboardingViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme  // Detect system color scheme
     @StateObject private var viewModel = LifestyleViewModel()
-    @State private var showHomeScreen = false  // State to navigate to the home screen
 
     // Define the grid layout for three columns
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible()),
     ]
 
     var body: some View {
@@ -37,7 +37,7 @@ struct LifestyleView: View {
                         .padding(.top, 15)
                         .padding(.bottom, 20)
                 }
-                .background(ColorPalette.background(for: colorScheme)) // Keep header static
+                .background(ColorPalette.background(for: colorScheme))  // Keep header static
 
                 // Scrollable Content
                 ScrollView {
@@ -48,7 +48,9 @@ struct LifestyleView: View {
                                 Text(question.text)
                                     .font(.headline)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                    .foregroundColor(
+                                        ColorPalette.secondaryText(
+                                            for: colorScheme))
 
                                 // Use LazyVGrid for a multi-column layout with three columns
                                 LazyVGrid(columns: columns, spacing: 12) {
@@ -56,12 +58,27 @@ struct LifestyleView: View {
                                         Text(option.title)
                                             .padding(.horizontal, 12)
                                             .padding(.vertical, 8)
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                            .background(option.isSelected ? ColorPalette.accent(for: colorScheme) : ColorPalette.lightGray(for: colorScheme))
-                                            .foregroundColor(option.isSelected ? .white : ColorPalette.text(for: colorScheme))
+                                            .frame(
+                                                maxWidth: .infinity,
+                                                alignment: .center
+                                            )
+                                            .background(
+                                                option.isSelected
+                                                    ? ColorPalette.accent(
+                                                        for: colorScheme)
+                                                    : ColorPalette.lightGray(
+                                                        for: colorScheme)
+                                            )
+                                            .foregroundColor(
+                                                option.isSelected
+                                                    ? .white
+                                                    : ColorPalette.text(
+                                                        for: colorScheme)
+                                            )
                                             .cornerRadius(10)
                                             .onTapGesture {
-                                                viewModel.toggleSelection(for: option, in: question)
+                                                viewModel.toggleSelection(
+                                                    for: option, in: question)
                                             }
                                     }
                                 }
@@ -76,53 +93,43 @@ struct LifestyleView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        let selectedAnswers = viewModel.questions.flatMap { question in
-                            question.options.filter { $0.isSelected }.map { $0.title }
+                        let selectedAnswers = viewModel.questions.flatMap {
+                            question in
+                            question.options.filter { $0.isSelected }.map {
+                                $0.title
+                            }
                         }
 
                         Task {
                             await userVM.saveOnboardingData(
                                 profileQuestions: nil,  // Already handled in previous screens
-                                socialStyle: nil,       // Already handled in previous screens
+                                socialStyle: nil,  // Already handled in previous screens
                                 interactionPreferences: nil,  // Already handled in previous screens
                                 friendshipValues: nil,  // Already handled in previous screens
                                 socialSituations: nil,  // Already handled in previous screens
-                                lifestylePreferences: selectedAnswers  // Final screen data
+                                lifestylePreferences: selectedAnswers,  // Final screen data
+                                markComplete: true
                             )
-
-                            // Mark onboarding as complete
-                            userVM.currentUser?.hasCompletedOnboarding = true  // Update locally
-                            await userVM.saveOnboardingData(
-                                profileQuestions: userVM.currentUser?.profileQuestions,
-                                socialStyle: userVM.currentUser?.socialStyle,
-                                interactionPreferences: userVM.currentUser?.interactionPreferences,
-                                friendshipValues: userVM.currentUser?.friendshipValues,
-                                socialSituations: userVM.currentUser?.socialSituations,
-                                lifestylePreferences: userVM.currentUser?.lifestylePreferences
-                            )
+                            onboardingVM.completeOnboarding()
                         }
 
-                        showHomeScreen = true
+                        //                        showHomeScreen = true
+
                     }) {
                         Text("Finish")
                             .font(.headline)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(canProceed() ? ColorPalette.accent(for: colorScheme) : ColorPalette.lightGray(for: colorScheme))
+                            .background(
+                                canProceed()
+                                    ? ColorPalette.accent(for: colorScheme)
+                                    : ColorPalette.lightGray(for: colorScheme)
+                            )
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
                     .disabled(!canProceed())
                     .padding(.horizontal)
-                    .background(
-                        NavigationLink(
-                            destination: HomeView()
-                                .environmentObject(userVM),  // Pass UserViewModel
-                            isActive: $showHomeScreen
-                        ) {
-                            EmptyView()
-                        }
-                    )
                 }
                 .padding(.bottom, 20)  // Ensure spacing at the bottom
                 .background(ColorPalette.background(for: colorScheme))  // Add background color to footer
@@ -140,7 +147,7 @@ struct LifestyleView: View {
 
 struct LifestyleView_Previews: PreviewProvider {
     static var previews: some View {
-        LifestyleView()
+        LifestyleView(onboardingVM: OnboardingViewModel())
             .environmentObject(UserViewModel())
     }
 }
