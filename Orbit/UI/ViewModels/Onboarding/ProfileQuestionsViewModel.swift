@@ -19,33 +19,28 @@ class ProfileQuestionsViewModel: ObservableObject {
             Question(
                 text: "What are some activities or hobbies that bring you joy?",
                 options: [
-                    "Hiking", "Reading", "Cooking", "Volunteering",
-                    "Photography", "Yoga",
-                    "Gaming", "Painting", "Sports", "Traveling", "Crafting",
-                    "Coding",
-                    "Music", "Meditation", "Dancing", "Gardening",
-                ].map { title in
-                    QuestionOption(
-                        title: title,
-                        isSelected: currentUser?.profileQuestions?.contains(
-                            title)
-                            ?? false
-                    )
-                }
-            ),
-            Question(
-                text: "Which conversation topics do you enjoy?",
-                options: [
-                    "Books", "Movies", "Science", "Philosophy", "Tech",
+                    "Hiking",
+                    "Reading",
+                    "Cooking",
+                    "Volunteering",
+                    "Photography",
+                    "Yoga",
+                    "Gaming",
+                    "Painting",
                     "Sports",
-                    "Current Events", "Culture", "Food", "Travel", "Humour",
+                    "Traveling",
+                    "Crafting",
+                    "Coding",
                     "Music",
-                    "Personal Growth", "Enviroment", "Wellness",
+                    "Meditation",
+                    "Dancing",
+                    "Gardening",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.profileQuestions?.contains(
-                            title)
+                        isSelected: currentUser?.personalPreferences?
+                            .activitiesHobbies.contains(
+                                title)
                             ?? false
                     )
                 }
@@ -54,14 +49,22 @@ class ProfileQuestionsViewModel: ObservableObject {
                 text:
                     "What’s something you’d love to find a friend to do with you?",
                 options: [
-                    "Deep Conversations", "Workout", "Travel Buddy",
-                    "Study Buddy", "Creative Collaborator", "Event Companion",
-                    "Group Hangouts", "Casual Meetup",
+                    "Workout Partner",
+                    "Travel Buddy",
+                    "Study Partner",
+                    "Creative Collaborator",
+                    "Hobby Buddy",
+                    "Event Companion",
+                    "Group Hangouts",
+                    "Casual Meetup",
+                    "Deep Conversations",
+                    "Reliability Partner",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.profileQuestions?.contains(
-                            title)
+                        isSelected: currentUser?.personalPreferences?
+                            .friendActivities.contains(
+                                title)
                             ?? false
                     )
                 }
@@ -77,5 +80,26 @@ class ProfileQuestionsViewModel: ObservableObject {
         {
             questions[questionIndex].options[optionIndex].isSelected.toggle()
         }
+    }
+
+    func getPersonalPreferences() -> PersonalPreferences {
+        let activitiesHobbies =
+            questions
+            .first(where: { $0.text.contains("activities or hobbies") })?
+            .options
+            .filter { $0.isSelected }
+            .map { $0.title } ?? []
+
+        let friendActivities =
+            questions
+            .first(where: { $0.text.contains("find a friend to do with you") })?
+            .options
+            .filter { $0.isSelected }
+            .map { $0.title } ?? []
+
+        return PersonalPreferences(
+            activitiesHobbies: activitiesHobbies,
+            friendActivities: friendActivities
+        )
     }
 }

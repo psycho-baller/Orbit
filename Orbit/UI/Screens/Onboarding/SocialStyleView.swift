@@ -103,12 +103,7 @@ struct SocialStyleView: View {
                             OnboardingViewModel.OnboardingStep.friendshipValues)
                         Task {
                             await userVM.saveOnboardingData(
-                                profileQuestions: nil,
-                                socialStyle: selectedAnswers,
-                                interactionPreferences: nil,
-                                friendshipValues: nil,
-                                socialSituations: nil,
-                                lifestylePreferences: nil
+                                socialStyle: selectedAnswers
                             )
                         }
                     }) {

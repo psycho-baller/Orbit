@@ -91,12 +91,11 @@ struct SignupView: View {
                                 accountId: userId,
                                 name: userName,
                                 interests: nil,
-                                profileQuestions: [],
-                                socialStyle: [],
-                                interactionPreferences: [],
-                                friendshipValues: [],
-                                socialSituations: [],
-                                lifestylePreferences: []
+                                personalPreferences: nil,
+                                socialStyle: nil,
+                                interactionPreferences: nil,
+                                friendshipValues: nil,
+                                socialSituations: nil
                             )
 
                             try await retryUserCreation(userData: myUser)

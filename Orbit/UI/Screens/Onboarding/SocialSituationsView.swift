@@ -99,18 +99,13 @@ struct SocialSituationsView: View {
                                 $0.title
                             }
                         }
-                        onboardingVM.navigationPath.append(
-                            OnboardingViewModel.OnboardingStep
-                                .lifestylePreferences)
+
                         Task {
                             await userVM.saveOnboardingData(
-                                profileQuestions: nil,
-                                socialStyle: nil,
-                                interactionPreferences: nil,
-                                friendshipValues: nil,
                                 socialSituations: selectedAnswers,
-                                lifestylePreferences: nil
+                                markComplete: true
                             )
+                            onboardingVM.completeOnboarding()
                         }
                     }) {
                         Text("Next")

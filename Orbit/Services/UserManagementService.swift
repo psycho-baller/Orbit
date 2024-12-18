@@ -90,9 +90,18 @@ class UserManagementService: UserManagementServiceProtocol {
             return nil
         }
 
-        // Now, use the documentId of the retrieved user document to update it
         let documentId = userDocument.id  // Get the actual documentId from the user document
 
+//        var updateData: [String: Any] = [:]
+//        let mirror = Mirror(reflecting: updatedUser)
+//        for child in mirror.children {
+//            if let key = child.label,
+//                let value = child.value as? OptionalProtocol, !value.isNil
+//            {
+//                updateData[key] = value.jsonValue
+//            }
+//        }
+        // Now, use the documentId of the retrieved user document to update it
         // Perform the update using the documentId
         let updatedDocument = try await appwriteService.databases
             .updateDocument<UserModel>(

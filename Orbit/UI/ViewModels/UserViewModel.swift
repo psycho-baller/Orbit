@@ -100,12 +100,11 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     @MainActor
     func saveOnboardingData(
-        profileQuestions: [String]?,
-        socialStyle: [String]?,
-        interactionPreferences: [String]?,
-        friendshipValues: [String]?,
-        socialSituations: [String]?,
-        lifestylePreferences: [String]?,
+        personalPreferences: PersonalPreferences? = nil,
+        interactionPreferences: [String]? = nil,
+        friendshipValues: [String]? = nil,
+        socialSituations: [String]? = nil,
+        socialStyle: [String]? = nil,
         markComplete: Bool = false
     ) async {
         guard var currentUser = currentUser else {
@@ -113,9 +112,26 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             return
         }
 
+//        // Update only the non-nil properties
+//        if let personalPreferences = personalPreferences {
+//            currentUser.personalPreferences = personalPreferences
+//        }
+//        if let socialStyle = socialStyle {
+//            currentUser.socialStyle = socialStyle
+//        }
+//        if let interactionPreferences = interactionPreferences {
+//            currentUser.interactionPreferences = interactionPreferences
+//        }
+//        if let friendshipValues = friendshipValues {
+//            currentUser.friendshipValues = friendshipValues
+//        }
+//        if let socialSituations = socialSituations {
+//            currentUser.socialSituations = socialSituations
+//        }
+
         // Update the user's onboarding data locally
-        currentUser.profileQuestions =
-            profileQuestions ?? currentUser.profileQuestions
+        currentUser.personalPreferences =
+            personalPreferences ?? currentUser.personalPreferences
         currentUser.socialStyle = socialStyle ?? currentUser.socialStyle
         currentUser.interactionPreferences =
             interactionPreferences ?? currentUser.interactionPreferences
@@ -123,24 +139,13 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             friendshipValues ?? currentUser.friendshipValues
         currentUser.socialSituations =
             socialSituations ?? currentUser.socialSituations
-        currentUser.lifestylePreferences =
-            lifestylePreferences ?? currentUser.lifestylePreferences
 
         if markComplete {
             currentUser.hasCompletedOnboarding = true
         }
 
-        do {
-            let updatedDocument = try await userManagementService.updateUser(
-                accountId: currentUser.accountId, updatedUser: currentUser)
-            print(
-                "Onboarding data saved successfully for user: \(updatedDocument?.id)"
-            )
-            self.currentUser = currentUser  // Update local currentUser
-        } catch {
-            print("Error saving onboarding data: \(error.localizedDescription)")
-            self.error = error.localizedDescription
-        }
+        await updateUser(
+            id: currentUser.accountId, updatedUser: currentUser)
     }
 
     //Get the User's name from their ID. (Used for chat requests)

@@ -98,21 +98,12 @@ struct ProfileQuestionsView: View {
                         onboardingVM.navigationPath.append(
                             OnboardingViewModel.OnboardingStep.socialStyle)
 
-                        let selectedAnswers = viewModel
-                            .questions.flatMap {
-                                question in
-                                question.options.filter { $0.isSelected }.map {
-                                    $0.title
-                                }
-                            }
+                        let selectedAnswers =
+                            viewModel
+                            .getPersonalPreferences()
                         Task {
                             await userVM.saveOnboardingData(
-                                profileQuestions: selectedAnswers,
-                                socialStyle: nil,  // Add other data in subsequent screens
-                                interactionPreferences: nil,
-                                friendshipValues: nil,
-                                socialSituations: nil,
-                                lifestylePreferences: nil
+                                personalPreferences: selectedAnswers
                             )
                         }
                     }) {
