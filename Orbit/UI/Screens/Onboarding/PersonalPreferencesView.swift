@@ -1,5 +1,5 @@
 //
-//  ProfileQuestionsView.swift
+//  PersonalPreferencesView.swift
 //  Orbit
 //
 //  Created by Ubaid Niaz on 2024-10-30.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct ProfileQuestionsView: View {
+struct PersonalPreferencesView: View {
     @EnvironmentObject var userVM: UserViewModel
     @ObservedObject var onboardingVM: OnboardingViewModel
     @Environment(\.colorScheme) var colorScheme  // Detect system color scheme
     @StateObject private var viewModel =
-        ProfileQuestionsViewModel()
+        PersonalPreferencesViewModel()
 
     // Define the grid layout for three columns
     let columns = [
@@ -142,7 +142,7 @@ struct ProfileQuestionsView: View {
 
 struct ProfileQuestionsView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileQuestionsView(onboardingVM: OnboardingViewModel())
+        PersonalPreferencesView(onboardingVM: OnboardingViewModel())
             .environmentObject(UserViewModel())
     }
 }

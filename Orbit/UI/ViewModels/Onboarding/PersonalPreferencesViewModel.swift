@@ -1,5 +1,5 @@
 //
-//  ProfileQuestionsViewModel.swift
+//  PersonalPreferencesViewModel.swift
 //  Orbit
 //
 //  Created by Ubaid Niaz on 2024-10-30.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ProfileQuestionsViewModel: ObservableObject {
+class PersonalPreferencesViewModel: ObservableObject {
     @Published var questions: [Question] = []
 
     init() {
