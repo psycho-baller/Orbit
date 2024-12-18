@@ -31,13 +31,7 @@ flowchart TD
         P["End Request"]
   end
  subgraph Chat_Interface["Chat_Interface"]
-        Q["Chat Interface for Planning Meetup"]
-        R{"Request Precise Location Sharing?"}
-        S["Enable High-Accuracy Mode for Map"]
-        T["Continue in Chat"]
-        U["Share Precise Location on Map"]
-        V{"Meetup Concluded or Cancelled?"}
-        W["Return to Home Page"]
+        Q["Chat Interface for Planning Meetup and Sharing Location"]
   end
     C --> D
     D -- Enter --> E
@@ -52,13 +46,6 @@ flowchart TD
     N -- Yes --> O
     N -- No --> P
     O --> Q
-    Q --> R
-    R -- Yes --> S
-    R -- No --> T
-    S --> U
-    U --> V
-    V -- Yes --> W
-    V -- No --> Q
     E --> G
 ```
 
