@@ -6,6 +6,16 @@ Hiking, Reading, Cooking, Volunteering, Photography, Yoga, Gaming, Painting, Spo
 ## What's something you'd love to find a friend to do with you?
 Workout Partner, Travel Buddy, Study Partner, Creative Collaborator, Hobby Buddy, Event Companion, Group Hangouts, Casual Meetup, Deep Conversations, Reliability Partner
 
+# interactionPreferences
+
+## Which activities would you enjoy doing with other Astronauts?
+Grab a coffee together, Share a meal, Enjoy hobbies together, Try an outdoor adventure, Play or participate in sports activities
+
+## Which conversation topics do you enjoy?
+Books, Movies, Tech, Philosophy, Psychology, Wellness, Personal Growth, Sports, Fitness, Relationships, Spirituality, Health, Current Events, Culture, Food, Travel, Music, Art, Fashion, Gaming, Nature, Animals, Career, Education, Politics, Social Issues, Entrepreneurship, History
+
+# friendshipValues
+
 ## What do you value most in a friendship?
 Deep Conversations, Adventure, Humor, Loyalty, Honesty, Kindness, Respect, Similar Interests, Mutual Support
 
