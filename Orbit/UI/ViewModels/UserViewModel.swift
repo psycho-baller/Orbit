@@ -645,66 +645,41 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 #if DEBUG
     extension UserViewModel {
         static func mock() -> UserViewModel {
-            let viewModel = UserViewModel()
-            viewModel.currentUser = UserModel(
-                accountId: "6707fc9594f9bf8a1f1f",
-                name: "John Doe",
-                interests: ["Basketball", "Music"],
-                latitude: 51.078621,
-                longitude: -114.136719,
+            let mockViewModel = UserViewModel()
+            mockViewModel.currentUser = UserModel(
+                accountId: "mock_id",
+                name: "Test User",
+                interests: ["Space", "Reading", "Gaming"],
+                latitude: 51.0447,
+                longitude: -114.0719,
                 isInterestedToMeet: true,
-                currentAreaId: "990215865"
+                conversations: [],
+                currentAreaId: "mock_area",
+                profilePictureUrl: nil,
+                profileQuestions: ["Deep Conversations", "Creative Collaborator"],
+                socialStyle: [
+                    "Ambivert",
+                    "Small Groups",
+                    "Deep Conversations",
+                    "Casual Hangouts"
+                ],
+                interactionPreferences: [
+                    "Coffee Chats",
+                    "Study Sessions",
+                    "Campus Walks",
+                    "Group Activities"
+                ],
+                friendshipValues: [
+                    "Authenticity",
+                    "Shared Interests",
+                    "Good Humor",
+                    "Reliability"
+                ],
+                socialSituations: ["Comfortable in small groups", "Love one-on-one chats"],
+                lifestylePreferences: ["Early Bird", "Outdoor Activities"],
+                hasCompletedOnboarding: true
             )
-
-            // Add mock users
-            viewModel.users = [
-                UserModel(
-                    accountId: "6726b1ef776f5badc4fe",
-                    name: "Jane Smith",
-                    interests: ["Reading", "Cooking"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "11223",
-                    name: "Michael Brown",
-                    interests: ["Video Games", "Art"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "33445",
-                    name: "Emily White",
-                    interests: ["Travel", "Movies"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "55667",
-                    name: "David Green",
-                    interests: ["Basketball", "Music", "Art"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "77889",
-                    name: "Sophia Black",
-                    interests: ["Hiking", "Photography"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-            ]
-            return viewModel
+            return mockViewModel
         }
     }
 #endif
