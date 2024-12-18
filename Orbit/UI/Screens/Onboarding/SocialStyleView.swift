@@ -93,12 +93,7 @@ struct SocialStyleView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        let selectedAnswers = viewModel.questions.flatMap {
-                            question in
-                            question.options.filter { $0.isSelected }.map {
-                                $0.title
-                            }
-                        }
+                        let selectedAnswers = viewModel.getSocialStyle()
                         onboardingVM.navigationPath.append(
                             OnboardingViewModel.OnboardingStep.friendshipValues)
                         Task {

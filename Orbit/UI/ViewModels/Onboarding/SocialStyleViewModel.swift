@@ -18,28 +18,24 @@ class SocialStyleViewModel: ObservableObject {
             Question(
                 text: "How would you describe your social style?",
                 options: [
-                    "Extroverted", "Introverted", "Outgoing", "Reserved",
+                    "Extroverted",
+                    "Introverted",
+                    "Outgoing",
+                    "Reserved",
                     "Easygoing",
-                    "Thoughtful", "Adventurous", "Laid-back",
+                    "Thoughtful",
+                    "Adventurous",
+                    "Laid-back",
                     "Highly energetic",
+                    "Socially anxious",
+                    "Spontaneous",
+                    "Organized",
+                    "Depends on the situation",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.socialStyle?.contains(title)
-                            ?? false
-                    )
-                }
-            ),
-            Question(
-                text: "What’s your preferred group size for social activities?",
-                options: [
-                    "1-on-1 Hangouts", "Small Groups (3-5 people)",
-                    "Medium Groups (6-10 people)",
-                    "Large Gatherings (10+ people)",
-                ].map { title in
-                    QuestionOption(
-                        title: title,
-                        isSelected: currentUser?.socialStyle?.contains(title)
+                        isSelected: currentUser?.socialStyle?.mySocialStyle
+                            .contains(title)
                             ?? false
                     )
                 }
@@ -48,13 +44,18 @@ class SocialStyleViewModel: ObservableObject {
                 text:
                     "How do you usually feel after spending time with friends?",
                 options: [
-                    "Energized", "Relaxed", "Reflective",
+                    "Energized",
+                    "Relaxed",
+                    "Reflective",
                     "Ready for Alone Time",
-                    "Inspired", "Cheerful", "Motivated",
+                    "Inspired",
+                    "Cheerful",
+                    "Motivated",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.socialStyle?.contains(title)
+                        isSelected: currentUser?.socialStyle?.feelAfterMeetup?
+                            .contains(title)
                             ?? false
                     )
                 }
@@ -74,5 +75,21 @@ class SocialStyleViewModel: ObservableObject {
             }
             questions[questionIndex].options[optionIndex].isSelected = true
         }
+    }
+
+    func getSocialStyle() -> SocialStyleModel {
+        return SocialStyleModel(
+            mySocialStyle:
+                questions
+                .first(where: { $0.text.contains("describe your social style") }
+                )?
+                .options
+                .filter { $0.isSelected }
+                .map { $0.title } ?? [],
+            feelAfterMeetup:
+                questions
+                .first(where: { $0.text.contains("feel after") })?
+                .options.first(where: { $0.isSelected })?.title
+        )
     }
 }

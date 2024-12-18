@@ -19,14 +19,21 @@ class FriendshipValuesViewModel: ObservableObject {
             Question(
                 text: "What do you value most in a friendship?",
                 options: [
-                    "Adventure", "Humor", "Loyalty", "Honesty", "Kindness",
-                    "Respect", "Similar Interests", "Mutual Support",
-                    "Fun Activities Together",
+                    "Deep Conversations",
+                    "Adventure",
+                    "Humor",
+                    "Loyalty",
+                    "Honesty",
+                    "Kindness",
+                    "Respect",
+                    "Similar Interests",
+                    "Mutual Support",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.friendshipValues?.contains(
-                            title)
+                        isSelected: currentUser?.friendshipValues?.values
+                            .contains(
+                                title)
                             ?? false
                     )
                 }
@@ -34,16 +41,21 @@ class FriendshipValuesViewModel: ObservableObject {
             Question(
                 text: "Which of these best describe your ideal friendship?",
                 options: [
-                    "Mentorship", "Supportive", "Light-hearted",
+                    "Mentorship",
+                    "Supportive (e.g., encouraging and dependable)",
+                    "Light-hearted",
                     "Goal-Oriented",
-                    "Adventure-Driven", "Family-Like", "Intellectual",
+                    "Adventure-Driven (e.g., loves exploring and trying new things)",
+                    "Family-Like",
+                    "Intellectual",
                     "Balanced",
-                    "Encouraging", "Humorous",
+                    "Humorous",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.friendshipValues?.contains(
-                            title)
+                        isSelected: currentUser?.friendshipValues?
+                            .idealFriendship.contains(
+                                title)
                             ?? false
                     )
                 }
@@ -52,15 +64,24 @@ class FriendshipValuesViewModel: ObservableObject {
                 text:
                     "What qualities do you look for in someone you’d like to meet?",
                 options: [
-                    "Good Listener", "Outgoing", "Empathetic", "Reliable",
+                    "Good Listener",
+                    "Outgoing",
+                    "Empathetic",
+                    "Reliable",
                     "Intelligent",
-                    "Creative", "Funny", "Open-Minded", "Positive",
+                    "Creative",
+                    "Curious",
+                    "Funny",
+                    "Open-Minded",
+                    "Positive",
                     "Thoughtful",
+                    "Passionate",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.friendshipValues?.contains(
-                            title)
+                        isSelected: currentUser?.friendshipValues?.qualities
+                            .contains(
+                                title)
                             ?? false
                     )
                 }
@@ -77,5 +98,28 @@ class FriendshipValuesViewModel: ObservableObject {
         {
             questions[questionIndex].options[optionIndex].isSelected.toggle()
         }
+    }
+
+    func getFriendshipValues() -> FriendshipValuesModel {
+        return FriendshipValuesModel(
+            values:
+                questions
+                .first(where: { $0.text.contains("value most") })?
+                .options
+                .filter { $0.isSelected }
+                .map { $0.title } ?? [],
+            idealFriendship:
+                questions
+                .first(where: { $0.text.contains("ideal friendship?") })?
+                .options
+                .filter { $0.isSelected }
+                .map { $0.title } ?? [],
+            qualities:
+                questions
+                .first(where: { $0.text.contains("you’d like to meet") })?
+                .options
+                .filter { $0.isSelected }
+                .map { $0.title } ?? [])
+
     }
 }

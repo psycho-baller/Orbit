@@ -19,13 +19,19 @@ class SocialSituationsViewModel: ObservableObject {
             Question(
                 text: "When you meet new people, how do you usually feel?",
                 options: [
-                    "Excited", "Curious", "Nervous", "Neutral",
-                    "Reserved", "Comfortable",
+                    "Excited and Energized",
+                    "Curious",
+                    "Nervous",
+                    "Neutral",
+                    "Reserved but Interested",
+                    "Comfortable",
+                    "It depends on the situation",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.socialSituations?.contains(
-                            title)
+                        isSelected: currentUser?.socialSituations?
+                            .feelWhenMeetingNewPeople?.contains(
+                                title)
                             ?? false
                     )
                 }
@@ -34,27 +40,19 @@ class SocialSituationsViewModel: ObservableObject {
                 text:
                     "If you’re at a social event, what role do you find yourself taking?",
                 options: [
-                    "The Planner", "The Social Butterfly", "The Listener",
-                    "The Helper", "The Observer", "The Icebreaker",
+                    "The Planner",
+                    "The Social Butterfly",
+                    "The Listener",
+                    "The Helper",
+                    "The Observer",
+                    "The Icebreaker",
+                    "I adapt to the situation",
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.socialSituations?.contains(
-                            title)
-                            ?? false
-                    )
-                }
-            ),
-            Question(
-                text: "How often would you like to connect with new people?",
-                options: [
-                    "Frequently", "Occasionally",
-                    "Rarely", "No preference",
-                ].map { title in
-                    QuestionOption(
-                        title: title,
-                        isSelected: currentUser?.socialSituations?.contains(
-                            title)
+                        isSelected: currentUser?.socialSituations?.socialRole?
+                            .contains(
+                                title)
                             ?? false
                     )
                 }
@@ -70,5 +68,20 @@ class SocialSituationsViewModel: ObservableObject {
         {
             questions[questionIndex].options[optionIndex].isSelected.toggle()
         }
+    }
+
+    func getSocialSituations() -> SocialSituationsModel {
+        return SocialSituationsModel(
+            feelWhenMeetingNewPeople:
+                questions
+                .first(where: {
+                    $0.text.contains("feel")
+                })?
+                .options.first(where: { $0.isSelected })?.title,
+            socialRole:
+                questions
+                .first(where: { $0.text.contains("social") })?
+                .options.first(where: { $0.isSelected })?.title
+        )
     }
 }

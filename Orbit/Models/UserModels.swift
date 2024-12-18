@@ -27,10 +27,10 @@ struct UserModel: Codable, Identifiable, Equatable {
 
     // Onboarding-related fields
     var personalPreferences: PersonalPreferences?  // To store answers to Profile Questions
-    var socialStyle: [String]?  // To store answers to Social Style
-    var interactionPreferences: [String]?  // To store Interaction Preferences
-    var friendshipValues: [String]?  // To store Friendship Values
-    var socialSituations: [String]?  // To store Social Situations
+    var socialStyle: SocialStyleModel?  // To store answers to Social Style
+    var interactionPreferences: InteractionPreferencesModel?  // To store Interaction Preferences
+    var friendshipValues: FriendshipValuesModel?  // To store Friendship Values
+    var socialSituations: SocialSituationsModel?  // To store Social Situations
     var hasCompletedOnboarding: Bool? = false  // Indicates if onboarding is completed
     //    var userLocations: String?
 
@@ -49,10 +49,10 @@ struct UserModel: Codable, Identifiable, Equatable {
         currentAreaId: String? = nil,
         profilePictureUrl: String? = nil,
         personalPreferences: PersonalPreferences? = nil,
-        socialStyle: [String]? = nil,
-        interactionPreferences: [String]? = nil,
-        friendshipValues: [String]? = nil,
-        socialSituations: [String]? = nil,
+        socialStyle: SocialStyleModel? = nil,
+        interactionPreferences: InteractionPreferencesModel? = nil,
+        friendshipValues: FriendshipValuesModel? = nil,
+        socialSituations: SocialSituationsModel? = nil,
         hasCompletedOnboarding: Bool? = false
             //        userLocations: String? = nil
     ) {
@@ -82,10 +82,10 @@ struct UserModel: Codable, Identifiable, Equatable {
         isInterestedToMeet: Bool? = nil,
         conversations: [String]? = nil,
         personalPreferences: PersonalPreferences? = nil,
-        socialStyle: [String]? = nil,
-        interactionPreferences: [String]? = nil,
-        friendshipValues: [String]? = nil,
-        socialSituations: [String]? = nil
+        socialStyle: SocialStyleModel? = nil,
+        interactionPreferences: InteractionPreferencesModel? = nil,
+        friendshipValues: FriendshipValuesModel? = nil,
+        socialSituations: SocialSituationsModel? = nil
             //        userLocations: String? = nil
     ) -> UserModel {
         return UserModel(

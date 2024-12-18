@@ -101,10 +101,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     @MainActor
     func saveOnboardingData(
         personalPreferences: PersonalPreferences? = nil,
-        interactionPreferences: [String]? = nil,
-        friendshipValues: [String]? = nil,
-        socialSituations: [String]? = nil,
-        socialStyle: [String]? = nil,
+        interactionPreferences: InteractionPreferencesModel? = nil,
+        friendshipValues: FriendshipValuesModel? = nil,
+        socialSituations: SocialSituationsModel? = nil,
+        socialStyle: SocialStyleModel? = nil,
         markComplete: Bool = false
     ) async {
         guard var currentUser = currentUser else {
@@ -112,22 +112,22 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             return
         }
 
-//        // Update only the non-nil properties
-//        if let personalPreferences = personalPreferences {
-//            currentUser.personalPreferences = personalPreferences
-//        }
-//        if let socialStyle = socialStyle {
-//            currentUser.socialStyle = socialStyle
-//        }
-//        if let interactionPreferences = interactionPreferences {
-//            currentUser.interactionPreferences = interactionPreferences
-//        }
-//        if let friendshipValues = friendshipValues {
-//            currentUser.friendshipValues = friendshipValues
-//        }
-//        if let socialSituations = socialSituations {
-//            currentUser.socialSituations = socialSituations
-//        }
+        //        // Update only the non-nil properties
+        //        if let personalPreferences = personalPreferences {
+        //            currentUser.personalPreferences = personalPreferences
+        //        }
+        //        if let socialStyle = socialStyle {
+        //            currentUser.socialStyle = socialStyle
+        //        }
+        //        if let interactionPreferences = interactionPreferences {
+        //            currentUser.interactionPreferences = interactionPreferences
+        //        }
+        //        if let friendshipValues = friendshipValues {
+        //            currentUser.friendshipValues = friendshipValues
+        //        }
+        //        if let socialSituations = socialSituations {
+        //            currentUser.socialSituations = socialSituations
+        //        }
 
         // Update the user's onboarding data locally
         currentUser.personalPreferences =
