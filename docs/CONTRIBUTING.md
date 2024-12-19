@@ -49,11 +49,28 @@ flowchart TD
     E --> G
 ```
 
-## Prerequisites
+### **How To Set Custom Location in Xcode Simulator**
 
-# Development
+1. In the simulator, go to `Features > Location > Custom Location`
+2. Enter the desired location in latitude and longitude:
+   - Examples:
+     - University of Calgary
+        - **latitude**: 51.078621
+        - **longitude**: -114.136719
+     - Science A:
+        - **latitude**: 51.079549
+        - **longitude**: 114.127
 
-## Architecture: MVVM + Services
+
+## **Prerequisites**
+
+1. **Download Orbit** by [installing the zip file of this repository](https://github.com/psycho-baller/Orbit/archive/refs/heads/main.zip)
+2. Build the app and open it to get started.
+
+
+# **Development**
+
+## **Architecture: MVVM + Services**
 
 The project uses the **MVVM** architecture with Services for backend calls where:
 
@@ -63,9 +80,9 @@ The project uses the **MVVM** architecture with Services for backend calls where
 4. **Service**: Are backend calls to the Appwrite database.
    - https://appwrite.io/
 
-## Example
+### **Example**
 
-### Model
+#### **Model**
 
 ```swift
 struct UserModel {
@@ -81,7 +98,7 @@ struct UserModel {
 typealias UserDocument = AppwriteModels.Document<UserModel>
 ```
 
-### View
+#### **View**
 
 ```swift
 struct UserView: View {
@@ -102,7 +119,7 @@ struct UserView: View {
 }
 ```
 
-### ViewModel
+#### **ViewModel**
 
 ```swift
 class UserViewModel {
@@ -126,7 +143,7 @@ class UserViewModel {
 }
 ```
 
-### Service
+#### **Service**
 
 ```swift
 import Appwrite
@@ -179,11 +196,3 @@ class UserService {
     }
 }
 ```
-
-## Set Custom Location in Xcode Simulator
-
-1. In the simulator, go to `Features > Location > Custom Location`
-2. Enter the desired location in latitude and longitude:
-   - Example: University of Calgary
-     - **latitude**: 51.078621,
-     - **longitude**: -114.136719.
