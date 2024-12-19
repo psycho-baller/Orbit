@@ -55,6 +55,7 @@ struct UserCardView: View {
                                 .font(.title)
                                 .padding(.bottom, 1)
                                 .foregroundColor(Color.accentColor)
+                                .lineLimit(1)
 
                             // User Interests
                             if let activities = user.personalPreferences?.activitiesHobbies {
@@ -66,8 +67,14 @@ struct UserCardView: View {
                                         }
                                     }
                                 )
+                            } else {
+                                InterestsHorizontalTags(
+                                    interests: [],
+                                    onTapInterest: { _ in }
+                                )
                             }
                         }
+                        .frame(height: 100) // Fixed height for the entire VStack
                     }
                     .padding()
                     .background(ColorPalette.main(for: colorScheme))
