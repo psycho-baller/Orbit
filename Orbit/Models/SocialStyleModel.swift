@@ -6,6 +6,6 @@
 //
 
 struct SocialStyleModel: Codable {
-    var mySocialStyle: [String]
+    var mySocialStyle: [String]?
     var feelAfterMeetup: String?
 }

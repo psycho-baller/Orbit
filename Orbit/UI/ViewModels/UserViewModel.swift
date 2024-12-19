@@ -142,10 +142,14 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         currentUser.socialSituations =
             socialSituations ?? currentUser.socialSituations
         currentUser.bio = bio ?? currentUser.bio
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        currentUser.dob =
-            (dob != nil) ? dateFormatter.string(from: dob!) : currentUser.dob
+        if let dateOfBirth = dob {
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .none
+
+            currentUser.dob = dateFormatter.string(from: dateOfBirth)
+        }
         if markComplete {
             currentUser.hasCompletedOnboarding = true
         }
@@ -657,7 +661,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     extension UserViewModel {
         static func mock() -> UserViewModel {
             let mockVM = UserViewModel()
-            
+
             // Set current user
             mockVM.currentUser = UserModel(
                 accountId: "currentUser",
@@ -688,10 +692,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 ),
                 hasCompletedOnboarding: true
             )
-            
+
             // Set other users
             mockVM.users = UserModel.mockUsers()
-            
+
             return mockVM
         }
     }

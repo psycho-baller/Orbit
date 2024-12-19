@@ -34,7 +34,7 @@ class SocialStyleViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.socialStyle?.mySocialStyle
+                        isSelected: currentUser?.socialStyle?.mySocialStyle?
                             .contains(title)
                             ?? false
                     )

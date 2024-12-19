@@ -8,6 +8,6 @@
 import Foundation
 
 struct InteractionPreferencesModel: Codable, Equatable {
-    let events: [String]
-    let topics: [String]
+    let events: [String]?
+    let topics: [String]?
 }
