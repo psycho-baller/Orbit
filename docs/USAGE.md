@@ -4,6 +4,13 @@
 
 1. **Download Orbit** by [installing the zip file of this repository](https://github.com/psycho-baller/Orbit/archive/refs/heads/main.zip)
 2. Build the app and open it to get started.
+3. If you'd like to see some users around you, set your location in the simulator to Science A:
+   - **latitude**: 51.079549
+   - **longitude**: 114.127
+
+You can also go off campus to disable the location features of the app.
+
+*You can find more info on how to set custom locations in the Xcode simulator in the [CONTRIBUTING.md](/docs/CONTRIBUTING.md#how-to-set-custom-location-in-xcode-simulator) file.*
 
 ---
 
