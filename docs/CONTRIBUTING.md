@@ -60,6 +60,10 @@ flowchart TD
      - Science A:
         - **latitude**: 51.079549
         - **longitude**: 114.127
+     - Apple Park (already in the simulator):
+        - **latitude**: 37.3349
+        - **longitude**: -122.00902
+3. Click `OK` to set the custom location.
 
 
 ## **Prerequisites**
