@@ -57,13 +57,13 @@ struct ProfilePageView: View {
                             .overlay(Circle().stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2))
                     }
                     
-                    // Orbiting Interests
-                    if let interests = user.interests {
-                        ForEach(Array(interests.enumerated()), id: \.element) { index, interest in
+                    // Orbiting Activities
+                    if let activities = user.personalPreferences?.activitiesHobbies {
+                        ForEach(Array(activities.enumerated()), id: \.element) { index, activity in
                             InterestOrbit(
-                                interest: interest,
+                                interest: activity,
                                 index: index,
-                                totalCount: interests.count,
+                                totalCount: activities.count,
                                 orbitAngle: orbitAngle
                             )
                         }
@@ -141,23 +141,24 @@ let orbitAngle: Double
 @State private var floatOffset: CGFloat = 0
 
 // Interest to Icon mapping
-private func iconName(for interest: String) -> String {
-    switch interest.lowercased() {
-    case "space": return "moon.stars.fill"
+private func iconName(for activity: String) -> String {
+    switch activity.lowercased() {
+    case "hiking": return "figure.hiking"
+    case "reading": return "book.fill"
+    case "cooking": return "fork.knife"
+    case "volunteering": return "heart.fill"
+    case "photography": return "camera.fill"
+    case "yoga": return "figure.mind.and.body"
+    case "gaming": return "gamecontroller.fill"
+    case "painting": return "paintbrush.fill"
+    case "sports": return "figure.run"
+    case "traveling": return "airplane"
+    case "crafting": return "scissors"
     case "coding": return "chevron.left.forwardslash.chevron.right"
     case "music": return "music.note"
-    case "art": return "paintbrush.fill"
-    case "reading": return "book.fill"
-    case "gaming": return "gamecontroller.fill"
-    case "sports": return "figure.run"
-    case "cooking": return "fork.knife"
-    case "travel": return "airplane"
-    case "movies": return "film"
-    case "photography": return "camera.fill"
-    case "writing": return "pencil"
-    case "nature": return "leaf.fill"
-    case "technology": return "desktopcomputer"
-    case "fitness": return "figure.walk"
+    case "meditation": return "sparkles"
+    case "dancing": return "figure.dance"
+    case "gardening": return "leaf.fill"
     default: return "star.fill"
     }
 }
