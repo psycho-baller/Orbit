@@ -364,8 +364,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     // Aggregate unique interests from all users
     var allInterests: [String] {
-        let interestsArray = users.compactMap { $0.interests }.flatMap { $0 }
-        return Array(Set(interestsArray)).sorted()
+        let activitiesArray = users.compactMap { $0.personalPreferences?.activitiesHobbies }.flatMap { $0 }
+        return Array(Set(activitiesArray)).sorted()
     }
 
     // Filter users based on selected interests and search text
@@ -380,14 +380,13 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
                 || user.name.lowercased().contains(lowercasedSearchText)
-                || (user.interests?.joined(separator: " ").lowercased()
-                    .contains(
-                        lowercasedSearchText) ?? false)
+                || (user.personalPreferences?.activitiesHobbies?.joined(separator: " ").lowercased()
+                    .contains(lowercasedSearchText) ?? false)
 
             let matchesInterests =
                 selectedInterests.isEmpty
-                || (user.interests != nil
-                    && !Set(user.interests!).intersection(selectedInterestsSet)
+                || (user.personalPreferences?.activitiesHobbies != nil
+                    && !Set(user.personalPreferences!.activitiesHobbies!).intersection(selectedInterestsSet)
                         .isEmpty)
 
             return matchesSearchText && matchesInterests

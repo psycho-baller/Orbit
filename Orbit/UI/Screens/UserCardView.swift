@@ -57,12 +57,12 @@ struct UserCardView: View {
                                 .foregroundColor(Color.accentColor)
 
                             // User Interests
-                            if let interests = user.interests {
+                            if let activities = user.personalPreferences?.activitiesHobbies {
                                 InterestsHorizontalTags(
-                                    interests: interests,
-                                    onTapInterest: { interest in
+                                    interests: activities,
+                                    onTapInterest: { activity in
                                         withAnimation {
-                                            userVM.toggleInterest(interest)
+                                            userVM.toggleInterest(activity)
                                         }
                                     }
                                 )
