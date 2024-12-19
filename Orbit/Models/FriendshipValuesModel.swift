@@ -6,7 +6,7 @@
 //
 
 struct FriendshipValuesModel: Codable {
-    var values: [String]
-    var idealFriendship: [String]
-    var qualities: [String]
+    var values: [String]?
+    var idealFriendship: [String]?
+    var qualities: [String]?
 }

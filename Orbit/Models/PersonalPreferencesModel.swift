@@ -8,6 +8,6 @@
 import Foundation
 
 struct PersonalPreferences: Codable, Equatable {
-    var activitiesHobbies: [String]
-    var friendActivities: [String]
+    var activitiesHobbies: [String]?
+    var friendActivities: [String]?
 }

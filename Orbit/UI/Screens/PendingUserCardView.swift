@@ -52,19 +52,26 @@ struct PendingUserCardView: View {
                             .font(.title)
                             .padding(.bottom, 1)
                             .foregroundColor(.accentColor)
+                            .lineLimit(1)
 
                         // User Interests
-                        if let interests = user.interests {
+                        if let activities = user.personalPreferences?.activitiesHobbies {
                             InterestsHorizontalTags(
-                                interests: interests,
-                                onTapInterest: { interest in
+                                interests: activities,
+                                onTapInterest: { activity in
                                     withAnimation {
-                                        userVM.toggleInterest(interest)
+                                        userVM.toggleInterest(activity)
                                     }
                                 }
                             )
+                        } else {
+                            InterestsHorizontalTags(
+                                interests: [],
+                                onTapInterest: { _ in }
+                            )
                         }
                     }
+                    .frame(height: 100)
                 }
                 .padding()
                 .background(ColorPalette.main(for: colorScheme))

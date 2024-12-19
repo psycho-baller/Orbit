@@ -142,10 +142,14 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         currentUser.socialSituations =
             socialSituations ?? currentUser.socialSituations
         currentUser.bio = bio ?? currentUser.bio
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        currentUser.dob =
-            (dob != nil) ? dateFormatter.string(from: dob!) : currentUser.dob
+        if let dateOfBirth = dob {
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .none
+
+            currentUser.dob = dateFormatter.string(from: dateOfBirth)
+        }
         if markComplete {
             currentUser.hasCompletedOnboarding = true
         }
@@ -360,8 +364,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     // Aggregate unique interests from all users
     var allInterests: [String] {
-        let interestsArray = users.compactMap { $0.interests }.flatMap { $0 }
-        return Array(Set(interestsArray)).sorted()
+        let activitiesArray = users.compactMap { $0.personalPreferences?.activitiesHobbies }.flatMap { $0 }
+        return Array(Set(activitiesArray)).sorted()
     }
 
     // Filter users based on selected interests and search text
@@ -376,14 +380,13 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
                 || user.name.lowercased().contains(lowercasedSearchText)
-                || (user.interests?.joined(separator: " ").lowercased()
-                    .contains(
-                        lowercasedSearchText) ?? false)
+                || (user.personalPreferences?.activitiesHobbies?.joined(separator: " ").lowercased()
+                    .contains(lowercasedSearchText) ?? false)
 
             let matchesInterests =
                 selectedInterests.isEmpty
-                || (user.interests != nil
-                    && !Set(user.interests!).intersection(selectedInterestsSet)
+                || (user.personalPreferences?.activitiesHobbies != nil
+                    && !Set(user.personalPreferences!.activitiesHobbies!).intersection(selectedInterestsSet)
                         .isEmpty)
 
             return matchesSearchText && matchesInterests
@@ -656,66 +659,43 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 #if DEBUG
     extension UserViewModel {
         static func mock() -> UserViewModel {
-            let viewModel = UserViewModel()
-            viewModel.currentUser = UserModel(
-                accountId: "6707fc9594f9bf8a1f1f",
-                name: "John Doe",
-                interests: ["Basketball", "Music"],
-                latitude: 51.078621,
-                longitude: -114.136719,
+            let mockVM = UserViewModel()
+
+            // Set current user
+            mockVM.currentUser = UserModel(
+                accountId: "currentUser",
+                name: "Current User",
+                interests: ["Photography", "Gaming", "Reading", "Travel"],
                 isInterestedToMeet: true,
-                currentAreaId: "990215865"
+                profilePictureUrl: "https://picsum.photos/203",
+                personalPreferences: PersonalPreferences(
+                    activitiesHobbies: ["Photography", "Gaming", "Reading"],
+                    friendActivities: ["Creative Partner", "Gaming Buddy"]
+                ),
+                socialStyle: SocialStyleModel(
+                    mySocialStyle: ["Adaptable", "Friendly", "Open-minded"],
+                    feelAfterMeetup: "Energized"
+                ),
+                interactionPreferences: InteractionPreferencesModel(
+                    events: ["Mixed Settings", "Group Activities"],
+                    topics: ["Technology", "Gaming", "Photography"]
+                ),
+                friendshipValues: FriendshipValuesModel(
+                    values: ["Honesty", "Shared Growth", "Fun"],
+                    idealFriendship: ["Supportive", "Engaging"],
+                    qualities: ["Open-minded", "Tech-savvy"]
+                ),
+                socialSituations: SocialSituationsModel(
+                    feelWhenMeetingNewPeople: "Curious and Open",
+                    socialRole: "The Connector"
+                ),
+                hasCompletedOnboarding: true
             )
 
-            // Add mock users
-            viewModel.users = [
-                UserModel(
-                    accountId: "6726b1ef776f5badc4fe",
-                    name: "Jane Smith",
-                    interests: ["Reading", "Cooking"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "11223",
-                    name: "Michael Brown",
-                    interests: ["Video Games", "Art"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "33445",
-                    name: "Emily White",
-                    interests: ["Travel", "Movies"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "55667",
-                    name: "David Green",
-                    interests: ["Basketball", "Music", "Art"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-                UserModel(
-                    accountId: "77889",
-                    name: "Sophia Black",
-                    interests: ["Hiking", "Photography"],
-                    latitude: 51.078621,
-                    longitude: -114.136719,
-                    isInterestedToMeet: true,
-                    currentAreaId: "990215865"
-                ),
-            ]
-            return viewModel
+            // Set other users
+            mockVM.users = UserModel.mockUsers()
+
+            return mockVM
         }
     }
 #endif

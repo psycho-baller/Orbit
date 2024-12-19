@@ -58,13 +58,14 @@ struct HomeView: View {
                         .presentationBackground(.ultraThinMaterial)
                     }
                     .sheet(item: $selectedUser) { user in
-                        ChatRequestView(
-                            sender: userVM.currentUser, receiver: user
-                        )
-                        .presentationBackground(.thinMaterial)
-                        .presentationDetents(
-                            [.medium, .large]
-                        )
+                        ZStack {
+                            ScrollView {
+                                UserProfileView(user: user, currentUser: userVM.currentUser)
+                                    .padding(.bottom, 80)
+                            }
+                        }
+                        .presentationDetents([.large])
+                        .presentationDragIndicator(.visible)
                     }
                     .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
                         HomeSettings()

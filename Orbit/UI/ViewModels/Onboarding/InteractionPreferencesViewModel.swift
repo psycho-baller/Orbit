@@ -29,7 +29,7 @@ class InteractionPreferencesViewModel: ObservableObject {
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.interactionPreferences?
-                            .events.contains(title)
+                            .events?.contains(title)
                             ?? false
                     )
                 }
@@ -69,7 +69,7 @@ class InteractionPreferencesViewModel: ObservableObject {
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.interactionPreferences?
-                            .topics.contains(title)
+                            .topics?.contains(title)
                             ?? false
                     )
                 }

@@ -39,7 +39,7 @@ class PersonalPreferencesViewModel: ObservableObject {
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.personalPreferences?
-                            .activitiesHobbies.contains(
+                            .activitiesHobbies?.contains(
                                 title)
                             ?? false
                     )
@@ -63,7 +63,7 @@ class PersonalPreferencesViewModel: ObservableObject {
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.personalPreferences?
-                            .friendActivities.contains(
+                            .friendActivities?.contains(
                                 title)
                             ?? false
                     )
