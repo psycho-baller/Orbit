@@ -666,7 +666,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 isInterestedToMeet: true,
                 profilePictureUrl: "https://picsum.photos/203",
                 personalPreferences: PersonalPreferences(
-                    activitiesHobbies: ["Photography", "Gaming", "Reading"],
+                    activitiesHobbies: ["Photography", "Gaming", "Reading", "Meditation", "Coding"],
                     friendActivities: ["Creative Partner", "Gaming Buddy"]
                 ),
                 socialStyle: SocialStyleModel(
