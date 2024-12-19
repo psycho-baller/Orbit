@@ -645,41 +645,32 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 #if DEBUG
     extension UserViewModel {
         static func mock() -> UserViewModel {
-            let mockViewModel = UserViewModel()
-            mockViewModel.currentUser = UserModel(
-                accountId: "mock_id",
-                name: "Test User",
-                interests: ["Space", "Reading", "Gaming"],
-                latitude: 51.0447,
-                longitude: -114.0719,
+            let mockVM = UserViewModel()
+            
+            // Set current user
+            mockVM.currentUser = UserModel(
+                accountId: "currentUser",
+                name: "Current User",
+                interests: ["Photography", "Gaming", "Reading", "Travel"],
                 isInterestedToMeet: true,
-                conversations: [],
-                currentAreaId: "mock_area",
-                profilePictureUrl: nil,
-                profileQuestions: ["Deep Conversations", "Creative Collaborator"],
-                socialStyle: [
-                    "Ambivert",
-                    "Small Groups",
-                    "Deep Conversations",
-                    "Casual Hangouts"
+                profilePictureUrl: "https://picsum.photos/203",
+                profileQuestions: [
+                    "Love trying new things",
+                    "Always curious about technology",
+                    "Enjoy meeting new people"
                 ],
-                interactionPreferences: [
-                    "Coffee Chats",
-                    "Study Sessions",
-                    "Campus Walks",
-                    "Group Activities"
-                ],
-                friendshipValues: [
-                    "Authenticity",
-                    "Shared Interests",
-                    "Good Humor",
-                    "Reliability"
-                ],
-                socialSituations: ["Comfortable in small groups", "Love one-on-one chats"],
-                lifestylePreferences: ["Early Bird", "Outdoor Activities"],
+                socialStyle: ["Adaptable", "Friendly", "Open-minded"],
+                interactionPreferences: ["Mixed Settings", "Group Activities", "Learning Together"],
+                friendshipValues: ["Honesty", "Shared Growth", "Fun"],
+                socialSituations: ["Social Events", "Learning Workshops", "Casual Meetups"],
+                lifestylePreferences: ["Flexible Schedule", "Active Social Life", "Continuous Learning"],
                 hasCompletedOnboarding: true
             )
-            return mockViewModel
+            
+            // Set other users
+            mockVM.users = UserModel.mockUsers()
+            
+            return mockVM
         }
     }
 #endif

@@ -87,6 +87,8 @@
 		61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61129BC62CEC10D10076C793 /* UserCardView.swift */; };
 		6190F7192CF508BF00DAEBDE /* PendingRequestsDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */; };
 		6190F71B2CF5644A00DAEBDE /* PendingUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */; };
+		619992A12D13768D00440533 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619992A02D13768300440533 /* UserProfileView.swift */; };
+		619992A32D13786B00440533 /* MockUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619992A22D13786200440533 /* MockUsers.swift */; };
 		61A07DE22CC98B1E00AD7A01 /* AnimatedTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */; };
 		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
 		61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137602CC4AFD600E7BA6C /* ProfileView.swift */; };
@@ -200,6 +202,8 @@
 		61129BC62CEC10D10076C793 /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
 		6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestsDropdown.swift; sourceTree = "<group>"; };
 		6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingUserCardView.swift; sourceTree = "<group>"; };
+		619992A02D13768300440533 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
+		619992A22D13786200440533 /* MockUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUsers.swift; sourceTree = "<group>"; };
 		61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = BAHNSCHRIFT.TTF; sourceTree = "<group>"; };
 		61E137602CC4AFD600E7BA6C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		61E137622CC4B02C00E7BA6C /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -283,6 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				00ACBBB22D0B80A2008F321C /* Onboarding */,
+				619992A02D13768300440533 /* UserProfileView.swift */,
 				6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */,
 				250F9B702CF5310800B734FF /* NotInterestedToMeetView.swift */,
 				250F9B6E2CF52CA100B734FF /* OffCampusView.swift */,
@@ -337,6 +342,7 @@
 		259CB2A12CC046F300C9F285 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				619992A22D13786200440533 /* MockUsers.swift */,
 				25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */,
 				25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */,
 				259CB2A22CC046F300C9F285 /* UserModels.swift */,
@@ -610,6 +616,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				619992A32D13786B00440533 /* MockUsers.swift in Sources */,
 				0669F94A2CD1CCA30031D154 /* MessagingService.swift in Sources */,
 				259CB27F2CC0460400C9F285 /* AccountManagementService.swift in Sources */,
 				0669F9562CD6D87C0031D154 /* MessagesView.swift in Sources */,
@@ -659,6 +666,7 @@
 				AE36B86B2CF2D79600C7078F /* OnboardingModel.swift in Sources */,
 				259CB2992CC0465600C9F285 /* SignupView.swift in Sources */,
 				005518CF2CE6E5A000F3E92B /* ConversationDetailModel.swift in Sources */,
+				619992A12D13768D00440533 /* UserProfileView.swift in Sources */,
 				0669F94C2CD6C6460031D154 /* MessageModel.swift in Sources */,
 				259CB2A32CC046F300C9F285 /* UserModels.swift in Sources */,
 				0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */,

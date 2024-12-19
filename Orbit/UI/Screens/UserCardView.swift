@@ -18,98 +18,101 @@ struct UserCardView: View {
 
     var body: some View {
         if !isHidden {
-            SwipeView {
-                HStack(spacing: 16) {
-                    // Profile Picture
-                    if let profileUrl = user.profilePictureUrl,
-                        let url = URL(string: profileUrl)
-                    {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 60, height: 60)
-                                .clipShape(Circle())
-                        } placeholder: {
+            NavigationLink(destination: UserProfileView(user: user, currentUser: currentUser)) {
+                SwipeView {
+                    HStack(spacing: 16) {
+                        // Profile Picture
+                        if let profileUrl = user.profilePictureUrl,
+                            let url = URL(string: profileUrl)
+                        {
+                            AsyncImage(url: url) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 60, height: 60)
+                                    .clipShape(Circle())
+                            } placeholder: {
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 60, height: 60)
+                                    .foregroundColor(
+                                        ColorPalette.secondaryText(for: colorScheme)
+                                    )
+                            }
+                        } else {
                             Image(systemName: "person.circle.fill")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 60, height: 60)
                                 .foregroundColor(
-                                    ColorPalette.secondaryText(for: colorScheme)
-                                )
+                                    ColorPalette.secondaryText(for: colorScheme))
                         }
-                    } else {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 60, height: 60)
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme))
-                    }
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        // User Name
-                        Text(user.name)
-                            .font(.title)
-                            .padding(.bottom, 1)
-                            .foregroundColor(Color.accentColor)
+                        VStack(alignment: .leading, spacing: 8) {
+                            // User Name
+                            Text(user.name)
+                                .font(.title)
+                                .padding(.bottom, 1)
+                                .foregroundColor(Color.accentColor)
 
-                        // User Interests
-                        if let interests = user.interests {
-                            InterestsHorizontalTags(
-                                interests: interests,
-                                onTapInterest: { interest in
-                                    withAnimation {
-                                        userVM.toggleInterest(interest)
+                            // User Interests
+                            if let interests = user.interests {
+                                InterestsHorizontalTags(
+                                    interests: interests,
+                                    onTapInterest: { interest in
+                                        withAnimation {
+                                            userVM.toggleInterest(interest)
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
-                }
-                .padding()
-                .background(ColorPalette.main(for: colorScheme))
-                .cornerRadius(32)
-            } leadingActions: { _ in
-                SwipeAction {
-                    sendQuickRequest()
-                } label: { isHighlighted in
-                    VStack(spacing: 4) {
-                        Image(systemName: "hand.wave.fill")
-                            .font(.title2)
-                        Text("Request")
-                            .font(.caption)
+                    .padding()
+                    .background(ColorPalette.main(for: colorScheme))
+                    .cornerRadius(32)
+                } leadingActions: { _ in
+                    SwipeAction {
+                        sendQuickRequest()
+                    } label: { isHighlighted in
+                        VStack(spacing: 4) {
+                            Image(systemName: "hand.wave.fill")
+                                .font(.title2)
+                            Text("Request")
+                                .font(.caption)
+                        }
+                        .foregroundColor(.white)
+                        .frame(width: 60)
+                    } background: { isHighlighted in
+                        ColorPalette.accent(for: colorScheme)
+                            .opacity(isHighlighted ? 0.8 : 1)
                     }
-                    .foregroundColor(.white)
-                    .frame(width: 60)
-                } background: { isHighlighted in
-                    ColorPalette.accent(for: colorScheme)
-                        .opacity(isHighlighted ? 0.8 : 1)
-                }
-                .allowSwipeToTrigger()
-            } trailingActions: { _ in
-                SwipeAction {
-                    isHidden = true
-                } label: { isHighlighted in
-                    VStack(spacing: 4) {
-                        Image(systemName: "xmark.circle")
-                            .font(.title2)
-                        Text("Hide")
-                            .font(.caption)
+                    .allowSwipeToTrigger()
+                } trailingActions: { _ in
+                    SwipeAction {
+                        isHidden = true
+                    } label: { isHighlighted in
+                        VStack(spacing: 4) {
+                            Image(systemName: "xmark.circle")
+                                .font(.title2)
+                            Text("Hide")
+                                .font(.caption)
+                        }
+                        .foregroundColor(.white)
+                        .frame(width: 60)
+                    } background: { isHighlighted in
+                        Color.red
+                            .opacity(isHighlighted ? 0.8 : 1)
                     }
-                    .foregroundColor(.white)
-                    .frame(width: 60)
-                } background: { isHighlighted in
-                    Color.red
-                        .opacity(isHighlighted ? 0.8 : 1)
+                    .allowSwipeToTrigger()
                 }
-                .allowSwipeToTrigger()
+                .swipeOffsetCloseAnimation(stiffness: 500, damping: 600)
+                .swipeOffsetExpandAnimation(stiffness: 500, damping: 600)
+                .swipeOffsetTriggerAnimation(stiffness: 500, damping: 600)
+                .swipeMinimumDistance(20)
             }
-            .swipeOffsetCloseAnimation(stiffness: 500, damping: 600)
-            .swipeOffsetExpandAnimation(stiffness: 500, damping: 600)
-            .swipeOffsetTriggerAnimation(stiffness: 500, damping: 600)
-            .swipeMinimumDistance(20)
+            .buttonStyle(PlainButtonStyle())
         }
     }
 
