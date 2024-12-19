@@ -105,6 +105,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         friendshipValues: FriendshipValuesModel? = nil,
         socialSituations: SocialSituationsModel? = nil,
         socialStyle: SocialStyleModel? = nil,
+        bio: String? = nil,
+        dob: Date? = nil,
         markComplete: Bool = false
     ) async {
         guard var currentUser = currentUser else {
@@ -139,7 +141,11 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             friendshipValues ?? currentUser.friendshipValues
         currentUser.socialSituations =
             socialSituations ?? currentUser.socialSituations
-
+        currentUser.bio = bio ?? currentUser.bio
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        currentUser.dob =
+            (dob != nil) ? dateFormatter.string(from: dob!) : currentUser.dob
         if markComplete {
             currentUser.hasCompletedOnboarding = true
         }

@@ -103,7 +103,7 @@ struct SocialSituationsView: View {
                             onboardingVM.completeOnboarding()
                         }
                     }) {
-                        Text("Next")
+                        Text("Finish")
                             .font(.headline)
                             .padding()
                             .frame(maxWidth: .infinity)
