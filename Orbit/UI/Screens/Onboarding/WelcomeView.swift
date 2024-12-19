@@ -16,7 +16,7 @@ struct WelcomeView: View {
 
             Button("Start Onboarding") {
                 viewModel.navigationPath.append(
-                    OnboardingViewModel.OnboardingStep.profileQuestions)
+                    OnboardingViewModel.OnboardingStep.personalPreferences)
             }
         }
         .padding()

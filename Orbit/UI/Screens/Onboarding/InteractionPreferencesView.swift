@@ -93,22 +93,12 @@ struct InteractionPreferencesView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        let selectedAnswers = viewModel.questions.flatMap {
-                            question in
-                            question.options.filter { $0.isSelected }.map {
-                                $0.title
-                            }
-                        }
+                        let selectedAnswers = viewModel.getInteractionPreferences()
                         onboardingVM.navigationPath.append(
                             OnboardingViewModel.OnboardingStep.socialSituations)
                         Task {
                             await userVM.saveOnboardingData(
-                                profileQuestions: nil,
-                                socialStyle: nil,
-                                interactionPreferences: selectedAnswers,
-                                friendshipValues: nil,
-                                socialSituations: nil,
-                                lifestylePreferences: nil
+                                interactionPreferences: selectedAnswers
                             )
                         }
                     }) {

@@ -93,24 +93,14 @@ struct SocialSituationsView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        let selectedAnswers = viewModel.questions.flatMap {
-                            question in
-                            question.options.filter { $0.isSelected }.map {
-                                $0.title
-                            }
-                        }
-                        onboardingVM.navigationPath.append(
-                            OnboardingViewModel.OnboardingStep
-                                .lifestylePreferences)
+                        let selectedAnswers = viewModel.getSocialSituations()
+
                         Task {
                             await userVM.saveOnboardingData(
-                                profileQuestions: nil,
-                                socialStyle: nil,
-                                interactionPreferences: nil,
-                                friendshipValues: nil,
                                 socialSituations: selectedAnswers,
-                                lifestylePreferences: nil
+                                markComplete: true
                             )
+                            onboardingVM.completeOnboarding()
                         }
                     }) {
                         Text("Next")

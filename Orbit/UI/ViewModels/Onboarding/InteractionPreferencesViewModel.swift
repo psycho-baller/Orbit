@@ -17,51 +17,59 @@ class InteractionPreferencesViewModel: ObservableObject {
     func loadQuestions(with currentUser: UserModel?) {
         questions = [
             Question(
-                text: "When it comes to planning meetups, what do you prefer?",
-                options: [
-                    "Spontaneous",
-                    "Some Planning ",
-                    "Well-Organized",
-                    "Flexible",
-                ].map { title in
-                    QuestionOption(
-                        title: title,
-                        isSelected: currentUser?.interactionPreferences?
-                            .contains(title)
-                            ?? false
-                    )
-                }
-            ),
-            Question(
-                text: "How do you prefer interacting with new friends?",
-                options: [
-                    "Texting/Chatting",
-                    "Voice Calls",
-                    "In-Person Hangouts",
-                    "Group Activities",
-                    "Exploring New Places",
-                    "Virtual Hangouts",
-                ].map { title in
-                    QuestionOption(
-                        title: title,
-                        isSelected: currentUser?.interactionPreferences?
-                            .contains(title)
-                            ?? false
-                    )
-                }
-            ),
-            Question(
                 text:
-                    "Do you typically start conversations or wait for others to approach you?",
+                    "Which activities would you enjoy doing with other Astronauts?",
                 options: [
-                    "I usually start conversations",
-                    "I prefer waiting for others",
-                    "Depends on the situation",
+                    "Grab a coffee together",
+                    "Share a meal",
+                    "Enjoy hobbies together",
+                    "Try an outdoor adventure",
+                    "Play or participate in sports activities",
                 ].map { title in
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.interactionPreferences?
-                            .contains(title)
+                            .events.contains(title)
+                            ?? false
+                    )
+                }
+            ),
+            Question(
+                text: "Which conversation topics do you enjoy?",
+                options: [
+                    "Books",
+                    "Movies",
+                    "Tech",
+                    "Philosophy",
+                    "Psychology",
+                    "Wellness",
+                    "Personal Growth",
+                    "Sports",
+                    "Fitness",
+                    "Relationships",
+                    "Spirituality",
+                    "Health",
+                    "Current Events",
+                    "Culture",
+                    "Food",
+                    "Travel",
+                    "Music",
+                    "Art",
+                    "Fashion",
+                    "Gaming",
+                    "Nature",
+                    "Animals",
+                    "Career",
+                    "Education",
+                    "Politics",
+                    "Social Issues",
+                    "Entrepreneurship",
+                    "History",
+                ].map { title in
+                    QuestionOption(
+                        title: title,
+                        isSelected: currentUser?.interactionPreferences?
+                            .topics.contains(title)
                             ?? false
                     )
                 }
@@ -79,5 +87,22 @@ class InteractionPreferencesViewModel: ObservableObject {
         {
             questions[questionIndex].options[optionIndex].isSelected.toggle()
         }
+    }
+
+    func getInteractionPreferences() -> InteractionPreferencesModel {
+        return InteractionPreferencesModel(
+            events:
+                questions
+                .first(where: { $0.text.contains("Which activities") })?
+                .options
+                .filter { $0.isSelected }
+                .map { $0.title } ?? [],
+            topics:
+                questions
+                .first(where: { $0.text.contains("Which conversation topics") }
+                )?
+                .options
+                .filter { $0.isSelected }
+                .map { $0.title } ?? [])
     }
 }

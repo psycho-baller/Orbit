@@ -93,23 +93,13 @@ struct FriendshipValuesView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        let selectedAnswers = viewModel.questions.flatMap {
-                            question in
-                            question.options.filter { $0.isSelected }.map {
-                                $0.title
-                            }
-                        }
+                        let selectedAnswers = viewModel.getFriendshipValues()
                         onboardingVM.navigationPath.append(
                             OnboardingViewModel.OnboardingStep
                                 .interactionPreferences)
                         Task {
                             await userVM.saveOnboardingData(
-                                profileQuestions: nil,
-                                socialStyle: nil,
-                                interactionPreferences: nil,
-                                friendshipValues: selectedAnswers,
-                                socialSituations: nil,
-                                lifestylePreferences: nil
+                                friendshipValues: selectedAnswers
                             )
                         }
                     }) {

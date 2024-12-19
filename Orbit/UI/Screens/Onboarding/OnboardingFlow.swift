@@ -17,8 +17,8 @@ struct OnboardingFlow: View {
                     for: OnboardingViewModel.OnboardingStep.self
                 ) { step in
                     switch step {
-                    case .profileQuestions:
-                        ProfileQuestionsView(onboardingVM: viewModel)
+                    case .personalPreferences:
+                        PersonalPreferencesView(onboardingVM: viewModel)
                     case .socialStyle:
                         SocialStyleView(onboardingVM: viewModel)
                     case .friendshipValues:
@@ -27,8 +27,6 @@ struct OnboardingFlow: View {
                         InteractionPreferencesView(onboardingVM: viewModel)
                     case .socialSituations:
                         SocialSituationsView(onboardingVM: viewModel)
-                    case .lifestylePreferences:
-                        LifestyleView(onboardingVM: viewModel)
                     //                    case .complete:
                     //                        CompleteView(viewModel: viewModel)
                     default:

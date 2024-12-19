@@ -9,21 +9,20 @@ import SwiftUI
 
 // Onboarding Data Model
 class OnboardingViewModel: ObservableObject {
-    
+
     @Published var navigationPath = NavigationPath()  // Store the stack path
-    @Published var onboardingData: OnboardingData = OnboardingData()
+    //    @Published var onboardingData: OnboardingData = OnboardingData()
     @Published var hasCompletedOnboarding = false  // Tracks if onboarding is completed
 
     enum OnboardingStep: String, CaseIterable, Hashable {
-        case welcome, profileQuestions, socialStyle, interactionPreferences,
-            friendshipValues, socialSituations, lifestylePreferences, complete
+        case welcome, personalPreferences, socialStyle, interactionPreferences,
+            friendshipValues, socialSituations, complete
     }
 
-    struct OnboardingData {
-        var profileQuestions: [String]? = nil
-        var socialStyle: [String]? = nil
-        // Add other fields as needed
-    }
+    //    struct OnboardingData {
+    //        var personalPreferences: PersonalPreferences? = nil
+    //        // Add other fields as needed
+    //    }
 
     func completeOnboarding() {
         hasCompletedOnboarding = true
