@@ -200,12 +200,21 @@ struct MeetUpRequestsListView: View {
         .sheet(item: $chatRequestVM.selectedRequest) { request in
             NavigationStack {
                 MeetUpRequestDetailsView(
-                    request: request, approveRequest: approveRequest,
-                    declineRequest: declineRequest)
+                    request: request,
+                    approveRequest: { request in
+                        Task {
+                            await approveRequest(request: request)
+                        }
+                    },
+                    declineRequest: { request in
+                        Task {
+                            await declineRequest(request: request)
+                        }
+                    }
+                )
             }
-            .presentationDetents([.medium, .large])
+            .presentationDetents([.large])
             .presentationBackground(.ultraThinMaterial)
-
         }
     }
 }

@@ -659,16 +659,27 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 interests: ["Photography", "Gaming", "Reading", "Travel"],
                 isInterestedToMeet: true,
                 profilePictureUrl: "https://picsum.photos/203",
-                profileQuestions: [
-                    "Love trying new things",
-                    "Always curious about technology",
-                    "Enjoy meeting new people"
-                ],
-                socialStyle: ["Adaptable", "Friendly", "Open-minded"],
-                interactionPreferences: ["Mixed Settings", "Group Activities", "Learning Together"],
-                friendshipValues: ["Honesty", "Shared Growth", "Fun"],
-                socialSituations: ["Social Events", "Learning Workshops", "Casual Meetups"],
-                lifestylePreferences: ["Flexible Schedule", "Active Social Life", "Continuous Learning"],
+                personalPreferences: PersonalPreferences(
+                    activitiesHobbies: ["Photography", "Gaming", "Reading"],
+                    friendActivities: ["Creative Partner", "Gaming Buddy"]
+                ),
+                socialStyle: SocialStyleModel(
+                    mySocialStyle: ["Adaptable", "Friendly", "Open-minded"],
+                    feelAfterMeetup: "Energized"
+                ),
+                interactionPreferences: InteractionPreferencesModel(
+                    events: ["Mixed Settings", "Group Activities"],
+                    topics: ["Technology", "Gaming", "Photography"]
+                ),
+                friendshipValues: FriendshipValuesModel(
+                    values: ["Honesty", "Shared Growth", "Fun"],
+                    idealFriendship: ["Supportive", "Engaging"],
+                    qualities: ["Open-minded", "Tech-savvy"]
+                ),
+                socialSituations: SocialSituationsModel(
+                    feelWhenMeetingNewPeople: "Curious and Open",
+                    socialRole: "The Connector"
+                ),
                 hasCompletedOnboarding: true
             )
             
