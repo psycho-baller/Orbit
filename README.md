@@ -1,5 +1,7 @@
 # **Orbit**
 
+[![wakatime](https://wakatime.com/badge/user/33addb7e-f5e6-470b-a55b-0a8babc62ebb/project/b7e8f127-9e44-4117-b689-f425a6f4a22c.svg)](https://wakatime.com/badge/user/33addb7e-f5e6-470b-a55b-0a8babc62ebb/project/b7e8f127-9e44-4117-b689-f425a6f4a22c.svg)
+
 We are on a mission to empower every university student the ability to find and approach other people who share similar interests. Ultimately helping each one of us create lifelong friendships. At its core, Orbit addresses the isolation people feel despite living in a highly connected world. Its goal is to create a community where users—referred to as "astronauts"—can explore social connections, make friends, and feel a sense of belonging. It targets individuals seeking to meet new people and build genuine relationships in a safe, personalized, and engaging environment.
 
 This app is still being actively developed. But you can [join the waitlist](https://app.formbricks.com/s/cm1kzuugo0000y7iienebnvd9) so you get notified once the app is out
