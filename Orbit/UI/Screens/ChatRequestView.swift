@@ -114,13 +114,10 @@ struct ChatRequestView: View {
         let sender = UserModel(
             accountId: "1", name: "John",
             interests: ["Swift", "iOS", "Coding"],
-            latitude: 40.7127, longitude: -74.0059, isInterestedToMeet: true,
             conversations: ["1", "2", "3"], currentAreaId: "1")
         let receiver = UserModel(
             accountId: "2", name: "Jane",
             interests: ["Swift", "iOS", "Coding"],
-            latitude: 40.7127, longitude: -74.0059,
-            isInterestedToMeet: true,
             conversations: ["1", "2", "3"], currentAreaId: "1")
         ChatRequestView(sender: sender, receiver: receiver)
             .environmentObject(ChatRequestViewModel.mock())

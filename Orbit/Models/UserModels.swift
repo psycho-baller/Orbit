@@ -18,9 +18,6 @@ struct UserModel: Codable, Identifiable, Equatable {
     }
     var name: String
     var interests: [String]?
-    var latitude: Double?
-    var longitude: Double?
-    var isInterestedToMeet: Bool?
     var conversations: [String]?
     var currentAreaId: String?  // References Area collection
     var profilePictureUrl: String?
@@ -43,9 +40,6 @@ struct UserModel: Codable, Identifiable, Equatable {
         accountId: String,
         name: String,
         interests: [String]? = nil,
-        latitude: Double? = nil,
-        longitude: Double? = nil,
-        isInterestedToMeet: Bool? = nil,
         conversations: [String]? = nil,
         currentAreaId: String? = nil,
         profilePictureUrl: String? = nil,
@@ -61,9 +55,6 @@ struct UserModel: Codable, Identifiable, Equatable {
         self.accountId = accountId
         self.name = name
         self.interests = interests
-        self.latitude = latitude
-        self.longitude = longitude
-        self.isInterestedToMeet = isInterestedToMeet
         self.conversations = conversations
         self.currentAreaId = currentAreaId
         self.profilePictureUrl = profilePictureUrl
@@ -80,9 +71,6 @@ struct UserModel: Codable, Identifiable, Equatable {
     func update(
         name: String? = nil,
         interests: [String]? = nil,
-        latitude: Double? = nil,
-        longitude: Double? = nil,
-        isInterestedToMeet: Bool? = nil,
         conversations: [String]? = nil,
         bio: String? = nil,
         dob: String? = nil,
@@ -96,9 +84,6 @@ struct UserModel: Codable, Identifiable, Equatable {
             accountId: self.accountId,  // accountId stays the same
             name: name ?? self.name,
             interests: interests ?? self.interests,
-            latitude: latitude ?? self.latitude,
-            longitude: longitude ?? self.longitude,
-            isInterestedToMeet: isInterestedToMeet ?? self.isInterestedToMeet,
             conversations: conversations ?? self.conversations,
             currentAreaId: self.currentAreaId,  // currentAreaId remains unchanged
             profilePictureUrl: self.profilePictureUrl,  // profilePictureUrl remains unchanged

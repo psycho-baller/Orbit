@@ -86,7 +86,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     func getAllUsers() async -> [UserModel] {
         do {
             let allUsers = try await userManagementService.listUsers(queries: [
-                Query.equal("isInterestedToMeet", value: true)
+//                Query.equal("isInterestedToMeet", value: true)
             ])
             return allUsers.map(\.data)
 
@@ -252,9 +252,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             return
         }
 
-        // Toggle the `isInterestedToMeet` attribute
-        currentUser.isInterestedToMeet =
-            !(currentUser.isInterestedToMeet ?? false)
+        // add something that you need to toggle for the user
 
         do {
             // Update the user in the Appwrite database
@@ -375,7 +373,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
         return users.filter { user in
             guard user.accountId != currentUser?.accountId else { return false }
-            guard user.isInterestedToMeet ?? false else { return false }
 
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
@@ -666,7 +663,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 accountId: "currentUser",
                 name: "Current User",
                 interests: ["Photography", "Gaming", "Reading", "Travel"],
-                isInterestedToMeet: true,
                 profilePictureUrl: "https://picsum.photos/203",
                 personalPreferences: PersonalPreferences(
                     activitiesHobbies: ["Photography", "Gaming", "Reading"],
