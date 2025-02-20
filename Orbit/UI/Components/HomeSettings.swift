@@ -16,18 +16,18 @@ struct HomeSettings: View {
             Text("Settings")
                 .font(.title)
                 .padding()
-            Toggle(
-                "Receive meetup requests from other people",
-                isOn: Binding(
-                    get: { userVM.currentUser?.isInterestedToMeet ?? false },
-                    set: { _ in
-                        Task {
-                            await userVM.toggleIsInterestedToMeet()
-                        }
-                    }
-                )
-            )
-            .font(.headline)
+//            Toggle(
+//                "Receive meetup requests from other people",
+//                isOn: Binding(
+//                    get: { userVM.currentUser? ?? false },
+//                    set: { _ in
+//                        Task {
+//                            await userVM.toggleIsInterestedToMeet()
+//                        }
+//                    }
+//                )
+//            )
+//            .font(.headline)
         }
         .padding()
     }

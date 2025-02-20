@@ -14,7 +14,6 @@ extension UserModel {
                 accountId: "user1",
                 name: "Sarah Chen",
                 interests: ["Photography", "Hiking", "Coffee", "Art", "Travel"],
-                isInterestedToMeet: true,
                 profilePictureUrl: "https://picsum.photos/200",
                 personalPreferences: PersonalPreferences(
                     activitiesHobbies: ["Photography", "Hiking", "Art"],
@@ -43,7 +42,6 @@ extension UserModel {
                 accountId: "user2",
                 name: "Alex Rivera",
                 interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
-                isInterestedToMeet: true,
                 profilePictureUrl: "https://picsum.photos/201",
                 personalPreferences: PersonalPreferences(
                     activitiesHobbies: ["Gaming", "Coding", "Music"],
@@ -72,7 +70,6 @@ extension UserModel {
                 accountId: "user3",
                 name: "Jordan Taylor",
                 interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
-                isInterestedToMeet: true,
                 profilePictureUrl: "https://picsum.photos/202",
                 personalPreferences: PersonalPreferences(
                     activitiesHobbies: ["Yoga", "Reading", "Meditation"],
