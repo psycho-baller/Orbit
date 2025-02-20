@@ -37,11 +37,11 @@ func deleteUnmatchedUsers() async {
 func fetchAccountIds() async throws -> Set<String> {
     var accountIds = Set<String>()
     do {
-
+        print("Fetching all documents...")
         let documents = try await databases.listDocuments(
             databaseId: DATABASE_ID,
-            collectionId: COLLECTION_ID,
-            queries: [Query.select(["accountId"])]
+            collectionId: COLLECTION_ID
+            // queries: [Query.select(["accountId"])]
             // limit: 100,
             // cursor: cursor
         )
