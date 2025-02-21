@@ -5,10 +5,11 @@ struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
     @EnvironmentObject private var chatRequestVM: ChatRequestViewModel
+    @EnvironmentObject private var meetupRequestVM: MeetupRequestViewModel
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) var colorScheme
 
-    @State private var selectedUser: UserModel? = nil
+    @State private var selectedMeetupRequest: MeetupRequestModel? = nil
     @State private var isShowingChatRequests = false
     @State private var chatRequestListDetent: PresentationDetent = .medium
     @State private var isPendingExpanded = false
@@ -57,11 +58,11 @@ struct HomeView: View {
                         )
                         .presentationBackground(.ultraThinMaterial)
                     }
-                    .sheet(item: $selectedUser) { user in
+                    .sheet(item: $selectedMeetupRequest) { meetupRequest in
                         ZStack {
                             ScrollView {
-                                UserProfileView(user: user, currentUser: userVM.currentUser)
-                                    .padding(.bottom, 80)
+
+                                //                                .padding(.bottom, 80)
                             }
                         }
                         .presentationDetents([.large])
@@ -115,9 +116,9 @@ struct HomeView: View {
             //        } else if userVM.currentUser?.isInterestedToMeet == false {
             //            NotInterestedToMeetView()
         } else if userVM.isOnCampus || isPreviewMode {
-            loadedView(userVM.filteredUsers)
-        } else {
-            OffCampusView()
+            loadedView()
+            //        } else {
+            //            OffCampusView()
         }
     }
 
@@ -217,12 +218,12 @@ struct HomeView: View {
         }
     }
 
-    private func loadedView(_ users: [UserModel]) -> some View {
+    private func loadedView() -> some View {
 
         VStack(alignment: .leading, spacing: 0) {
             SearchBar(
                 text: $userVM.searchText,
-                placeholder: "Search for a user"
+                placeholder: "Search for a meetup request"
             )
 
             HStack {
@@ -236,24 +237,24 @@ struct HomeView: View {
                 )
             }
 
-            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
-                .padding(.bottom, 16)
+            //            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
+            //                .padding(.bottom, 16)
 
             if userVM.filteredUsers.isEmpty {
                 NoUsersAroundView()
             } else {
                 ScrollView {
                     VStack(spacing: 16) {
-                        ForEach(userVM.filteredUsers) { user in
-                            if !hasPendingRequest(for: user) {
-                                UserCardView(
-                                    user: user,
-                                    currentUser: userVM.currentUser
-                                )
-                                .onTapGesture {
-                                    selectedUser = user
-                                }
+                        ForEach(meetupRequestVM.meetupRequests) {
+                            meetupRequest in
+                            //                            if !hasPendingRequest(for: user) {
+                            MeetupRequestCardView(
+                                meetupRequest: meetupRequest.data
+                            )
+                            .onTapGesture {
+                                selectedMeetupRequest = nil
                             }
+                            //                            }
                         }
                     }
                 }
@@ -292,6 +293,7 @@ struct HomeView: View {
             .environmentObject(AuthViewModel.mock())
             .environmentObject(UserViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(MeetupRequestViewModel.mock())
             .environmentObject(AppState())
             .accentColor(ColorPalette.accent(for: colorScheme))
 
