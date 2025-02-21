@@ -11,7 +11,8 @@ import CoreLocation
 import Foundation
 import UIKit
 
-struct UserModel: Codable, Identifiable, Equatable {
+struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
+{
     let accountId: String
     var id: String {
         return accountId
@@ -209,3 +210,11 @@ struct TimeRangeConfig: Codable {
 }
 
 typealias UserDocument = AppwriteModels.Document<UserModel>
+
+extension UserDocument {
+    static func mock() -> UserDocument {
+        return AppwriteModels.Document<UserModel>.mock(
+            data: UserModel.mock()
+        )
+    }
+}
