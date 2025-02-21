@@ -15,6 +15,8 @@ struct OrbitApp: App {
     @StateObject var userVM = UserViewModel()
     @StateObject var msgVM = MessagingViewModel()
     @StateObject var chatRequestVM = ChatRequestViewModel()
+    @StateObject var meetupRequestVM = MeetupRequestViewModel()
+    @StateObject var meetupApprovalVM = MeetupApprovalViewModel()
 
     init() {
         let appearance = UITabBarAppearance()
@@ -35,6 +37,8 @@ struct OrbitApp: App {
                 .environmentObject(userVM)
                 .environmentObject(msgVM)
                 .environmentObject(chatRequestVM)
+                .environmentObject(meetupRequestVM)
+                .environmentObject(meetupApprovalVM)
                 .environmentObject(appDelegate.appState)
         }
     }
