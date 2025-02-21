@@ -44,9 +44,7 @@ typealias MeetupApprovalDocument = AppwriteModels.Document<MeetupApprovalModel>
 extension MeetupApprovalDocument {
     static func mock() -> MeetupApprovalDocument {
         return AppwriteModels.Document<MeetupApprovalModel>.mock(
-            data: MeetupApprovalModel.mock(),
-            collectionId: "meetup-approvals",
-            databaseId: "main-database"
+            data: MeetupApprovalModel.mock()
         )
     }
 }

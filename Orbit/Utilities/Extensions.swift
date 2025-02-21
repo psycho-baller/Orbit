@@ -153,7 +153,6 @@ where T: Codable & CodableDictionaryConvertible {
             "$createdAt": ISO8601DateFormatter().string(from: Date.distantPast),
             "$updatedAt": ISO8601DateFormatter().string(from: Date.distantPast),
             "$permissions": [],
-//            "data": data.toDictionary(),  //try! JSONEncoder().encode(data),  // Convert model to JSON
         ]
         // 🔹 Flatten the "data" dictionary so `from(map:)` gets the correct structure
         let modelData = data.toDictionary()
