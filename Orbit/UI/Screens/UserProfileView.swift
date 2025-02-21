@@ -9,7 +9,6 @@ import SwiftUI
 
 struct UserProfileView: View {
     let user: UserModel
-    let currentUser: UserModel?
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
@@ -64,7 +63,7 @@ struct UserProfileView: View {
                                 .padding(.top, 24)
                             
                             Button(action: {
-                                if let currentUser = currentUser {
+                                if let currentUser = userVM.currentUser {
                                     let request = ChatRequestModel(
                                         senderAccountId: currentUser.accountId,
                                         receiverAccountId: user.accountId,

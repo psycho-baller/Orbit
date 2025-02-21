@@ -10,15 +10,16 @@ import SwiftUI
 
 struct UserCardView: View {
     let user: UserModel
-    let currentUser: UserModel?
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var isHidden = false
 
     var body: some View {
-        if !isHidden {
-            NavigationLink(destination: UserProfileView(user: user, currentUser: currentUser)) {
+        if let currentUser = userVM.currentUser, !isHidden {
+            NavigationLink(  // the parent checks if currentUser exists
+                destination: UserProfileView(user: currentUser)
+            ) {
                 SwipeView {
                     HStack(spacing: 16) {
                         // Profile Picture
@@ -37,7 +38,8 @@ struct UserCardView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 60, height: 60)
                                     .foregroundColor(
-                                        ColorPalette.secondaryText(for: colorScheme)
+                                        ColorPalette.secondaryText(
+                                            for: colorScheme)
                                     )
                             }
                         } else {
@@ -46,7 +48,8 @@ struct UserCardView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 60, height: 60)
                                 .foregroundColor(
-                                    ColorPalette.secondaryText(for: colorScheme))
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
                         }
 
                         VStack(alignment: .leading, spacing: 8) {
@@ -58,7 +61,9 @@ struct UserCardView: View {
                                 .lineLimit(1)
 
                             // User Interests
-                            if let activities = user.personalPreferences?.activitiesHobbies {
+                            if let activities = user.personalPreferences?
+                                .activitiesHobbies
+                            {
                                 InterestsHorizontalTags(
                                     interests: activities,
                                     onTapInterest: { activity in
@@ -74,7 +79,7 @@ struct UserCardView: View {
                                 )
                             }
                         }
-                        .frame(height: 100) // Fixed height for the entire VStack
+                        .frame(height: 100)  // Fixed height for the entire VStack
                     }
                     .padding()
                     .background(ColorPalette.main(for: colorScheme))
@@ -124,7 +129,7 @@ struct UserCardView: View {
     }
 
     private func sendQuickRequest() {
-        guard let senderAccountId = currentUser?.accountId else {
+        guard let senderAccountId = userVM.currentUser?.accountId else {
             print("Error: Current user is nil.")
             return
         }
@@ -137,7 +142,7 @@ struct UserCardView: View {
 
         Task {
             await chatRequestVM.sendMeetUpRequest(
-                request: request, from: currentUser?.name)
+                request: request, from: userVM.currentUser?.name)
         }
     }
 }
