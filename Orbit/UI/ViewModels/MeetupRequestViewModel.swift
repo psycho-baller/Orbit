@@ -97,42 +97,27 @@ class MeetupRequestViewModel: ObservableObject {
         }
     }
 
-    #if DEBUG
-        static func mock() -> MeetupRequestViewModel {
-            let meetupRequestVM = MeetupRequestViewModel()
-            meetupRequestVM.meetupRequests = [
-                MeetupRequestDocument.mock()
-            ]
-            print(
-                "meetupRequestVM.meetupRequests: \(meetupRequestVM.meetupRequests)"
-            )
-            print(
-                "meetupRequestVM.meetupRequests[0].data: \(meetupRequestVM.meetupRequests[0].data)"
-            )
-            return meetupRequestVM
-        }
-    #endif
+    /// Update an existing meetup
+    func updateMeetup(_ meetup: MeetupRequestDocument) async {
+        isLoading = true
+        defer { isLoading = false }
 
-    //    /// Update an existing meetup
-    //    func updateMeetup(_ meetup: MeetupRequestModel) async {
-    //        isLoading = true
-    //        defer { isLoading = false }
-    //
-    //        do {
-    //            let updatedMeetup = try await meetupService.updateMeetup(
-    //                meetupId: meetup.)
-    //            if let index = meetupRequests.firstIndex(where: {
-    //                $0.title == meetup.title
-    //            }) {
-    //                meetupRequests[index] = updatedMeetup
-    //            }
-    //        } catch {
-    //            self.error = error.localizedDescription
-    //            print(
-    //                "MeetupRequestViewModel - updateMeetup: Error: \(error.localizedDescription)"
-    //            )
-    //        }
-    //    }
+        do {
+            if let updatedMeetup = try await meetupService.updateMeetup(
+                meetupId: meetup.id, updatedMeetup: meetup.data),
+                let index = meetupRequests.firstIndex(where: {
+                    $0.id == updatedMeetup.id
+                })
+            {
+                meetupRequests[index] = updatedMeetup
+            }
+        } catch {
+            self.error = error.localizedDescription
+            print(
+                "MeetupRequestViewModel - updateMeetup: Error: \(error.localizedDescription)"
+            )
+        }
+    }
 
     /// Delete a meetup request
     //    func deleteMeetup(_ meetup: MeetupRequestModel) async {
@@ -149,4 +134,16 @@ class MeetupRequestViewModel: ObservableObject {
     //            )
     //        }
     //    }
+
+    #if DEBUG
+        static func mock() -> MeetupRequestViewModel {
+            let meetupRequestVM = MeetupRequestViewModel()
+            meetupRequestVM.meetupRequests = [
+                MeetupRequestDocument.mock()
+            ]
+
+            return meetupRequestVM
+        }
+    #endif
+
 }

@@ -58,6 +58,30 @@ class MeetupApprovalViewModel: ObservableObject {
         }
     }
 
+    /// Update an existing meetup approval
+    func updateMeetupApproval(_ approval: MeetupApprovalDocument) async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            if let updatedApproval =
+                try await meetupApprovalService.updateApproval(
+                    approvalId: approval.id, updatedApproval: approval.data
+                ),
+                let index = approvals.firstIndex(where: {
+                    $0.id == updatedApproval.id
+                })
+            {
+                approvals[index] = updatedApproval
+            }
+        } catch {
+            self.error = error.localizedDescription
+            print(
+                "MeetupApprovalViewModel - updateMeetupApproval: Error: \(error.localizedDescription)"
+            )
+        }
+    }
+
     /// Reject (or remove) a meetup approval
     //    func removeApproval(_ approval: MeetupApprovalModel) async {
     //        isLoading = true

@@ -13,6 +13,9 @@ protocol MeetupApprovalServiceProtocol {
     func createApproval(approval: MeetupApprovalModel) async throws
         -> MeetupApprovalDocument
     func getApproval(approvalId: String) async throws -> MeetupApprovalDocument?
+    func updateApproval(
+        approvalId: String, updatedApproval: MeetupApprovalModel
+    ) async throws -> MeetupApprovalDocument?
     func deleteApproval(approvalId: String) async throws
     func listApprovals(queries: [String]?) async throws
         -> [MeetupApprovalDocument]
@@ -56,6 +59,29 @@ class MeetupApprovalService: MeetupApprovalServiceProtocol {
         } catch {
             throw NSError(
                 domain: "Approval not found", code: 404, userInfo: nil)
+        }
+    }
+
+    // 🔹 Update an existing approval
+    func updateApproval(
+        approvalId: String, updatedApproval: MeetupApprovalModel
+    ) async throws -> MeetupApprovalDocument? {
+        do {
+            let updatedDocument = try await appwriteService.databases
+                .updateDocument<MeetupApprovalModel>(
+                    databaseId: appwriteService.databaseId,
+                    collectionId: collectionId,
+                    documentId: approvalId,
+                    data: updatedApproval.toJson(),
+                    permissions: nil,
+                    nestedType: MeetupApprovalModel.self
+                )
+            return updatedDocument
+        } catch {
+            print(
+                "MeetupApprovalService - updateApproval: Error: \(error.localizedDescription)"
+            )
+            throw error
         }
     }
 
