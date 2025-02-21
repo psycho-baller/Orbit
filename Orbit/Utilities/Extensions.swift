@@ -138,7 +138,45 @@ where T: Identifiable, T.ID == String {
     //        return self.id
     //    }
 }
+extension AppwriteModels.Document
+where T: Codable & CodableDictionaryConvertible {
+    static func mock(
+        data: T, collectionId: String = "default-collection",
+        databaseId: String = "default-database"
+    ) -> AppwriteModels.Document<T> {
+        print("data: \(data)")
+        print("data.toDictionary(): \(data.toDictionary())")
+        var mockData: [String: Any] = [
+            "$id": UUID().uuidString,
+            "$collectionId": collectionId,
+            "$databaseId": databaseId,
+            "$createdAt": ISO8601DateFormatter().string(from: Date.distantPast),
+            "$updatedAt": ISO8601DateFormatter().string(from: Date.distantPast),
+            "$permissions": [],
+//            "data": data.toDictionary(),  //try! JSONEncoder().encode(data),  // Convert model to JSON
+        ]
+        // 🔹 Flatten the "data" dictionary so `from(map:)` gets the correct structure
+        let modelData = data.toDictionary()
+        mockData.merge(modelData) { (_, new) in new }
 
+        return AppwriteModels.Document<T>.from(map: mockData)
+    }
+}
+
+protocol CodableDictionaryConvertible: Codable {
+    func toDictionary() -> [String: Any]
+}
+extension CodableDictionaryConvertible {
+    func toDictionary() -> [String: Any] {
+        guard let data = try? JSONEncoder().encode(self),
+            let json = try? JSONSerialization.jsonObject(with: data)
+                as? [String: Any]
+        else {
+            return [:]  // Fallback empty dictionary if encoding fails
+        }
+        return json
+    }
+}
 //struct ColorPalette {
 //
 //    // Main color inspired by deep space
