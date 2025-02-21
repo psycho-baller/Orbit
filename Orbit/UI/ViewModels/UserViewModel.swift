@@ -54,10 +54,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         print(
             "UserViewModel - initialize: Initializing user list and subscribing to real-time updates."
         )
-        self.preciseLocationManager = PreciseLocationManager()
-        preciseLocationManager?.delegate = self  // Set delegate to receive location updates
-        await subscribeToRealtimeUpdates()
-        self.allUsers = await getAllUsers()
+//        self.preciseLocationManager = PreciseLocationManager()
+//        preciseLocationManager?.delegate = self  // Set delegate to receive location updates
+//        await subscribeToRealtimeUpdates()
+//        self.allUsers = await getAllUsers()
     }
 
     @MainActor
