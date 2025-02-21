@@ -9,7 +9,7 @@ struct HomeView: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) var colorScheme
 
-    @State private var selectedMeetupRequest: MeetupRequestModel? = nil
+    //    @State private var selectedMeetupRequest: MeetupRequestDocument? = nil
     @State private var isShowingChatRequests = false
     @State private var chatRequestListDetent: PresentationDetent = .medium
     @State private var isPendingExpanded = false
@@ -58,16 +58,16 @@ struct HomeView: View {
                         )
                         .presentationBackground(.ultraThinMaterial)
                     }
-                    .sheet(item: $selectedMeetupRequest) { meetupRequest in
-                        ZStack {
-                            ScrollView {
-
-                                //                                .padding(.bottom, 80)
-                            }
-                        }
-                        .presentationDetents([.large])
-                        .presentationDragIndicator(.visible)
-                    }
+//                    .sheet(item: $selectedMeetupRequest) { meetupRequest in
+//                        ZStack {
+//                            ScrollView {
+//
+//                                //                                .padding(.bottom, 80)
+//                            }
+//                        }
+//                        .presentationDetents([.large])
+//                        .presentationDragIndicator(.visible)
+//                    }
                     .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
                         HomeSettings()
                             .presentationDetents([.fraction(0.7), .large])
@@ -251,9 +251,9 @@ struct HomeView: View {
                             MeetupRequestCardView(
                                 meetupRequest: meetupRequest.data
                             )
-                            .onTapGesture {
-                                selectedMeetupRequest = nil
-                            }
+                            //                            .onTapGesture {
+                            //                                selectedMeetupRequest = meetupRequest
+                            //                            }
                             //                            }
                         }
                     }
