@@ -11,7 +11,7 @@ struct LoggedInView: View {
 
     var body: some View {
         Group {
-            if (userVM.currentUser?.hasCompletedOnboarding) != true {
+            if (userVM.currentUser?.hasCompletedOnboarding) == true {
                 MainTabView()
             } else {
                 OnboardingFlow()
