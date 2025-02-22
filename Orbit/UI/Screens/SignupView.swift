@@ -11,6 +11,8 @@ struct SignupView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var name = ""
+    @State private var username = ""
+    @State private var isUsernameAvailable: Bool? = nil
     @State private var navigateToOnboarding = false
 
     @EnvironmentObject var authVM: AuthViewModel
@@ -51,6 +53,25 @@ struct SignupView: View {
                 }
                 .padding(.bottom, 30)
 
+                TextField("Username", text: self.$username)
+                    .padding()
+                    .background(ColorPalette.lightGray(for: colorScheme))
+                    .cornerRadius(16.0)
+                    .textInputAutocapitalization(.never)
+                    .onChange(of: username, initial: false) {
+                        newUsername, i in
+                        checkUsernameAvailability(newUsername)
+                    }
+                if let isAvailable = isUsernameAvailable {
+                    Text(
+                        isAvailable
+                            ? "✅ Username available" : "❌ Username taken"
+                    )
+                    .foregroundColor(isAvailable ? .green : .red)
+                    .font(.caption)
+                    .padding(.top, 4)
+                }
+
                 TextField("Name", text: self.$name)
                     .padding()
                     .background(ColorPalette.lightGray(for: colorScheme))
@@ -80,7 +101,7 @@ struct SignupView: View {
 
                             // Step 2: Ensure the account creation was successful
                             guard let userId = newUser?.id,
-                                let userName = newUser?.name
+                                let nameOfUser = newUser?.name
                             else {
                                 print("Error: User ID or Name is nil")
                                 return
@@ -89,7 +110,8 @@ struct SignupView: View {
                             // Step 3: Create a corresponding user in the database
                             let myUser = UserModel(
                                 accountId: userId,
-                                name: userName,
+                                username: username,
+                                name: nameOfUser,
                                 interests: nil,
                                 personalPreferences: nil,
                                 interactionPreferences: nil,
@@ -123,10 +145,23 @@ struct SignupView: View {
             }
             .padding([.leading, .trailing], 27.5)
             .navigationBarHidden(true)
-
+            .onAppear {
+                Task {
+                    await userVM.fetchAllUsernames()
+                }
+            }
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))
+    }
+
+    /// Check if username is available using cached data
+    func checkUsernameAvailability(_ newUsername: String) {
+        guard !newUsername.isEmpty else {
+            isUsernameAvailable = nil
+            return
+        }
+        isUsernameAvailable = userVM.isUsernameAvailable(newUsername)
     }
 
     func retryUserCreation(userData: UserModel, retries: Int = 3) async throws {
@@ -151,10 +186,9 @@ struct SignupView: View {
     }
 }
 
-struct SignupView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignupView()
-            .environmentObject(AuthViewModel())
-            .environmentObject(UserViewModel())
-    }
+#Preview {
+    SignupView()
+        .environmentObject(AuthViewModel())
+        .environmentObject(UserViewModel())
+
 }
