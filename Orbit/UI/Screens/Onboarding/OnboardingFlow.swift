@@ -21,14 +21,10 @@ struct OnboardingFlow: View {
                         UserInfoView(onboardingVM: viewModel)
                     case .personalPreferences:
                         PersonalPreferencesView(onboardingVM: viewModel)
-                    case .socialStyle:
-                        SocialStyleView(onboardingVM: viewModel)
                     case .friendshipValues:
                         FriendshipValuesView(onboardingVM: viewModel)
                     case .interactionPreferences:
                         InteractionPreferencesView(onboardingVM: viewModel)
-                    case .socialSituations:
-                        SocialSituationsView(onboardingVM: viewModel)
                     //                    case .complete:
                     //                        CompleteView(viewModel: viewModel)
                     default:

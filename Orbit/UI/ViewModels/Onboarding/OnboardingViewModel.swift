@@ -15,8 +15,8 @@ class OnboardingViewModel: ObservableObject {
     @Published var hasCompletedOnboarding = false  // Tracks if onboarding is completed
 
     enum OnboardingStep: String, CaseIterable, Hashable {
-        case welcome, userInfo, personalPreferences, socialStyle, interactionPreferences,
-            friendshipValues, socialSituations, complete
+        case welcome, userInfo, personalPreferences, interactionPreferences,
+            friendshipValues, complete
     }
 
     //    struct OnboardingData {

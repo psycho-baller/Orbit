@@ -96,7 +96,7 @@ struct PersonalPreferencesView: View {
                 VStack {
                     Button(action: {
                         onboardingVM.navigationPath.append(
-                            OnboardingViewModel.OnboardingStep.socialStyle)
+                            OnboardingViewModel.OnboardingStep.interactionPreferences)
 
                         let selectedAnswers =
                             viewModel

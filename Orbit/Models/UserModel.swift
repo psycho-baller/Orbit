@@ -27,10 +27,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     // Onboarding-related fields
     var personalPreferences: PersonalPreferences?  // To store answers to Profile Questions
-    var socialStyle: SocialStyleModel?  // To store answers to Social Style
     var interactionPreferences: InteractionPreferencesModel?  // To store Interaction Preferences
     var friendshipValues: FriendshipValuesModel?  // To store Friendship Values
-    var socialSituations: SocialSituationsModel?  // To store Social Situations
     var hasCompletedOnboarding: Bool? = false  // Indicates if onboarding is completed
 
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
@@ -47,10 +45,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         bio: String? = nil,
         dob: String? = nil,
         personalPreferences: PersonalPreferences? = nil,
-        socialStyle: SocialStyleModel? = nil,
         interactionPreferences: InteractionPreferencesModel? = nil,
         friendshipValues: FriendshipValuesModel? = nil,
-        socialSituations: SocialSituationsModel? = nil,
         hasCompletedOnboarding: Bool? = false
     ) {
         self.accountId = accountId
@@ -62,10 +58,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.bio = bio
         self.dob = dob
         self.personalPreferences = personalPreferences
-        self.socialStyle = socialStyle
         self.interactionPreferences = interactionPreferences
         self.friendshipValues = friendshipValues
-        self.socialSituations = socialSituations
         self.hasCompletedOnboarding = hasCompletedOnboarding
     }
 
@@ -76,10 +70,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         bio: String? = nil,
         dob: String? = nil,
         personalPreferences: PersonalPreferences? = nil,
-        socialStyle: SocialStyleModel? = nil,
         interactionPreferences: InteractionPreferencesModel? = nil,
-        friendshipValues: FriendshipValuesModel? = nil,
-        socialSituations: SocialSituationsModel? = nil
+        friendshipValues: FriendshipValuesModel? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,  // accountId stays the same
@@ -92,11 +84,10 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             dob: dob ?? self.dob,
             personalPreferences: personalPreferences
                 ?? self.personalPreferences,
-            socialStyle: socialStyle ?? self.socialStyle,
             interactionPreferences: interactionPreferences
                 ?? self.interactionPreferences,
             friendshipValues: friendshipValues ?? self.friendshipValues,
-            socialSituations: socialSituations ?? self.socialSituations
+            hasCompletedOnboarding: self.hasCompletedOnboarding
         )
     }
 
@@ -112,10 +103,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 activitiesHobbies: ["Photography", "Hiking", "Art"],
                 friendActivities: ["Creative Collaborator", "Travel Buddy"]
             ),
-            socialStyle: SocialStyleModel(
-                mySocialStyle: ["Extroverted", "Spontaneous", "Creative"],
-                feelAfterMeetup: "Energized"
-            ),
             interactionPreferences: InteractionPreferencesModel(
                 events: [
                     "Grab a coffee together", "Try an outdoor adventure",
@@ -124,12 +111,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             ),
             friendshipValues: FriendshipValuesModel(
                 values: ["Authenticity", "Adventure", "Growth"],
-                idealFriendship: ["Spontaneous", "Creative"],
                 qualities: ["Open-minded", "Adventurous"]
-            ),
-            socialSituations: SocialSituationsModel(
-                feelWhenMeetingNewPeople: "Excited and Energized",
-                socialRole: "The Social Butterfly"
             ),
             hasCompletedOnboarding: true
         )
@@ -147,22 +129,13 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                     activitiesHobbies: ["Gaming", "Coding", "Music"],
                     friendActivities: ["Hobby Buddy", "Deep Conversations"]
                 ),
-                socialStyle: SocialStyleModel(
-                    mySocialStyle: ["Ambivert", "Strategic", "Analytical"],
-                    feelAfterMeetup: "Reflective"
-                ),
                 interactionPreferences: InteractionPreferencesModel(
                     events: ["Share a meal", "Enjoy hobbies together"],
                     topics: ["Tech", "Gaming", "Movies"]
                 ),
                 friendshipValues: FriendshipValuesModel(
                     values: ["Loyalty", "Shared Interests", "Fun"],
-                    idealFriendship: ["Intellectual", "Relaxed"],
                     qualities: ["Tech-savvy", "Analytical"]
-                ),
-                socialSituations: SocialSituationsModel(
-                    feelWhenMeetingNewPeople: "Curious",
-                    socialRole: "The Observer"
                 ),
                 hasCompletedOnboarding: true
             ),
@@ -177,22 +150,13 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                     activitiesHobbies: ["Yoga", "Reading", "Meditation"],
                     friendActivities: ["Workout Partner", "Deep Conversations"]
                 ),
-                socialStyle: SocialStyleModel(
-                    mySocialStyle: ["Introspective", "Calm", "Thoughtful"],
-                    feelAfterMeetup: "Reflective"
-                ),
                 interactionPreferences: InteractionPreferencesModel(
                     events: ["Enjoy hobbies together", "Share a meal"],
                     topics: ["Books", "Wellness", "Personal Growth"]
                 ),
                 friendshipValues: FriendshipValuesModel(
                     values: ["Personal Growth", "Understanding", "Support"],
-                    idealFriendship: ["Mindful", "Supportive"],
                     qualities: ["Self-aware", "Calm"]
-                ),
-                socialSituations: SocialSituationsModel(
-                    feelWhenMeetingNewPeople: "Reserved but Interested",
-                    socialRole: "The Listener"
                 ),
                 hasCompletedOnboarding: true
             ),

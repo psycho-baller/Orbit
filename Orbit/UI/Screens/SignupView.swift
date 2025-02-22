@@ -92,10 +92,8 @@ struct SignupView: View {
                                 name: userName,
                                 interests: nil,
                                 personalPreferences: nil,
-                                socialStyle: nil,
                                 interactionPreferences: nil,
-                                friendshipValues: nil,
-                                socialSituations: nil
+                                friendshipValues: nil
                             )
 
                             try await retryUserCreation(userData: myUser)
