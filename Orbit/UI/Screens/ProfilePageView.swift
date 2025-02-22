@@ -104,17 +104,6 @@ struct ProfilePageView: View {
                         )
                     }
 
-                    // Social Style Section
-                    if let socialStyle = user.socialStyle {
-                        PreferenceSection(
-                            title: "Social Style",
-                            items: (socialStyle.mySocialStyle ?? [])
-                                + [socialStyle.feelAfterMeetup].compactMap {
-                                    $0
-                                }
-                        )
-                    }
-
                     // Interaction Preferences Section
                     if let interactions = user.interactionPreferences {
                         PreferenceSection(
@@ -129,19 +118,7 @@ struct ProfilePageView: View {
                         PreferenceSection(
                             title: "Friendship Values",
                             items: (values.values ?? [])
-                                + (values.idealFriendship ?? [])
                                 + (values.qualities ?? [])
-                        )
-                    }
-
-                    // Social Situations Section
-                    if let situations = user.socialSituations {
-                        PreferenceSection(
-                            title: "Social Situations",
-                            items: [
-                                situations.feelWhenMeetingNewPeople,
-                                situations.socialRole,
-                            ].compactMap { $0 }
                         )
                     }
                 }

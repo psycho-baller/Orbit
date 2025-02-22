@@ -74,8 +74,6 @@
 		25B8239E2D12FCAA007F63B6 /* PersonalPreferencesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B8239D2D12FCAA007F63B6 /* PersonalPreferencesModel.swift */; };
 		25B823A02D134556007F63B6 /* InteractionPreferencesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B8239F2D134556007F63B6 /* InteractionPreferencesModel.swift */; };
 		25B823A22D1346D0007F63B6 /* FriendshipValuesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B823A12D1346BB007F63B6 /* FriendshipValuesModel.swift */; };
-		25B823A42D1347A1007F63B6 /* SocialSituationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B823A32D134796007F63B6 /* SocialSituationsModel.swift */; };
-		25B823A62D1347F9007F63B6 /* SocialStyleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B823A52D1347EE007F63B6 /* SocialStyleModel.swift */; };
 		25D90B072CE6CE4B00463D67 /* ChatRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */; };
 		25D90B092CE6D7ED00463D67 /* ChatRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */; };
 		25D90B0B2CE6EB3800463D67 /* ChatRequestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D90B0A2CE6EB3800463D67 /* ChatRequestViewModel.swift */; };
@@ -195,8 +193,6 @@
 		25B8239D2D12FCAA007F63B6 /* PersonalPreferencesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalPreferencesModel.swift; sourceTree = "<group>"; };
 		25B8239F2D134556007F63B6 /* InteractionPreferencesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionPreferencesModel.swift; sourceTree = "<group>"; };
 		25B823A12D1346BB007F63B6 /* FriendshipValuesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendshipValuesModel.swift; sourceTree = "<group>"; };
-		25B823A32D134796007F63B6 /* SocialSituationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialSituationsModel.swift; sourceTree = "<group>"; };
-		25B823A52D1347EE007F63B6 /* SocialStyleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialStyleModel.swift; sourceTree = "<group>"; };
 		25D90B062CE6CE4B00463D67 /* ChatRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestModel.swift; sourceTree = "<group>"; };
 		25D90B082CE6D7ED00463D67 /* ChatRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestService.swift; sourceTree = "<group>"; };
 		25D90B0A2CE6EB3800463D67 /* ChatRequestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestViewModel.swift; sourceTree = "<group>"; };
@@ -373,8 +369,6 @@
 			isa = PBXGroup;
 			children = (
 				257454AE2D67AED400C7747F /* MeetupRequestModel.swift */,
-				25B823A52D1347EE007F63B6 /* SocialStyleModel.swift */,
-				25B823A32D134796007F63B6 /* SocialSituationsModel.swift */,
 				25B823A12D1346BB007F63B6 /* FriendshipValuesModel.swift */,
 				25B8239D2D12FCAA007F63B6 /* PersonalPreferencesModel.swift */,
 				25B8239F2D134556007F63B6 /* InteractionPreferencesModel.swift */,
@@ -695,7 +689,6 @@
 				25AE6B4A2D0F1B8500D622B5 /* LoggedInView.swift in Sources */,
 				000AE7492CD5F5DD00431CDB /* MessageBox.swift in Sources */,
 				25D90B0D2CE6EC3100463D67 /* ChatRequestView.swift in Sources */,
-				25B823A62D1347F9007F63B6 /* SocialStyleModel.swift in Sources */,
 				25117F6A2CF772DB00ACE9C8 /* LightGrayOrMaterial.swift in Sources */,
 				259CB2952CC0465600C9F285 /* AuthViewModel.swift in Sources */,
 				257454AD2D67ACC800C7747F /* MeetupApprovalModel.swift in Sources */,
@@ -712,7 +705,6 @@
 				005518CF2CE6E5A000F3E92B /* ConversationDetailModel.swift in Sources */,
 				619992A12D13768D00440533 /* UserProfileView.swift in Sources */,
 				0669F94C2CD6C6460031D154 /* MessageModel.swift in Sources */,
-				25B823A42D1347A1007F63B6 /* SocialSituationsModel.swift in Sources */,
 				257454B32D67BC2600C7747F /* MeetupRequestService.swift in Sources */,
 				259CB2A32CC046F300C9F285 /* UserModel.swift in Sources */,
 				0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */,

@@ -54,10 +54,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         print(
             "UserViewModel - initialize: Initializing user list and subscribing to real-time updates."
         )
-//        self.preciseLocationManager = PreciseLocationManager()
-//        preciseLocationManager?.delegate = self  // Set delegate to receive location updates
-//        await subscribeToRealtimeUpdates()
-//        self.allUsers = await getAllUsers()
+        //        self.preciseLocationManager = PreciseLocationManager()
+        //        preciseLocationManager?.delegate = self  // Set delegate to receive location updates
+        //        await subscribeToRealtimeUpdates()
+        //        self.allUsers = await getAllUsers()
     }
 
     @MainActor
@@ -86,7 +86,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     func getAllUsers() async -> [UserModel] {
         do {
             let allUsers = try await userManagementService.listUsers(queries: [
-//                Query.equal("isInterestedToMeet", value: true)
+                //                Query.equal("isInterestedToMeet", value: true)
             ])
             return allUsers.map(\.data)
 
@@ -103,8 +103,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         personalPreferences: PersonalPreferences? = nil,
         interactionPreferences: InteractionPreferencesModel? = nil,
         friendshipValues: FriendshipValuesModel? = nil,
-        socialSituations: SocialSituationsModel? = nil,
-        socialStyle: SocialStyleModel? = nil,
         bio: String? = nil,
         dob: Date? = nil,
         markComplete: Bool = false
@@ -134,13 +132,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         // Update the user's onboarding data locally
         currentUser.personalPreferences =
             personalPreferences ?? currentUser.personalPreferences
-        currentUser.socialStyle = socialStyle ?? currentUser.socialStyle
         currentUser.interactionPreferences =
             interactionPreferences ?? currentUser.interactionPreferences
         currentUser.friendshipValues =
             friendshipValues ?? currentUser.friendshipValues
-        currentUser.socialSituations =
-            socialSituations ?? currentUser.socialSituations
         currentUser.bio = bio ?? currentUser.bio
         if let dateOfBirth = dob {
 
@@ -362,7 +357,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     // Aggregate unique interests from all users
     var allInterests: [String] {
-        let activitiesArray = users.compactMap { $0.personalPreferences?.activitiesHobbies }.flatMap { $0 }
+        let activitiesArray = users.compactMap {
+            $0.personalPreferences?.activitiesHobbies
+        }.flatMap { $0 }
         return Array(Set(activitiesArray)).sorted()
     }
 
@@ -377,13 +374,16 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
                 || user.name.lowercased().contains(lowercasedSearchText)
-                || (user.personalPreferences?.activitiesHobbies?.joined(separator: " ").lowercased()
+                || (user.personalPreferences?.activitiesHobbies?.joined(
+                    separator: " "
+                ).lowercased()
                     .contains(lowercasedSearchText) ?? false)
 
             let matchesInterests =
                 selectedInterests.isEmpty
                 || (user.personalPreferences?.activitiesHobbies != nil
-                    && !Set(user.personalPreferences!.activitiesHobbies!).intersection(selectedInterestsSet)
+                    && !Set(user.personalPreferences!.activitiesHobbies!)
+                        .intersection(selectedInterestsSet)
                         .isEmpty)
 
             return matchesSearchText && matchesInterests
@@ -668,22 +668,13 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                     activitiesHobbies: ["Photography", "Gaming", "Reading"],
                     friendActivities: ["Creative Partner", "Gaming Buddy"]
                 ),
-                socialStyle: SocialStyleModel(
-                    mySocialStyle: ["Adaptable", "Friendly", "Open-minded"],
-                    feelAfterMeetup: "Energized"
-                ),
                 interactionPreferences: InteractionPreferencesModel(
                     events: ["Mixed Settings", "Group Activities"],
                     topics: ["Technology", "Gaming", "Photography"]
                 ),
                 friendshipValues: FriendshipValuesModel(
                     values: ["Honesty", "Shared Growth", "Fun"],
-                    idealFriendship: ["Supportive", "Engaging"],
                     qualities: ["Open-minded", "Tech-savvy"]
-                ),
-                socialSituations: SocialSituationsModel(
-                    feelWhenMeetingNewPeople: "Curious and Open",
-                    socialRole: "The Connector"
                 ),
                 hasCompletedOnboarding: true
             )
