@@ -17,6 +17,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 {
 
     @Published var users: [UserModel] = []
+    @Published var cachedUsernames: Set<String> = []  // Store usernames locally
     @Published var currentUser: UserModel?  // The current logged-in user
     @Published var error: String?
     @Published var isLoading = false
@@ -241,8 +242,32 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     }
 
     @MainActor
+    /// Load all usernames once when the app starts or when needed
+    func fetchAllUsernames() async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let allUsers = try await userManagementService.listUsers(
+                queries: nil)
+            DispatchQueue.main.async {
+                self.cachedUsernames = Set(
+                    allUsers.map { $0.data.username.lowercased() })
+            }
+        } catch {
+            print("Error fetching usernames: \(error.localizedDescription)")
+            self.error = error.localizedDescription
+        }
+    }
+
+    /// Check if a username is available using the cached list
+    func isUsernameAvailable(_ username: String) -> Bool {
+        return !cachedUsernames.contains(username.lowercased())
+    }
+
+    @MainActor
     func toggleIsInterestedToMeet() async {
-        guard var currentUser = currentUser else {
+        guard let currentUser = currentUser else {
             print("No current user available to toggle isInterestedToMeet.")
             return
         }
@@ -659,25 +684,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let mockVM = UserViewModel()
 
             // Set current user
-            mockVM.currentUser = UserModel(
-                accountId: "currentUser",
-                name: "Current User",
-                interests: ["Photography", "Gaming", "Reading", "Travel"],
-                profilePictureUrl: "https://picsum.photos/203",
-                personalPreferences: PersonalPreferences(
-                    activitiesHobbies: ["Photography", "Gaming", "Reading"],
-                    friendActivities: ["Creative Partner", "Gaming Buddy"]
-                ),
-                interactionPreferences: InteractionPreferencesModel(
-                    events: ["Mixed Settings", "Group Activities"],
-                    topics: ["Technology", "Gaming", "Photography"]
-                ),
-                friendshipValues: FriendshipValuesModel(
-                    values: ["Honesty", "Shared Growth", "Fun"],
-                    qualities: ["Open-minded", "Tech-savvy"]
-                ),
-                hasCompletedOnboarding: true
-            )
+            mockVM.currentUser = .mock()
 
             // Set other users
             mockVM.users = UserModel.mockUsers()
