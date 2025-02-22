@@ -14,22 +14,29 @@ import UIKit
 struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 {
     let accountId: String
-    var id: String {
-        return accountId
-    }
+    var id: String { accountId }
+    var username: String
     var name: String
     var interests: [String]?
     var conversations: [String]?
     var currentAreaId: String?  // References Area collection
     var profilePictureUrl: String?
-    var bio: String?  // User biography
+    var bio: String?
     var dob: String?  // Date of birth
 
     // Onboarding-related fields
-    var personalPreferences: PersonalPreferences?  // To store answers to Profile Questions
-    var interactionPreferences: InteractionPreferencesModel?  // To store Interaction Preferences
-    var friendshipValues: FriendshipValuesModel?  // To store Friendship Values
-    var hasCompletedOnboarding: Bool? = false  // Indicates if onboarding is completed
+    var personalPreferences: PersonalPreferences?
+    var interactionPreferences: InteractionPreferencesModel?
+    var friendshipValues: FriendshipValuesModel?
+    var hasCompletedOnboarding: Bool? = false
+
+    // 🔹 New Attributes
+    var showLastOnline: Bool = true
+    var showJoinedDate: Bool = true
+    var showSentReceivedRatio: Bool = true
+    var lastOnline: String?  // 🔹 ISO8601 formatted date-time (optional)
+    var requestedMeetups: [MeetupRequestModel]?  // 🔹 Relationship with meetups
+    var meetupsApproved: [MeetupApprovalModel]?  // 🔹 Relationship with approvals
 
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
@@ -37,6 +44,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     init(
         accountId: String,
+        username: String,  // 🔹 New required field
         name: String,
         interests: [String]? = nil,
         conversations: [String]? = nil,
@@ -44,12 +52,24 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         profilePictureUrl: String? = nil,
         bio: String? = nil,
         dob: String? = nil,
+
+        /// onboarding stuff
         personalPreferences: PersonalPreferences? = nil,
         interactionPreferences: InteractionPreferencesModel? = nil,
         friendshipValues: FriendshipValuesModel? = nil,
-        hasCompletedOnboarding: Bool? = false
+        hasCompletedOnboarding: Bool? = false,
+
+        /// personal prefs
+        showLastOnline: Bool = true,
+        showJoinedDate: Bool = true,
+        showSentReceivedRatio: Bool = true,
+        lastOnline: String? = nil,
+
+        requestedMeetups: [MeetupRequestModel]? = nil,
+        meetupsApproved: [MeetupApprovalModel]? = nil
     ) {
         self.accountId = accountId
+        self.username = username
         self.name = name
         self.interests = interests
         self.conversations = conversations
@@ -61,9 +81,17 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.interactionPreferences = interactionPreferences
         self.friendshipValues = friendshipValues
         self.hasCompletedOnboarding = hasCompletedOnboarding
+        self.showLastOnline = showLastOnline
+        self.showJoinedDate = showJoinedDate
+        self.showSentReceivedRatio = showSentReceivedRatio
+        self.lastOnline = lastOnline
+        self.requestedMeetups = requestedMeetups
+        self.meetupsApproved = meetupsApproved
     }
 
+    /// 🔹 Updated `update` method to include new attributes
     func update(
+        username: String? = nil,
         name: String? = nil,
         interests: [String]? = nil,
         conversations: [String]? = nil,
@@ -71,15 +99,22 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         dob: String? = nil,
         personalPreferences: PersonalPreferences? = nil,
         interactionPreferences: InteractionPreferencesModel? = nil,
-        friendshipValues: FriendshipValuesModel? = nil
+        friendshipValues: FriendshipValuesModel? = nil,
+        showLastOnline: Bool? = nil,
+        showJoinedDate: Bool? = nil,
+        showSentReceivedRatio: Bool? = nil,
+        lastOnline: String? = nil,
+        requestedMeetups: [MeetupRequestModel]? = nil,
+        meetupsApproved: [MeetupApprovalModel]? = nil
     ) -> UserModel {
         return UserModel(
-            accountId: self.accountId,  // accountId stays the same
+            accountId: self.accountId,
+            username: username ?? self.username,  // 🔹 Update new field
             name: name ?? self.name,
             interests: interests ?? self.interests,
             conversations: conversations ?? self.conversations,
-            currentAreaId: self.currentAreaId,  // currentAreaId remains unchanged
-            profilePictureUrl: self.profilePictureUrl,  // profilePictureUrl remains unchanged
+            currentAreaId: self.currentAreaId,
+            profilePictureUrl: self.profilePictureUrl,
             bio: bio ?? self.bio,
             dob: dob ?? self.dob,
             personalPreferences: personalPreferences
@@ -87,41 +122,111 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             interactionPreferences: interactionPreferences
                 ?? self.interactionPreferences,
             friendshipValues: friendshipValues ?? self.friendshipValues,
-            hasCompletedOnboarding: self.hasCompletedOnboarding
+            hasCompletedOnboarding: self.hasCompletedOnboarding,
+            showLastOnline: showLastOnline ?? self.showLastOnline,
+            showJoinedDate: showJoinedDate ?? self.showJoinedDate,
+            showSentReceivedRatio: showSentReceivedRatio
+                ?? self.showSentReceivedRatio,
+            lastOnline: lastOnline ?? self.lastOnline,
+            requestedMeetups: requestedMeetups ?? self.requestedMeetups,
+            meetupsApproved: meetupsApproved ?? self.meetupsApproved
         )
     }
 
     static func mock() -> UserModel {
         UserModel(
             accountId: "user1",
+            username: "slingshot69",  // 🔹 New required field
             name: "Sarah Chen",
-            interests: [
-                "Photography", "Hiking", "Coffee", "Art", "Travel",
-            ],
+            interests: ["Photography", "Hiking", "Coffee", "Art", "Travel"],
             profilePictureUrl: "https://picsum.photos/200",
             personalPreferences: PersonalPreferences(
                 activitiesHobbies: ["Photography", "Hiking", "Art"],
                 friendActivities: ["Creative Collaborator", "Travel Buddy"]
             ),
             interactionPreferences: InteractionPreferencesModel(
-                events: [
-                    "Grab a coffee together", "Try an outdoor adventure",
-                ],
+                events: ["Grab a coffee together", "Try an outdoor adventure"],
                 topics: ["Art", "Travel", "Photography"]
             ),
             friendshipValues: FriendshipValuesModel(
                 values: ["Authenticity", "Adventure", "Growth"],
                 qualities: ["Open-minded", "Adventurous"]
             ),
-            hasCompletedOnboarding: true
+            hasCompletedOnboarding: true,
+            showLastOnline: true,
+            showJoinedDate: true,
+            showSentReceivedRatio: true,
+            lastOnline: "2024-02-20T15:30:00Z",
+            requestedMeetups: [MeetupRequestModel.mock()],
+            meetupsApproved: [MeetupApprovalModel.mock()]
         )
     }
 
+    static func mock2() -> UserModel {
+        UserModel(
+            accountId: "user2",
+            username: "imjustken",
+            name: "Alex Rivera",
+            interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
+            profilePictureUrl: "https://picsum.photos/201",
+            personalPreferences: PersonalPreferences(
+                activitiesHobbies: ["Gaming", "Coding", "Music"],
+                friendActivities: ["Hobby Buddy", "Deep Conversations"]
+            ),
+            interactionPreferences: InteractionPreferencesModel(
+                events: ["Share a meal", "Enjoy hobbies together"],
+                topics: ["Tech", "Gaming", "Movies"]
+            ),
+            friendshipValues: FriendshipValuesModel(
+                values: ["Loyalty", "Shared Interests", "Fun"],
+                qualities: ["Tech-savvy", "Analytical"]
+            ),
+            hasCompletedOnboarding: true,
+            showLastOnline: false,
+            showJoinedDate: true,
+            showSentReceivedRatio: false,
+            lastOnline: "2024-02-19T10:45:00Z",
+            requestedMeetups: [MeetupRequestModel.mock()],
+            meetupsApproved: []
+        )
+    }
+
+    static func mock3() -> UserModel {
+        UserModel(
+            accountId: "user3",
+            username: "jordan_taylor",
+            name: "Jordan Taylor",
+            interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
+            profilePictureUrl: "https://picsum.photos/202",
+            personalPreferences: PersonalPreferences(
+                activitiesHobbies: ["Yoga", "Reading", "Meditation"],
+                friendActivities: ["Workout Partner", "Deep Conversations"]
+            ),
+            interactionPreferences: InteractionPreferencesModel(
+                events: ["Enjoy hobbies together", "Share a meal"],
+                topics: ["Books", "Wellness", "Personal Growth"]
+            ),
+            friendshipValues: FriendshipValuesModel(
+                values: ["Personal Growth", "Understanding", "Support"],
+                qualities: ["Self-aware", "Calm"]
+            ),
+            hasCompletedOnboarding: true,
+            showLastOnline: true,
+            showJoinedDate: false,
+            showSentReceivedRatio: true,
+            lastOnline: "2024-02-18T20:15:00Z",
+            requestedMeetups: [],
+            meetupsApproved: [MeetupApprovalModel.mock()]
+        )
+    }
     static func mockUsers() -> [UserModel] {
         return [
             .mock(),
+            .mock2(),
+            .mock3(),
             UserModel(
-                accountId: "user2",
+                accountId: "user4",
+                username: "alexrivera42",
                 name: "Alex Rivera",
                 interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
                 profilePictureUrl: "https://picsum.photos/201",
@@ -140,8 +245,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 hasCompletedOnboarding: true
             ),
             UserModel(
-                accountId: "user3",
-                name: "Jordan Taylor",
+                accountId: "user5",
+                username: "noob",
+                name: "Klay Blampson",
                 interests: [
                     "Fitness", "Reading", "Meditation", "Yoga", "Writing",
                 ],
@@ -163,9 +269,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         ]
     }
 }
-
-var profileImageURL: URL?
-var inactiveAreas: [Int] = []  // Array of area_id references
 
 struct TimeRangeConfig: Codable {
     var dayOfWeek: Int  // 0 is Monday, 1 is Tuesday, and so on
