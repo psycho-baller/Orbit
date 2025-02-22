@@ -20,8 +20,10 @@ class MeetupRequestViewModel: ObservableObject {
         MeetupRequestService()
 
     init() {
-        Task {
-            await fetchAllMeetups()
+        if !isPreviewMode {
+            Task {
+                await fetchAllMeetups()
+            }
         }
     }
 
