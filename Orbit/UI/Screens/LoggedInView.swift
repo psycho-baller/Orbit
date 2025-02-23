@@ -17,10 +17,5 @@ struct LoggedInView: View {
                 OnboardingFlow()
             }
         }
-        .onAppear {
-            Task {
-                await userVM.fetchCurrentUser()
-            }
-        }
     }
 }

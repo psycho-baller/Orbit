@@ -22,9 +22,11 @@ struct ContentView: View {
             if showSplashScreen {
                 SplashScreenView(isActive: $showSplashScreen)
             } else {
-                if authVM.isLoggedIn {
+                if authVM.isLoggedIn && (userVM.currentUser != nil) {
                     LoggedInView()
-                } else if !authVM.isLoggedIn && !authVM.isLoading {
+                } else if !(authVM.isLoggedIn && (userVM.currentUser != nil))
+                    && !authVM.isLoading
+                {
                     LoginView()
                         //                            .navigationDestination(for: String.self) { screen in
                         //                                navigateToView(screen: screen)
@@ -45,6 +47,7 @@ struct ContentView: View {
         .onAppear {
             Task {
                 await authVM.initialize()
+                await userVM.fetchCurrentUser()
                 try await Task.sleep(nanoseconds: 1_000_000_000)
                 isOneSecondAfterLaunch = true
             }
