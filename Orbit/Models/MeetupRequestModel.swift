@@ -72,22 +72,6 @@ enum MeetupType: String, Codable {
 
 typealias MeetupRequestDocument = AppwriteModels.Document<MeetupRequestModel>
 
-//extension MeetupRequestDocument {
-//    static func mock() -> MeetupRequestDocument {
-//        let mockMeetupRequestModel: MeetupRequestModel = .mock()
-//        return (MockDocument<MeetupRequestModel>(
-//            id: mockMeetupRequestModel.id,
-//            collectionId: "chat-requests",
-//            databaseId: "chat-requests",
-//            createdAt: distantPastString,
-//            updatedAt: distantPastString,
-//            permissions: [],
-//            data: mockMeetupRequestModel
-//        ) as? MeetupRequestDocument)!
-//
-//    }
-//}
-
 extension MeetupRequestDocument {
     static func mock() -> MeetupRequestDocument {
         return AppwriteModels.Document<MeetupRequestModel>.mock(
