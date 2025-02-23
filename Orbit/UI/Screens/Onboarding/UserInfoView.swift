@@ -65,7 +65,7 @@ struct UserInfoView: View {
                             Text("^[\(wordCount) word](inflect: true)")
                                 .font(.caption)
                                 .foregroundColor(
-                                    wordCount <= 50 ?
+                                    isValidBio ?
                                     ColorPalette.secondaryText(for: colorScheme) :
                                     .red
                                 )
