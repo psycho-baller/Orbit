@@ -14,12 +14,14 @@ struct UserDetailsView: View {
     @State private var username = ""
     @State private var isUsernameAvailable: Bool? = nil
     @State private var navigateToOnboarding = false
+    @State private var errorMessage: String?
+    @State private var isLoading = false
 
     let accountId: String
 
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var userVM: UserViewModel
-    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var navigationCoordinator: AuthNavigationCoordinator
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -76,47 +78,38 @@ struct UserDetailsView: View {
 
                 Spacer().frame(height: 16)
 
-                Button("Complete Profile") {
+                LoadingButton(
+                    title: "Complete Profile",
+                    isLoading: isLoading,
+                    isEnabled: isFormValid
+                ) {
                     Task {
+                        isLoading = true
                         do {
-                            // Create a corresponding user in the database
                             let myUser = UserModel(
                                 accountId: accountId,
                                 username: username,
                                 firstName: firstName,
-                                lastName: lastName,
-                                personalPreferences: nil,
-                                interactionPreferences: nil,
-                                friendshipValues: nil
+                                lastName: lastName
                             )
 
                             try await retryUserCreation(userData: myUser)
-                            print("User profile created successfully")
-                            navigateToOnboarding = true
-
+                            navigationCoordinator.navigateToRoot()
                         } catch {
                             print("Error: \(error.localizedDescription)")
-                            await authVM.handleAccountCreationFailure()
+                            errorMessage = error.localizedDescription
                         }
+                        isLoading = false
                     }
                 }
-                .regularFont()
-                .padding()
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, maxHeight: 60)
-                .background(
-                    isFormValid
-                        ? ColorPalette.accent(for: colorScheme)
-                        : ColorPalette.accent(for: colorScheme).opacity(0.5)
-                )
-                .cornerRadius(16.0)
-                .disabled(!isFormValid)
+                .padding(.bottom, 20)
 
                 Spacer()
             }
             .padding([.leading, .trailing], 27.5)
             .navigationBarHidden(true)
             .onAppear {
+                print("\(accountId) onAppear")
                 Task {
                     await userVM.fetchAllUsernames()
                 }
@@ -124,9 +117,7 @@ struct UserDetailsView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))
-        .navigationDestination(isPresented: $navigateToOnboarding) {
-            OnboardingFlow()
-        }
+
     }
 
     private var isFormValid: Bool {
