@@ -20,6 +20,7 @@ public let COLLECTION_ID = "users"
 
 @MainActor
 public let client: Client = {
+    print("Initializing Appwrite client... \(APPWRITE_API_KEY)")
     let client = Client()
         .setEndpoint("https://cloud.appwrite.io/v1")
         .setProject(PROJECT_ID)
