@@ -21,14 +21,14 @@ struct DragAndDropScreen: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            // 🔹 Question at the top
+            // Question at the top
             Text("What brings you to Orbit?")
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding()
 
-            // 🔹 Basket (Vertical List)
+            // Basket (Vertical List)
             VStack(spacing: 16) {
                 Text("Your Basket")
                     .font(.headline)
@@ -47,7 +47,7 @@ struct DragAndDropScreen: View {
                     .frame(height: 150)
                 } else {
 
-                    // 🔹 Basket Items (Draggable & Sortable)
+                    // Basket Items (Draggable & Sortable)
                     VStack(spacing: 8) {
                         ForEach(Array(basketItems.enumerated()), id: \.element)
                         {
@@ -107,7 +107,7 @@ struct DragAndDropScreen: View {
                 return false
             }
 
-            // 🔹 Available Items List (Draggable)
+            // Available Items List (Draggable)
             VStack(spacing: 8) {
                 ForEach(availableItems, id: \.self) { item in
                     BasketItemView(item: item)
@@ -131,7 +131,7 @@ struct DragAndDropScreen: View {
         .background(ColorPalette.background(for: colorScheme))
     }
 
-    /// 🔹 Adds an item to the basket & removes from list
+    /// Adds an item to the basket & removes from list
     private func addItem(from providers: [NSItemProvider]) -> Bool {
         for provider in providers {
             provider.loadObject(ofClass: NSString.self) { (data, error) in
@@ -149,12 +149,12 @@ struct DragAndDropScreen: View {
         return true
     }
 
-    /// 🔹 Moves an item inside the basket
+    /// Moves an item inside the basket
     private func moveBasketItem(from source: IndexSet, to destination: Int) {
         basketItems.move(fromOffsets: source, toOffset: destination)
     }
 
-    /// 🔹 Handles items being dropped back into available items list
+    /// Handles items being dropped back into available items list
     private func handleDropInAvailableItems(from providers: [NSItemProvider])
         -> Bool
     {
@@ -176,7 +176,7 @@ struct DragAndDropScreen: View {
     }
 }
 
-/// 🔹 Handles reordering inside the basket and returning items
+/// Handles reordering inside the basket and returning items
 struct BasketDropDelegate: DropDelegate {
     let currentItem: String
     @Binding var basketItems: [String]
@@ -209,7 +209,7 @@ struct BasketDropDelegate: DropDelegate {
     }
 }
 
-/// 🔹 Basket Item View (Draggable)
+/// Basket Item View (Draggable)
 struct BasketItemView: View {
     let item: String
 

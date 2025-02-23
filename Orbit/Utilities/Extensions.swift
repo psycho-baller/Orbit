@@ -154,7 +154,7 @@ where T: Codable & CodableDictionaryConvertible {
             "$updatedAt": ISO8601DateFormatter().string(from: Date.distantPast),
             "$permissions": [],
         ]
-        // 🔹 Flatten the "data" dictionary so `from(map:)` gets the correct structure
+        // Flatten the "data" dictionary so `from(map:)` gets the correct structure
         let modelData = data.toDictionary()
         mockData.merge(modelData) { (_, new) in new }
 

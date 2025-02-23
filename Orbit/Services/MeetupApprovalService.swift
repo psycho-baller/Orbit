@@ -62,7 +62,7 @@ class MeetupApprovalService: MeetupApprovalServiceProtocol {
         }
     }
 
-    // 🔹 Update an existing approval
+    // Update an existing approval
     func updateApproval(
         approvalId: String, updatedApproval: MeetupApprovalModel
     ) async throws -> MeetupApprovalDocument? {

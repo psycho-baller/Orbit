@@ -31,13 +31,13 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var friendshipValues: FriendshipValuesModel?
     var hasCompletedOnboarding: Bool? = false
 
-    // 🔹 New Attributes
+    // New Attributes
     var showLastOnline: Bool = true
     var showJoinedDate: Bool = true
     var showSentReceivedRatio: Bool = true
-    var lastOnline: String?  // 🔹 ISO8601 formatted date-time (optional)
-    var requestedMeetups: [MeetupRequestModel]?  // 🔹 Relationship with meetups
-    var meetupsApproved: [MeetupApprovalModel]?  // 🔹 Relationship with approvals
+    var lastOnline: String?  // ISO8601 formatted date-time (optional)
+    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
+    var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
 
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
