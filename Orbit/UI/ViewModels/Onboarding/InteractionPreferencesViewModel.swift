@@ -25,6 +25,7 @@ class InteractionPreferencesViewModel: ObservableObject {
                     "Enjoy hobbies together",
                     "Try an outdoor adventure",
                     "Play or participate in sports activities",
+                    "Practice speaking a new language"
                 ].map { title in
                     QuestionOption(
                         title: title,

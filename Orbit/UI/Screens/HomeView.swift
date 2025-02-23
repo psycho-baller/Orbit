@@ -58,16 +58,16 @@ struct HomeView: View {
                         )
                         .presentationBackground(.ultraThinMaterial)
                     }
-//                    .sheet(item: $selectedMeetupRequest) { meetupRequest in
-//                        ZStack {
-//                            ScrollView {
-//
-//                                //                                .padding(.bottom, 80)
-//                            }
-//                        }
-//                        .presentationDetents([.large])
-//                        .presentationDragIndicator(.visible)
-//                    }
+                    //                    .sheet(item: $selectedMeetupRequest) { meetupRequest in
+                    //                        ZStack {
+                    //                            ScrollView {
+                    //
+                    //                                //                                .padding(.bottom, 80)
+                    //                            }
+                    //                        }
+                    //                        .presentationDetents([.large])
+                    //                        .presentationDragIndicator(.visible)
+                    //                    }
                     .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
                         HomeSettings()
                             .presentationDetents([.fraction(0.7), .large])
@@ -115,11 +115,10 @@ struct HomeView: View {
             failedView(error)
             //        } else if userVM.currentUser?.isInterestedToMeet == false {
             //            NotInterestedToMeetView()
-        } else if userVM.isOnCampus || isPreviewMode {
-            loadedView()
             //        } else {
             //            OffCampusView()
         }
+        loadedView()
     }
 
     // MARK: - Buttons
