@@ -7,42 +7,50 @@
 import SwiftUI
 
 struct DragAndDropScreen: View {
+    var title: String
+    var description: String
+    var maxBasketItems: Int = 3
+    var basketTitle: String = "Your Basket"
+    var emptyBasketText: String? = nil
+    var emptyBasketImage: String = "arrow.down.circle.dotted"
     @Environment(\.colorScheme) var colorScheme
-    @State private var availableItems = [
-        "Finding like-minded friends to share hobbies",
-        "Meeting people for intellectual or deep conversations",
-        "Creating lasting friendships",
-        "Dating",
-        "Idk, I'm just a chill dude",
-    ]
-    @State private var basketItems: [String] = [
-        "Idk, I'm just a chill dude"
-    ]
+    @Binding var availableItems: [String]
+    @Binding var basketItems: [String]
 
     var body: some View {
         VStack(spacing: 24) {
             // Question at the top
-            Text("What brings you to Orbit?")
+            Text(title)
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding()
 
+            // Description
+            Text(description)
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+                .padding()
+
             // Basket (Vertical List)
             VStack(spacing: 16) {
-                Text("Your Basket")
+                Text(basketTitle)
                     .font(.headline)
                     .foregroundColor(.white)
 
                 if basketItems.isEmpty {
                     VStack(spacing: 12) {
-                        Image(systemName: "arrow.down.circle.dotted")
+                        Image(systemName: emptyBasketImage)
                             .font(.system(size: 40))
                             .foregroundColor(.white.opacity(0.8))
 
-                        Text("Drag up to 3 items here")
-                            .font(.subheadline)
-                            .foregroundColor(.white.opacity(0.8))
+                        //                        Text(
+                        //                            emptyBasketText
+                        //                                ? emptyBasketText
+                        //                                : "Drag up to \(maxBasketItems) items here"
+                        //                        )
+                        //                        .font(.subheadline)
+                        //                        .foregroundColor(.white.opacity(0.8))
                     }
                     .frame(height: 150)
                 } else {
@@ -65,31 +73,14 @@ struct DragAndDropScreen: View {
                                         currentIndex: index
                                     )
                                 )
-
                         }
-                        //                    .onDrop(
-                        //                        of: [.text],
-                        //                        delegate: BasketDropDelegate(
-                        //                            currentItem: basketItems.last,
-                        //                            basketItems: $basketItems,
-                        //                            availableItems: $availableItems,
-                        //                            currentIndex: basketItems.count - 1
-                        //                        )
-                        //                    )
                         .onMove(perform: moveBasketItem)  // ✅ Sorting enabled
-                        //                    .onDrop(of: [.text], isTargeted: nil) { providers in
-                        //                        if basketItems.count < 3 {
-                        //                            return addItem(from: providers)
-                        //                        }
-                        //                        return false
-                        //                    }
                     }
                     .padding()
                     .scrollContentBackground(.hidden)
 
                 }
             }
-            //            .frame(maxWidth: .infinity)
             .padding(.vertical, 24)
             .background(
                 RoundedRectangle(cornerRadius: 16)
@@ -101,7 +92,7 @@ struct DragAndDropScreen: View {
                     )
             )
             .onDrop(of: [.text], isTargeted: nil) { providers in
-                if basketItems.count < 3 {
+                if basketItems.count < maxBasketItems {
                     return addItem(from: providers)
                 }
                 return false
@@ -137,7 +128,8 @@ struct DragAndDropScreen: View {
             provider.loadObject(ofClass: NSString.self) { (data, error) in
                 if let newItem = data as? String {
                     DispatchQueue.main.async {
-                        if !basketItems.contains(newItem), basketItems.count < 3
+                        if !basketItems.contains(newItem),
+                            basketItems.count < maxBasketItems
                         {
                             basketItems.append(newItem)
                             availableItems.removeAll { $0 == newItem }  // ✅ Remove from list
@@ -221,7 +213,6 @@ struct BasketItemView: View {
             Text(item)
         }
         .frame(maxWidth: .infinity, alignment: .leading)  // Align items to the left
-        //        .contentShape(Rectangle())
         .padding(.vertical, 14)
         .padding(.horizontal)
         .background(Color.accentColor.opacity(0.2))  // Match basket item style
@@ -230,5 +221,17 @@ struct BasketItemView: View {
 }
 
 #Preview {
-    DragAndDropScreen()
+    DragAndDropScreen(
+        title: "What brings you to Orbit?",
+        description: "Choose your interests from the list below.",
+        availableItems: .constant(
+            [
+                "Making friends who share my interests and hobbies",
+                "Having meaningful conversations and deep discussions",
+                "Building long-term friendships",
+                "Exploring romantic relationships",
+            ]
+        ),
+        basketItems: .constant(["Idk, I'm just a chill guy"])
+    )
 }
