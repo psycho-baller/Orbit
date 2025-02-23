@@ -1,11 +1,31 @@
 # What brings you to Orbit?
-Looking for casual meetups and activities
-Dating
-Finding like-minded friends to share hobbies
-Exploring new social experiences
-Meeting people for intellectual or deep conversations
-Creating lasting friendships
-Just exploring, open to various connections
+
+  (drag n drop to be able to sort)
+  (private)
+
+Making friends who share my interests and hobbies
+Having meaningful conversations and deep discussions
+Building long-term friendships
+Exploring romantic relationships
 Idk, I'm just a chill dude
 
 # What is your date of birth?
+
+  (apple UI)
+  (public)
+    - show star sign
+
+# In 50 words or less, how would you describe yourself?
+
+  (public)
+
+# What is your gender?
+
+  (public)
+
+# Which age group do you prefer to meetup with?
+
+  (apple slider UI)
+  (private)
+
+#
