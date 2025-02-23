@@ -48,7 +48,7 @@ struct PendingUserCardView: View {
 
                     VStack(alignment: .leading, spacing: 8) {
                         // User Name
-                        Text(user.name)
+                        Text(user.username)
                             .font(.title)
                             .padding(.bottom, 1)
                             .foregroundColor(.accentColor)

@@ -16,7 +16,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     let accountId: String
     var id: String { accountId }
     var username: String
-    var name: String
+    var firstName: String
+    var lastName: String?
     var interests: [String]?
     var conversations: [String]?
     var currentAreaId: String?  // References Area collection
@@ -44,8 +45,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     init(
         accountId: String,
-        username: String,  // 🔹 New required field
-        name: String,
+        username: String,
+        firstName: String,
+        lastName: String? = nil,
         interests: [String]? = nil,
         conversations: [String]? = nil,
         currentAreaId: String? = nil,
@@ -70,7 +72,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     ) {
         self.accountId = accountId
         self.username = username
-        self.name = name
+        self.firstName = firstName
+        self.lastName = lastName
         self.interests = interests
         self.conversations = conversations
         self.currentAreaId = currentAreaId
@@ -89,10 +92,10 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.meetupsApproved = meetupsApproved
     }
 
-    /// 🔹 Updated `update` method to include new attributes
     func update(
         username: String? = nil,
-        name: String? = nil,
+        firstName: String? = nil,
+        lastName: String? = nil,
         interests: [String]? = nil,
         conversations: [String]? = nil,
         bio: String? = nil,
@@ -109,8 +112,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,
-            username: username ?? self.username,  // 🔹 Update new field
-            name: name ?? self.name,
+            username: username ?? self.username,
+            firstName: firstName ?? self.firstName,
+            lastName: lastName ?? self.lastName,
             interests: interests ?? self.interests,
             conversations: conversations ?? self.conversations,
             currentAreaId: self.currentAreaId,
@@ -136,8 +140,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     static func mock() -> UserModel {
         UserModel(
             accountId: "user1",
-            username: "slingshot69",  // 🔹 New required field
-            name: "Sarah Chen",
+            username: "slingshot69",
+            firstName: "Sarah",
+            lastName: "Chen",
             interests: ["Photography", "Hiking", "Coffee", "Art", "Travel"],
             profilePictureUrl: "https://picsum.photos/200",
             personalPreferences: PersonalPreferences(
@@ -166,7 +171,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         UserModel(
             accountId: "user2",
             username: "imjustken",
-            name: "Alex Rivera",
+            firstName: "Alex",
+            lastName: "Rivera",
             interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
             profilePictureUrl: "https://picsum.photos/201",
             personalPreferences: PersonalPreferences(
@@ -195,7 +201,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         UserModel(
             accountId: "user3",
             username: "jordan_taylor",
-            name: "Jordan Taylor",
+            firstName: "Jordan",
+            lastName: "Taylor",
             interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
             profilePictureUrl: "https://picsum.photos/202",
             personalPreferences: PersonalPreferences(
@@ -227,7 +234,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             UserModel(
                 accountId: "user4",
                 username: "alexrivera42",
-                name: "Alex Rivera",
+                firstName: "Alex",
+                lastName: "Rivera",
                 interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
                 profilePictureUrl: "https://picsum.photos/201",
                 personalPreferences: PersonalPreferences(
@@ -247,7 +255,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             UserModel(
                 accountId: "user5",
                 username: "noob",
-                name: "Klay Blampson",
+                firstName: "Klay",
+                lastName: "Blampson",
                 interests: [
                     "Fitness", "Reading", "Meditation", "Yoga", "Writing",
                 ],

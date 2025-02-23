@@ -60,7 +60,7 @@ struct MeetupRequestCardView: View {
 
                         VStack(alignment: .leading, spacing: 8) {
                             // User Name
-                            Text(meetupRequest.createdBy.name)
+                            Text(meetupRequest.createdBy.username)
                                 .font(.title)
                                 .padding(.bottom, 1)
                                 .foregroundColor(Color.accentColor)

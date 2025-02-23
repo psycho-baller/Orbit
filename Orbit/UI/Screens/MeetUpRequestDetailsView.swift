@@ -69,7 +69,7 @@ struct MeetUpRequestDetailsView: View {
             .sheet(isPresented: $showChat) {
                 if let conversationId = chatRequestVM.newConversationId {
                     NavigationStack {
-                        MessageView(conversationId: conversationId, messagerName: sender.name)
+                        MessageView(conversationId: conversationId, messagerName: sender.firstName + " " + (sender.lastName ?? ""))
                     }
                 }
             }
