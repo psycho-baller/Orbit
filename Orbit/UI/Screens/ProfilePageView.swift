@@ -90,7 +90,7 @@ struct ProfilePageView: View {
                 // User Info Sections
                 VStack(alignment: .leading, spacing: 24) {
                     // Basic Info
-                    Text(user.name)
+                    Text(user.firstName + " " + (user.lastName ?? ""))
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(ColorPalette.text(for: colorScheme))

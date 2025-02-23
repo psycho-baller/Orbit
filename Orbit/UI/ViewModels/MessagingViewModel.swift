@@ -288,7 +288,7 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
         do {
             if let user = try await userManagementService.getUser(participantId)
             {
-                return user.data.name
+                return user.data.firstName + " " + (user.data.lastName ?? "")
             }
         } catch {
             print(

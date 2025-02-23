@@ -158,7 +158,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     func getUserName(from id: String) -> String {
         //        space inefficient
         if let userFromLocal = allUsers.first(where: { $0.accountId == id }) {
-            return userFromLocal.name
+            return userFromLocal.firstName + " "
+                + (userFromLocal.lastName ?? "")
         }
         return "Unknown"
     }
@@ -396,9 +397,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         return users.filter { user in
             guard user.accountId != currentUser?.accountId else { return false }
 
+            #warning("TODO: do we rlly need search for user's usernames")
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
-                || user.name.lowercased().contains(lowercasedSearchText)
+                || user.username.lowercased().contains(lowercasedSearchText)
                 || (user.personalPreferences?.activitiesHobbies?.joined(
                     separator: " "
                 ).lowercased()

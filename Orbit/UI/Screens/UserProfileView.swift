@@ -16,7 +16,7 @@ struct UserProfileView: View {
     @State private var showingMessageSheet = false
     @State private var message = ""
     @FocusState private var isTextFieldFocused: Bool
-    
+
     var body: some View {
         ProfilePageView(user: user)
             .toolbar {
@@ -42,14 +42,14 @@ struct UserProfileView: View {
                     ZStack {
                         ColorPalette.background(for: colorScheme)
                             .ignoresSafeArea()
-                        
+
                         VStack(spacing: 24) {
-                            Text("Send a request to \(user.name)")
+                            Text("Send a request to \(user.username)")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                                 .foregroundColor(ColorPalette.text(for: colorScheme))
                                 .padding(.top, 24)
-                            
+
                             TextField("Hi! Would you like to meet up?", text: $message, axis: .vertical)
                                 .frame(height: 150, alignment: .top)
                                 .padding()
@@ -61,7 +61,7 @@ struct UserProfileView: View {
                                 )
                                 .padding(.horizontal)
                                 .padding(.top, 24)
-                            
+
                             Button(action: {
                                 if let currentUser = userVM.currentUser {
                                     let request = ChatRequestModel(
@@ -72,7 +72,7 @@ struct UserProfileView: View {
                                     Task {
                                         await chatRequestVM.sendMeetUpRequest(
                                             request: request,
-                                            from: currentUser.name
+                                            from: currentUser.username
                                         )
                                     }
                                     showingMessageSheet = false
@@ -90,7 +90,7 @@ struct UserProfileView: View {
                                 .cornerRadius(16)
                             }
                             .padding(.horizontal)
-                            
+
                             Spacer()
                         }
                     }
@@ -109,4 +109,3 @@ struct UserProfileView: View {
             }
     }
 }
-

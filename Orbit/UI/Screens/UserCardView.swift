@@ -54,7 +54,7 @@ struct UserCardView: View {
 
                         VStack(alignment: .leading, spacing: 8) {
                             // User Name
-                            Text(user.name)
+                            Text(user.username)
                                 .font(.title)
                                 .padding(.bottom, 1)
                                 .foregroundColor(Color.accentColor)
@@ -141,8 +141,9 @@ struct UserCardView: View {
         )
 
         Task {
+            #warning("TODO: will change this after full refactor")
             await chatRequestVM.sendMeetUpRequest(
-                request: request, from: userVM.currentUser?.name)
+                request: request, from: userVM.currentUser?.username)
         }
     }
 }
