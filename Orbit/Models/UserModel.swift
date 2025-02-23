@@ -39,6 +39,14 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
     var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
 
+    // Newly added attributes from the database
+    var userLanguages: [UserLanguageModel]?
+    var gender: UserGender?
+    var pronouns: UserPronouns?
+    var showStarSign: Bool = true
+    var userLinks: [UserLinkModel]?
+    var intension: [UserIntention]?
+
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
     }
@@ -68,7 +76,15 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         lastOnline: String? = nil,
 
         requestedMeetups: [MeetupRequestModel]? = nil,
-        meetupsApproved: [MeetupApprovalModel]? = nil
+        meetupsApproved: [MeetupApprovalModel]? = nil,
+
+        /// newly added attributes
+        userLanguages: [UserLanguageModel]? = nil,
+        gender: UserGender? = nil,
+        pronouns: UserPronouns? = nil,
+        showStarSign: Bool = true,
+        userLinks: [UserLinkModel]? = nil,
+        intension: [UserIntention]? = nil
     ) {
         self.accountId = accountId
         self.username = username
@@ -90,6 +106,12 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.lastOnline = lastOnline
         self.requestedMeetups = requestedMeetups
         self.meetupsApproved = meetupsApproved
+        self.userLanguages = userLanguages
+        self.gender = gender
+        self.pronouns = pronouns
+        self.showStarSign = showStarSign
+        self.userLinks = userLinks
+        self.intension = intension
     }
 
     func update(
@@ -108,7 +130,13 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showSentReceivedRatio: Bool? = nil,
         lastOnline: String? = nil,
         requestedMeetups: [MeetupRequestModel]? = nil,
-        meetupsApproved: [MeetupApprovalModel]? = nil
+        meetupsApproved: [MeetupApprovalModel]? = nil,
+        userLanguages: [UserLanguageModel]? = nil,
+        gender: UserGender? = nil,
+        pronouns: UserPronouns? = nil,
+        showStarSign: Bool? = nil,
+        userLinks: [UserLinkModel]? = nil,
+        intension: [UserIntention]? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,
@@ -133,7 +161,13 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 ?? self.showSentReceivedRatio,
             lastOnline: lastOnline ?? self.lastOnline,
             requestedMeetups: requestedMeetups ?? self.requestedMeetups,
-            meetupsApproved: meetupsApproved ?? self.meetupsApproved
+            meetupsApproved: meetupsApproved ?? self.meetupsApproved,
+            userLanguages: userLanguages ?? self.userLanguages,
+            gender: gender ?? self.gender,
+            pronouns: pronouns ?? self.pronouns,
+            showStarSign: showStarSign ?? self.showStarSign,
+            userLinks: userLinks ?? self.userLinks,
+            intension: intension ?? self.intension
         )
     }
 
@@ -149,10 +183,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 activitiesHobbies: ["Photography", "Hiking", "Art"],
                 friendActivities: ["Creative Collaborator", "Travel Buddy"]
             ),
-            interactionPreferences: InteractionPreferencesModel(
-                events: ["Grab a coffee together", "Try an outdoor adventure"],
-                topics: ["Art", "Travel", "Photography"]
-            ),
+            interactionPreferences: .mock(),
             friendshipValues: FriendshipValuesModel(
                 values: ["Authenticity", "Adventure", "Growth"],
                 qualities: ["Open-minded", "Adventurous"]
@@ -179,10 +210,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 activitiesHobbies: ["Gaming", "Coding", "Music"],
                 friendActivities: ["Hobby Buddy", "Deep Conversations"]
             ),
-            interactionPreferences: InteractionPreferencesModel(
-                events: ["Share a meal", "Enjoy hobbies together"],
-                topics: ["Tech", "Gaming", "Movies"]
-            ),
+            interactionPreferences: .mock(),
             friendshipValues: FriendshipValuesModel(
                 values: ["Loyalty", "Shared Interests", "Fun"],
                 qualities: ["Tech-savvy", "Analytical"]
@@ -209,10 +237,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 activitiesHobbies: ["Yoga", "Reading", "Meditation"],
                 friendActivities: ["Workout Partner", "Deep Conversations"]
             ),
-            interactionPreferences: InteractionPreferencesModel(
-                events: ["Enjoy hobbies together", "Share a meal"],
-                topics: ["Books", "Wellness", "Personal Growth"]
-            ),
+            interactionPreferences: .mock(),
             friendshipValues: FriendshipValuesModel(
                 values: ["Personal Growth", "Understanding", "Support"],
                 qualities: ["Self-aware", "Calm"]
@@ -242,10 +267,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                     activitiesHobbies: ["Gaming", "Coding", "Music"],
                     friendActivities: ["Hobby Buddy", "Deep Conversations"]
                 ),
-                interactionPreferences: InteractionPreferencesModel(
-                    events: ["Share a meal", "Enjoy hobbies together"],
-                    topics: ["Tech", "Gaming", "Movies"]
-                ),
+                interactionPreferences: .mock(),
                 friendshipValues: FriendshipValuesModel(
                     values: ["Loyalty", "Shared Interests", "Fun"],
                     qualities: ["Tech-savvy", "Analytical"]
@@ -265,10 +287,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                     activitiesHobbies: ["Yoga", "Reading", "Meditation"],
                     friendActivities: ["Workout Partner", "Deep Conversations"]
                 ),
-                interactionPreferences: InteractionPreferencesModel(
-                    events: ["Enjoy hobbies together", "Share a meal"],
-                    topics: ["Books", "Wellness", "Personal Growth"]
-                ),
+                interactionPreferences: .mock(),
                 friendshipValues: FriendshipValuesModel(
                     values: ["Personal Growth", "Understanding", "Support"],
                     qualities: ["Self-aware", "Calm"]
@@ -283,6 +302,28 @@ struct TimeRangeConfig: Codable {
     var dayOfWeek: Int  // 0 is Monday, 1 is Tuesday, and so on
     var startTime: Date
     var endTime: Date
+}
+
+enum UserGender: String, Codable, CaseIterable {
+    case man
+    case woman
+    case nonBinary = "non-binary"
+    case other
+}
+
+enum UserPronouns: String, Codable {
+    case heHim = "he/him"
+    case sheHer = "she/her"
+    case theyThem = "they/them"
+    case other
+}
+
+enum UserIntention: String, Codable {
+    case hobbies = "Making friends who share my interests and hobbies"
+    case conversations = "Having meaningful conversations and deep discussions"
+    case friendships = "Building long-term friendships"
+    case dating = "Exploring romantic relationships"
+    case exploring = "Idk, I'm just a chill guy"
 }
 
 typealias UserDocument = AppwriteModels.Document<UserModel>
