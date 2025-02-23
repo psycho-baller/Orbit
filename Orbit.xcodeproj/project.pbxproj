@@ -30,6 +30,7 @@
 		25117F6A2CF772DB00ACE9C8 /* LightGrayOrMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */; };
 		252746E62CE82AC800365712 /* MeetUpRequestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */; };
 		252746E82CE831CA00365712 /* MeetUpRequestsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */; };
+		25306A102D6B753F002E8E81 /* DragAndDropScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25306A0F2D6B753F002E8E81 /* DragAndDropScreen.swift */; };
 		2553B44E2CF019E500E14E2B /* (null) in Sources */ = {isa = PBXBuildFile; };
 		256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F02CC0522300731939 /* Orbit.entitlements */; };
 		257454AD2D67ACC800C7747F /* MeetupApprovalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257454AC2D67ACC800C7747F /* MeetupApprovalModel.swift */; };
@@ -151,6 +152,7 @@
 		25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGrayOrMaterial.swift; sourceTree = "<group>"; };
 		252746E52CE82AC800365712 /* MeetUpRequestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestDetailsView.swift; sourceTree = "<group>"; };
 		252746E72CE831CA00365712 /* MeetUpRequestsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetUpRequestsListView.swift; sourceTree = "<group>"; };
+		25306A0F2D6B753F002E8E81 /* DragAndDropScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragAndDropScreen.swift; sourceTree = "<group>"; };
 		2553B44C2CF00AF000E14E2B /* Orbit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Orbit.entitlements; sourceTree = "<group>"; };
 		257454AC2D67ACC800C7747F /* MeetupApprovalModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupApprovalModel.swift; sourceTree = "<group>"; };
 		257454AE2D67AED400C7747F /* MeetupRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupRequestModel.swift; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 		259CB28D2CC0465600C9F285 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				25306A0F2D6B753F002E8E81 /* DragAndDropScreen.swift */,
 				258B24372D6AF67700B987F3 /* LoadingButton.swift */,
 				2585DFEF2CF8E400003F3B7F /* TermsAndPrivacyView.swift */,
 				25117F692CF772DB00ACE9C8 /* LightGrayOrMaterial.swift */,
@@ -689,6 +692,7 @@
 				259CB2982CC0465600C9F285 /* HomeView.swift in Sources */,
 				00AC33C62CF8461D000761BF /* FullMapView.swift in Sources */,
 				000AE7432CD5E71700431CDB /* ChatProfileTitle.swift in Sources */,
+				25306A102D6B753F002E8E81 /* DragAndDropScreen.swift in Sources */,
 				25F1BDAF2CF2656B0036D7E1 /* NotificationService.swift in Sources */,
 				61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */,
 				259CB2AA2CC0486D00C9F285 /* OrbitApp.swift in Sources */,
