@@ -12,7 +12,7 @@ import Foundation
 import JSONCodable
 
 protocol AccountManagementServiceProtocol: AnyObject {
-    func createAccount(_ email: String, _ password: String, _ name: String)
+    func createAccount(_ email: String, _ password: String, _ name: String?)
         async throws
         -> AppwriteModels.User<[String: AnyCodable]>
     func getAccount() async throws -> User<[String: AnyCodable]>?
@@ -40,7 +40,7 @@ class AccountManagementService: AccountManagementServiceProtocol {
     func createAccount(
         _ email: String,
         _ password: String,
-        _ name: String
+        _ name: String?
     ) async throws -> AppwriteModels.User<[String: AnyCodable]> {
         let user = try await account.create(
             userId: ID.unique(),

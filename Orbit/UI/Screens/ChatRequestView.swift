@@ -21,7 +21,7 @@ struct ChatRequestView: View {
         VStack(spacing: 10) {
             // Title and interests section
             VStack {
-                Text("Request to Chat with \(receiver.name)")
+                Text("Request to Chat with \(receiver.username)")
                     .font(.title)
                     .padding()
                     .foregroundColor(ColorPalette.text(for: colorScheme))
@@ -52,7 +52,7 @@ struct ChatRequestView: View {
                         )
                         Task {
                             await chatRequestVM.sendMeetUpRequest(
-                                request: request, from: sender?.name)
+                                request: request, from: sender?.username)
                             dismiss()
                         }
                     }) {

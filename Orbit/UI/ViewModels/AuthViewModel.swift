@@ -60,13 +60,15 @@ class AuthViewModel: ObservableObject {
     }
 
     @MainActor
-    func create(name: String, email: String, password: String) async -> User<
-        [String: AnyCodable]
-    >? {
+    func create(email: String, password: String, name: String? = nil) async
+        -> User<
+            [String: AnyCodable]
+        >?
+    {
         do {
             let newUser = try await account.createAccount(email, password, name)
             print(
-                "AuthViewModel - createAccount: Success, created account for \(newUser.email)."
+                "AuthViewModel - createAccount: Success, created account for \(newUser.email)"
             )
             await self.login(email: email, password: password)
             return newUser
