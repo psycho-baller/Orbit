@@ -17,6 +17,7 @@ struct OrbitApp: App {
     @StateObject var chatRequestVM = ChatRequestViewModel()
     @StateObject var meetupRequestVM = MeetupRequestViewModel()
     @StateObject var meetupApprovalVM = MeetupApprovalViewModel()
+    @StateObject var navigationCoordinator = AuthNavigationCoordinator()
 
     init() {
         let appearance = UITabBarAppearance()
@@ -40,6 +41,7 @@ struct OrbitApp: App {
                 .environmentObject(meetupRequestVM)
                 .environmentObject(meetupApprovalVM)
                 .environmentObject(appDelegate.appState)
+                .environmentObject(navigationCoordinator)
         }
     }
 }
