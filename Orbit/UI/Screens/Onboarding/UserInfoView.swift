@@ -16,6 +16,17 @@ struct UserInfoView: View {
     let oneHundredYearsAgo = Date().addingTimeInterval(
         -100 * 365 * 24 * 60 * 60)
 
+    private var wordCount: Int {
+        viewModel.bio.trimmingCharacters(in: .whitespacesAndNewlines)
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter { !$0.isEmpty }
+            .count
+    }
+
+    private var isValidBio: Bool {
+        wordCount >= 3 && wordCount <= 50
+    }
+
     var body: some View {
         ZStack {
             // Background Color for the entire screen
@@ -40,22 +51,24 @@ struct UserInfoView: View {
                     VStack(alignment: .leading, spacing: 30) {
                         // Bio Section
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(
-                                "How would you describe yourself in a sentence or two?"
-                            )
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme)
-                            )
+                            Text("In 50 words or less, how would you describe yourself?")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
 
                             TextField("", text: $viewModel.bio)
                                 .padding()
                                 .foregroundColor(.primary)
-                                .background(
-                                    ColorPalette.lightGray(for: colorScheme)
-                                )
+                                .background(ColorPalette.lightGray(for: colorScheme))
                                 .cornerRadius(10)
+
+                            Text("^[\(wordCount) word](inflect: true)")
+                                .font(.caption)
+                                .foregroundColor(
+                                    wordCount <= 50 ?
+                                    ColorPalette.secondaryText(for: colorScheme) :
+                                    .red
+                                )
                         }
 
                         // Date of Birth Section
@@ -90,8 +103,7 @@ struct UserInfoView: View {
                 VStack {
                     Button(action: {
                         onboardingVM.navigationPath.append(
-                            OnboardingViewModel.OnboardingStep
-                                .personalPreferences)
+                            OnboardingViewModel.OnboardingStep.personalPreferences)
                         Task {
                             await userVM.saveOnboardingData(
                                 bio: viewModel.bio, dob: viewModel.dateOfBirth)
@@ -102,14 +114,14 @@ struct UserInfoView: View {
                             .padding()
                             .frame(maxWidth: .infinity)
                             .background(
-                                viewModel.canProceed()
+                                viewModel.canProceed() && isValidBio
                                     ? ColorPalette.accent(for: colorScheme)
                                     : ColorPalette.lightGray(for: colorScheme)
                             )
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(!viewModel.canProceed())
+                    .disabled(!viewModel.canProceed() || !isValidBio)
                     .padding(.horizontal)
                 }
                 .padding(.bottom, 20)
