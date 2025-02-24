@@ -13,13 +13,6 @@ struct InteractionPreferencesView: View {
     @Environment(\.colorScheme) var colorScheme  // Detect system color scheme
     @StateObject private var viewModel = InteractionPreferencesViewModel()
 
-    // Define the grid layout for three columns
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-    ]
-
     var body: some View {
         ZStack {
             // Background Color for the entire screen
@@ -42,8 +35,8 @@ struct InteractionPreferencesView: View {
                 // Scrollable Content
                 ScrollView {
                     VStack(alignment: .leading, spacing: 30) {
-                        // Loop through each question
-                        ForEach(viewModel.questions) { question in
+                        // Loop through the first 2 questions and display them with a dynamic tag layout
+                        ForEach(viewModel.questions.prefix(2)) { question in
                             VStack(alignment: .leading, spacing: 12) {
                                 Text(question.text)
                                     .font(.headline)
@@ -52,36 +45,90 @@ struct InteractionPreferencesView: View {
                                         ColorPalette.secondaryText(
                                             for: colorScheme))
 
-                                // Use LazyVGrid for a multi-column layout with three columns
-                                LazyVGrid(columns: columns, spacing: 12) {
-                                    ForEach(question.options) { option in
-                                        Text(option.title)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 8)
-                                            .frame(
-                                                maxWidth: .infinity,
-                                                alignment: .center
-                                            )
-                                            .background(
-                                                option.isSelected
-                                                    ? ColorPalette.accent(
-                                                        for: colorScheme)
-                                                    : ColorPalette.lightGray(
-                                                        for: colorScheme)
-                                            )
-                                            .foregroundColor(
-                                                option.isSelected
-                                                    ? .white
-                                                    : ColorPalette.text(
-                                                        for: colorScheme)
-                                            )
-                                            .cornerRadius(10)
-                                            .onTapGesture {
-                                                viewModel.toggleSelection(
-                                                    for: option, in: question)
-                                            }
-                                    }
+                                FlowLayout(items: question.options) {
+                                    option in
+                                    self.tagView(for: option, in: question)
                                 }
+                            }
+                        }
+
+                        // **Preferred Age Range Selection**
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(
+                                "What is your preferred age range for interactions?"
+                            )
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
+
+                            // Display selected age range
+                            HStack {
+                                Text("\(viewModel.preferredMinAge ?? 18)")
+                                Spacer()
+                                Text("\(viewModel.preferredMaxAge ?? 60)")
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(
+                                ColorPalette.text(for: colorScheme))
+
+                            // Age range selection slider
+                            //                            RangeSliderView(
+                            //                                selectedMin: Binding(
+                            //                                    get: { viewModel.preferredMinAge ?? 18 },
+                            //                                    set: { viewModel.preferredMinAge = $0 }
+                            //                                ),
+                            //                                selectedMax: Binding(
+                            //                                    get: { viewModel.preferredMaxAge ?? 60 },
+                            //                                    set: { viewModel.preferredMaxAge = $0 }
+                            //                                ),
+                            //                                minValue: 18,
+                            //                                maxValue: 60
+                            //                            )
+                        }
+
+                        // **Preferred Gender Selection**
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(
+                                "What is your preferred gender for interactions?"
+                            )
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
+
+                            FlowLayout(items: UserGender.allCases) {
+                                gender in
+                                Text(gender.rawValue.capitalized)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        viewModel.preferredGender.contains(
+                                            gender)
+                                            ? ColorPalette.accent(
+                                                for: colorScheme)
+                                            : ColorPalette.lightGray(
+                                                for: colorScheme)
+                                    )
+                                    .foregroundColor(
+                                        viewModel.preferredGender.contains(
+                                            gender)
+                                            ? .white
+                                            : ColorPalette.text(
+                                                for: colorScheme)
+                                    )
+                                    .cornerRadius(10)
+                                    .onTapGesture {
+                                        if viewModel.preferredGender.contains(
+                                            gender)
+                                        {
+                                            viewModel.preferredGender.removeAll
+                                            { $0 == gender }
+                                        } else {
+                                            viewModel.preferredGender.append(
+                                                gender)
+                                        }
+                                    }
                             }
                         }
                     }
@@ -99,8 +146,7 @@ struct InteractionPreferencesView: View {
                             OnboardingViewModel.OnboardingStep.friendshipValues)
                         Task {
                             await userVM.saveOnboardingData(
-                                interactionPreferences: selectedAnswers
-                            )
+                                interactionPreferences: selectedAnswers)
                         }
                     }) {
                         Text("Next")
@@ -129,16 +175,42 @@ struct InteractionPreferencesView: View {
     }
 
     private func canProceed() -> Bool {
-        // Ensure at least one option is selected for each question
-        return viewModel.questions.allSatisfy { question in
+        let hasSelectedQuestions = viewModel.questions.prefix(2).allSatisfy {
+            question in
             question.options.contains { $0.isSelected }
         }
+
+        let hasValidAgeRange =
+            viewModel.preferredMinAge != nil && viewModel.preferredMaxAge != nil
+        let hasSelectedGenders = !viewModel.preferredGender.isEmpty
+
+        return hasSelectedQuestions && hasValidAgeRange && hasSelectedGenders
+    }
+
+    private func tagView(for option: QuestionOption, in question: Question)
+        -> some View
+    {
+        Text(option.title)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(
+                option.isSelected
+                    ? ColorPalette.accent(for: colorScheme)
+                    : ColorPalette.lightGray(for: colorScheme)
+            )
+            .foregroundColor(
+                option.isSelected
+                    ? .white
+                    : ColorPalette.text(for: colorScheme)
+            )
+            .cornerRadius(10)
+            .onTapGesture {
+                viewModel.toggleSelection(for: option, in: question)
+            }
     }
 }
 
-struct InteractionPreferencesView_Previews: PreviewProvider {
-    static var previews: some View {
-        InteractionPreferencesView(onboardingVM: OnboardingViewModel())
-            .environmentObject(UserViewModel())
-    }
+#Preview {
+    InteractionPreferencesView(onboardingVM: OnboardingViewModel())
+        .environmentObject(UserViewModel())
 }
