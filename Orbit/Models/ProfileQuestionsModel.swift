@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct QuestionOption: Identifiable {
+struct QuestionOption: Identifiable, Hashable {
     let id = UUID()
     let title: String
     var isSelected: Bool = false
