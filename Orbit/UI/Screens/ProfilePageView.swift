@@ -60,15 +60,22 @@ struct ProfilePageView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
                             .frame(width: 120, height: 120)
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme)
+                            )
                             .overlay(
-                                Circle().stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2)
+                                Circle().stroke(
+                                    ColorPalette.accent(for: colorScheme),
+                                    lineWidth: 2)
                             )
                     }
 
                     // Orbiting Activities
-                    if let activities = user.personalPreferences?.activitiesHobbies {
-                        ForEach(Array(activities.enumerated()), id: \.element) { index, activity in
+                    if let activities = user.personalPreferences?
+                        .activitiesHobbies
+                    {
+                        ForEach(Array(activities.enumerated()), id: \.element) {
+                            index, activity in
                             InterestOrbit(
                                 interest: activity,
                                 index: index,
@@ -250,36 +257,10 @@ struct PreferenceSection: View {
     }
 }
 
-// Flow layout for tags
-struct FlowLayout<Data: Collection, Content: View>: View
-where Data.Element: Hashable {
-    let items: Data
-    let content: (Data.Element) -> Content
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ForEach(generateRows(), id: \.self) { row in
-                HStack(spacing: 8) {
-                    ForEach(row, id: \.self) { item in
-                        content(item)
-                    }
-                }
-            }
-        }
-    }
-
-    private func generateRows() -> [[Data.Element]] {
-        var rows: [[Data.Element]] = [[]]
-        var currentRow = 0
-
-        for item in items {
-            rows[currentRow].append(item)
-            if rows[currentRow].count >= 3 {
-                rows.append([])
-                currentRow += 1
-            }
-        }
-
-        return rows
-    }
+#Preview {
+    PreferenceSection(
+        title: "hiii",
+        items: [
+            "1OldFlowLayout", "2OldFlowLayout", "3", "4", "5", "6", "7", "8", "9", "10",
+        ])
 }
