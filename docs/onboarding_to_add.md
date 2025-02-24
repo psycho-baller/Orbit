@@ -7,7 +7,7 @@ Making friends who share my interests and hobbies
 Having meaningful conversations and deep discussions
 Building long-term friendships
 Exploring romantic relationships
-Idk, I'm just a chill dude
+Idk, I'm just a chill guy
 
 # What is your date of birth?
 
@@ -27,5 +27,3 @@ Idk, I'm just a chill dude
 
   (apple slider UI)
   (private)
-
-#
