@@ -17,10 +17,8 @@ struct MeetupRequestCardView: View {
 
     var body: some View {
         if !isHidden {
-            #warning("TODO: replace with 'MeetupRequestDetailedView'")
             NavigationLink(
-                destination: UserProfileView(
-                    user: meetupRequest.createdBy)
+                destination: MeetupRequestDetailedView(meetupRequest: meetupRequest)
             ) {
                 #warning(
                     "TODO: Refactor this to match the new design while using the data from 'meetupRequest'"

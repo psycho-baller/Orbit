@@ -6,11 +6,12 @@
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
 
-import AnimatedTabBar
+//import AnimatedTabBar
 import SwiftUI
 
 enum MainViewTabs {
     case home
+    case create
     case messages
     case profile
 }
@@ -30,10 +31,16 @@ struct MainTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
                 .tag(MainViewTabs.home)
-
+            
             //            NavigationView {
+            CreateMeetupView()
+                .tabItem {
+                    Label("Create", systemImage: "plus.circle.fill")
+                }
+                .tag(MainViewTabs.create)
+            
             InboxView()
-                //            }
+                            //            }
                 .tabItem {
                     Label("Messages", systemImage: "message.fill")
                 }

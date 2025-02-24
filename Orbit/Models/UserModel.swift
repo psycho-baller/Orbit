@@ -179,6 +179,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             lastName: "Chen",
             interests: ["Photography", "Hiking", "Coffee", "Art", "Travel"],
             profilePictureUrl: "https://picsum.photos/200",
+            bio: "I love photography, hiking, and art. I'm also a big fan of travel!",
             personalPreferences: PersonalPreferences(
                 activitiesHobbies: ["Photography", "Hiking", "Art"],
                 friendActivities: ["Creative Collaborator", "Travel Buddy"]

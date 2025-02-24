@@ -14,8 +14,8 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     CodableDictionaryConvertible
 {
     let title: String
-    let startTime: String
-    let endTime: String
+    let startTime: Date
+    let endTime: Date
     let areaId: Int
     let description: String
     // enum status: active, completed, cancelled
@@ -30,10 +30,10 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     static func mock() -> Self {
         return .init(
             title: "Test",
-            startTime: "2025-02-20T12:00:00Z",
-            endTime: "2025-02-20T13:00:00Z",
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(3600),
             areaId: 1,
-            description: "Test",
+            description: "Test description",
             status: .active,
             intention: .friendship,
             createdBy: .mockNoPendingMeetups(),
@@ -41,7 +41,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
             type: .meal
         )
     }
-    var id: String { startTime + createdBy.accountId }
+    var id: String { startTime.ISO8601Format() + createdBy.accountId }
     //    var id: String {
     //        return
     //    }

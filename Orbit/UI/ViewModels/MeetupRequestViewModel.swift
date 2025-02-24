@@ -62,8 +62,8 @@ class MeetupRequestViewModel: ObservableObject {
     /// Create a new meetup request
     func createMeetup(
         title: String,
-        startTime: String,
-        endTime: String,
+        startTime: Date,
+        endTime: Date,
         areaId: Int,
         description: String,
         status: MeetupStatus,

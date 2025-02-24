@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct Area: Codable {
+struct Area: Codable, Identifiable {
     let id: String
     let name: String
     let lon: Double
