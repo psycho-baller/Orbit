@@ -36,7 +36,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
             description: "Test",
             status: .active,
             intension: .friendship,
-            createdBy: .mock(),
+            createdBy: .mockNoPendingMeetups(),
             meetupApprovals: [],
             type: .meal
         )
