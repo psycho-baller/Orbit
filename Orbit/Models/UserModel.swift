@@ -251,6 +251,32 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             meetupsApproved: [MeetupApprovalModel.mock()]
         )
     }
+
+    static func mockNoPendingMeetups() -> UserModel {
+        UserModel(
+            accountId: "user3",
+            username: "jordan_taylor",
+            firstName: "Jordan",
+            lastName: "Taylor",
+            interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
+            profilePictureUrl: "https://picsum.photos/202",
+            personalPreferences: PersonalPreferences(
+                activitiesHobbies: ["Yoga", "Reading", "Meditation"],
+                friendActivities: ["Workout Partner", "Deep Conversations"]
+            ),
+            interactionPreferences: .mock(),
+            friendshipValues: FriendshipValuesModel(
+                values: ["Personal Growth", "Understanding", "Support"],
+                qualities: ["Self-aware", "Calm"]
+            ),
+            hasCompletedOnboarding: true,
+            showLastOnline: true,
+            showJoinedDate: false,
+            showSentReceivedRatio: true,
+            lastOnline: "2024-02-18T20:15:00Z"
+        )
+    }
+
     static func mockUsers() -> [UserModel] {
         return [
             .mock(),

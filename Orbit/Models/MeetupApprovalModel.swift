@@ -17,7 +17,7 @@ struct MeetupApprovalModel: Codable, Equatable, CodableDictionaryConvertible {
 
     static func mock() -> Self {
         return .init(
-            approvedBy: UserModel.mock(),
+            approvedBy: UserModel.mockNoPendingMeetups(),
             meetupRequest: MeetupRequestModel.mock(),
             firstMessage: "Looking forward to this!"
         )
