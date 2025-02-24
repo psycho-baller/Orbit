@@ -16,13 +16,15 @@ struct MeetUpRequestDetailsView: View {
     var request: ChatRequestDocument
     var approveRequest: (ChatRequestDocument) async -> Void
     var declineRequest: (ChatRequestDocument) async -> Void
-    
+
     var body: some View {
-        if let sender = userVM.users.first(where: { $0.accountId == request.data.senderAccountId }) {
+        if let sender = userVM.users.first(where: {
+            $0.accountId == request.data.senderAccountId
+        }) {
             ZStack {
                 ColorPalette.background(for: colorScheme)
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     ProfilePageView(user: sender)
                         .padding(.bottom, 80)
@@ -34,7 +36,7 @@ struct MeetUpRequestDetailsView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 16) {
                         Button(action: {
@@ -47,7 +49,7 @@ struct MeetUpRequestDetailsView: View {
                                 .foregroundColor(.green)
                                 .font(.title2)
                         }
-                        
+
                         Button(action: {
                             Task {
                                 await declineRequest(request)
@@ -69,7 +71,10 @@ struct MeetUpRequestDetailsView: View {
             .sheet(isPresented: $showChat) {
                 if let conversationId = chatRequestVM.newConversationId {
                     NavigationStack {
-                        MessageView(conversationId: conversationId, messagerName: sender.firstName + " " + (sender.lastName ?? ""))
+                        MessageView(
+                            conversationId: conversationId,
+                            messagerName: sender.firstName + " "
+                                + (sender.lastName ?? ""))
                     }
                 }
             }
@@ -80,7 +85,7 @@ struct MeetUpRequestDetailsView: View {
 #if DEBUG
     #Preview {
         MeetUpRequestDetailsView(
-            request: (mockChatRequestDocument as? ChatRequestDocument)!,
+            request: .mock(data: .mock()),
             approveRequest: { _ in
                 print("Approveds")
             },

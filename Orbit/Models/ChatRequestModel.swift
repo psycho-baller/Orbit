@@ -8,7 +8,7 @@
 import Appwrite
 import Foundation
 
-struct ChatRequestModel: Codable, Identifiable {
+struct ChatRequestModel: Codable, Identifiable, CodableDictionaryConvertible {
     var id: String {
         return "\(senderAccountId)_\(receiverAccountId)_\(message)"
     }
@@ -21,6 +21,15 @@ struct ChatRequestModel: Codable, Identifiable {
         case pending
         case approved
         case declined
+    }
+
+    static func mock() -> ChatRequestModel {
+        return .init(
+            senderAccountId: "user123",
+            receiverAccountId: "user456",
+            message: "Hey! Want to grab coffee?",
+            status: .pending
+        )
     }
 }
 
@@ -37,28 +46,18 @@ struct MockDocument<T: Codable>: Identifiable {
     var data: T
 }
 
+extension UserDocument {
+    static func mock() -> ChatRequestDocument {
+        return AppwriteModels.Document<ChatRequestModel>.mock(
+            data: ChatRequestModel.mock()
+        )
+    }
+}
+
 // Mock data for testing
 let distantPast = Date(timeIntervalSince1970: -1_000_000_000)
 let dateFormatter = DateFormatter()
 let distantPastString = dateFormatter.string(from: distantPast)
-
-let mockChatRequest = ChatRequestModel(
-    senderAccountId: "user123",
-    receiverAccountId: "user456",
-    message: "Hey! Want to grab coffee?",
-    status: .pending
-)
-
-// Create a mock ChatRequestDocument
-let mockChatRequestDocument = MockDocument<ChatRequestModel>(
-    id: mockChatRequest.id,
-    collectionId: "chat-requests",
-    databaseId: "chat-requests",
-    createdAt: distantPastString,
-    updatedAt: distantPastString,
-    permissions: [],
-    data: mockChatRequest
-)
 
 //struct IdentifiableDocument<T: Identifiable & Codable>: Identifiable {
 //    let document: AppwriteModels.Document<T>
