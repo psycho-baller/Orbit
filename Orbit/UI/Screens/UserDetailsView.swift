@@ -107,7 +107,7 @@ struct UserDetailsView: View {
                 Spacer()
             }
             .padding([.leading, .trailing], 27.5)
-            .navigationBarHidden(true)
+//            .navigationBarHidden(true)
             .onAppear {
                 print("\(accountId) onAppear")
                 Task {

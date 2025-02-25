@@ -127,7 +127,7 @@ struct SignupView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))
-        .navigationBarHidden(true)
+//        .navigationBarHidden(true)
     }
 
     private var isFormValid: Bool {
