@@ -1,12 +1,12 @@
 [
-  {
-    "languageId": "eng",
-    "name": "English",
-    "autonym": "English"
-  },
-  {
-    "languageId": "spa",
-    "name": "Spanish",
-    "autonym": "Spanish"
-  }
+    {
+        "languageId": "eng",
+        "name": "English",
+        "autonym": "English"
+    },
+    {
+        "languageId": "spa",
+        "name": "Spanish",
+        "autonym": "Español"
+    }
 ]
