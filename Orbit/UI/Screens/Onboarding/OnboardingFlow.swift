@@ -17,20 +17,30 @@ struct OnboardingFlow: View {
                     for: OnboardingViewModel.OnboardingStep.self
                 ) { step in
                     switch step {
-                    case .userInfo:
-                        UserInfoView(onboardingVM: viewModel)
+                    case .intention:
+                        IntentionView(viewModel: viewModel)
                     case .personalPreferences:
                         PersonalPreferencesView(onboardingVM: viewModel)
-                    case .friendshipValues:
-                        FriendshipValuesView(onboardingVM: viewModel)
                     case .interactionPreferences:
                         InteractionPreferencesView(onboardingVM: viewModel)
+                    case .friendshipValues:
+                        FriendshipValuesView(onboardingVM: viewModel)
+                    case .languages:
+                        LanguagesView(viewModel: viewModel)
+                    case .genderPronouns:
+                        GenderPronounsView(viewModel: viewModel)
+                    case .dobAndStarSign:
+                        DOBAndStarSignView(viewModel: viewModel)
+                    case .userLinks:
+                        UserLinksView(viewModel: viewModel)
                     //                    case .complete:
                     //                        CompleteView(viewModel: viewModel)
                     default:
                         EmptyView()  // Fallback if no destination is matched
                     }
                 }
+                .navigationBarTitleDisplayMode(.inline)
+
         }
     }
 }
