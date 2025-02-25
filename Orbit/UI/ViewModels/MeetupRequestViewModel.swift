@@ -67,7 +67,7 @@ class MeetupRequestViewModel: ObservableObject {
         areaId: Int,
         description: String,
         status: MeetupStatus,
-        intention: Meetupintention,
+        intention: MeetupIntention,
         createdBy: UserModel,
         meetupApprovals: [MeetupApprovalModel] = [],
         type: MeetupType

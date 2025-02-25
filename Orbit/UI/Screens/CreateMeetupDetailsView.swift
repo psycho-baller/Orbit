@@ -11,30 +11,30 @@ struct CreateMeetupDetailsView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    
+
     let selectedType: MeetupType
-    
+
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var startTime = Date()
-    @State private var selectedIntention: MeetupIntension = .friendship
+    @State private var selectedIntention: MeetupIntention = .friendship
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var selectedLocation: String = ""
     @State private var locationSearchText: String = ""
     @State private var isShowingLocationDropdown = false
-    
-    
-    
+
+
+
     private var isFormValid: Bool {
         !title.isEmpty && !description.isEmpty
     }
-    
+
     var body: some View {
         ZStack {
             ColorPalette.background(for: colorScheme)
                 .ignoresSafeArea()
-            
+
             VStack {
                 ScrollView {
                     VStack(spacing: 24) {
@@ -47,7 +47,7 @@ struct CreateMeetupDetailsView: View {
                                 .background(ColorPalette.main(for: colorScheme))
                                 .cornerRadius(12)
                         }
-                        
+
                         // Date & Time
                         VStack(alignment: .leading) {
                             Text("Date & Time")
@@ -59,18 +59,18 @@ struct CreateMeetupDetailsView: View {
                                 .background(ColorPalette.main(for: colorScheme))
                                 .cornerRadius(12)
                         }
-                        
+
                         #warning(
                             "TODO: Add location"
                         )
-                        
+
                         // Intention Selection
                         VStack(alignment: .leading) {
                             Text("Meetup Intention")
                                 .font(.headline)
                             Picker("", selection: $selectedIntention) {
-                                Text("Friendship").tag(MeetupIntension.friendship)
-                                Text("Relationship").tag(MeetupIntension.dating)
+                                Text("Friendship").tag(MeetupIntention.friendship)
+                                Text("Relationship").tag(MeetupIntention.dating)
                             }
                             .pickerStyle(.segmented)
                             .padding(.horizontal)
@@ -78,7 +78,7 @@ struct CreateMeetupDetailsView: View {
                             .background(ColorPalette.main(for: colorScheme))
                             .cornerRadius(12)
                         }
-                        
+
                         // Description Field
                         VStack(alignment: .leading) {
                             Text("Description (more info)")
@@ -122,14 +122,14 @@ struct CreateMeetupDetailsView: View {
             Text(alertMessage)
         }
     }
-    
+
     private func createMeetup() {
         guard let currentUser = userVM.currentUser else {
             alertMessage = "User not found"
             showingAlert = true
             return
         }
-        
+
         Task {
             await meetupRequestVM.createMeetup(
                 title: title,
@@ -138,7 +138,7 @@ struct CreateMeetupDetailsView: View {
                 areaId: 1,
                 description: description,
                 status: .active,
-                intension: selectedIntention,
+                intention: selectedIntention,
                 createdBy: currentUser,
                 meetupApprovals: [],
                 type: selectedType

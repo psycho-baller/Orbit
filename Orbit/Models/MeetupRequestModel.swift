@@ -21,7 +21,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     // enum status: active, completed, cancelled
     let status: MeetupStatus
     // enum intention: friendship, dating
-    let intention: Meetupintention
+    let intention: MeetupIntention
     let createdBy: UserModel
     let meetupApprovals: [MeetupApprovalModel]
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
@@ -57,7 +57,7 @@ enum MeetupStatus: String, Codable {
     case completed
     case cancelled
 }
-enum Meetupintention: String, Codable {
+enum MeetupIntention: String, Codable {
     case friendship
     case dating
 }

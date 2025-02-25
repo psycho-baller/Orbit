@@ -15,7 +15,7 @@ struct MeetupRequestDetailedView: View {
     @EnvironmentObject var meetupApprovalVM: MeetupApprovalViewModel
     @EnvironmentObject var userVM: UserViewModel
     @State private var areaName: String = ""
-    
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
@@ -42,13 +42,13 @@ struct MeetupRequestDetailedView: View {
                             .padding(.bottom, 1)
                             .foregroundColor(Color.accentColor)
                             .lineLimit(1)
-                        
+
                         VStack(alignment: .leading, spacing: 16) {
                             // Title
                             Text(meetupRequest.title)
                                 .font(.title3)
                                 .fontWeight(.semibold)
-                            
+
                             // Time
                             HStack(spacing: 12) {
                                 Image(systemName: "clock")
@@ -56,7 +56,7 @@ struct MeetupRequestDetailedView: View {
                                 Text("\(meetupRequest.startTime.formatted(date: .long, time: .shortened)) - \(meetupRequest.endTime.formatted(date: .omitted, time: .shortened))")
                             }
                             .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                            
+
                             #warning (
                                 "TODO: Make Location work"
                             )
@@ -67,11 +67,11 @@ struct MeetupRequestDetailedView: View {
                                 Text(areaName)
                             }
                             .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                            
+
                             // Description
                             Text(meetupRequest.description)
                                 .font(.body)
-                            
+
                             // Type and Intention
                             HStack(spacing: 12) {
                                 Image(systemName: iconForType(meetupRequest.type))
@@ -79,11 +79,11 @@ struct MeetupRequestDetailedView: View {
                                 Text(meetupRequest.type.rawValue.capitalized)
                             }
                             .foregroundColor(ColorPalette.accent(for: colorScheme))
-                            
+
                             HStack(spacing: 12) {
-                                Image(systemName: iconForIntention(meetupRequest.intension))
+                                Image(systemName: iconForIntention(meetupRequest.intention))
                                     .frame(width: 24)
-                                Text(meetupRequest.intension.rawValue.capitalized)
+                                Text(meetupRequest.intention.rawValue.capitalized)
                             }
                             .foregroundColor(ColorPalette.accent(for: colorScheme))
                         }
@@ -98,7 +98,7 @@ struct MeetupRequestDetailedView: View {
                                 Text("Interests")
                                     .font(.headline)
                                     .foregroundColor(ColorPalette.text(for: colorScheme))
-                                
+
                                 InterestsHorizontalTags(
                                     interests: allInterests,
                                     onTapInterest: { _ in }
@@ -112,7 +112,7 @@ struct MeetupRequestDetailedView: View {
                         }
                         Text(meetupRequest.createdBy.bio ?? "")
                             .padding()
-                            
+
                     }
                 }
 
@@ -159,7 +159,7 @@ struct MeetupRequestDetailedView: View {
                         }
                     }
                 }
-            
+
         }
         .onAppear {
             areaName = userVM.getAreaName(forId: meetupRequest.areaId)
@@ -177,9 +177,9 @@ struct MeetupRequestDetailedView: View {
         case .other: return "ellipsis.circle.fill"
         }
     }
-    
+
     // helper function to get icon for meetup intention
-    private func iconForIntention(_ intention: MeetupIntension) -> String {
+    private func iconForIntention(_ intention: MeetupIntention) -> String {
         switch intention {
         case .friendship: return "figure.2"
         case .dating: return "heart.fill"
