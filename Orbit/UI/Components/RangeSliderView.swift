@@ -27,6 +27,15 @@ struct RangeSliderView: View {
                 // Selected range
                 Rectangle()
                     .fill(Color.blue)
+                            //                 width: CGFloat(
+                            // (upperValue - range.lowerBound)
+                            //     / CGFloat(range.upperBound - range.lowerBound)
+                            //     * geometry.size.width)
+                            // - CGFloat(
+                            //     (lowerValue - range.lowerBound)
+                            //         / CGFloat(
+                            //             range.upperBound - range.lowerBound)
+                            //         * geometry.size.width), height: trackHeight
                     .frame(
                         width: CGFloat(upperValue - lowerValue)
                             / CGFloat(range.upperBound - range.lowerBound)
