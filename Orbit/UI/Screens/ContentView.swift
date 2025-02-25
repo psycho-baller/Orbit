@@ -60,7 +60,7 @@ struct ContentView: View {
         case .home:
             HomeView()
         case .create:
-            CreateMeetupView()
+            CreateMeetupTypeView()
         case .messages:
             InboxView()
         case .profile:

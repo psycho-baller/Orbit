@@ -33,7 +33,7 @@ struct MainTabView: View {
                 .tag(MainViewTabs.home)
             
             //            NavigationView {
-            CreateMeetupView()
+            CreateMeetupTypeView()
                 .tabItem {
                     Label("Create", systemImage: "plus.circle.fill")
                 }
