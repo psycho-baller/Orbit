@@ -20,8 +20,8 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     let description: String
     // enum status: active, completed, cancelled
     let status: MeetupStatus
-    // enum intension: friendship, dating
-    let intension: MeetupIntension
+    // enum intention: friendship, dating
+    let intention: Meetupintention
     let createdBy: UserModel
     let meetupApprovals: [MeetupApprovalModel]
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
@@ -35,7 +35,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
             areaId: 1,
             description: "Test",
             status: .active,
-            intension: .friendship,
+            intention: .friendship,
             createdBy: .mockNoPendingMeetups(),
             meetupApprovals: [],
             type: .meal
@@ -57,7 +57,7 @@ enum MeetupStatus: String, Codable {
     case completed
     case cancelled
 }
-enum MeetupIntension: String, Codable {
+enum Meetupintention: String, Codable {
     case friendship
     case dating
 }
