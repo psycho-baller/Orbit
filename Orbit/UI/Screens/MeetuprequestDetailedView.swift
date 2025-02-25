@@ -147,18 +147,6 @@ struct MeetupRequestDetailedView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            HStack {
-                                Image(systemName: "chevron.left")
-                                Text("Back")
-                            }
-                            .foregroundColor(ColorPalette.accent(for: colorScheme))
-                        }
-                    }
-                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
                             dismiss()
