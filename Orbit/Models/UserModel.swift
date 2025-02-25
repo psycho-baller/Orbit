@@ -45,7 +45,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var pronouns: UserPronouns?
     var showStarSign: Bool = true
     var userLinks: [UserLinkModel]?
-    var intension: [UserIntention]?
+    var intentions: [UserIntention]?
 
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
@@ -84,7 +84,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         pronouns: UserPronouns? = nil,
         showStarSign: Bool = true,
         userLinks: [UserLinkModel]? = nil,
-        intension: [UserIntention]? = nil
+        intentions: [UserIntention]? = nil
     ) {
         self.accountId = accountId
         self.username = username
@@ -111,7 +111,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.pronouns = pronouns
         self.showStarSign = showStarSign
         self.userLinks = userLinks
-        self.intension = intension
+        self.intentions = intentions
     }
 
     func update(
@@ -136,7 +136,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         pronouns: UserPronouns? = nil,
         showStarSign: Bool? = nil,
         userLinks: [UserLinkModel]? = nil,
-        intension: [UserIntention]? = nil
+        intentions: [UserIntention]? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,
@@ -167,7 +167,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             pronouns: pronouns ?? self.pronouns,
             showStarSign: showStarSign ?? self.showStarSign,
             userLinks: userLinks ?? self.userLinks,
-            intension: intension ?? self.intension
+            intentions: intentions ?? self.intentions
         )
     }
 
@@ -344,7 +344,7 @@ enum UserPronouns: String, Codable {
     case other
 }
 
-enum UserIntention: String, Codable {
+enum UserIntention: String, Codable, CaseIterable {
     case hobbies = "Making friends who share my interests and hobbies"
     case conversations = "Having meaningful conversations and deep discussions"
     case friendships = "Building long-term friendships"
