@@ -12,6 +12,19 @@ import Foundation
 import JSONCodable
 import SwiftUI
 
+// struct OnboardingUpdate {
+//     var personalPreferences: PersonalPreferences?
+//     var interactionPreferences: InteractionPreferencesModel?
+//     var friendshipValues: FriendshipValuesModel?
+//     var bio: String?
+//     var dob: Date?
+//     var markComplete: Bool = false
+// }
+
+// enum OnboardingError: Error {
+//     case noCurrentUser
+// }
+
 class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     CampusLocationDelegate
 {
@@ -106,6 +119,12 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         friendshipValues: FriendshipValuesModel? = nil,
         bio: String? = nil,
         dob: Date? = nil,
+        showStarSign: Bool? = nil,
+        intentions: [UserIntention]? = [],
+        userLanguages: [UserLanguageModel]? = [],
+        userLinks: [UserLinkModel]? = [],
+        gender: UserGender? = nil,
+        pronouns: UserPronouns? = nil,
         markComplete: Bool = false
     ) async {
         guard var currentUser = currentUser else {
@@ -138,6 +157,11 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         currentUser.friendshipValues =
             friendshipValues ?? currentUser.friendshipValues
         currentUser.bio = bio ?? currentUser.bio
+        currentUser.intentions = intentions ?? currentUser.intentions
+        currentUser.userLanguages = userLanguages ?? currentUser.userLanguages
+        currentUser.gender = gender ?? currentUser.gender
+        currentUser.pronouns = pronouns ?? currentUser.pronouns
+        currentUser.userLinks = userLinks ?? currentUser.userLinks
         if let dateOfBirth = dob {
 
             let dateFormatter = DateFormatter()
@@ -146,6 +170,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
             currentUser.dob = dateFormatter.string(from: dateOfBirth)
         }
+        currentUser.showStarSign = showStarSign ?? currentUser.showStarSign
         if markComplete {
             currentUser.hasCompletedOnboarding = true
         }
