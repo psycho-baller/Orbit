@@ -20,11 +20,11 @@ struct DragAndDropScreen: View {
     var body: some View {
         VStack(spacing: 24) {
             // Question at the top
-            Text(title)
-                .font(.title2)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-                .padding()
+            //            Text(title)
+            //                .font(.title2)
+            //                .fontWeight(.bold)
+            //                .multilineTextAlignment(.center)
+            //                .padding()
 
             // Description
             Text(description)
@@ -53,6 +53,7 @@ struct DragAndDropScreen: View {
                         //                        .foregroundColor(.white.opacity(0.8))
                     }
                     .frame(height: 150)
+                    .frame(maxWidth: .infinity)
                 } else {
 
                     // Basket Items (Draggable & Sortable)
@@ -115,9 +116,7 @@ struct DragAndDropScreen: View {
         }
         .accentColor(ColorPalette.accent(for: colorScheme))
         .padding(.horizontal)
-        .toolbar {
-            EditButton()
-        }
+        .navigationTitle(title)
         //        .frame(maxHeight: .infinity)
         .background(ColorPalette.background(for: colorScheme))
     }
@@ -232,6 +231,8 @@ struct BasketItemView: View {
                 "Exploring romantic relationships",
             ]
         ),
-        basketItems: .constant(["Idk, I'm just a chill guy"])
+        basketItems: .constant([
+            //            "Idk, I'm just a chill guy"
+        ])
     )
 }

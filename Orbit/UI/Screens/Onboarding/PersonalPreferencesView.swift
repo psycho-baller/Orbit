@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct PersonalPreferencesView: View {
-    @EnvironmentObject var userVM: UserViewModel
     @ObservedObject var onboardingVM: OnboardingViewModel
+    @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme  // Detect system color scheme
     @StateObject private var viewModel =
         PersonalPreferencesViewModel()
@@ -96,7 +96,8 @@ struct PersonalPreferencesView: View {
                 VStack {
                     Button(action: {
                         onboardingVM.navigationPath.append(
-                            OnboardingViewModel.OnboardingStep.interactionPreferences)
+                            OnboardingViewModel.OnboardingStep
+                                .interactionPreferences)
 
                         let selectedAnswers =
                             viewModel
@@ -122,7 +123,7 @@ struct PersonalPreferencesView: View {
                     .disabled(!canProceed())
                     .padding(.horizontal)
                 }
-                .padding(.bottom, 20)  // Ensure spacing at the bottom
+                //                .padding(.bottom)  // Ensure spacing at the bottom
                 .background(ColorPalette.background(for: colorScheme))  // Add background color to footer
             }
         }

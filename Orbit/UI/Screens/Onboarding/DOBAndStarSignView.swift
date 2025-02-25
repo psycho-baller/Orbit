@@ -1,3 +1,10 @@
+//
+//  DOBAndStarSignView.swift
+//  Orbit
+//
+//  Created by Rami Maalouf on 2025-02-25.
+//
+
 import SwiftUI
 
 struct DOBAndStarSignView: View {
@@ -6,12 +13,15 @@ struct DOBAndStarSignView: View {
 
     @State private var dateOfBirth: Date = Date()
     @State private var shareStarSign: Bool = true
-    
+
     var body: some View {
         Form {
             Section(header: Text("What is your date of birth?")) {
-                DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
-                    .datePickerStyle(.graphical)
+                DatePicker(
+                    "Date of Birth", selection: $dateOfBirth,
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.graphical)
             }
             Section(header: Text("Would you like to share your star sign?")) {
                 Toggle("Share my star sign", isOn: $shareStarSign)
@@ -22,11 +32,12 @@ struct DOBAndStarSignView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Next") {
                     Task {
-                        await userVM.saveOnboardingData(dob: dateOfBirth)
+                        await userVM.saveOnboardingData(dob: dateOfBirth, showStarSign: shareStarSign)
                         // Optionally update the star sign preference here.
                         userVM.currentUser?.showStarSign = shareStarSign
                     }
-                    viewModel.navigationPath.append(.userLinks)
+                    viewModel.navigationPath.append(
+                        OnboardingViewModel.OnboardingStep.userLinks)
                 }
             }
         }

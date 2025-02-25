@@ -73,18 +73,18 @@ struct InteractionPreferencesView: View {
                                 ColorPalette.text(for: colorScheme))
 
                             // Age range selection slider
-                            //                            RangeSliderView(
-                            //                                selectedMin: Binding(
-                            //                                    get: { viewModel.preferredMinAge ?? 18 },
-                            //                                    set: { viewModel.preferredMinAge = $0 }
-                            //                                ),
-                            //                                selectedMax: Binding(
-                            //                                    get: { viewModel.preferredMaxAge ?? 60 },
-                            //                                    set: { viewModel.preferredMaxAge = $0 }
-                            //                                ),
-                            //                                minValue: 18,
-                            //                                maxValue: 60
-                            //                            )
+                            RangeSliderView(
+                                lowerValue: Binding(
+                                    get: { viewModel.preferredMinAge ?? 18 },
+                                    set: { viewModel.preferredMinAge = Int($0) }
+                                ),
+                                upperValue: Binding(
+                                    get: { viewModel.preferredMaxAge ?? 60 },
+                                    set: { viewModel.preferredMaxAge = $0 }
+                                ),
+                                range: 16...60
+                            )
+                            .padding(.bottom)
                         }
 
                         // **Preferred Gender Selection**
