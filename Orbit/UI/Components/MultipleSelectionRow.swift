@@ -1,3 +1,10 @@
+//
+//  MultipleSelectionRow.swift
+//  Orbit
+//
+//  Created by Rami Maalouf on 2025-02-25.
+//
+
 import SwiftUI
 
 struct MultipleSelectionRow: View {
