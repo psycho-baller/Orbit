@@ -53,10 +53,13 @@ struct MeetupRequestDetailedView: View {
                             HStack(spacing: 12) {
                                 Image(systemName: "clock")
                                     .frame(width: 24)
-                                Text("\(meetupRequest.startTime.formatted(date: .long, time: .shortened)) - \(meetupRequest.endTime.formatted(date: .long, time: .shortened))")
+                                Text("\(meetupRequest.startTime.formatted(date: .long, time: .shortened)) - \(meetupRequest.endTime.formatted(date: .omitted, time: .shortened))")
                             }
                             .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                             
+                            #warning (
+                                "TODO: Make Location work"
+                            )
                             // Area
                             HStack(spacing: 12) {
                                 Image(systemName: "mappin.circle.fill")

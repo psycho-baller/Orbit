@@ -14,10 +14,9 @@ struct CreateMeetupTypeView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var selectedType: MeetupType? = nil
-    @State private var showingDetails = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 ColorPalette.background(for: colorScheme)
                     .ignoresSafeArea()
@@ -72,44 +71,41 @@ struct CreateMeetupTypeView: View {
                                     selectedType = .other
                                 }
                             }
+                            .padding()
                         }
                         .padding()
                     }
                     
+                    // Footer with Next button
                     VStack {
-                        Button(action: {
-                            if selectedType != nil {
-                                showingDetails = true
+                        NavigationLink(
+                            destination: {
+                                if let type = selectedType {
+                                    CreateMeetupDetailsView(selectedType: type)
+                                }
+                            },
+                            label: {
+                                Text("Next")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(
+                                        selectedType != nil 
+                                            ? ColorPalette.accent(for: colorScheme)
+                                            : ColorPalette.lightGray(for: colorScheme)
+                                    )
+                                    .cornerRadius(12)
                             }
-                        }) {
-                            Text("Next")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                    selectedType != nil 
-                                        ? ColorPalette.accent(for: colorScheme)
-                                        : ColorPalette.lightGray(for: colorScheme)
-                                )
-                                .cornerRadius(12)
-                        }
+                        )
                         .disabled(selectedType == nil)
-                        .padding()
+                        .padding(.horizontal)
                     }
+                    .padding(.bottom, 20)
                     .background(ColorPalette.background(for: colorScheme))
                 }
             }
-            .navigationDestination(isPresented: $showingDetails) {
-                if let type = selectedType {
-                    CreateMeetupDetailsView(selectedType: type)
-                }
-            }
         }
-    }
-    
-    private func canProceed() -> Bool {
-        selectedType != nil
     }
 }
 

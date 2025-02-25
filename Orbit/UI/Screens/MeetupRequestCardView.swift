@@ -20,9 +20,6 @@ struct MeetupRequestCardView: View {
             NavigationLink(
                 destination: MeetupRequestDetailedView(meetupRequest: meetupRequest)
             ) {
-                #warning(
-                    "TODO: Refactor this to match the new design while using the data from 'meetupRequest'"
-                )
                 SwipeView {
                     HStack(spacing: 16) {
                         // Profile Picture
@@ -59,29 +56,26 @@ struct MeetupRequestCardView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             // User Name
                             Text(meetupRequest.createdBy.username)
-                                .font(.title)
-                                .padding(.bottom, 1)
+                                .font(.headline)
                                 .foregroundColor(Color.accentColor)
                                 .lineLimit(1)
-
-                            // User Interests
-                            if let activities = meetupRequest.createdBy
-                                .personalPreferences?
-                                .activitiesHobbies
-                            {
-                                InterestsHorizontalTags(
-                                    interests: activities,
-                                    onTapInterest: { activity in
-                                        withAnimation {
-                                            userVM.toggleInterest(activity)
-                                        }
-                                    }
-                                )
-                            } else {
-                                InterestsHorizontalTags(
-                                    interests: [], onTapInterest: { _ in })
+                            
+                            // Meetup Title
+                            Text(meetupRequest.title)
+                                .font(.body)
+                                .foregroundColor(ColorPalette.text(for: colorScheme))
+                                .lineLimit(2)
+                            
+                            // Time
+                            HStack(spacing: 4) {
+                                Image(systemName: "clock")
+                                    .font(.subheadline)
+                                Text(formatMeetupTime(startTime: meetupRequest.startTime, endTime: meetupRequest.endTime))
+                                    .font(.subheadline)
                             }
+                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(height: 100)
                     }
                     .padding()
@@ -144,6 +138,37 @@ struct MeetupRequestCardView: View {
         Task {
             await meetupApprovalVM.approveMeetup(approval: meetupApproval)
         }
+    }
+
+    private func formatMeetupTime(startTime: Date, endTime: Date) -> String {
+        let now = Date()
+        
+        // If current time is between start and end time
+        if now >= startTime && now <= endTime {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+            return "Now until \(formatter.string(from: endTime))"
+        }
+        
+        // If start time is within the next hour
+        let minutesUntilStart = Calendar.current.dateComponents([.minute], from: now, to: startTime).minute ?? 0
+        if minutesUntilStart > 0 && minutesUntilStart < 60 {
+            return "in \(minutesUntilStart) minutes"
+        }
+        
+        // Otherwise show the start time
+        let formatter = DateFormatter()
+        let isToday = Calendar.current.isDate(startTime, inSameDayAs: Date())
+
+        if isToday {
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+        } else {
+            formatter.dateStyle = .long
+            formatter.timeStyle = .short
+        }
+        return formatter.string(from: startTime)
     }
 }
 

@@ -24,6 +24,8 @@ struct CreateMeetupDetailsView: View {
     @State private var locationSearchText: String = ""
     @State private var isShowingLocationDropdown = false
     
+    
+    
     private var isFormValid: Bool {
         !title.isEmpty && !description.isEmpty
     }
@@ -58,6 +60,10 @@ struct CreateMeetupDetailsView: View {
                                 .cornerRadius(12)
                         }
                         
+                        #warning(
+                            "TODO: Add location"
+                        )
+                        
                         // Intention Selection
                         VStack(alignment: .leading) {
                             Text("Meetup Intention")
@@ -87,7 +93,9 @@ struct CreateMeetupDetailsView: View {
                     }
                     .padding()
                 }
-                
+                #warning (
+                    "TODO: Make submit create a meetup -> show user a success screen -> then redirect back to home"
+                )
                 VStack {
                     Button(action: createMeetup) {
                         Text("Submit")

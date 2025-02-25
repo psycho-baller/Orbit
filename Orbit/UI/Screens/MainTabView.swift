@@ -69,6 +69,7 @@ struct MainTabView: View {
             .environmentObject(UserViewModel.mock())
             .environmentObject(AuthViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(MeetupRequestViewModel.mock())
 
     }
 #endif
