@@ -16,11 +16,12 @@ struct WelcomeView: View {
 
             Button("Start Onboarding") {
                 viewModel.navigationPath.append(
-                    OnboardingViewModel.OnboardingStep.userInfo)
+                    OnboardingViewModel.OnboardingStep.intention)
             }
         }
         .padding()
         .navigationTitle("Welcome")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 #Preview {
