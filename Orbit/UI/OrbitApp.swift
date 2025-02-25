@@ -28,6 +28,27 @@ struct OrbitApp: App {
 
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
+
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithTransparentBackground()
+        // Set a blur effect (e.g., regular or extraLight)
+        navBarAppearance.backgroundEffect = UIBlurEffect(
+            style: .systemUltraThinMaterial)
+        navBarAppearance.titleTextAttributes = [
+            .foregroundColor: UIColor.label,
+            .font: UIFont.systemFont(ofSize: 24, weight: .bold),
+        ]
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().compactAppearance = navBarAppearance
+
+        // Scroll edge appearance (used when at the top)
+        let scrollEdgeAppearance = UINavigationBarAppearance()
+        scrollEdgeAppearance.configureWithTransparentBackground()
+        scrollEdgeAppearance.titleTextAttributes = [
+            .foregroundColor: UIColor.label,
+            .font: UIFont.systemFont(ofSize: 24, weight: .bold),
+        ]
+        UINavigationBar.appearance().scrollEdgeAppearance = scrollEdgeAppearance
     }
 
     var body: some Scene {
