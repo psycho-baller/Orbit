@@ -1,3 +1,10 @@
+//
+//  GenderPronounsView.swift
+//  Orbit
+//
+//  Created by Rami Maalouf on 2025-02-25.
+//
+
 import SwiftUI
 
 struct GenderPronounsView: View {
@@ -6,22 +13,28 @@ struct GenderPronounsView: View {
 
     @State private var selectedGender: UserGender? = nil
     @State private var selectedPronoun: UserPronouns? = nil
-    
+
     // If UserPronouns isn’t CaseIterable, define the options manually.
     let pronounsOptions: [UserPronouns] = [.heHim, .sheHer, .theyThem, .other]
-    
+
     var body: some View {
         Form {
             Section(header: Text("Gender")) {
                 ForEach(UserGender.allCases, id: \.self) { gender in
-                    MultipleSelectionRow(title: gender.rawValue.capitalized, isSelected: selectedGender == gender) {
+                    MultipleSelectionRow(
+                        title: gender.rawValue.capitalized,
+                        isSelected: selectedGender == gender
+                    ) {
                         selectedGender = gender
                     }
                 }
             }
             Section(header: Text("Pronouns")) {
                 ForEach(pronounsOptions, id: \.self) { pronoun in
-                    MultipleSelectionRow(title: pronoun.rawValue, isSelected: selectedPronoun == pronoun) {
+                    MultipleSelectionRow(
+                        title: pronoun.rawValue,
+                        isSelected: selectedPronoun == pronoun
+                    ) {
                         selectedPronoun = pronoun
                     }
                 }
@@ -39,7 +52,8 @@ struct GenderPronounsView: View {
                         userVM.currentUser?.pronouns = selectedPronoun
                         await userVM.saveOnboardingData()
                     }
-                    viewModel.navigationPath.append(.dobAndStarSign)
+                    viewModel.navigationPath.append(
+                        OnboardingViewModel.OnboardingStep.dobAndStarSign)
                 }
             }
         }
