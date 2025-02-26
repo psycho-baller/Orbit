@@ -53,7 +53,12 @@ struct MeetupRequestDetailedView: View {
                             HStack(spacing: 12) {
                                 Image(systemName: "clock")
                                     .frame(width: 24)
-                                Text("\(meetupRequest.startTime.formatted(date: .long, time: .shortened)) - \(meetupRequest.endTime.formatted(date: .omitted, time: .shortened))")
+                                if let startDate = meetupRequest.startTimeDate,
+                                   let endDate = meetupRequest.endTimeDate {
+                                    Text("\(startDate.formatted(date: .long, time: .shortened)) - \(endDate.formatted(date: .omitted, time: .shortened))")
+                                } else {
+                                    Text("Invalid date format")
+                                }
                             }
                             .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
 

@@ -65,15 +65,6 @@ struct MeetupRequestCardView: View {
                                 .font(.body)
                                 .foregroundColor(ColorPalette.text(for: colorScheme))
                                 .lineLimit(2)
-                            
-                            // Time
-                            HStack(spacing: 4) {
-                                Image(systemName: "clock")
-                                    .font(.subheadline)
-                                Text(formatMeetupTime(startTime: meetupRequest.startTime, endTime: meetupRequest.endTime))
-                                    .font(.subheadline)
-                            }
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(height: 100)
@@ -140,7 +131,12 @@ struct MeetupRequestCardView: View {
         }
     }
 
-    private func formatMeetupTime(startTime: Date, endTime: Date) -> String {
+    private func formatMeetupTime(meetup: MeetupRequestModel) -> String {
+        guard let startTime = meetup.startTimeDate,
+              let endTime = meetup.endTimeDate else {
+            return "Invalid date"
+        }
+        
         let now = Date()
         
         // If current time is between start and end time

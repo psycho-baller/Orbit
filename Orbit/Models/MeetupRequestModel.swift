@@ -14,8 +14,8 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     CodableDictionaryConvertible
 {
     let title: String
-    let startTime: Date
-    let endTime: Date
+    let startTime: String
+    let endTime: String
     let areaId: Int
     let description: String
     // enum status: active, completed, cancelled
@@ -27,12 +27,23 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
     let type: MeetupType
 
+    // Helper computed properties to get Date objects when needed
+    var startTimeDate: Date? {
+        ISO8601DateFormatter().date(from: startTime)
+    }
+    
+    var endTimeDate: Date? {
+        ISO8601DateFormatter().date(from: endTime)
+    }
+
     static func mock() -> Self {
+        let formatter = ISO8601DateFormatter()
+        let startTime = Date().addingTimeInterval(7200)
+        let endTime = startTime.addingTimeInterval(3600) // Add 1 hour
         return .init(
-            title:
-                "\"How do you plan to make the best of your university experience?\"",
-            startTime: Date().addingTimeInterval(7200),
-            endTime: Date().addingTimeInterval(7200),
+            title: "\"How do you plan to make the best of your university experience?\"",
+            startTime: formatter.string(from: startTime),
+            endTime: formatter.string(from: endTime),
             areaId: 521_659_157,
             description:
                 "It's been hard for me to balance out grades and social life. Wondering how others do it",
@@ -43,7 +54,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
             type: .meal
         )
     }
-    var id: String { startTime.ISO8601Format() + createdBy.accountId }
+    var id: String { startTime + createdBy.accountId }
     //    var id: String {
     //        return
     //    }

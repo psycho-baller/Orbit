@@ -62,8 +62,8 @@ class MeetupRequestViewModel: ObservableObject {
     /// Create a new meetup request
     func createMeetup(
         title: String,
-        startTime: Date,
-        endTime: Date,
+        startTime: String,
+        endTime: String,
         areaId: Int,
         description: String,
         status: MeetupStatus,
@@ -75,6 +75,9 @@ class MeetupRequestViewModel: ObservableObject {
         isLoading = true
         defer { isLoading = false }
 
+        print("Debug - ViewModel - Creating meetup with data:")
+        print("createdBy: \(createdBy)")
+        
         let newMeetup = MeetupRequestModel(
             title: title,
             startTime: startTime,
@@ -91,11 +94,11 @@ class MeetupRequestViewModel: ObservableObject {
         do {
             let savedMeetup = try await meetupService.createMeetup(newMeetup)
             self.meetupRequests.append(savedMeetup)
+            print("Debug - ViewModel - Successfully created meetup")
         } catch {
             self.error = error.localizedDescription
-            print(
-                "MeetupRequestViewModel - createMeetup: Error: \(error.localizedDescription)"
-            )
+            print("Debug - ViewModel - Error creating meetup:")
+            print(error)
         }
     }
 

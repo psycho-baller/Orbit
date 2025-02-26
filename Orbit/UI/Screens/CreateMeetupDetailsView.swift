@@ -130,11 +130,21 @@ struct CreateMeetupDetailsView: View {
             return
         }
 
+        let formatter = ISO8601DateFormatter()
+        let startTimeString = formatter.string(from: startTime)
+        let endTime = Calendar.current.date(byAdding: .hour, value: 1, to: startTime) ?? startTime.addingTimeInterval(3600)
+        let endTimeString = formatter.string(from: endTime)
+        
+        print("Debug - Creating meetup:")
+        print("Start time: \(startTimeString)")
+        print("End time: \(endTimeString)")
+        print("Current user: \(currentUser)")
+
         Task {
             await meetupRequestVM.createMeetup(
                 title: title,
-                startTime: startTime,
-                endTime: startTime.addingTimeInterval(3600),
+                startTime: startTimeString,
+                endTime: endTimeString,
                 areaId: 1,
                 description: description,
                 status: .active,
