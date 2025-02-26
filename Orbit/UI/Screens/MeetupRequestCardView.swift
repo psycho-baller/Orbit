@@ -65,6 +65,11 @@ struct MeetupRequestCardView: View {
                                 .font(.body)
                                 .foregroundColor(ColorPalette.text(for: colorScheme))
                                 .lineLimit(2)
+                            
+                            // Time
+                            Text(formatMeetupTime(meetup: meetupRequest))
+                                .font(.subheadline)
+                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(height: 100)
