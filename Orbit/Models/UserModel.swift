@@ -36,8 +36,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var showJoinedDate: Bool = true
     var showSentReceivedRatio: Bool = true
     var lastOnline: String?  // ISO8601 formatted date-time (optional)
-    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
-    var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
+    // var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
+    // var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
 
     // Newly added attributes from the database
     var userLanguages: [UserLanguageModel]?
@@ -104,8 +104,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.showJoinedDate = showJoinedDate
         self.showSentReceivedRatio = showSentReceivedRatio
         self.lastOnline = lastOnline
-        self.requestedMeetups = requestedMeetups
-        self.meetupsApproved = meetupsApproved
+//        self.requestedMeetups = requestedMeetups
+//        self.meetupsApproved = meetupsApproved
         self.userLanguages = userLanguages
         self.gender = gender
         self.pronouns = pronouns
@@ -160,8 +160,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showSentReceivedRatio: showSentReceivedRatio
                 ?? self.showSentReceivedRatio,
             lastOnline: lastOnline ?? self.lastOnline,
-            requestedMeetups: requestedMeetups ?? self.requestedMeetups,
-            meetupsApproved: meetupsApproved ?? self.meetupsApproved,
+//            requestedMeetups: requestedMeetups ?? self.requestedMeetups,
+//            meetupsApproved: meetupsApproved ?? self.meetupsApproved,
             userLanguages: userLanguages ?? self.userLanguages,
             gender: gender ?? self.gender,
             pronouns: pronouns ?? self.pronouns,
