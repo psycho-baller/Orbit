@@ -238,9 +238,9 @@ struct HomeView: View {
             //            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
             //                .padding(.bottom, 16)
 
-            if userVM.filteredUsers.isEmpty {
-                NoUsersAroundView()
-            } else {
+//            if userVM.filteredUsers.isEmpty {
+//                NoUsersAroundView()
+//            } else {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
@@ -251,7 +251,7 @@ struct HomeView: View {
                     .padding(.vertical)
                 }
             }
-        }
+//        }
         .onAppear {
             if !isPreviewMode {
                 Task {
