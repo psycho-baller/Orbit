@@ -29,11 +29,13 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
 
     static func mock() -> Self {
         return .init(
-            title: "Test",
-            startTime: Date(),
-            endTime: Date().addingTimeInterval(3600),
-            areaId: 1,
-            description: "Test description",
+            title:
+                "\"How do you plan to make the best of your university experience?\"",
+            startTime: Date().addingTimeInterval(7200),
+            endTime: Date().addingTimeInterval(7200),
+            areaId: 521_659_157,
+            description:
+                "It's been hard for me to balance out grades and social life. Wondering how others do it",
             status: .active,
             intention: .friendship,
             createdBy: .mockNoPendingMeetups(),

@@ -173,13 +173,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     static func mock() -> UserModel {
         UserModel(
-            accountId: "user1",
-            username: "slingshot69",
-            firstName: "Sarah",
-            lastName: "Chen",
-            interests: ["Photography", "Hiking", "Coffee", "Art", "Travel"],
+            accountId: "imjustken",
+            username: "imjustken",
+            firstName: "Ken",
+            lastName: "",
+            interests: [
+                "Fitness", "Reading", "Meditation", "Writing", "Hiking",
+            ],
             profilePictureUrl: "https://picsum.photos/200",
-            bio: "I love photography, hiking, and art. I'm also a big fan of travel!",
+            bio:
+                "I love photography, hiking, and art. I'm also a big fan of travel!",
             personalPreferences: PersonalPreferences(
                 activitiesHobbies: ["Photography", "Hiking", "Art"],
                 friendActivities: ["Creative Collaborator", "Travel Buddy"]
@@ -195,16 +198,26 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showSentReceivedRatio: true,
             lastOnline: "2024-02-20T15:30:00Z",
             requestedMeetups: [MeetupRequestModel.mock()],
-            meetupsApproved: [MeetupApprovalModel.mock()]
+            meetupsApproved: [MeetupApprovalModel.mock()],
+            gender: .man,
+            pronouns: .heHim,
+            userLinks: [
+                .mock()
+            ],
+            intentions: [
+                .friendships,
+                .conversations,
+                .hobbies,
+            ]
         )
     }
 
     static func mock2() -> UserModel {
         UserModel(
             accountId: "user2",
-            username: "imjustken",
-            firstName: "Alex",
-            lastName: "Rivera",
+            username: "slingshot69",
+            firstName: "Mark",
+            lastName: "",
             interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
             profilePictureUrl: "https://picsum.photos/201",
             personalPreferences: PersonalPreferences(
@@ -255,12 +268,14 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     static func mockNoPendingMeetups() -> UserModel {
         UserModel(
-            accountId: "user3",
-            username: "jordan_taylor",
-            firstName: "Jordan",
-            lastName: "Taylor",
+            accountId: "slingshot69",
+            username: "slingshot69",
+            firstName: "Mark",
+            lastName: "",
             interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
             profilePictureUrl: "https://picsum.photos/202",
+            bio:
+                "Curious, open-minded, and always up for a good conversation. I enjoy meeting new people, learning from different perspectives, and making the most of every experience",
             personalPreferences: PersonalPreferences(
                 activitiesHobbies: ["Yoga", "Reading", "Meditation"],
                 friendActivities: ["Workout Partner", "Deep Conversations"]
@@ -274,7 +289,17 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: false,
             showSentReceivedRatio: true,
-            lastOnline: "2024-02-18T20:15:00Z"
+            lastOnline: "2024-02-18T20:15:00Z",
+            gender: .man,
+            pronouns: .heHim,
+            userLinks: [
+                .mock()
+            ],
+            intentions: [
+                .friendships,
+                .conversations,
+                .hobbies,
+            ]
         )
     }
 
