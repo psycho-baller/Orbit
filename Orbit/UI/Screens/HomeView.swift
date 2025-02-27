@@ -218,7 +218,6 @@ struct HomeView: View {
     }
 
     private func loadedView() -> some View {
-
         VStack(alignment: .leading, spacing: 0) {
             SearchBar(
                 text: $userVM.searchText,
@@ -239,26 +238,20 @@ struct HomeView: View {
             //            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
             //                .padding(.bottom, 16)
 
-            if userVM.filteredUsers.isEmpty {
-                NoUsersAroundView()
-            } else {
+//            if userVM.filteredUsers.isEmpty {
+//                NoUsersAroundView()
+//            } else {
                 ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(meetupRequestVM.meetupRequests) {
-                            meetupRequest in
-                            //                            if !hasPendingRequest(for: user) {
-                            MeetupRequestCardView(
-                                meetupRequest: meetupRequest.data
-                            )
-                            //                            .onTapGesture {
-                            //                                selectedMeetupRequest = meetupRequest
-                            //                            }
-                            //                            }
+                    LazyVStack(spacing: 16) {
+                        ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
+                            MeetupRequestCardView(meetupRequest: meetupRequest.data)
+                                .padding(.horizontal)
                         }
                     }
+                    .padding(.vertical)
                 }
             }
-        }
+//        }
         .onAppear {
             if !isPreviewMode {
                 Task {
@@ -269,6 +262,9 @@ struct HomeView: View {
         }
         .padding(.horizontal)
         .background(ColorPalette.background(for: colorScheme))
+        .refreshable {
+            await meetupRequestVM.fetchAllMeetups()
+        }
     }
 
     private func loadRequests() async {

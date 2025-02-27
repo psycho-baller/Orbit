@@ -702,6 +702,14 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             self.error = error.localizedDescription
         }
     }
+
+
+    func getAreaName(forId id: Int) -> String {
+        if let area = areaData.first(where: { String($0.id) == String(id) }) {
+            return area.name
+        }
+        return "Unknown Location"
+    }
 }
 
 // MARK: - Mock for SwiftUI Preview
