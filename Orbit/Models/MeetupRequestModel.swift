@@ -70,6 +70,7 @@ enum MeetupStatus: String, Codable {
     case completed
     case cancelled
 }
+
 enum MeetupIntention: String, Codable {
     case friendship
     case dating

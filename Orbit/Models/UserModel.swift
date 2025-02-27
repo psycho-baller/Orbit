@@ -39,6 +39,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     // var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
     // var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
 
+    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
+    var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
+
     // Newly added attributes from the database
     var userLanguages: [UserLanguageModel]?
     var gender: UserGender?

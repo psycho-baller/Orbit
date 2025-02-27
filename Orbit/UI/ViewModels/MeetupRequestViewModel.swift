@@ -77,7 +77,6 @@ class MeetupRequestViewModel: ObservableObject {
 
         print("Debug - ViewModel - Creating meetup with data:")
         print("createdBy: \(createdBy)")
-        
         let newMeetup = MeetupRequestModel(
             title: title,
             startTime: startTime,
