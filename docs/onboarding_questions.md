@@ -48,6 +48,7 @@ Deep Conversations, Adventure, Humor, Loyalty, Honesty, Kindness, Respect, Simil
 Good Listener, Outgoing, Empathetic, Reliable, Intelligent, Creative, Curious, Funny, Open-Minded, Positive, Thoughtful, Passionate, Ambitious, Adventurous
 
 ## What are some languages you speak or are interested in learning? - [userLanguages: String]
+  (later)
 
 ```json
 [
@@ -68,12 +69,12 @@ Good Listener, Outgoing, Empathetic, Reliable, Intelligent, Creative, Curious, F
 
 ### Gender - gender
 
-  (public)
+  (public|later)
 Male, Female, Non-Binary, Other (custom)
 
 ### Pronouns - pronouns
 
-  (public)
+  (public|later)
 He/Him, She/Her, They/Them, Other (custom)
 
 ## What is your date of birth? - dob
@@ -85,14 +86,14 @@ He/Him, She/Her, They/Them, Other (custom)
 
 ## What are some links you'd like to share with other Astronauts to help them get to know you more? - [userLinks]
 
-  (public)
+  (public|later)
 
 Instagram, X, LinkedIn, TikTok, Bluesky, Other
 
 ## Which age group do you prefer to meetup with? - ageGroup
 
   (apple slider UI)
-  (private)
+  (private|later)
 
 ## In 50 words or less, how would you describe yourself? - bio
 
