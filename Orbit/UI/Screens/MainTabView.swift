@@ -33,18 +33,21 @@ struct MainTabView: View {
                 .tag(MainViewTabs.home)
             
             //            NavigationView {
-            CreateMeetupTypeView()
-                .tabItem {
-                    Label("Create", systemImage: "plus.circle.fill")
-                }
-                .tag(MainViewTabs.create)
             
-            InboxView()
+            //InboxView()
+            MyMessages()
                             //            }
                 .tabItem {
                     Label("Messages", systemImage: "message.fill")
                 }
                 .tag(MainViewTabs.messages)
+            
+            
+            MyOrbitView()
+                .tabItem {
+                    Label("Create", systemImage: "circle.circle.fill")
+                }
+                .tag(MainViewTabs.create)
 
             //            NavigationView {
             //                if let user = authViewModel.user {
