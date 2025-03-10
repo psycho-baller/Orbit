@@ -40,7 +40,7 @@ class UserManagementService: UserManagementServiceProtocol {
             databaseId: appwriteService.databaseId,
             collectionId: collectionId,
             documentId: ID.unique(),
-            data: user.toJson(),
+            data: user.toJson(excludeId: true),
             permissions: nil,  // [Appwrite.Permission.write(Role.user(user.accountId))],
             nestedType: UserModel.self
         )
@@ -68,6 +68,7 @@ class UserManagementService: UserManagementServiceProtocol {
         )
         // Check if any document was found
         if let document = response.documents.first {
+            print("meow \(document.data.id) ?? ")
             return document
         } else {
             throw NSError(domain: "User not found", code: 404, userInfo: nil)

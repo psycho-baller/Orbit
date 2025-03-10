@@ -35,7 +35,7 @@ class MeetupApprovalService: MeetupApprovalServiceProtocol {
             databaseId: appwriteService.databaseId,
             collectionId: collectionId,
             documentId: ID.unique(),
-            data: approval.toJson(),
+            data: approval.toJson(excludeId: true),
             permissions: nil,  // [Appwrite.Permission.write(Role.user(approval.approvedBy.accountId))],
             nestedType: MeetupApprovalModel.self
         )
