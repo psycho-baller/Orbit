@@ -63,13 +63,12 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     }
 
     // Helper computed properties to get Date objects when needed
+    #warning("TODO: Clean this up. Use one formatter for both and all other datetimes that we use in the database")
     var startTimeDate: Date? {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [
             .withInternetDateTime, .withFractionalSeconds,
         ]
-        print(startTime)
-        print(formatter.date(from: startTime))
         return formatter.date(from: startTime)
     }
 
@@ -78,8 +77,6 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         formatter.formatOptions = [
             .withInternetDateTime, .withFractionalSeconds,
         ]
-        print(endTime)
-        print(formatter.date(from: endTime))
         return formatter.date(from: endTime)
     }
 
