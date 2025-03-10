@@ -21,23 +21,28 @@ struct MeetupRequestDetailedView: View {
             ZStack(alignment: .bottom) {
                 ColorPalette.background(for: colorScheme)
                     .ignoresSafeArea()
-                ScrollView{
-                    VStack(spacing:24){
-                        if let profileUrl = meetupRequest.createdBy.profilePictureUrl,
-                            let url = URL(string: profileUrl) {
-                                AsyncImage(url: url) { image in image
+                ScrollView {
+                    VStack(spacing: 24) {
+                        if let profileUrl = meetupRequest.createdByUser?
+                            .profilePictureUrl,
+                            let url = URL(string: profileUrl)
+                        {
+                            AsyncImage(url: url) { image in
+                                image
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 80, height: 80)
                                     .clipShape(Circle())
-                                } placeholder: {
+                            } placeholder: {
                                 Image(systemName: "person.circle.fill")
                                     .resizable()
                                     .frame(width: 80, height: 80)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                    .foregroundColor(
+                                        ColorPalette.secondaryText(
+                                            for: colorScheme))
                             }
                         }
-                        Text(meetupRequest.createdBy.username)
+                        Text(meetupRequest.createdByUser?.username ?? "")
                             .font(.title)
                             .padding(.bottom, 1)
                             .foregroundColor(Color.accentColor)
@@ -54,15 +59,19 @@ struct MeetupRequestDetailedView: View {
                                 Image(systemName: "clock")
                                     .frame(width: 24)
                                 if let startDate = meetupRequest.startTimeDate,
-                                   let endDate = meetupRequest.endTimeDate {
-                                    Text("\(startDate.formatted(date: .long, time: .shortened)) - \(endDate.formatted(date: .omitted, time: .shortened))")
+                                    let endDate = meetupRequest.endTimeDate
+                                {
+                                    Text(
+                                        "\(startDate.formatted(date: .long, time: .shortened)) - \(endDate.formatted(date: .omitted, time: .shortened))"
+                                    )
                                 } else {
                                     Text("Invalid date format")
                                 }
                             }
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
 
-                            #warning (
+                            #warning(
                                 "TODO: Make Location work"
                             )
                             // Area
@@ -71,7 +80,8 @@ struct MeetupRequestDetailedView: View {
                                     .frame(width: 24)
                                 Text(areaName)
                             }
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
 
                             // Description
                             Text(meetupRequest.description)
@@ -79,18 +89,27 @@ struct MeetupRequestDetailedView: View {
 
                             // Type and Intention
                             HStack(spacing: 12) {
-                                Image(systemName: iconForType(meetupRequest.type))
-                                    .frame(width: 24)
+                                Image(
+                                    systemName: iconForType(meetupRequest.type)
+                                )
+                                .frame(width: 24)
                                 Text(meetupRequest.type.rawValue.capitalized)
                             }
-                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.accent(for: colorScheme))
 
                             HStack(spacing: 12) {
-                                Image(systemName: iconForIntention(meetupRequest.intention))
-                                    .frame(width: 24)
-                                Text(meetupRequest.intention.rawValue.capitalized)
+                                Image(
+                                    systemName: iconForIntention(
+                                        meetupRequest.intention)
+                                )
+                                .frame(width: 24)
+                                Text(
+                                    meetupRequest.intention.rawValue.capitalized
+                                )
                             }
-                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.accent(for: colorScheme))
                         }
                         .padding()
                         .background(ColorPalette.main(for: colorScheme))
@@ -102,7 +121,8 @@ struct MeetupRequestDetailedView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Interests")
                                     .font(.headline)
-                                    .foregroundColor(ColorPalette.text(for: colorScheme))
+                                    .foregroundColor(
+                                        ColorPalette.text(for: colorScheme))
 
                                 InterestsHorizontalTags(
                                     interests: allInterests,
@@ -115,7 +135,7 @@ struct MeetupRequestDetailedView: View {
                             .padding(.horizontal, 24)
                             .padding(.top, 8)
                         }
-                        Text(meetupRequest.createdBy.bio ?? "")
+                        Text(meetupRequest.createdByUser?.bio ?? "")
                             .padding()
 
                     }
@@ -151,19 +171,20 @@ struct MeetupRequestDetailedView: View {
                 .padding(.horizontal, 24)
             }
             .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "person.crop.circle.badge.xmark")  //Other potential icons: "nosign", "shield.lefthalf.filled"
-                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                            #warning(
-                                "TODO: Add block functionality"
-                            )
-                        }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "person.crop.circle.badge.xmark")  //Other potential icons: "nosign", "shield.lefthalf.filled"
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
+                        #warning(
+                            "TODO: Add block functionality"
+                        )
                     }
                 }
+            }
 
         }
         .onAppear {
@@ -187,12 +208,13 @@ struct MeetupRequestDetailedView: View {
     private func iconForIntention(_ intention: MeetupIntention) -> String {
         switch intention {
         case .friendship: return "figure.2"
-        case .dating: return "heart.fill"
+        case .relationship: return "heart.fill"
         }
     }
 
     private var allInterests: [String] {
-        meetupRequest.createdBy.personalPreferences?.activitiesHobbies ?? []
+        meetupRequest.createdByUser?.personalPreferences?.activitiesHobbies
+            ?? []
     }
 
     private func approveMeetupRequest() {
@@ -202,9 +224,10 @@ struct MeetupRequestDetailedView: View {
         }
 
         let meetupApproval = MeetupApprovalModel(
-            approvedBy: currentUser,
-            meetupRequest: meetupRequest,
-            firstMessage: ""
+            //            approvedByUserId: currentUser.id,
+            approvedByUser: currentUser,
+            //            meetupRequestId: meetupRequest.id,
+            meetupRequest: meetupRequest
         )
 
         Task {
@@ -223,14 +246,13 @@ struct MeetupRequestDetailedView: View {
     }
 }
 
-
 #if DEBUG
-struct MeetupRequestDetailedView_Previews: PreviewProvider {
-    static var previews: some View {
-        MeetupRequestDetailedView(meetupRequest: .mock())
-            .environmentObject(UserViewModel.mock())
-            .environmentObject(MeetupRequestViewModel.mock())
-            .environmentObject(MeetupApprovalViewModel())
+    struct MeetupRequestDetailedView_Previews: PreviewProvider {
+        static var previews: some View {
+            MeetupRequestDetailedView(meetupRequest: .mock())
+                .environmentObject(UserViewModel.mock())
+                .environmentObject(MeetupRequestViewModel.mock())
+                .environmentObject(MeetupApprovalViewModel())
+        }
     }
-}
 #endif

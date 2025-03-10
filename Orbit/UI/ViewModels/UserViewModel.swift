@@ -71,7 +71,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         //        self.preciseLocationManager = PreciseLocationManager()
         //        preciseLocationManager?.delegate = self  // Set delegate to receive location updates
         //        await subscribeToRealtimeUpdates()
-        //        self.allUsers = await getAllUsers()
+        //                self.allUsers = await getAllUsers()
+        // await fetchAllUsernames()
     }
 
     @MainActor
@@ -80,8 +81,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         do {
             if let user = try await userManagementService.getCurrentUser() {
                 self.currentUser = user
+
                 print(
-                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(user.accountId)."
+                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(user.hasCompletedOnboarding)."
                 )
             } else {
                 print(
@@ -94,6 +96,20 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             )
             self.error = error.localizedDescription
         }
+    }
+
+    @MainActor
+    func getUserDocument(accountId: String) async -> UserDocument? {
+        do {
+            let userDocument = try await userManagementService.getUser(
+                accountId)
+            return userDocument
+        } catch {
+            print(
+                "UserViewModel - Source: getUserDocument - Error: \(error.localizedDescription)"
+            )
+        }
+        return nil
     }
 
     /// Get all users in the DB
@@ -702,7 +718,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             self.error = error.localizedDescription
         }
     }
-
 
     func getAreaName(forId id: Int) -> String {
         if let area = areaData.first(where: { String($0.id) == String(id) }) {

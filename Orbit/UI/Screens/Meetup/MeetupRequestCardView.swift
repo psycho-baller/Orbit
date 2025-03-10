@@ -18,12 +18,13 @@ struct MeetupRequestCardView: View {
     var body: some View {
         if !isHidden {
             NavigationLink(
-                destination: MeetupRequestDetailedView(meetupRequest: meetupRequest)
+                destination: MeetupRequestDetailedView(
+                    meetupRequest: meetupRequest)
             ) {
                 SwipeView {
                     HStack(spacing: 16) {
                         // Profile Picture
-                        if let profileUrl = meetupRequest.createdBy
+                        if let profileUrl = meetupRequest.createdByUser?
                             .profilePictureUrl,
                             let url = URL(string: profileUrl)
                         {
@@ -55,21 +56,25 @@ struct MeetupRequestCardView: View {
 
                         VStack(alignment: .leading, spacing: 8) {
                             // User Name
-                            Text(meetupRequest.createdBy.username)
+                            Text(meetupRequest.createdByUser?.username ?? "")
                                 .font(.headline)
                                 .foregroundColor(Color.accentColor)
                                 .lineLimit(1)
-                            
+
                             // Meetup Title
                             Text(meetupRequest.title)
                                 .font(.body)
-                                .foregroundColor(ColorPalette.text(for: colorScheme))
+                                .foregroundColor(
+                                    ColorPalette.text(for: colorScheme)
+                                )
                                 .lineLimit(2)
-                            
+
                             // Time
                             Text(formatMeetupTime(meetup: meetupRequest))
                                 .font(.subheadline)
-                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(height: 100)
@@ -128,7 +133,10 @@ struct MeetupRequestCardView: View {
         }
 
         let meetupApproval = MeetupApprovalModel(
-            approvedBy: sender, meetupRequest: meetupRequest, firstMessage: ""
+            //            approvedByUserId: sender.id,
+            approvedByUser: sender,
+            //            meetupRequestId: meetupRequest.id,
+            meetupRequest: meetupRequest, firstMessage: ""
         )
 
         Task {
@@ -138,12 +146,13 @@ struct MeetupRequestCardView: View {
 
     private func formatMeetupTime(meetup: MeetupRequestModel) -> String {
         guard let startTime = meetup.startTimeDate,
-              let endTime = meetup.endTimeDate else {
+            let endTime = meetup.endTimeDate
+        else {
             return "Invalid date"
         }
-        
+
         let now = Date()
-        
+
         // If current time is between start and end time
         if now >= startTime && now <= endTime {
             let formatter = DateFormatter()
@@ -151,13 +160,15 @@ struct MeetupRequestCardView: View {
             formatter.timeStyle = .short
             return "Now until \(formatter.string(from: endTime))"
         }
-        
+
         // If start time is within the next hour
-        let minutesUntilStart = Calendar.current.dateComponents([.minute], from: now, to: startTime).minute ?? 0
+        let minutesUntilStart =
+            Calendar.current.dateComponents([.minute], from: now, to: startTime)
+            .minute ?? 0
         if minutesUntilStart > 0 && minutesUntilStart < 60 {
             return "in \(minutesUntilStart) minutes"
         }
-        
+
         // Otherwise show the start time
         let formatter = DateFormatter()
         let isToday = Calendar.current.isDate(startTime, inSameDayAs: Date())
