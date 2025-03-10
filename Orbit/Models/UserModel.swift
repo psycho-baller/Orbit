@@ -13,8 +13,8 @@ import UIKit
 
 struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 {
+    let id: String
     let accountId: String
-    var id: String { accountId }
     var username: String
     var firstName: String
     var lastName: String?
@@ -31,16 +31,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var friendshipValues: FriendshipValuesModel?
     var hasCompletedOnboarding: Bool? = false
 
+    //    var requestedMeetupIds: [String]?  // Relationship with meetups
+    //    var approvedMeetupIds: [String]?  // Relationship with approvals
+    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
+    var approvedMeetups: [MeetupApprovalModel]?  // Relationship with approvals
+
     // New Attributes
     var showLastOnline: Bool = true
     var showJoinedDate: Bool = true
     var showSentReceivedRatio: Bool = true
     var lastOnline: String?  // ISO8601 formatted date-time (optional)
-    // var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
-    // var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
-
-    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
-    var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
 
     // Newly added attributes from the database
     var userLanguages: [UserLanguageModel]?
@@ -50,11 +50,25 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var userLinks: [UserLinkModel]?
     var intentions: [UserIntention]?
 
+    // Define CodingKeys to map "$id" to "id"
+    enum CodingKeys: String, CodingKey {
+        case id = "$id"
+        case accountId, username, firstName, lastName, interests, conversations,
+            currentAreaId
+        case profilePictureUrl, bio, dob
+        case personalPreferences, interactionPreferences, friendshipValues,
+            hasCompletedOnboarding
+        case requestedMeetups, approvedMeetups
+        case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
+        case userLanguages, gender, pronouns, showStarSign, userLinks,
+            intentions
+    }
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
     }
 
     init(
+        id: String = UUID().uuidString,
         accountId: String,
         username: String,
         firstName: String,
@@ -76,12 +90,14 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showLastOnline: Bool = true,
         showJoinedDate: Bool = true,
         showSentReceivedRatio: Bool = true,
-        lastOnline: String? = nil,
 
+        //        requestedMeetupIds: [String]? = nil,
+        //        approvedMeetupIds: [String]? = nil,
         requestedMeetups: [MeetupRequestModel]? = nil,
-        meetupsApproved: [MeetupApprovalModel]? = nil,
+        approvedMeetups: [MeetupApprovalModel]? = nil,
 
         /// newly added attributes
+        lastOnline: String? = nil,
         userLanguages: [UserLanguageModel]? = nil,
         gender: UserGender? = nil,
         pronouns: UserPronouns? = nil,
@@ -89,6 +105,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         userLinks: [UserLinkModel]? = nil,
         intentions: [UserIntention]? = nil
     ) {
+        self.id = id
         self.accountId = accountId
         self.username = username
         self.firstName = firstName
@@ -106,15 +123,31 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.showLastOnline = showLastOnline
         self.showJoinedDate = showJoinedDate
         self.showSentReceivedRatio = showSentReceivedRatio
+        self.requestedMeetups = requestedMeetups
+        self.approvedMeetups = approvedMeetups
+        //        self.requestedMeetupIds = requestedMeetupIds
+        //        self.approvedMeetupIds = approvedMeetupIds
         self.lastOnline = lastOnline
-//        self.requestedMeetups = requestedMeetups
-//        self.meetupsApproved = meetupsApproved
         self.userLanguages = userLanguages
         self.gender = gender
         self.pronouns = pronouns
         self.showStarSign = showStarSign
         self.userLinks = userLinks
         self.intentions = intentions
+    }
+
+    func toJson(excludeId: Bool = false) -> [String: Any] {
+        var json =
+            try! JSONSerialization.jsonObject(
+                with: JSONEncoder().encode(self),
+                options: []
+            ) as! [String: Any]
+
+        if excludeId {
+            json.removeValue(forKey: "$id")  // ✅ Remove Appwrite's `$id`
+        }
+
+        return json
     }
 
     func update(
@@ -131,9 +164,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showLastOnline: Bool? = nil,
         showJoinedDate: Bool? = nil,
         showSentReceivedRatio: Bool? = nil,
-        lastOnline: String? = nil,
+        //        requestedMeetupIds: [String]? = nil,
+        //        approvedMeetupIds: [String]? = nil,
         requestedMeetups: [MeetupRequestModel]? = nil,
         meetupsApproved: [MeetupApprovalModel]? = nil,
+        lastOnline: String? = nil,
         userLanguages: [UserLanguageModel]? = nil,
         gender: UserGender? = nil,
         pronouns: UserPronouns? = nil,
@@ -162,9 +197,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showJoinedDate: showJoinedDate ?? self.showJoinedDate,
             showSentReceivedRatio: showSentReceivedRatio
                 ?? self.showSentReceivedRatio,
+            //            requestedMeetupIds: requestedMeetupIds ?? self.requestedMeetupIds,
+            //            approvedMeetupIds: approvedMeetupIds ?? self.approvedMeetupIds,
+            requestedMeetups: requestedMeetups ?? self.requestedMeetups,
+            approvedMeetups: approvedMeetups ?? self.approvedMeetups,
             lastOnline: lastOnline ?? self.lastOnline,
-//            requestedMeetups: requestedMeetups ?? self.requestedMeetups,
-//            meetupsApproved: meetupsApproved ?? self.meetupsApproved,
             userLanguages: userLanguages ?? self.userLanguages,
             gender: gender ?? self.gender,
             pronouns: pronouns ?? self.pronouns,
@@ -199,9 +236,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: true,
             showSentReceivedRatio: true,
-            lastOnline: "2024-02-20T15:30:00Z",
             requestedMeetups: [MeetupRequestModel.mock()],
-            meetupsApproved: [MeetupApprovalModel.mock()],
+            approvedMeetups: [MeetupApprovalModel.mock()],
+            lastOnline: "2024-02-20T15:30:00Z",
             gender: .man,
             pronouns: .heHim,
             userLinks: [
@@ -236,9 +273,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: false,
             showJoinedDate: true,
             showSentReceivedRatio: false,
-            lastOnline: "2024-02-19T10:45:00Z",
             requestedMeetups: [MeetupRequestModel.mock()],
-            meetupsApproved: []
+            approvedMeetups: [],
+            lastOnline: "2024-02-19T10:45:00Z"
         )
     }
 
@@ -263,9 +300,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: false,
             showSentReceivedRatio: true,
-            lastOnline: "2024-02-18T20:15:00Z",
             requestedMeetups: [],
-            meetupsApproved: [MeetupApprovalModel.mock()]
+            approvedMeetups: [MeetupApprovalModel.mock()],
+            lastOnline: "2024-02-18T20:15:00Z"
         )
     }
 
