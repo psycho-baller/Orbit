@@ -24,8 +24,6 @@ struct CreateMeetupDetailsView: View {
     @State private var locationSearchText: String = ""
     @State private var isShowingLocationDropdown = false
 
-
-
     private var isFormValid: Bool {
         !title.isEmpty && !description.isEmpty
     }
@@ -69,8 +67,10 @@ struct CreateMeetupDetailsView: View {
                             Text("Meetup Intention")
                                 .font(.headline)
                             Picker("", selection: $selectedIntention) {
-                                Text("Friendship").tag(MeetupIntention.friendship)
-                                Text("Relationship").tag(MeetupIntention.dating)
+                                Text("Friendship").tag(
+                                    MeetupIntention.friendship)
+                                Text("Relationship").tag(
+                                    MeetupIntention.relationship)
                             }
                             .pickerStyle(.segmented)
                             .padding(.horizontal)
@@ -93,7 +93,7 @@ struct CreateMeetupDetailsView: View {
                     }
                     .padding()
                 }
-                #warning (
+                #warning(
                     "TODO: Make submit create a meetup -> show user a success screen -> then redirect back to home"
                 )
                 VStack {
@@ -117,7 +117,7 @@ struct CreateMeetupDetailsView: View {
             }
         }
         .alert("Error", isPresented: $showingAlert) {
-            Button("OK", role: .cancel) { }
+            Button("OK", role: .cancel) {}
         } message: {
             Text(alertMessage)
         }
@@ -132,9 +132,11 @@ struct CreateMeetupDetailsView: View {
 
         let formatter = ISO8601DateFormatter()
         let startTimeString = formatter.string(from: startTime)
-        let endTime = Calendar.current.date(byAdding: .hour, value: 1, to: startTime) ?? startTime.addingTimeInterval(3600)
+        let endTime =
+            Calendar.current.date(byAdding: .hour, value: 1, to: startTime)
+            ?? startTime.addingTimeInterval(3600)
         let endTimeString = formatter.string(from: endTime)
-        
+
         print("Debug - Creating meetup:")
         print("Start time: \(startTimeString)")
         print("End time: \(endTimeString)")
@@ -145,12 +147,11 @@ struct CreateMeetupDetailsView: View {
                 title: title,
                 startTime: startTimeString,
                 endTime: endTimeString,
-                areaId: 1,
+                areaId: 521_659_157,
                 description: description,
                 status: .active,
                 intention: selectedIntention,
-                createdBy: currentUser,
-                meetupApprovals: [],
+                createdByUser: currentUser,
                 type: selectedType
             )
             dismiss()
@@ -159,11 +160,11 @@ struct CreateMeetupDetailsView: View {
 }
 
 #if DEBUG
-struct CreateMeetupDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateMeetupDetailsView(selectedType: .coffee)
-            .environmentObject(MeetupRequestViewModel.mock())
-            .environmentObject(UserViewModel.mock())
+    struct CreateMeetupDetailsView_Previews: PreviewProvider {
+        static var previews: some View {
+            CreateMeetupDetailsView(selectedType: .coffee)
+                .environmentObject(MeetupRequestViewModel.mock())
+                .environmentObject(UserViewModel.mock())
+        }
     }
-}
 #endif

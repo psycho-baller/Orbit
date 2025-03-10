@@ -68,15 +68,13 @@ class MeetupRequestViewModel: ObservableObject {
         description: String,
         status: MeetupStatus,
         intention: MeetupIntention,
-        createdBy: UserModel,
-        meetupApprovals: [MeetupApprovalModel] = [],
+        createdByUser: UserModel,
+        //        meetupApprovals: [MeetupApprovalModel] = [],
         type: MeetupType
     ) async {
         isLoading = true
         defer { isLoading = false }
 
-        print("Debug - ViewModel - Creating meetup with data:")
-        print("createdBy: \(createdBy)")
         let newMeetup = MeetupRequestModel(
             title: title,
             startTime: startTime,
@@ -85,8 +83,7 @@ class MeetupRequestViewModel: ObservableObject {
             description: description,
             status: status,
             intention: intention,
-            createdBy: createdBy,
-            meetupApprovals: meetupApprovals,
+            createdByUser: createdByUser,
             type: type
         )
 
