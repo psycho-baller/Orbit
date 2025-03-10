@@ -21,19 +21,32 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     // enum status: active, completed, cancelled
     let status: MeetupStatus
     // enum intention: friendship, dating
-    let intention: Meetupintention
+    let intention: MeetupIntention
     let createdBy: UserModel
     let meetupApprovals: [MeetupApprovalModel]
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
     let type: MeetupType
 
+    // Helper computed properties to get Date objects when needed
+    var startTimeDate: Date? {
+        ISO8601DateFormatter().date(from: startTime)
+    }
+    
+    var endTimeDate: Date? {
+        ISO8601DateFormatter().date(from: endTime)
+    }
+
     static func mock() -> Self {
+        let formatter = ISO8601DateFormatter()
+        let startTime = Date().addingTimeInterval(7200)
+        let endTime = startTime.addingTimeInterval(3600) // Add 1 hour
         return .init(
-            title: "Test",
-            startTime: "2025-02-20T12:00:00Z",
-            endTime: "2025-02-20T13:00:00Z",
-            areaId: 1,
-            description: "Test",
+            title: "\"How do you plan to make the best of your university experience?\"",
+            startTime: formatter.string(from: startTime),
+            endTime: formatter.string(from: endTime),
+            areaId: 521_659_157,
+            description:
+                "It's been hard for me to balance out grades and social life. Wondering how others do it",
             status: .active,
             intention: .friendship,
             createdBy: .mockNoPendingMeetups(),
@@ -57,7 +70,8 @@ enum MeetupStatus: String, Codable {
     case completed
     case cancelled
 }
-enum Meetupintention: String, Codable {
+
+enum MeetupIntention: String, Codable {
     case friendship
     case dating
 }

@@ -13,7 +13,7 @@ struct UserLinkModel: Codable, Equatable, Identifiable, CodableDictionaryConvert
     let value: String
 
     static func mock() -> Self {
-        return .init(platform: .instagram, value: "https://instagram.com/example")
+        return .init(platform: .instagram, value: "https://instagram.com/psycho.baller")
     }
 
     var id: String { platform.rawValue + value }
