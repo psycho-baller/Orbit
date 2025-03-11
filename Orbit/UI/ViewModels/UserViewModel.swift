@@ -140,7 +140,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         userLanguages: [UserLanguageModel]? = [],
         userLinks: [UserLinkModel]? = [],
         gender: UserGender? = nil,
-        pronouns: UserPronouns? = nil,
+        pronouns: [UserPronouns] = [],
         markComplete: Bool = false
     ) async {
         guard var currentUser = currentUser else {
