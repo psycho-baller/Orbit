@@ -13,8 +13,7 @@ struct LocationPickerView: View {
     @Binding var isShowingLocationDropdown: Bool
     let locations: [Area]
     let colorScheme: ColorScheme
-
-
+    
     private var filteredLocations: [Area] { 
         guard !locationSearchText.isEmpty else { return locations }
         return locations.filter { $0.name.lowercased().contains(locationSearchText.lowercased()) }
@@ -24,16 +23,32 @@ struct LocationPickerView: View {
         VStack(alignment: .leading) {
             Text("Location")
                 .font(.headline)
-
-            ZStack {
-                TextField("Select a location...", text: $locationSearchText)
-                    .padding()
-                    .background(ColorPalette.main(for: colorScheme))
-                    .cornerRadius(12)
-                    .onTapGesture {
-                        isShowingLocationDropdown = true
+            
+            ZStack(alignment: .top) {
+                VStack {
+                    TextField("Select a location...", text: $locationSearchText)
+                        .padding()
+                        .background(ColorPalette.main(for: colorScheme))
+                        .cornerRadius(12)
+                        .onTapGesture {
+                            withAnimation {
+                                isShowingLocationDropdown = true
+                            }
+                        }
+                    
+                    if isShowingLocationDropdown {
+                        LocationDropdownList(
+                            locations: filteredLocations,
+                            selectedLocation: $selectedLocation,
+                            selectedLocationId: $selectedLocationId,
+                            locationSearchText: $locationSearchText,
+                            isShowingDropdown: $isShowingLocationDropdown,
+                            colorScheme: colorScheme
+                        )
+                        .transition(.move(edge: .top).combined(with: .opacity))
                     }
-
+                }
+                
                 if !locationSearchText.isEmpty {
                     HStack {
                         Spacer()
@@ -47,18 +62,13 @@ struct LocationPickerView: View {
                                 .padding(.trailing)
                         }
                     }
+                    .offset(y: 12)
                 }
             }
-
-            if isShowingLocationDropdown {
-                LocationDropdownList(
-                    locations: filteredLocations,
-                    selectedLocation: $selectedLocation,
-                    selectedLocationId: $selectedLocationId,
-                    locationSearchText: $locationSearchText,
-                    isShowingDropdown: $isShowingLocationDropdown,
-                    colorScheme: colorScheme
-                )
+        }
+        .onTapGesture {
+            withAnimation {
+                isShowingLocationDropdown = false
             }
         }
     }
@@ -82,10 +92,12 @@ private struct LocationDropdownList: View {
                         colorScheme: colorScheme
                     )
                     .onTapGesture {
-                        selectedLocation = location.name
-                        selectedLocationId = location.id
-                        locationSearchText = location.name
-                        isShowingDropdown = false
+                        withAnimation {
+                            selectedLocation = location.name
+                            selectedLocationId = location.id
+                            locationSearchText = location.name
+                            isShowingDropdown = false
+                        }
                     }
                 }
             }
@@ -94,6 +106,7 @@ private struct LocationDropdownList: View {
         .background(ColorPalette.main(for: colorScheme))
         .cornerRadius(12)
         .padding(.top, 4)
+        .shadow(radius: 5)
     }
 }
 

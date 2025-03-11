@@ -13,6 +13,7 @@ struct MyOrbitView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var selectedRequest: MeetupRequestModel?
     @State private var showDetailView = false
+    @State private var isShowingCreateMeetup = false
     
     var body: some View {
         NavigationStack {
@@ -31,12 +32,6 @@ struct MyOrbitView: View {
                                     .foregroundColor(Color.accentColor)
                                 
                                 Spacer()
-                                
-                                Button(action: {}) {
-                                    Image(systemName: "plus")
-                                        .font(.title2)
-                                        .foregroundColor(Color.accentColor)
-                                }
                             }
                             
                             MyPostRow(
@@ -78,6 +73,18 @@ struct MyOrbitView: View {
             .sheet(isPresented: $showDetailView) {
                 if let request = selectedRequest {
                     MeetupRequestDetailedView(meetupRequest: request)
+                }
+            }
+            .sheet(isPresented: $isShowingCreateMeetup) {
+                CreateMeetupTypeView()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        isShowingCreateMeetup = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
                 }
             }
         }
