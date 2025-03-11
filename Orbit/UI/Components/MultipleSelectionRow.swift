@@ -12,6 +12,8 @@ struct MultipleSelectionRow: View {
     let isSelected: Bool
     let action: () -> Void
 
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         Button(action: action) {
             HStack {
@@ -19,10 +21,14 @@ struct MultipleSelectionRow: View {
                 Spacer()
                 if isSelected {
                     Image(systemName: "checkmark")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.accentColor)
                 }
             }
             .padding(.vertical, 8)
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
+}
+#Preview {
+    MultipleSelectionRow(title: "Test", isSelected: true, action: { })
 }
