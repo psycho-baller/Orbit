@@ -13,13 +13,12 @@ class UserInfoViewModel: ObservableObject {
 
     func loadUserData(user: UserModel?) {
         bio = user?.bio ?? ""
-        let dateString = user?.dob ?? "none"
-        let dateComponent = dateString.split(separator: "T").first ?? ""  // Get the part before 'T'
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        if let date = dateFormatter.date(from: String(dateComponent)) {
+        guard let dateString = user?.dob else {
+            dateOfBirth = Date()
+            return
+        }
+        
+        if let date = DateFormatterUtility.parseISO8601(dateString) {
             print("Converted Date: \(date)")
             dateOfBirth = date
         } else {

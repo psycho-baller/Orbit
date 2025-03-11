@@ -146,7 +146,7 @@ struct MeetupRequestCardView: View {
 
     private func formatMeetupTime(meetup: MeetupRequestModel) -> String {
         guard let startTime = meetup.startTimeDate,
-            let endTime = meetup.endTimeDate
+              let endTime = meetup.endTimeDate
         else {
             return "Invalid date"
         }
@@ -155,32 +155,22 @@ struct MeetupRequestCardView: View {
 
         // If current time is between start and end time
         if now >= startTime && now <= endTime {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .none
-            formatter.timeStyle = .short
-            return "Now until \(formatter.string(from: endTime))"
+            return "Now until \(DateFormatterUtility.formatTimeOnly(endTime))"
         }
 
         // If start time is within the next hour
-        let minutesUntilStart =
-            Calendar.current.dateComponents([.minute], from: now, to: startTime)
-            .minute ?? 0
+        let minutesUntilStart = Calendar.current.dateComponents([.minute], from: now, to: startTime).minute ?? 0
         if minutesUntilStart > 0 && minutesUntilStart < 60 {
             return "in \(minutesUntilStart) minutes"
         }
 
         // Otherwise show the start time
-        let formatter = DateFormatter()
         let isToday = Calendar.current.isDate(startTime, inSameDayAs: Date())
-
         if isToday {
-            formatter.dateStyle = .none
-            formatter.timeStyle = .short
+            return DateFormatterUtility.formatTimeOnly(startTime)
         } else {
-            formatter.dateStyle = .long
-            formatter.timeStyle = .short
+            return DateFormatterUtility.formatForDisplay(startTime)
         }
-        return formatter.string(from: startTime)
     }
 }
 

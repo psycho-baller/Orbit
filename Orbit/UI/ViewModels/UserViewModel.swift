@@ -179,12 +179,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         currentUser.pronouns = pronouns ?? currentUser.pronouns
         currentUser.userLinks = userLinks ?? currentUser.userLinks
         if let dateOfBirth = dob {
-
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .none
-
-            currentUser.dob = dateFormatter.string(from: dateOfBirth)
+            currentUser.dob = DateFormatterUtility.formatDateOnly(dateOfBirth)
         }
         currentUser.showStarSign = showStarSign ?? currentUser.showStarSign
         if markComplete {

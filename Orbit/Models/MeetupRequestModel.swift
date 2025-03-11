@@ -63,36 +63,24 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     }
 
     // Helper computed properties to get Date objects when needed
-    #warning("TODO: Clean this up. Use one formatter for both and all other datetimes that we use in the database")
     var startTimeDate: Date? {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [
-            .withInternetDateTime, .withFractionalSeconds,
-        ]
-        return formatter.date(from: startTime)
+        return DateFormatterUtility.parseISO8601(startTime)
     }
 
     var endTimeDate: Date? {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [
-            .withInternetDateTime, .withFractionalSeconds,
-        ]
-        return formatter.date(from: endTime)
+        return DateFormatterUtility.parseISO8601(endTime)
     }
 
     static func mock() -> Self {
-        let formatter = ISO8601DateFormatter()
         let startTime = Date().addingTimeInterval(7200)
         let endTime = startTime.addingTimeInterval(3600)  // Add 1 hour
         return .init(
             id: "67ce15c07501e11e1fa3",
-            title:
-                "\"How do you plan to make the best of your university experience?\"",
-            startTime: formatter.string(from: startTime),
-            endTime: formatter.string(from: endTime),
+            title: "\"How do you plan to make the best of your university experience?\"",
+            startTime: DateFormatterUtility.formatISO8601(startTime),
+            endTime: DateFormatterUtility.formatISO8601(endTime),
             areaId: 521_659_157,
-            description:
-                "It's been hard for me to balance out grades and social life. Wondering how others do it",
+            description: "It's been hard for me to balance out grades and social life. Wondering how others do it",
             status: .active,
             intention: .friendship,
             createdByUser: .mockNoPendingMeetups(),

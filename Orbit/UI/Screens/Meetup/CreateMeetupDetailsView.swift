@@ -23,6 +23,8 @@ struct CreateMeetupDetailsView: View {
     @State private var selectedLocation: String = ""
     @State private var locationSearchText: String = ""
     @State private var isShowingLocationDropdown = false
+    @State private var selectedLocationId: String?
+    @State private var locations: [Area] = []
 
     private var isFormValid: Bool {
         !title.isEmpty && !description.isEmpty
@@ -32,7 +34,7 @@ struct CreateMeetupDetailsView: View {
         ZStack {
             ColorPalette.background(for: colorScheme)
                 .ignoresSafeArea()
-
+            
             VStack {
                 ScrollView {
                     VStack(spacing: 24) {
@@ -58,9 +60,18 @@ struct CreateMeetupDetailsView: View {
                                 .cornerRadius(12)
                         }
 
-                        #warning(
-                            "TODO: Add location"
-                        )
+                        // Location Selection
+                        VStack(alignment: .leading) {
+                            
+                            LocationPickerView(
+                                locationSearchText: $locationSearchText,
+                                selectedLocation: $selectedLocation,
+                                selectedLocationId: $selectedLocationId,
+                                isShowingLocationDropdown: $isShowingLocationDropdown,
+                                locations: locations,
+                                colorScheme: colorScheme
+                            )
+                        }
 
                         // Intention Selection
                         VStack(alignment: .leading) {
@@ -116,6 +127,9 @@ struct CreateMeetupDetailsView: View {
                 .background(ColorPalette.background(for: colorScheme))
             }
         }
+        .onAppear {
+            loadLocations()
+        }
         .alert("Error", isPresented: $showingAlert) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -130,12 +144,9 @@ struct CreateMeetupDetailsView: View {
             return
         }
 
-        let formatter = ISO8601DateFormatter()
-        let startTimeString = formatter.string(from: startTime)
-        let endTime =
-            Calendar.current.date(byAdding: .hour, value: 1, to: startTime)
-            ?? startTime.addingTimeInterval(3600)
-        let endTimeString = formatter.string(from: endTime)
+        let startTimeString: String = DateFormatterUtility.formatISO8601(startTime)
+        let endTime = Calendar.current.date(byAdding: .hour, value: 1, to: startTime) ?? startTime.addingTimeInterval(3600)
+        let endTimeString = DateFormatterUtility.formatISO8601(endTime)
 
         print("Debug - Creating meetup:")
         print("Start time: \(startTimeString)")
@@ -147,7 +158,7 @@ struct CreateMeetupDetailsView: View {
                 title: title,
                 startTime: startTimeString,
                 endTime: endTimeString,
-                areaId: 521_659_157,
+                areaId: Int(selectedLocationId ?? "521659157") ?? 521_659_157,
                 description: description,
                 status: .active,
                 intention: selectedIntention,
@@ -156,6 +167,11 @@ struct CreateMeetupDetailsView: View {
             )
             dismiss()
         }
+    }
+
+    private func loadLocations() {
+        locations = DataLoader.loadUofCLocationDataFromJSON()
+            .filter { $0.categories.contains("building.university") }
     }
 }
 

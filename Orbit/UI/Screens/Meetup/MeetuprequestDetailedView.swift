@@ -62,7 +62,7 @@ struct MeetupRequestDetailedView: View {
                                     let endDate = meetupRequest.endTimeDate
                                 {
                                     Text(
-                                        "\(startDate.formatted(date: .long, time: .shortened)) - \(endDate.formatted(date: .omitted, time: .shortened))"
+                                        "\(DateFormatterUtility.formatForDisplay(startDate)) - \(DateFormatterUtility.formatTimeOnly(endDate))"
                                     )
                                 } else {
                                     Text("Invalid date format")
