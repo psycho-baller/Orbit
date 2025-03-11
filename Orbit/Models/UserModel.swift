@@ -236,8 +236,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: true,
             showSentReceivedRatio: true,
-            requestedMeetups: [MeetupRequestModel.mock()],
-            approvedMeetups: [MeetupApprovalModel.mock()],
+//            requestedMeetups: [MeetupRequestModel.mock()],
+//            approvedMeetups: [MeetupApprovalModel.mock()],
             lastOnline: "2024-02-20T15:30:00Z",
             gender: .man,
             pronouns: .heHim,
@@ -273,8 +273,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: false,
             showJoinedDate: true,
             showSentReceivedRatio: false,
-            requestedMeetups: [MeetupRequestModel.mock()],
-            approvedMeetups: [],
+//            requestedMeetups: [MeetupRequestModel.mock()],
+//            approvedMeetups: [],
             lastOnline: "2024-02-19T10:45:00Z"
         )
     }
@@ -300,8 +300,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: false,
             showSentReceivedRatio: true,
-            requestedMeetups: [],
-            approvedMeetups: [MeetupApprovalModel.mock()],
+//            requestedMeetups: [],
+//            approvedMeetups: [MeetupApprovalModel.mock()],
             lastOnline: "2024-02-18T20:15:00Z"
         )
     }
