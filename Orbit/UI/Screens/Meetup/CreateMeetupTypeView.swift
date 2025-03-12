@@ -12,15 +12,15 @@ struct CreateMeetupTypeView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    
+
     @State private var selectedType: MeetupType? = nil
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
                 ColorPalette.background(for: colorScheme)
                     .ignoresSafeArea()
-                
+
                 VStack {
                     ScrollView {
                         VStack(spacing: 24) {
@@ -28,7 +28,7 @@ struct CreateMeetupTypeView: View {
                                 .font(.title2)
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            
+
                             // Meetup Type Buttons
                             VStack(spacing: 12) {
                                 MeetupTypeButton(
@@ -38,7 +38,7 @@ struct CreateMeetupTypeView: View {
                                 ) {
                                     selectedType = .coffee
                                 }
-                                
+
                                 MeetupTypeButton(
                                     title: "Have a meal",
                                     icon: "fork.knife",
@@ -46,7 +46,7 @@ struct CreateMeetupTypeView: View {
                                 ) {
                                     selectedType = .meal
                                 }
-                                
+
                                 MeetupTypeButton(
                                     title: "Sports/Workout",
                                     icon: "figure.run",
@@ -54,7 +54,7 @@ struct CreateMeetupTypeView: View {
                                 ) {
                                     selectedType = .indoorActivity
                                 }
-                                
+
                                 MeetupTypeButton(
                                     title: "Outdoor activity",
                                     icon: "figure.hiking",
@@ -62,7 +62,7 @@ struct CreateMeetupTypeView: View {
                                 ) {
                                     selectedType = .outdoorActivity
                                 }
-                                
+
                                 MeetupTypeButton(
                                     title: "Other",
                                     icon: "ellipsis.circle.fill",
@@ -75,7 +75,7 @@ struct CreateMeetupTypeView: View {
                         }
                         .padding()
                     }
-                    
+
                     // Footer with Next button
                     VStack {
                         NavigationLink(
@@ -91,9 +91,11 @@ struct CreateMeetupTypeView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                                     .background(
-                                        selectedType != nil 
-                                            ? ColorPalette.accent(for: colorScheme)
-                                            : ColorPalette.lightGray(for: colorScheme)
+                                        selectedType != nil
+                                            ? ColorPalette.accent(
+                                                for: colorScheme)
+                                            : ColorPalette.lightGray(
+                                                for: colorScheme)
                                     )
                                     .cornerRadius(12)
                             }
@@ -114,7 +116,9 @@ struct MeetupTypeButton: View {
     let icon: String
     let isSelected: Bool
     let action: () -> Void
-    
+
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         Button(action: action) {
             HStack {
@@ -124,21 +128,28 @@ struct MeetupTypeButton: View {
                     .font(.body)
                 Spacer()
             }
-            .foregroundColor(isSelected ? .white : ColorPalette.text(for: .light))
+            .foregroundColor(
+                isSelected ? .white : ColorPalette.text(for: colorScheme)
+            )
             .padding()
             .frame(maxWidth: .infinity)
-            .background(isSelected ? Color.accentColor : ColorPalette.main(for: .light))
+            .background(
+                isSelected
+                    ? Color.accentColor
+                    : ColorPalette.lightGray(for: colorScheme)
+            )
             .cornerRadius(12)
         }
     }
 }
 
 #if DEBUG
-struct CreateMeetupTypeView_Previews: PreviewProvider {
-    static var previews: some View {
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
         CreateMeetupTypeView()
             .environmentObject(MeetupRequestViewModel.mock())
             .environmentObject(UserViewModel.mock())
+            .accentColor(ColorPalette.accent(for: colorScheme))
     }
-}
 #endif

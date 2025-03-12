@@ -15,6 +15,8 @@ struct RangeSliderView: View {
     private let trackHeight: CGFloat = 4
     private let thumbSize: CGFloat = 24
 
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
@@ -26,16 +28,16 @@ struct RangeSliderView: View {
 
                 // Selected range
                 Rectangle()
-                    .fill(Color.blue)
-                            //                 width: CGFloat(
-                            // (upperValue - range.lowerBound)
-                            //     / CGFloat(range.upperBound - range.lowerBound)
-                            //     * geometry.size.width)
-                            // - CGFloat(
-                            //     (lowerValue - range.lowerBound)
-                            //         / CGFloat(
-                            //             range.upperBound - range.lowerBound)
-                            //         * geometry.size.width), height: trackHeight
+                    .fill(Color.accentColor)
+                    //                 width: CGFloat(
+                    // (upperValue - range.lowerBound)
+                    //     / CGFloat(range.upperBound - range.lowerBound)
+                    //     * geometry.size.width)
+                    // - CGFloat(
+                    //     (lowerValue - range.lowerBound)
+                    //         / CGFloat(
+                    //             range.upperBound - range.lowerBound)
+                    //         * geometry.size.width), height: trackHeight
                     .frame(
                         width: CGFloat(upperValue - lowerValue)
                             / CGFloat(range.upperBound - range.lowerBound)
@@ -103,5 +105,6 @@ struct RangeSliderView: View {
             }
             .frame(height: thumbSize)
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 }
