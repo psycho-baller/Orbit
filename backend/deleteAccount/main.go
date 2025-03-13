@@ -13,10 +13,10 @@ import (
 // TYPES
 type AccountType string
 
-const (
-    UserAccount AccountType = "userAccount"
-    AdminAccount AccountType = "adminAccount"
-)
+// const (
+//     UserAccount AccountType = "userAccount"
+//     AdminAccount AccountType = "adminAccount"
+// )
 
 type AccountData struct {
     AccountId string `json:"accountId"`
@@ -25,7 +25,7 @@ type AccountData struct {
 
 type requestData struct {
     AccountId string      `json:"accountId"`
-    Type      AccountType `json:"type"`
+    // Type      AccountType `json:"type"`
 }
 
 type responseData struct {
@@ -109,8 +109,8 @@ func validateInput(data requestData) error {
     if data.AccountId == "" {
         return fmt.Errorf("account ID cannot be empty")
     }
-    if data.Type != UserAccount && data.Type != AdminAccount {
-        return fmt.Errorf("invalid account type")
-    }
+    // if data.Type != UserAccount && data.Type != AdminAccount {
+    //     return fmt.Errorf("invalid account type")
+    // }
     return nil
 }
