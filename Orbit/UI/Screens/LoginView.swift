@@ -82,7 +82,6 @@ struct LoginView: View {
                             isLoading = false
                         }
                     }
-                    .padding(.bottom, 20)
 
                     HStack {
                         Text("Anonymous Login")
