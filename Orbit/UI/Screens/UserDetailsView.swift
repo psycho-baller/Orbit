@@ -6,6 +6,7 @@
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
 
+import Combine
 import SwiftUI
 
 struct UserDetailsView: View {
@@ -16,6 +17,7 @@ struct UserDetailsView: View {
     @State private var navigateToOnboarding = false
     @State private var errorMessage: String?
     @State private var isLoading = false
+    @State private var debounceCancellable: AnyCancellable?
 
     let accountId: String
 
@@ -52,7 +54,14 @@ struct UserDetailsView: View {
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
                     .onChange(of: username, initial: false) { newUsername, _ in
-                        checkUsernameAvailability(newUsername)
+                        debounceCancellable?.cancel()
+                        debounceCancellable = Just(newUsername)
+                            .delay(
+                                for: .milliseconds(250), scheduler: RunLoop.main
+                            )
+                            .sink { finalValue in
+                                checkUsernameAvailability(finalValue)
+                            }
                     }
                 if let isAvailable = isUsernameAvailable {
                     Text(
@@ -107,7 +116,6 @@ struct UserDetailsView: View {
                 Spacer()
             }
             .padding([.leading, .trailing], 27.5)
-//            .navigationBarHidden(true)
             .onAppear {
                 print("\(accountId) onAppear")
                 Task {
@@ -117,7 +125,29 @@ struct UserDetailsView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    Task {
+                        isLoading = true
+                        let deleted = await authVM.deleteAccount(accountId)
+                        print("deleted: \(deleted)")
+                        navigationCoordinator.navigateToRoot()
+                        //                        print("Error: \(error.localizedDescription)")
+                        //                        errorMessage = error.localizedDescription
 
+                        isLoading = false
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Cancel Account Creation")
+                    }
+                    .foregroundColor(.red)
+                }
+            }
+        }
     }
 
     private var isFormValid: Bool {
