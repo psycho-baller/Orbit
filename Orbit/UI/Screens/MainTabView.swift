@@ -6,11 +6,12 @@
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
 
-import AnimatedTabBar
+//import AnimatedTabBar
 import SwiftUI
 
 enum MainViewTabs {
     case home
+    case create
     case messages
     case profile
 }
@@ -30,14 +31,23 @@ struct MainTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
                 .tag(MainViewTabs.home)
-
+            
             //            NavigationView {
-            InboxView()
-                //            }
+            
+            //InboxView()
+            MyMessages()
+                            //            }
                 .tabItem {
                     Label("Messages", systemImage: "message.fill")
                 }
                 .tag(MainViewTabs.messages)
+            
+            
+            MyOrbitView()
+                .tabItem {
+                    Label("My Plans", systemImage: "circle.circle.fill")
+                }
+                .tag(MainViewTabs.create)
 
             //            NavigationView {
             //                if let user = authViewModel.user {
@@ -62,6 +72,7 @@ struct MainTabView: View {
             .environmentObject(UserViewModel.mock())
             .environmentObject(AuthViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(MeetupRequestViewModel.mock())
 
     }
 #endif

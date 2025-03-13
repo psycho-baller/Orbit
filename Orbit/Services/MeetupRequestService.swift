@@ -32,8 +32,8 @@ class MeetupRequestService: MeetupRequestServiceProtocol {
             databaseId: appwriteService.databaseId,
             collectionId: collectionId,
             documentId: ID.unique(),
-            data: meetup.toJson(),
-            permissions: nil,  // [Appwrite.Permission.write(Role.user(meetup.createdBy.accountId))],
+            data: meetup.toJson(excludeId: true),
+            permissions: nil,  // [Appwrite.Permission.write(Role.user(meetup.createdByUser.accountId))],
             nestedType: MeetupRequestModel.self
         )
         return document

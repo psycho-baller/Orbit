@@ -59,6 +59,8 @@ struct ContentView: View {
         switch screen {
         case .home:
             HomeView()
+        case .create:
+            CreateMeetupTypeView()
         case .messages:
             InboxView()
         case .profile:

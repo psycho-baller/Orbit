@@ -41,7 +41,6 @@
 		257454AF2D67AED400C7747F /* MeetupRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257454AE2D67AED400C7747F /* MeetupRequestModel.swift */; };
 		257454B12D67BB1B00C7747F /* MeetupRequestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257454B02D67BB1B00C7747F /* MeetupRequestViewModel.swift */; };
 		257454B32D67BC2600C7747F /* MeetupRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257454B22D67BC2600C7747F /* MeetupRequestService.swift */; };
-		257454B52D67C13900C7747F /* MeetupRequestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257454B42D67C13900C7747F /* MeetupRequestCardView.swift */; };
 		257454B72D67C4B700C7747F /* MeetupApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257454B62D67C4B700C7747F /* MeetupApprovalViewModel.swift */; };
 		257454B92D67C4D500C7747F /* MeetupApprovalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257454B82D67C4D500C7747F /* MeetupApprovalService.swift */; };
 		2585DFF02CF8E400003F3B7F /* TermsAndPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2585DFEF2CF8E400003F3B7F /* TermsAndPrivacyView.swift */; };
@@ -105,11 +104,12 @@
 		25F5B9CB2CEE5A0D0062438B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F5B9CA2CEE5A090062438B /* Helpers.swift */; };
 		25F5B9CF2CEEA4F90062438B /* SwipeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */; };
 		61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61129BC62CEC10D10076C793 /* UserCardView.swift */; };
+		614168E82D80982700829319 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614168E72D80982300829319 /* DateFormatter.swift */; };
+		6141694E2D809E3C00829319 /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6141694D2D809E3600829319 /* LocationPickerView.swift */; };
 		6190F7192CF508BF00DAEBDE /* PendingRequestsDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */; };
 		6190F71B2CF5644A00DAEBDE /* PendingUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */; };
 		619992A12D13768D00440533 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619992A02D13768300440533 /* UserProfileView.swift */; };
 		619993D12D13D09000440533 /* ProfilePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619993D02D13D08B00440533 /* ProfilePageView.swift */; };
-		61A07DE22CC98B1E00AD7A01 /* AnimatedTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */; };
 		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
 		61E137612CC4AFD600E7BA6C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137602CC4AFD600E7BA6C /* ProfileView.swift */; };
 		61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137622CC4B02C00E7BA6C /* ImagePicker.swift */; };
@@ -168,7 +168,6 @@
 		257454AE2D67AED400C7747F /* MeetupRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupRequestModel.swift; sourceTree = "<group>"; };
 		257454B02D67BB1B00C7747F /* MeetupRequestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupRequestViewModel.swift; sourceTree = "<group>"; };
 		257454B22D67BC2600C7747F /* MeetupRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupRequestService.swift; sourceTree = "<group>"; };
-		257454B42D67C13900C7747F /* MeetupRequestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupRequestCardView.swift; sourceTree = "<group>"; };
 		257454B62D67C4B700C7747F /* MeetupApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupApprovalViewModel.swift; sourceTree = "<group>"; };
 		257454B82D67C4D500C7747F /* MeetupApprovalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupApprovalService.swift; sourceTree = "<group>"; };
 		2585DFEF2CF8E400003F3B7F /* TermsAndPrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndPrivacyView.swift; sourceTree = "<group>"; };
@@ -240,6 +239,8 @@
 		25F5B9CA2CEE5A090062438B /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeActions.swift; sourceTree = "<group>"; };
 		61129BC62CEC10D10076C793 /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
+		614168E72D80982300829319 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		6141694D2D809E3600829319 /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
 		6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestsDropdown.swift; sourceTree = "<group>"; };
 		6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingUserCardView.swift; sourceTree = "<group>"; };
 		619992A02D13768300440533 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
@@ -255,6 +256,7 @@
 		00ACBBB22D0B80A2008F321C /* Onboarding */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Onboarding; sourceTree = "<group>"; };
 		00ACBBB32D0B80C9008F321C /* Onboarding */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Onboarding; sourceTree = "<group>"; };
 		25F1BDB02CF29EDB0036D7E1 /* System */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = System; sourceTree = "<group>"; };
+		619E06722D7DE4B700D9AAB1 /* Meetup */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Meetup; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,7 +264,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61A07DE22CC98B1E00AD7A01 /* AnimatedTabBar in Frameworks */,
 				259CB2292CC02F2500C9F285 /* EnvironmentOverrides in Frameworks */,
 				259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */,
 			);
@@ -339,8 +340,9 @@
 		259CB2872CC0465600C9F285 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				6141694D2D809E3600829319 /* LocationPickerView.swift */,
+				619E06722D7DE4B700D9AAB1 /* Meetup */,
 				258B23FA2D6A90CB00B987F3 /* UserDetailsView.swift */,
-				257454B42D67C13900C7747F /* MeetupRequestCardView.swift */,
 				00ACBBB22D0B80A2008F321C /* Onboarding */,
 				619992A02D13768300440533 /* UserProfileView.swift */,
 				6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */,
@@ -426,6 +428,7 @@
 		259CB2A42CC047D000C9F285 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				614168E72D80982300829319 /* DateFormatter.swift */,
 				2590D8A02CF7E42C00D9E35D /* Views.swift */,
 				25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */,
 				25F5B9CA2CEE5A090062438B /* Helpers.swift */,
@@ -544,12 +547,12 @@
 				00ACBBB22D0B80A2008F321C /* Onboarding */,
 				00ACBBB32D0B80C9008F321C /* Onboarding */,
 				25F1BDB02CF29EDB0036D7E1 /* System */,
+				619E06722D7DE4B700D9AAB1 /* Meetup */,
 			);
 			name = Orbit;
 			packageProductDependencies = (
 				259CB2252CC02F0D00C9F285 /* Appwrite */,
 				259CB2282CC02F2500C9F285 /* EnvironmentOverrides */,
-				61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */,
 			);
 			productName = Orbit;
 			productReference = 25A399522CBF30C500D6BCE8 /* Orbit.app */;
@@ -631,7 +634,6 @@
 			packageReferences = (
 				259CB2242CC02F0D00C9F285 /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
 				259CB2272CC02F2500C9F285 /* XCRemoteSwiftPackageReference "EnvironmentOverrides" */,
-				61A07DE02CC98B1E00AD7A01 /* XCRemoteSwiftPackageReference "AnimatedTabBar" */,
 			);
 			productRefGroup = 25A399532CBF30C500D6BCE8 /* Products */;
 			projectDirPath = "";
@@ -703,9 +705,9 @@
 				257454B92D67C4D500C7747F /* MeetupApprovalService.swift in Sources */,
 				257454AF2D67AED400C7747F /* MeetupRequestModel.swift in Sources */,
 				258B23FB2D6A90CB00B987F3 /* UserDetailsView.swift in Sources */,
+				614168E82D80982700829319 /* DateFormatter.swift in Sources */,
 				259CB29D2CC0465600C9F285 /* InterestsHorizontalTags.swift in Sources */,
 				0088BFE12CD85A92002B4B9D /* ChatProfileView.swift in Sources */,
-				257454B52D67C13900C7747F /* MeetupRequestCardView.swift in Sources */,
 				259CB2812CC0460400C9F285 /* UserManagementService.swift in Sources */,
 				25E1ABC32CD00FAD00F27722 /* AreaModel.swift in Sources */,
 				259CB2982CC0465600C9F285 /* HomeView.swift in Sources */,
@@ -740,6 +742,7 @@
 				259CB27E2CC0460400C9F285 /* PreciseLocationManagerDelegate.swift in Sources */,
 				0088BFDF2CD853E0002B4B9D /* MessageField.swift in Sources */,
 				6190F7192CF508BF00DAEBDE /* PendingRequestsDropdown.swift in Sources */,
+				6141694E2D809E3C00829319 /* LocationPickerView.swift in Sources */,
 				259CB2A72CC047D000C9F285 /* Extensions.swift in Sources */,
 				00AC33C02CF7E44F000761BF /* LocationChoosingView.swift in Sources */,
 				2512755D2D6BD9DC00BB1FCB /* UserLinkModel.swift in Sources */,
@@ -1154,14 +1157,6 @@
 				minimumVersion = 0.0.4;
 			};
 		};
-		61A07DE02CC98B1E00AD7A01 /* XCRemoteSwiftPackageReference "AnimatedTabBar" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/exyte/AnimatedTabBar";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.4;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1174,11 +1169,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 259CB2272CC02F2500C9F285 /* XCRemoteSwiftPackageReference "EnvironmentOverrides" */;
 			productName = EnvironmentOverrides;
-		};
-		61A07DE12CC98B1E00AD7A01 /* AnimatedTabBar */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 61A07DE02CC98B1E00AD7A01 /* XCRemoteSwiftPackageReference "AnimatedTabBar" */;
-			productName = AnimatedTabBar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

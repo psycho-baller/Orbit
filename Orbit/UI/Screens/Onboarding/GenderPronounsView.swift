@@ -12,10 +12,10 @@ struct GenderPronounsView: View {
     @EnvironmentObject var userVM: UserViewModel
 
     @State private var selectedGender: UserGender? = nil
-    @State private var selectedPronoun: UserPronouns? = nil
+    @State private var selectedPronouns: Set<UserPronouns> = []
 
     // If UserPronouns isn’t CaseIterable, define the options manually.
-    let pronounsOptions: [UserPronouns] = [.heHim, .sheHer, .theyThem, .other]
+    let pronounsOptions: [UserPronouns] = [.heHim, .sheHer, .theyThem] // , .other
 
     var body: some View {
         Form {
@@ -33,9 +33,13 @@ struct GenderPronounsView: View {
                 ForEach(pronounsOptions, id: \.self) { pronoun in
                     MultipleSelectionRow(
                         title: pronoun.rawValue,
-                        isSelected: selectedPronoun == pronoun
+                        isSelected: selectedPronouns.contains(pronoun)
                     ) {
-                        selectedPronoun = pronoun
+                        if selectedPronouns.contains(pronoun) {
+                            selectedPronouns.remove(pronoun)
+                        } else {
+                            selectedPronouns.insert(pronoun)
+                        }
                     }
                 }
             }
@@ -49,7 +53,7 @@ struct GenderPronounsView: View {
                         // Assume that the saveOnboardingData function is extended or called elsewhere
                         // to update gender and pronouns on the user model.
                         userVM.currentUser?.gender = selectedGender
-                        userVM.currentUser?.pronouns = selectedPronoun
+                        userVM.currentUser?.pronouns = Array(selectedPronouns)
                         await userVM.saveOnboardingData()
                     }
                     viewModel.navigationPath.append(
@@ -58,4 +62,9 @@ struct GenderPronounsView: View {
             }
         }
     }
+}
+
+#Preview {
+    GenderPronounsView(viewModel: OnboardingViewModel())
+        .environmentObject(UserViewModel.mock())
 }

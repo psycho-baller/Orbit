@@ -17,18 +17,14 @@ struct MeetupRequestCardView: View {
 
     var body: some View {
         if !isHidden {
-            #warning("TODO: replace with 'MeetupRequestDetailedView'")
             NavigationLink(
-                destination: UserProfileView(
-                    user: meetupRequest.createdBy)
+                destination: MeetupRequestDetailedView(
+                    meetupRequest: meetupRequest)
             ) {
-                #warning(
-                    "TODO: Refactor this to match the new design while using the data from 'meetupRequest'"
-                )
                 SwipeView {
                     HStack(spacing: 16) {
                         // Profile Picture
-                        if let profileUrl = meetupRequest.createdBy
+                        if let profileUrl = meetupRequest.createdByUser?
                             .profilePictureUrl,
                             let url = URL(string: profileUrl)
                         {
@@ -60,30 +56,27 @@ struct MeetupRequestCardView: View {
 
                         VStack(alignment: .leading, spacing: 8) {
                             // User Name
-                            Text(meetupRequest.createdBy.username)
-                                .font(.title)
-                                .padding(.bottom, 1)
+                            Text(meetupRequest.createdByUser?.username ?? "")
+                                .font(.headline)
                                 .foregroundColor(Color.accentColor)
                                 .lineLimit(1)
 
-                            // User Interests
-                            if let activities = meetupRequest.createdBy
-                                .personalPreferences?
-                                .activitiesHobbies
-                            {
-                                InterestsHorizontalTags(
-                                    interests: activities,
-                                    onTapInterest: { activity in
-                                        withAnimation {
-                                            userVM.toggleInterest(activity)
-                                        }
-                                    }
+                            // Meetup Title
+                            Text(meetupRequest.title)
+                                .font(.body)
+                                .foregroundColor(
+                                    ColorPalette.text(for: colorScheme)
                                 )
-                            } else {
-                                InterestsHorizontalTags(
-                                    interests: [], onTapInterest: { _ in })
-                            }
+                                .lineLimit(2)
+
+                            // Time
+                            Text(formatMeetupTime(meetup: meetupRequest))
+                                .font(.subheadline)
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(height: 100)
                     }
                     .padding()
@@ -140,11 +133,43 @@ struct MeetupRequestCardView: View {
         }
 
         let meetupApproval = MeetupApprovalModel(
-            approvedBy: sender, meetupRequest: meetupRequest, firstMessage: ""
+            //            approvedByUserId: sender.id,
+            approvedByUser: sender,
+            //            meetupRequestId: meetupRequest.id,
+            meetupRequest: meetupRequest, firstMessage: ""
         )
 
         Task {
             await meetupApprovalVM.approveMeetup(approval: meetupApproval)
+        }
+    }
+
+    private func formatMeetupTime(meetup: MeetupRequestModel) -> String {
+        guard let startTime = meetup.startTimeDate,
+              let endTime = meetup.endTimeDate
+        else {
+            return "Invalid date"
+        }
+
+        let now = Date()
+
+        // If current time is between start and end time
+        if now >= startTime && now <= endTime {
+            return "Now until \(DateFormatterUtility.formatTimeOnly(endTime))"
+        }
+
+        // If start time is within the next hour
+        let minutesUntilStart = Calendar.current.dateComponents([.minute], from: now, to: startTime).minute ?? 0
+        if minutesUntilStart > 0 && minutesUntilStart < 60 {
+            return "in \(minutesUntilStart) minutes"
+        }
+
+        // Otherwise show the start time
+        let isToday = Calendar.current.isDate(startTime, inSameDayAs: Date())
+        if isToday {
+            return DateFormatterUtility.formatTimeOnly(startTime)
+        } else {
+            return DateFormatterUtility.formatForDisplay(startTime)
         }
     }
 }

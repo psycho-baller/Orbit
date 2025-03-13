@@ -17,8 +17,10 @@ class MeetupApprovalViewModel: ObservableObject {
         MeetupApprovalService()
 
     init() {
-        Task {
-            await fetchApprovals()
+        if !isPreviewMode {
+            Task {
+                await fetchApprovals()
+            }
         }
     }
 

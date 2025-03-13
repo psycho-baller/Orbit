@@ -13,8 +13,8 @@ import UIKit
 
 struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 {
+    let id: String
     let accountId: String
-    var id: String { accountId }
     var username: String
     var firstName: String
     var lastName: String?
@@ -31,27 +31,44 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var friendshipValues: FriendshipValuesModel?
     var hasCompletedOnboarding: Bool? = false
 
+    //    var requestedMeetupIds: [String]?  // Relationship with meetups
+    //    var approvedMeetupIds: [String]?  // Relationship with approvals
+    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
+    var approvedMeetups: [MeetupApprovalModel]?  // Relationship with approvals
+
     // New Attributes
     var showLastOnline: Bool = true
     var showJoinedDate: Bool = true
     var showSentReceivedRatio: Bool = true
     var lastOnline: String?  // ISO8601 formatted date-time (optional)
-    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
-    var meetupsApproved: [MeetupApprovalModel]?  // Relationship with approvals
 
     // Newly added attributes from the database
     var userLanguages: [UserLanguageModel]?
     var gender: UserGender?
-    var pronouns: UserPronouns?
+    var pronouns: [UserPronouns]
     var showStarSign: Bool = true
     var userLinks: [UserLinkModel]?
     var intentions: [UserIntention]?
 
+    // Define CodingKeys to map "$id" to "id"
+    enum CodingKeys: String, CodingKey {
+        case id = "$id"
+        case accountId, username, firstName, lastName, interests, conversations,
+            currentAreaId
+        case profilePictureUrl, bio, dob
+        case personalPreferences, interactionPreferences, friendshipValues,
+            hasCompletedOnboarding
+        case requestedMeetups, approvedMeetups
+        case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
+        case userLanguages, gender, pronouns, showStarSign, userLinks,
+            intentions
+    }
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
     }
 
     init(
+        id: String = UUID().uuidString,
         accountId: String,
         username: String,
         firstName: String,
@@ -73,19 +90,22 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showLastOnline: Bool = true,
         showJoinedDate: Bool = true,
         showSentReceivedRatio: Bool = true,
-        lastOnline: String? = nil,
 
+        //        requestedMeetupIds: [String]? = nil,
+        //        approvedMeetupIds: [String]? = nil,
         requestedMeetups: [MeetupRequestModel]? = nil,
-        meetupsApproved: [MeetupApprovalModel]? = nil,
+        approvedMeetups: [MeetupApprovalModel]? = nil,
 
         /// newly added attributes
+        lastOnline: String? = nil,
         userLanguages: [UserLanguageModel]? = nil,
         gender: UserGender? = nil,
-        pronouns: UserPronouns? = nil,
+        pronouns: [UserPronouns] = [],
         showStarSign: Bool = true,
         userLinks: [UserLinkModel]? = nil,
         intentions: [UserIntention]? = nil
     ) {
+        self.id = id
         self.accountId = accountId
         self.username = username
         self.firstName = firstName
@@ -103,15 +123,31 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.showLastOnline = showLastOnline
         self.showJoinedDate = showJoinedDate
         self.showSentReceivedRatio = showSentReceivedRatio
-        self.lastOnline = lastOnline
         self.requestedMeetups = requestedMeetups
-        self.meetupsApproved = meetupsApproved
+        self.approvedMeetups = approvedMeetups
+        //        self.requestedMeetupIds = requestedMeetupIds
+        //        self.approvedMeetupIds = approvedMeetupIds
+        self.lastOnline = lastOnline
         self.userLanguages = userLanguages
         self.gender = gender
         self.pronouns = pronouns
         self.showStarSign = showStarSign
         self.userLinks = userLinks
         self.intentions = intentions
+    }
+
+    func toJson(excludeId: Bool = false) -> [String: Any] {
+        var json =
+            try! JSONSerialization.jsonObject(
+                with: JSONEncoder().encode(self),
+                options: []
+            ) as! [String: Any]
+
+        if excludeId {
+            json.removeValue(forKey: "$id")  // ✅ Remove Appwrite's `$id`
+        }
+
+        return json
     }
 
     func update(
@@ -128,12 +164,14 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showLastOnline: Bool? = nil,
         showJoinedDate: Bool? = nil,
         showSentReceivedRatio: Bool? = nil,
-        lastOnline: String? = nil,
+        //        requestedMeetupIds: [String]? = nil,
+        //        approvedMeetupIds: [String]? = nil,
         requestedMeetups: [MeetupRequestModel]? = nil,
         meetupsApproved: [MeetupApprovalModel]? = nil,
+        lastOnline: String? = nil,
         userLanguages: [UserLanguageModel]? = nil,
         gender: UserGender? = nil,
-        pronouns: UserPronouns? = nil,
+        pronouns: [UserPronouns]? = nil,
         showStarSign: Bool? = nil,
         userLinks: [UserLinkModel]? = nil,
         intentions: [UserIntention]? = nil
@@ -159,9 +197,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showJoinedDate: showJoinedDate ?? self.showJoinedDate,
             showSentReceivedRatio: showSentReceivedRatio
                 ?? self.showSentReceivedRatio,
-            lastOnline: lastOnline ?? self.lastOnline,
+            //            requestedMeetupIds: requestedMeetupIds ?? self.requestedMeetupIds,
+            //            approvedMeetupIds: approvedMeetupIds ?? self.approvedMeetupIds,
             requestedMeetups: requestedMeetups ?? self.requestedMeetups,
-            meetupsApproved: meetupsApproved ?? self.meetupsApproved,
+            approvedMeetups: approvedMeetups ?? self.approvedMeetups,
+            lastOnline: lastOnline ?? self.lastOnline,
             userLanguages: userLanguages ?? self.userLanguages,
             gender: gender ?? self.gender,
             pronouns: pronouns ?? self.pronouns,
@@ -173,12 +213,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     static func mock() -> UserModel {
         UserModel(
-            accountId: "user1",
-            username: "slingshot69",
-            firstName: "Sarah",
-            lastName: "Chen",
-            interests: ["Photography", "Hiking", "Coffee", "Art", "Travel"],
+            accountId: "imjustken",
+            username: "imjustken",
+            firstName: "Ken",
+            lastName: "",
+            interests: [
+                "Fitness", "Reading", "Meditation", "Writing", "Hiking",
+            ],
             profilePictureUrl: "https://picsum.photos/200",
+            bio:
+                "I love photography, hiking, and art. I'm also a big fan of travel!",
             personalPreferences: PersonalPreferences(
                 activitiesHobbies: ["Photography", "Hiking", "Art"],
                 friendActivities: ["Creative Collaborator", "Travel Buddy"]
@@ -192,18 +236,28 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: true,
             showSentReceivedRatio: true,
+            //            requestedMeetups: [MeetupRequestModel.mock()],
+            //            approvedMeetups: [MeetupApprovalModel.mock()],
             lastOnline: "2024-02-20T15:30:00Z",
-            requestedMeetups: [MeetupRequestModel.mock()],
-            meetupsApproved: [MeetupApprovalModel.mock()]
+            gender: .man,
+            pronouns: [.heHim],
+            userLinks: [
+                .mock()
+            ],
+            intentions: [
+                .friendships,
+                .conversations,
+                .hobbies,
+            ]
         )
     }
 
     static func mock2() -> UserModel {
         UserModel(
             accountId: "user2",
-            username: "imjustken",
-            firstName: "Alex",
-            lastName: "Rivera",
+            username: "slingshot69",
+            firstName: "Mark",
+            lastName: "",
             interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
             profilePictureUrl: "https://picsum.photos/201",
             personalPreferences: PersonalPreferences(
@@ -219,9 +273,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: false,
             showJoinedDate: true,
             showSentReceivedRatio: false,
-            lastOnline: "2024-02-19T10:45:00Z",
-            requestedMeetups: [MeetupRequestModel.mock()],
-            meetupsApproved: []
+            //            requestedMeetups: [MeetupRequestModel.mock()],
+            //            approvedMeetups: [],
+            lastOnline: "2024-02-19T10:45:00Z"
         )
     }
 
@@ -246,20 +300,22 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: false,
             showSentReceivedRatio: true,
-            lastOnline: "2024-02-18T20:15:00Z",
-            requestedMeetups: [],
-            meetupsApproved: [MeetupApprovalModel.mock()]
+            //            requestedMeetups: [],
+            //            approvedMeetups: [MeetupApprovalModel.mock()],
+            lastOnline: "2024-02-18T20:15:00Z"
         )
     }
 
     static func mockNoPendingMeetups() -> UserModel {
         UserModel(
-            accountId: "user3",
-            username: "jordan_taylor",
-            firstName: "Jordan",
-            lastName: "Taylor",
+            accountId: "slingshot69",
+            username: "slingshot69",
+            firstName: "Mark",
+            lastName: "",
             interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
             profilePictureUrl: "https://picsum.photos/202",
+            bio:
+                "Curious, open-minded, and always up for a good conversation. I enjoy meeting new people, learning from different perspectives, and making the most of every experience",
             personalPreferences: PersonalPreferences(
                 activitiesHobbies: ["Yoga", "Reading", "Meditation"],
                 friendActivities: ["Workout Partner", "Deep Conversations"]
@@ -273,7 +329,17 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showLastOnline: true,
             showJoinedDate: false,
             showSentReceivedRatio: true,
-            lastOnline: "2024-02-18T20:15:00Z"
+            lastOnline: "2024-02-18T20:15:00Z",
+            gender: .man,
+            pronouns: [.heHim],
+            userLinks: [
+                .mock()
+            ],
+            intentions: [
+                .friendships,
+                .conversations,
+                .hobbies,
+            ]
         )
     }
 
@@ -334,6 +400,7 @@ enum UserGender: String, Codable, CaseIterable {
     case man
     case woman
     case nonBinary = "non-binary"
+    case preferNotToSay = "Prefer not to say"
     case other
 }
 
@@ -341,7 +408,7 @@ enum UserPronouns: String, Codable {
     case heHim = "he/him"
     case sheHer = "she/her"
     case theyThem = "they/them"
-    case other
+    //    case other
 }
 
 enum UserIntention: String, Codable, CaseIterable {
