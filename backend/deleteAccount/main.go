@@ -3,7 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+
+	// "log"
 	"os"
 
 	"github.com/appwrite/sdk-for-go/appwrite"
@@ -70,8 +71,8 @@ func Main(Context openruntimes.Context) openruntimes.Response {
     response, err := users.Delete(requestDataFromClient.AccountId)
 
     if err != nil {
-        log.Printf("Failed to delete account: %v", err)
-        Context.Log("Failed to delete account: " + err.Error())
+        // log.Printf("Failed to delete account: %v", err)
+        Context.Error("Failed to delete account: " + err.Error())
         return Context.Res.Json(
             responseData{
                 Status: 500,
@@ -80,7 +81,7 @@ func Main(Context openruntimes.Context) openruntimes.Response {
         )
     }
 
-    log.Printf("Account deleted successfully: %+v", response)
+    Context.Log("Account deleted successfully: %+v", response)
     return Context.Res.Json(
         responseData{
             Status: 200,
@@ -96,8 +97,8 @@ func parseData(Context openruntimes.Context) (requestData, error) {
 
 	err := json.Unmarshal(Context.Req.BodyBinary(), &requestData)
 	if err != nil {
-		log.Printf("Failed to parse data: %v", err)
-		Context.Log("Failed to parse data: " + err.Error())
+		// log.Printf("Failed to parse data: %v", err)
+		Context.Error("Failed to parse data: " + err.Error())
 		return requestData, err
 	}
 
