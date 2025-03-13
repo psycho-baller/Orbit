@@ -24,7 +24,6 @@ protocol AccountManagementServiceProtocol: AnyObject {
     func listSessions() async throws -> [Session]
     func deleteSessions() async throws
     func deleteSession() async throws
-    func deleteAccount(_ id: String) async throws
     func generateJWT() async throws -> Jwt
     func socialLogin(provider: String) async throws
 }
@@ -90,10 +89,6 @@ class AccountManagementService: AccountManagementServiceProtocol {
 
     func deleteSession() async throws {
         try await account.deleteSession(sessionId: "current")
-    }
-
-    func deleteAccount(_ id: String) async throws {
-        try await account.deleteIdentity(identityId: id)
     }
 
     func generateJWT() async throws -> Jwt {
