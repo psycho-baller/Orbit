@@ -23,6 +23,8 @@ class AuthViewModel: ObservableObject {
 
     private var account: AccountManagementServiceProtocol =
         AccountManagementService()
+    private var functions: CloudFunctionsServiceProtocol =
+        CloudFunctionsService()
 
     @MainActor
     func initialize() async {
@@ -151,7 +153,7 @@ class AuthViewModel: ObservableObject {
     func handleAccountCreationFailure() async {
         do {
             if let user = try await account.getAccount() {
-                try await account.deleteAccount(user.id)
+                try await functions.deleteAccount(accountId: user.id)
                 print(
                     "AuthViewModel - handleAccountCreationFailure: Account deleted due to user creation failure in DB for user \(user.email)."
                 )
@@ -160,6 +162,23 @@ class AuthViewModel: ObservableObject {
             print(
                 "AuthViewModel - Source: handleAccountCreationFailure - Error while deleting account: \(error.localizedDescription)"
             )
+        }
+    }
+
+    @MainActor
+    func deleteAccount(_ accountId: String) async -> Bool {
+        do {
+            let response = try await functions.deleteAccount(
+                accountId: accountId)
+            print(
+                "AuthViewModel - deleteAccount: Success, account deleted for \(accountId)."
+            )
+            return response
+        } catch {
+            print(
+                "AuthViewModel - Source: deleteAccount - Error while deleting account for \(accountId): \(error.localizedDescription)"
+            )
+            return false
         }
     }
 }
