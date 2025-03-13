@@ -18,6 +18,7 @@ struct OrbitApp: App {
     @StateObject var meetupRequestVM = MeetupRequestViewModel()
     @StateObject var meetupApprovalVM = MeetupApprovalViewModel()
     @StateObject var navigationCoordinator = AuthNavigationCoordinator()
+    @Environment(\.colorScheme) var colorScheme
 
     init() {
         let appearance = UITabBarAppearance()
@@ -63,6 +64,7 @@ struct OrbitApp: App {
                 .environmentObject(meetupApprovalVM)
                 .environmentObject(appDelegate.appState)
                 .environmentObject(navigationCoordinator)
+                .accentColor(ColorPalette.accent(for: colorScheme))
         }
     }
 }

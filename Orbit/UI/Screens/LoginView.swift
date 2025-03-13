@@ -78,11 +78,12 @@ struct LoginView: View {
                             if let currentUserAccountId = authVM.user?.id {
                                 await userVM.updateCurrentUser(
                                     accountId: currentUserAccountId)
+                                print("currentUserAccountId: \(currentUserAccountId)")
                             }
+
                             isLoading = false
                         }
                     }
-                    .padding(.bottom, 20)
 
                     HStack {
                         Text("Anonymous Login")
@@ -124,6 +125,13 @@ struct LoginView: View {
                                 "Navigating to UserDetailsView for accountId: \(accountId)"
                             )
                         }
+                }
+            }
+            .onAppear {
+                // if the user is logged in but there is no record of them in the database, then take them  to userdetails view
+                if authVM.user != nil && userVM.currentUser == nil {
+                    navigationCoordinator.navigateToUserDetails(
+                        accountId: authVM.user!.id)
                 }
             }
         }

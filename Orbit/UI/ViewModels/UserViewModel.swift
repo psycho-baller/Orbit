@@ -202,9 +202,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     // setCurrentUser
     @MainActor
-    func updateCurrentUser(accountId: String) async {
-        let userFromDatabase = users.first { $0.accountId == accountId }
-        self.currentUser = userFromDatabase
+    func updateCurrentUser(accountId: String) async -> Bool {
+        #warning("This function only updates CURRENTUSER variable, not the backend DB.")
+        if let userFromDatabase = users.first(where: {
+            $0.accountId == accountId
+        }) {
+            self.currentUser = userFromDatabase
+            return true
+        }
+        return false
     }
 
     @MainActor

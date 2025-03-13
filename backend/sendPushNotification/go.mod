@@ -1,4 +1,4 @@
-module orbit-backend
+module orbit-backend/sendPushNotification
 
 go 1.23.0
 

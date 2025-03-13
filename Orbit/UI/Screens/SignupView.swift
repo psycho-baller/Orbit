@@ -107,16 +107,7 @@ struct SignupView: View {
                         isLoading = false
                     }
                 }
-                .padding()
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, maxHeight: 50)
-                .background(
-                    isFormValid
-                        ? ColorPalette.accent(for: colorScheme)
-                        : ColorPalette.accent(for: colorScheme).opacity(0.5)
-                )
-                .cornerRadius(16.0)
-                .disabled(!isFormValid)
+
 
                 TermsAndPrivacyView(forButtonLabel: "Join the community")
                     .padding(.top)
@@ -127,7 +118,7 @@ struct SignupView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))
-//        .navigationBarHidden(true)
+        .navigationBarHidden(true)
     }
 
     private var isFormValid: Bool {
