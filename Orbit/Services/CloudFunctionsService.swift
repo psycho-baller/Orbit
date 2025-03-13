@@ -47,11 +47,11 @@ class CloudFunctionsService: CloudFunctionsServiceProtocol {
                     let response =
                         try await functions
                         .createExecution(
-                            functionId: "deleteAccount",
+                            functionId: "delete-account",
                             body: stringBody,
                             async: true
                         )
-
+                    print("response: \(response.toMap())")
                     // Return success based on function execution status
                     return response.status == "200"
                 }
