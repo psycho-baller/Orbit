@@ -13,6 +13,15 @@ struct UserDetailsView: View {
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var username = ""
+    private var usernameBinding: Binding<String> {
+        Binding(
+            get: { username },
+            set: { newValue in
+                username = newValue
+                checkUsernameAvailability(newValue)  // Instant availability check
+            }
+        )
+    }
     @State private var isUsernameAvailable: Bool? = nil
     @State private var navigateToOnboarding = false
     @State private var errorMessage: String?
@@ -48,21 +57,11 @@ struct UserDetailsView: View {
                 }
                 .padding(.bottom, 30)
 
-                TextField("Username", text: self.$username)
+                TextField("Username", text: usernameBinding)
                     .padding()
                     .background(ColorPalette.lightGray(for: colorScheme))
                     .cornerRadius(16.0)
                     .textInputAutocapitalization(.never)
-                    .onChange(of: username, initial: false) { newUsername, _ in
-                        debounceCancellable?.cancel()
-                        debounceCancellable = Just(newUsername)
-                            .delay(
-                                for: .milliseconds(250), scheduler: RunLoop.main
-                            )
-                            .sink { finalValue in
-                                checkUsernameAvailability(finalValue)
-                            }
-                    }
                 if let isAvailable = isUsernameAvailable {
                     Text(
                         isAvailable
@@ -130,12 +129,10 @@ struct UserDetailsView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     Task {
+                        navigationCoordinator.navigateToRoot()
                         isLoading = true
                         let deleted = await authVM.deleteAccount(accountId)
                         print("deleted: \(deleted)")
-                        navigationCoordinator.navigateToRoot()
-                        //                        print("Error: \(error.localizedDescription)")
-                        //                        errorMessage = error.localizedDescription
 
                         isLoading = false
                     }
@@ -157,7 +154,7 @@ struct UserDetailsView: View {
 
     /// Check if username is available using cached data
     func checkUsernameAvailability(_ newUsername: String) {
-        guard !newUsername.isEmpty else {
+        guard newUsername.count > 2 else {
             isUsernameAvailable = nil
             return
         }
