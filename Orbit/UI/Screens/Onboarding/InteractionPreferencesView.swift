@@ -67,7 +67,14 @@ struct InteractionPreferencesView: View {
                             OnboardingViewModel.OnboardingStep.friendshipValues)
                         Task {
                             await userVM.saveOnboardingData(
-                                interactionPreferences: selectedAnswers)
+                                events: selectedAnswers.events,
+                                topics: selectedAnswers.topics,
+                                preferredMinAge: selectedAnswers
+                                    .preferredMinAge,
+                                preferredMaxAge: selectedAnswers
+                                    .preferredMaxAge,
+                                preferredGender: selectedAnswers.preferredGender
+                            )
                         }
                     }) {
                         Text("Next")

@@ -130,9 +130,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     @MainActor
     func saveOnboardingData(
-        personalPreferences: PersonalPreferences? = nil,
-        interactionPreferences: InteractionPreferencesModel? = nil,
-        friendshipValues: FriendshipValuesModel? = nil,
+        activitiesHobbies: [String]? = nil,
+        friendActivities: [String]? = nil,
+        events: [String]? = nil,
+        topics: [String]? = nil,
+        preferredMinAge: Int? = nil,
+        preferredMaxAge: Int? = nil,
+        preferredGender: [UserGender]? = nil,
+        values: [String]? = nil,
+        qualities: [String]? = nil,
         bio: String? = nil,
         dob: Date? = nil,
         showStarSign: Bool? = nil,
@@ -166,12 +172,20 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         //        }
 
         // Update the user's onboarding data locally
-        currentUser.personalPreferences =
-            personalPreferences ?? currentUser.personalPreferences
-        currentUser.interactionPreferences =
-            interactionPreferences ?? currentUser.interactionPreferences
-        currentUser.friendshipValues =
-            friendshipValues ?? currentUser.friendshipValues
+        currentUser.activitiesHobbies =
+            activitiesHobbies ?? currentUser.activitiesHobbies
+        currentUser.friendActivities =
+            friendActivities ?? currentUser.friendActivities
+        currentUser.events = events ?? currentUser.events
+        currentUser.topics = topics ?? currentUser.topics
+        currentUser.preferredMinAge =
+            preferredMinAge ?? currentUser.preferredMinAge
+        currentUser.preferredMaxAge =
+            preferredMaxAge ?? currentUser.preferredMaxAge
+        currentUser.preferredGender =
+            preferredGender ?? currentUser.preferredGender
+        currentUser.values = values ?? currentUser.values
+        currentUser.qualities = qualities ?? currentUser.qualities
         currentUser.bio = bio ?? currentUser.bio
         currentUser.intentions = intentions ?? currentUser.intentions
         currentUser.userLanguages = userLanguages ?? currentUser.userLanguages
@@ -429,7 +443,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     // Aggregate unique interests from all users
     var allInterests: [String] {
         let activitiesArray = users.compactMap {
-            $0.personalPreferences?.activitiesHobbies
+            $0.activitiesHobbies
         }.flatMap { $0 }
         return Array(Set(activitiesArray)).sorted()
     }
@@ -446,15 +460,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
                 || user.username.lowercased().contains(lowercasedSearchText)
-                || (user.personalPreferences?.activitiesHobbies?.joined(
+                || (user.activitiesHobbies?.joined(
                     separator: " "
                 ).lowercased()
                     .contains(lowercasedSearchText) ?? false)
 
             let matchesInterests =
                 selectedInterests.isEmpty
-                || (user.personalPreferences?.activitiesHobbies != nil
-                    && !Set(user.personalPreferences!.activitiesHobbies!)
+                || (user.activitiesHobbies != nil
+                    && !Set(user.activitiesHobbies!)
                         .intersection(selectedInterestsSet)
                         .isEmpty)
 

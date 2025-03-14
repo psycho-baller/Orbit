@@ -26,9 +26,18 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var dob: String?  // Date of birth
 
     // Onboarding-related fields
-    var personalPreferences: PersonalPreferences?
-    var interactionPreferences: InteractionPreferencesModel?
-    var friendshipValues: FriendshipValuesModel?
+    //    var personalPreferences: PersonalPreferences?
+    var activitiesHobbies: [String]?
+    var friendActivities: [String]?
+    //    var interactionPreferences: InteractionPreferencesModel?
+    var events: [String]?
+    var topics: [String]?
+    var preferredMinAge: Int?
+    var preferredMaxAge: Int?
+    var preferredGender: [UserGender]?
+    //    var friendshipValues: FriendshipValuesModel?
+    var values: [String]?
+    var qualities: [String]?
     var hasCompletedOnboarding: Bool? = false
 
     //    var requestedMeetupIds: [String]?  // Relationship with meetups
@@ -56,8 +65,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case accountId, username, firstName, lastName, interests, conversations,
             currentAreaId
         case profilePictureUrl, bio, dob
-        case personalPreferences, interactionPreferences, friendshipValues,
-            hasCompletedOnboarding
+        case activitiesHobbies, friendActivities, events, topics,
+            preferredMinAge, preferredMaxAge, preferredGender, values, qualities
         case requestedMeetups, approvedMeetups
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
         case userLanguages, gender, pronouns, showStarSign, userLinks,
@@ -81,9 +90,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         dob: String? = nil,
 
         /// onboarding stuff
-        personalPreferences: PersonalPreferences? = nil,
-        interactionPreferences: InteractionPreferencesModel? = nil,
-        friendshipValues: FriendshipValuesModel? = nil,
+        activitiesHobbies: [String]? = nil,
+        friendActivities: [String]? = nil,
+        events: [String]? = nil,
+        topics: [String]? = nil,
+        preferredMinAge: Int? = nil,
+        preferredMaxAge: Int? = nil,
+        preferredGender: [UserGender]? = nil,
+        values: [String]? = nil,
+        qualities: [String]? = nil,
+
         hasCompletedOnboarding: Bool? = false,
 
         /// personal prefs
@@ -116,9 +132,18 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.profilePictureUrl = profilePictureUrl
         self.bio = bio
         self.dob = dob
-        self.personalPreferences = personalPreferences
-        self.interactionPreferences = interactionPreferences
-        self.friendshipValues = friendshipValues
+
+        /// onboarding stuff
+        self.activitiesHobbies = activitiesHobbies
+        self.friendActivities = friendActivities
+        self.events = events
+        self.topics = topics
+        self.preferredMinAge = preferredMinAge
+        self.preferredMaxAge = preferredMaxAge
+        self.preferredGender = preferredGender
+        self.values = values
+        self.qualities = qualities
+
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.showLastOnline = showLastOnline
         self.showJoinedDate = showJoinedDate
@@ -151,6 +176,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         if let userIntentions = self.intentions {
             json["intentions"] = userIntentions.map { $0.rawValue }
         }
+        json["preferredGender"] = self.preferredGender?.map { $0.rawValue }
 
         return json
     }
@@ -163,9 +189,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         conversations: [String]? = nil,
         bio: String? = nil,
         dob: String? = nil,
-        personalPreferences: PersonalPreferences? = nil,
-        interactionPreferences: InteractionPreferencesModel? = nil,
-        friendshipValues: FriendshipValuesModel? = nil,
+        /// onboarding stuff
+        activitiesHobbies: [String]? = nil,
+        friendActivities: [String]? = nil,
+        events: [String]? = nil,
+        topics: [String]? = nil,
+        preferredMinAge: Int? = nil,
+        preferredMaxAge: Int? = nil,
+        preferredGender: [UserGender]? = nil,
+        values: [String]? = nil,
+        qualities: [String]? = nil,
         showLastOnline: Bool? = nil,
         showJoinedDate: Bool? = nil,
         showSentReceivedRatio: Bool? = nil,
@@ -192,11 +225,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             profilePictureUrl: self.profilePictureUrl,
             bio: bio ?? self.bio,
             dob: dob ?? self.dob,
-            personalPreferences: personalPreferences
-                ?? self.personalPreferences,
-            interactionPreferences: interactionPreferences
-                ?? self.interactionPreferences,
-            friendshipValues: friendshipValues ?? self.friendshipValues,
+            /// onboarding stuff
+            activitiesHobbies: activitiesHobbies ?? self.activitiesHobbies,
+            friendActivities: friendActivities ?? self.friendActivities,
+            events: events ?? self.events,
+            topics: topics ?? self.topics,
+            preferredMinAge: preferredMinAge ?? self.preferredMinAge,
+            preferredMaxAge: preferredMaxAge ?? self.preferredMaxAge,
+            preferredGender: preferredGender ?? self.preferredGender,
+            values: values ?? self.values,
+            qualities: qualities ?? self.qualities,
             hasCompletedOnboarding: self.hasCompletedOnboarding,
             showLastOnline: showLastOnline ?? self.showLastOnline,
             showJoinedDate: showJoinedDate ?? self.showJoinedDate,
@@ -228,15 +266,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             profilePictureUrl: "https://picsum.photos/200",
             bio:
                 "I love photography, hiking, and art. I'm also a big fan of travel!",
-            personalPreferences: PersonalPreferences(
-                activitiesHobbies: ["Photography", "Hiking", "Art"],
-                friendActivities: ["Creative Collaborator", "Travel Buddy"]
-            ),
-            interactionPreferences: .mock(),
-            friendshipValues: FriendshipValuesModel(
-                values: ["Authenticity", "Adventure", "Growth"],
-                qualities: ["Open-minded", "Adventurous"]
-            ),
+            /// onboarding stuff
+            activitiesHobbies: ["Photography", "Hiking", "Art"],
+            friendActivities: ["Creative Collaborator", "Travel Buddy"],
+            events: ["Photography Exhibition", "Hiking Trip"],
+            topics: ["Photography", "Hiking", "Art"],
+            preferredMinAge: 18,
+            preferredMaxAge: 30,
+            preferredGender: [.man],
+            values: ["Authenticity", "Adventure", "Growth"],
+            qualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: true,
             showJoinedDate: true,
@@ -265,15 +304,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             lastName: "",
             interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
             profilePictureUrl: "https://picsum.photos/201",
-            personalPreferences: PersonalPreferences(
-                activitiesHobbies: ["Gaming", "Coding", "Music"],
-                friendActivities: ["Hobby Buddy", "Deep Conversations"]
-            ),
-            interactionPreferences: .mock(),
-            friendshipValues: FriendshipValuesModel(
-                values: ["Loyalty", "Shared Interests", "Fun"],
-                qualities: ["Tech-savvy", "Analytical"]
-            ),
+            /// onboarding stuff
+            activitiesHobbies: ["Gaming", "Coding", "Music"],
+            friendActivities: ["Hobby Buddy", "Deep Conversations"],
+            events: ["Tech Meetups", "Hiking Trips"],
+            topics: ["AI", "Space Exploration"],
+            preferredMinAge: 20,
+            preferredMaxAge: 35,
+            preferredGender: [.man, .woman],
+            values: ["Authenticity", "Adventure", "Growth"],
+            qualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: false,
             showJoinedDate: true,
@@ -292,15 +332,16 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             lastName: "Taylor",
             interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
             profilePictureUrl: "https://picsum.photos/202",
-            personalPreferences: PersonalPreferences(
-                activitiesHobbies: ["Yoga", "Reading", "Meditation"],
-                friendActivities: ["Workout Partner", "Deep Conversations"]
-            ),
-            interactionPreferences: .mock(),
-            friendshipValues: FriendshipValuesModel(
-                values: ["Personal Growth", "Understanding", "Support"],
-                qualities: ["Self-aware", "Calm"]
-            ),
+            /// onboarding stuff
+            activitiesHobbies: ["Yoga", "Reading", "Meditation"],
+            friendActivities: ["Workout Partner", "Deep Conversations"],
+            events: ["Tech Meetups", "Hiking Trips"],
+            topics: ["AI", "Startups", "Philosophy"],
+            preferredMinAge: 20,
+            preferredMaxAge: 35,
+            preferredGender: [.man, .woman],
+            values: ["Authenticity", "Adventure", "Growth"],
+            qualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: true,
             showJoinedDate: false,
@@ -321,15 +362,25 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             profilePictureUrl: "https://picsum.photos/202",
             bio:
                 "Curious, open-minded, and always up for a good conversation. I enjoy meeting new people, learning from different perspectives, and making the most of every experience",
-            personalPreferences: PersonalPreferences(
-                activitiesHobbies: ["Yoga", "Reading", "Meditation"],
-                friendActivities: ["Workout Partner", "Deep Conversations"]
-            ),
-            interactionPreferences: .mock(),
-            friendshipValues: FriendshipValuesModel(
-                values: ["Personal Growth", "Understanding", "Support"],
-                qualities: ["Self-aware", "Calm"]
-            ),
+            // personalPreferences: PersonalPreferences(
+            //     activitiesHobbies: ["Yoga", "Reading", "Meditation"],
+            //     friendActivities: ["Workout Partner", "Deep Conversations"]
+            // ),
+            // interactionPreferences: .mock(),
+            // friendshipValues: FriendshipValuesModel(
+            //     values: ["Personal Growth", "Understanding", "Support"],
+            //     qualities: ["Self-aware", "Calm"]
+            // ),
+            /// onboarding stuff
+            activitiesHobbies: ["Yoga", "Reading", "Meditation"],
+            friendActivities: ["Workout Partner", "Deep Conversations"],
+            events: ["Tech Meetups", "Hiking Trips"],
+            topics: ["AI", "Startups", "Philosophy"],
+            preferredMinAge: 20,
+            preferredMaxAge: 35,
+            preferredGender: [.man, .woman],
+            values: ["Authenticity", "Adventure", "Growth"],
+            qualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: true,
             showJoinedDate: false,
@@ -360,15 +411,25 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 lastName: "Rivera",
                 interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
                 profilePictureUrl: "https://picsum.photos/201",
-                personalPreferences: PersonalPreferences(
-                    activitiesHobbies: ["Gaming", "Coding", "Music"],
-                    friendActivities: ["Hobby Buddy", "Deep Conversations"]
-                ),
-                interactionPreferences: .mock(),
-                friendshipValues: FriendshipValuesModel(
-                    values: ["Loyalty", "Shared Interests", "Fun"],
-                    qualities: ["Tech-savvy", "Analytical"]
-                ),
+                // personalPreferences: PersonalPreferences(
+                //     activitiesHobbies: ["Gaming", "Coding", "Music"],
+                //     friendActivities: ["Hobby Buddy", "Deep Conversations"]
+                // ),
+                // interactionPreferences: .mock(),
+                // friendshipValues: FriendshipValuesModel(
+                //     values: ["Loyalty", "Shared Interests", "Fun"],
+                //     qualities: ["Tech-savvy", "Analytical"]
+                // ),
+                /// onboarding stuff
+                activitiesHobbies: ["Gaming", "Coding", "Music"],
+                friendActivities: ["Hobby Buddy", "Deep Conversations"],
+                events: ["Tech Meetups", "Hiking Trips"],
+                topics: ["AI", "Space Exploration"],
+                preferredMinAge: 20,
+                preferredMaxAge: 35,
+                preferredGender: [.man, .woman],
+                values: ["Authenticity", "Adventure", "Growth"],
+                qualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true
             ),
             UserModel(
@@ -380,15 +441,25 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                     "Fitness", "Reading", "Meditation", "Yoga", "Writing",
                 ],
                 profilePictureUrl: "https://picsum.photos/202",
-                personalPreferences: PersonalPreferences(
-                    activitiesHobbies: ["Yoga", "Reading", "Meditation"],
-                    friendActivities: ["Workout Partner", "Deep Conversations"]
-                ),
-                interactionPreferences: .mock(),
-                friendshipValues: FriendshipValuesModel(
-                    values: ["Personal Growth", "Understanding", "Support"],
-                    qualities: ["Self-aware", "Calm"]
-                ),
+                // personalPreferences: PersonalPreferences(
+                //     activitiesHobbies: ["Yoga", "Reading", "Meditation"],
+                //     friendActivities: ["Workout Partner", "Deep Conversations"]
+                // ),
+                // interactionPreferences: .mock(),
+                // friendshipValues: FriendshipValuesModel(
+                //     values: ["Personal Growth", "Understanding", "Support"],
+                //     qualities: ["Self-aware", "Calm"]
+                // ),
+                /// onboarding stuff
+                activitiesHobbies: ["Yoga", "Reading", "Meditation"],
+                friendActivities: ["Workout Partner", "Deep Conversations"],
+                events: ["Tech Meetups", "Hiking Trips"],
+                topics: ["AI", "Space Exploration"],
+                preferredMinAge: 20,
+                preferredMaxAge: 35,
+                preferredGender: [.man, .woman],
+                values: ["Authenticity", "Adventure", "Growth"],
+                qualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true
             ),
         ]

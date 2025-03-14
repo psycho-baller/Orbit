@@ -213,7 +213,7 @@ struct MeetupRequestDetailedView: View {
     }
 
     private var allInterests: [String] {
-        meetupRequest.createdByUser?.personalPreferences?.activitiesHobbies
+        meetupRequest.createdByUser?.activitiesHobbies
             ?? []
     }
 

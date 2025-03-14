@@ -99,7 +99,8 @@ struct FriendshipValuesView: View {
                                 .userInfo)
                         Task {
                             await userVM.saveOnboardingData(
-                                friendshipValues: selectedAnswers
+                                values: selectedAnswers.values,
+                                qualities: selectedAnswers.qualities
                             )
                         }
                     }) {

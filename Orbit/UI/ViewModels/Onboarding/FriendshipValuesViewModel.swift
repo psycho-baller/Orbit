@@ -31,7 +31,7 @@ class FriendshipValuesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.friendshipValues?.values?
+                        isSelected: currentUser?.values?
                             .contains(
                                 title)
                             ?? false
@@ -57,7 +57,7 @@ class FriendshipValuesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.friendshipValues?.qualities?
+                        isSelected: currentUser?.qualities?
                             .contains(
                                 title)
                             ?? false
