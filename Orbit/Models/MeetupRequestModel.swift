@@ -26,14 +26,15 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     //    let createdByUserId: String
     let createdByUser: UserModel?
     //    let meetupApprovalIds: [String]
-    let meetupApprovals: [MeetupApprovalModel]?
+    //    let meetupApprovals: [MeetupApprovalModel]?
+    let chats: [ChatModel]
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
     let type: MeetupType
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"  // Maps Appwrite's `$id` to `id`
         case title, startTime, endTime, areaId, description, status
-        case intention, createdByUser, meetupApprovals, type
+        case intention, createdByUser, chats, type
     }
 
     init(
@@ -46,7 +47,8 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         status: MeetupStatus,
         intention: MeetupIntention,
         createdByUser: UserModel? = nil,
-        meetupApprovals: [MeetupApprovalModel]? = [],
+        //        meetupApprovals: [MeetupApprovalModel] = [],
+        chats: [ChatModel] = [],
         type: MeetupType
     ) {
         self.id = id
@@ -58,7 +60,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         self.status = status
         self.intention = intention
         self.createdByUser = createdByUser
-        self.meetupApprovals = meetupApprovals
+        self.chats = chats
         self.type = type
     }
 
@@ -76,15 +78,17 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         let endTime = startTime.addingTimeInterval(3600)  // Add 1 hour
         return .init(
             id: "67ce15c07501e11e1fa3",
-            title: "\"How do you plan to make the best of your university experience?\"",
+            title:
+                "\"How do you plan to make the best of your university experience?\"",
             startTime: DateFormatterUtility.formatISO8601(startTime),
             endTime: DateFormatterUtility.formatISO8601(endTime),
             areaId: 521_659_157,
-            description: "It's been hard for me to balance out grades and social life. Wondering how others do it",
+            description:
+                "It's been hard for me to balance out grades and social life. Wondering how others do it",
             status: .active,
             intention: .friendship,
             createdByUser: .mockNoPendingMeetups(),
-            meetupApprovals: [],
+            chats: [],
             type: .meal
         )
     }
@@ -102,7 +106,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         }
 
         json["createdByUser"] = self.createdByUser?.id
-        json["meetupApprovals"] = self.meetupApprovals?.map { $0.id }
+        json["chats"] = self.chats.map(\.id)
 
         print("data: \(json)")
 
