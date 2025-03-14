@@ -68,7 +68,7 @@ struct InteractionPreferencesView: View {
                         Task {
                             await userVM.saveOnboardingData(
                                 events: selectedAnswers.events,
-                                topics: selectedAnswers.topics,
+                                convoTopics: selectedAnswers.convoTopics,
                                 preferredMinAge: selectedAnswers
                                     .preferredMinAge,
                                 preferredMaxAge: selectedAnswers

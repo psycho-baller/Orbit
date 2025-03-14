@@ -31,7 +31,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var friendActivities: [String]?
     //    var interactionPreferences: InteractionPreferencesModel?
     var events: [String]?
-    var topics: [String]?
+    var convoTopics: [String]?
     var preferredMinAge: Int?
     var preferredMaxAge: Int?
     var preferredGender: [UserGender]?
@@ -65,7 +65,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case accountId, username, firstName, lastName, interests, conversations,
             currentAreaId
         case profilePictureUrl, bio, dob
-        case activitiesHobbies, friendActivities, events, topics,
+        case activitiesHobbies, friendActivities, events, convoTopics,
             preferredMinAge, preferredMaxAge, preferredGender, friendshipValues, friendshipQualities
         case requestedMeetups, approvedMeetups
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
@@ -93,7 +93,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         activitiesHobbies: [String]? = nil,
         friendActivities: [String]? = nil,
         events: [String]? = nil,
-        topics: [String]? = nil,
+        convoTopics: [String]? = nil,
         preferredMinAge: Int? = nil,
         preferredMaxAge: Int? = nil,
         preferredGender: [UserGender]? = nil,
@@ -137,7 +137,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.activitiesHobbies = activitiesHobbies
         self.friendActivities = friendActivities
         self.events = events
-        self.topics = topics
+        self.convoTopics = convoTopics
         self.preferredMinAge = preferredMinAge
         self.preferredMaxAge = preferredMaxAge
         self.preferredGender = preferredGender
@@ -193,7 +193,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         activitiesHobbies: [String]? = nil,
         friendActivities: [String]? = nil,
         events: [String]? = nil,
-        topics: [String]? = nil,
+        convoTopics: [String]? = nil,
         preferredMinAge: Int? = nil,
         preferredMaxAge: Int? = nil,
         preferredGender: [UserGender]? = nil,
@@ -229,7 +229,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             activitiesHobbies: activitiesHobbies ?? self.activitiesHobbies,
             friendActivities: friendActivities ?? self.friendActivities,
             events: events ?? self.events,
-            topics: topics ?? self.topics,
+            convoTopics: convoTopics ?? self.convoTopics,
             preferredMinAge: preferredMinAge ?? self.preferredMinAge,
             preferredMaxAge: preferredMaxAge ?? self.preferredMaxAge,
             preferredGender: preferredGender ?? self.preferredGender,
@@ -270,7 +270,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             activitiesHobbies: ["Photography", "Hiking", "Art"],
             friendActivities: ["Creative Collaborator", "Travel Buddy"],
             events: ["Photography Exhibition", "Hiking Trip"],
-            topics: ["Photography", "Hiking", "Art"],
+            convoTopics: ["Photography", "Hiking", "Art"],
             preferredMinAge: 18,
             preferredMaxAge: 30,
             preferredGender: [.man],
@@ -308,7 +308,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             activitiesHobbies: ["Gaming", "Coding", "Music"],
             friendActivities: ["Hobby Buddy", "Deep Conversations"],
             events: ["Tech Meetups", "Hiking Trips"],
-            topics: ["AI", "Space Exploration"],
+            convoTopics: ["AI", "Space Exploration"],
             preferredMinAge: 20,
             preferredMaxAge: 35,
             preferredGender: [.man, .woman],
@@ -336,7 +336,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             activitiesHobbies: ["Yoga", "Reading", "Meditation"],
             friendActivities: ["Workout Partner", "Deep Conversations"],
             events: ["Tech Meetups", "Hiking Trips"],
-            topics: ["AI", "Startups", "Philosophy"],
+            convoTopics: ["AI", "Startups", "Philosophy"],
             preferredMinAge: 20,
             preferredMaxAge: 35,
             preferredGender: [.man, .woman],
@@ -375,7 +375,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             activitiesHobbies: ["Yoga", "Reading", "Meditation"],
             friendActivities: ["Workout Partner", "Deep Conversations"],
             events: ["Tech Meetups", "Hiking Trips"],
-            topics: ["AI", "Startups", "Philosophy"],
+            convoTopics: ["AI", "Startups", "Philosophy"],
             preferredMinAge: 20,
             preferredMaxAge: 35,
             preferredGender: [.man, .woman],
@@ -424,7 +424,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 activitiesHobbies: ["Gaming", "Coding", "Music"],
                 friendActivities: ["Hobby Buddy", "Deep Conversations"],
                 events: ["Tech Meetups", "Hiking Trips"],
-                topics: ["AI", "Space Exploration"],
+                convoTopics: ["AI", "Space Exploration"],
                 preferredMinAge: 20,
                 preferredMaxAge: 35,
                 preferredGender: [.man, .woman],
@@ -454,7 +454,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 activitiesHobbies: ["Yoga", "Reading", "Meditation"],
                 friendActivities: ["Workout Partner", "Deep Conversations"],
                 events: ["Tech Meetups", "Hiking Trips"],
-                topics: ["AI", "Space Exploration"],
+                convoTopics: ["AI", "Space Exploration"],
                 preferredMinAge: 20,
                 preferredMaxAge: 35,
                 preferredGender: [.man, .woman],

@@ -115,7 +115,7 @@ struct ProfilePageView: View {
                     }
 
                     // Interaction Preferences Section
-                    let interactions = (user.events ?? []) + (user.topics ?? [])
+                    let interactions = (user.events ?? []) + (user.convoTopics ?? [])
                     if !interactions.isEmpty {
                         PreferenceSection(
                             title: "Connection Style",

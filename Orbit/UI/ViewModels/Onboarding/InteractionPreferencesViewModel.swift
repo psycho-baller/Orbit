@@ -72,7 +72,7 @@ class InteractionPreferencesViewModel: ObservableObject {
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?
-                            .topics?.contains(title)
+                            .convoTopics?.contains(title)
                             ?? false
                     )
                 }
@@ -158,7 +158,7 @@ class InteractionPreferencesViewModel: ObservableObject {
                 .options
                 .filter { $0.isSelected }
                 .map { $0.title } ?? [],
-            topics:
+            convoTopics:
                 questions
                 .first(where: { $0.text.contains("Which conversation topics") }
                 )?

@@ -22,7 +22,7 @@ func sendNotification() async throws {
         messageId:  ID.unique(),
         title: "[TITLE]",
         body: "[BODY]",
-        // topics: [],  // optional
+        // convoTopics: [],  // optional
         users: [
             "6726b1e615c56d9b9ab5"
         ]
