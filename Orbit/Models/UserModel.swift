@@ -37,7 +37,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var preferredGender: [UserGender]?
     //    var friendshipValues: FriendshipValuesModel?
     var friendshipValues: [String]?
-    var qualities: [String]?
+    var friendshipQualities: [String]?
     var hasCompletedOnboarding: Bool? = false
 
     //    var requestedMeetupIds: [String]?  // Relationship with meetups
@@ -66,7 +66,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             currentAreaId
         case profilePictureUrl, bio, dob
         case activitiesHobbies, friendActivities, events, topics,
-            preferredMinAge, preferredMaxAge, preferredGender, friendshipValues, qualities
+            preferredMinAge, preferredMaxAge, preferredGender, friendshipValues, friendshipQualities
         case requestedMeetups, approvedMeetups
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
         case userLanguages, gender, pronouns, showStarSign, userLinks,
@@ -98,7 +98,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         preferredMaxAge: Int? = nil,
         preferredGender: [UserGender]? = nil,
         friendshipValues: [String]? = nil,
-        qualities: [String]? = nil,
+        friendshipQualities: [String]? = nil,
 
         hasCompletedOnboarding: Bool? = false,
 
@@ -142,7 +142,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.preferredMaxAge = preferredMaxAge
         self.preferredGender = preferredGender
         self.friendshipValues = friendshipValues
-        self.qualities = qualities
+        self.friendshipQualities = friendshipQualities
 
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.showLastOnline = showLastOnline
@@ -198,7 +198,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         preferredMaxAge: Int? = nil,
         preferredGender: [UserGender]? = nil,
         friendshipValues: [String]? = nil,
-        qualities: [String]? = nil,
+        friendshipQualities: [String]? = nil,
         showLastOnline: Bool? = nil,
         showJoinedDate: Bool? = nil,
         showSentReceivedRatio: Bool? = nil,
@@ -234,7 +234,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             preferredMaxAge: preferredMaxAge ?? self.preferredMaxAge,
             preferredGender: preferredGender ?? self.preferredGender,
             friendshipValues: friendshipValues ?? self.friendshipValues,
-            qualities: qualities ?? self.qualities,
+            friendshipQualities: friendshipQualities ?? self.friendshipQualities,
             hasCompletedOnboarding: self.hasCompletedOnboarding,
             showLastOnline: showLastOnline ?? self.showLastOnline,
             showJoinedDate: showJoinedDate ?? self.showJoinedDate,
@@ -275,7 +275,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             preferredMaxAge: 30,
             preferredGender: [.man],
             friendshipValues: ["Authenticity", "Adventure", "Growth"],
-            qualities: ["Open-minded", "Adventurous"],
+            friendshipQualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: true,
             showJoinedDate: true,
@@ -313,7 +313,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             preferredMaxAge: 35,
             preferredGender: [.man, .woman],
             friendshipValues: ["Authenticity", "Adventure", "Growth"],
-            qualities: ["Open-minded", "Adventurous"],
+            friendshipQualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: false,
             showJoinedDate: true,
@@ -341,7 +341,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             preferredMaxAge: 35,
             preferredGender: [.man, .woman],
             friendshipValues: ["Authenticity", "Adventure", "Growth"],
-            qualities: ["Open-minded", "Adventurous"],
+            friendshipQualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: true,
             showJoinedDate: false,
@@ -369,7 +369,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             // interactionPreferences: .mock(),
             // friendshipValues: FriendshipValuesModel(
             //     friendshipValues: ["Personal Growth", "Understanding", "Support"],
-            //     qualities: ["Self-aware", "Calm"]
+            //     friendshipQualities: ["Self-aware", "Calm"]
             // ),
             /// onboarding stuff
             activitiesHobbies: ["Yoga", "Reading", "Meditation"],
@@ -380,7 +380,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             preferredMaxAge: 35,
             preferredGender: [.man, .woman],
             friendshipValues: ["Authenticity", "Adventure", "Growth"],
-            qualities: ["Open-minded", "Adventurous"],
+            friendshipQualities: ["Open-minded", "Adventurous"],
             hasCompletedOnboarding: true,
             showLastOnline: true,
             showJoinedDate: false,
@@ -418,7 +418,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 // interactionPreferences: .mock(),
                 // friendshipValues: FriendshipValuesModel(
                 //     friendshipValues: ["Loyalty", "Shared Interests", "Fun"],
-                //     qualities: ["Tech-savvy", "Analytical"]
+                //     friendshipQualities: ["Tech-savvy", "Analytical"]
                 // ),
                 /// onboarding stuff
                 activitiesHobbies: ["Gaming", "Coding", "Music"],
@@ -429,7 +429,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 preferredMaxAge: 35,
                 preferredGender: [.man, .woman],
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
-                qualities: ["Open-minded", "Adventurous"],
+                friendshipQualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true
             ),
             UserModel(
@@ -448,7 +448,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 // interactionPreferences: .mock(),
                 // friendshipValues: FriendshipValuesModel(
                 //     friendshipValues: ["Personal Growth", "Understanding", "Support"],
-                //     qualities: ["Self-aware", "Calm"]
+                //     friendshipQualities: ["Self-aware", "Calm"]
                 // ),
                 /// onboarding stuff
                 activitiesHobbies: ["Yoga", "Reading", "Meditation"],
@@ -459,7 +459,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 preferredMaxAge: 35,
                 preferredGender: [.man, .woman],
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
-                qualities: ["Open-minded", "Adventurous"],
+                friendshipQualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true
             ),
         ]

@@ -138,7 +138,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         preferredMaxAge: Int? = nil,
         preferredGender: [UserGender]? = nil,
         friendshipValues: [String]? = nil,
-        qualities: [String]? = nil,
+        friendshipQualities: [String]? = nil,
         bio: String? = nil,
         dob: Date? = nil,
         showStarSign: Bool? = nil,
@@ -185,7 +185,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         currentUser.preferredGender =
             preferredGender ?? currentUser.preferredGender
         currentUser.friendshipValues = friendshipValues ?? currentUser.friendshipValues
-        currentUser.qualities = qualities ?? currentUser.qualities
+        currentUser.friendshipQualities = friendshipQualities ?? currentUser.friendshipQualities
         currentUser.bio = bio ?? currentUser.bio
         currentUser.intentions = intentions ?? currentUser.intentions
         currentUser.userLanguages = userLanguages ?? currentUser.userLanguages

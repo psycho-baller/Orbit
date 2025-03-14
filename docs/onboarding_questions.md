@@ -42,7 +42,7 @@ Books, Movies, Tech, Philosophy, Psychology, Wellness, Personal Growth, Sports, 
   (public)
 Deep Conversations, Adventure, Humor, Loyalty, Honesty, Kindness, Respect, Similar Interests, Mutual Support
 
-### What qualities do you look for in someone you’d like to meet? - qualities
+### What qualities do you look for in someone you’d like to meet? - friendshipQualities
 
   (public)
 Good Listener, Outgoing, Empathetic, Reliable, Intelligent, Creative, Curious, Funny, Open-Minded, Positive, Thoughtful, Passionate, Ambitious, Adventurous
