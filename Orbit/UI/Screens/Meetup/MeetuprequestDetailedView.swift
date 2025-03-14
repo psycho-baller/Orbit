@@ -142,7 +142,12 @@ struct MeetupRequestDetailedView: View {
                 }
 
                 HStack(spacing: 16) {
-                    Button(action: declineMeetupRequest) {
+                    Button(action: {
+                        Task {
+                            await meetupApprovalVM.declineMeetup(meetupRequest: meetupRequest)
+                            dismiss()
+                        }
+                    }) {
                         HStack {
                             Image(systemName: "xmark.circle.fill")
                             Text("Decline")
@@ -154,6 +159,7 @@ struct MeetupRequestDetailedView: View {
                         .background(Color.red)
                         .cornerRadius(16)
                     }
+                    
                     Button(action: approveMeetupRequest) {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
@@ -173,18 +179,23 @@ struct MeetupRequestDetailedView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "person.crop.circle.badge.xmark")  //Other potential icons: "nosign", "shield.lefthalf.filled"
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme))
-                        #warning(
-                            "TODO: Add block functionality"
-                        )
+                    Menu {
+                                Button(role: .destructive) {
+                                    Task {
+                                        if let userId = meetupRequest.createdByUser?.id {
+                                            await userVM.blockUser(userId: userId)
+                                            dismiss() // Dismiss after blocking
+                                        }
+                                    }
+                                } label: {
+                                    Label("Block User", systemImage: "nosign")
+                                }
+                            } label: {
+                                Image(systemName: "ellipsis.circle") // Three-dot menu
+                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            }
+                        }
                     }
-                }
-            }
 
         }
         .onAppear {
@@ -236,14 +247,7 @@ struct MeetupRequestDetailedView: View {
         }
     }
 
-    private func declineMeetupRequest() {
-        Task {
-            #warning(
-                "TODO: Implement decline functionality"
-            )
-            dismiss()
-        }
-    }
+   
 }
 
 #if DEBUG

@@ -2,12 +2,12 @@ import AppwriteModels
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
     @EnvironmentObject private var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject private var meetupRequestVM: MeetupRequestViewModel
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject private var userVM: UserViewModel
 
     //    @State private var selectedMeetupRequest: MeetupRequestDocument? = nil
     @State private var isShowingChatRequests = false

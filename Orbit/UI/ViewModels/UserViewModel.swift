@@ -41,6 +41,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     @Published var selectedRadius: Double = 10.0
     @Published var isOnCampus = false  // Track if the user is inside campus
     @Published var allUsers: [UserModel] = []
+    @Published var blockedUsers: Set<String> = []
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -51,6 +52,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     var lastFetchedAreaId: String?
     var lastFetchedTimestamp: Date?
     private var subscribeToLocationUpdates: RealtimeSubscription?
+    private let appwriteService = AppwriteService.shared
 
     init(
         campusLocationManager: CampusLocationManager = CampusLocationManager()
@@ -73,6 +75,57 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         //        await subscribeToRealtimeUpdates()
         //                self.allUsers = await getAllUsers()
         // await fetchAllUsernames()
+        await fetchBlockedUsers()
+    }
+    @MainActor
+    func fetchBlockedUsers() async {
+        do {
+            let blockedUsersList = try await appwriteService.databases.listDocuments(
+                databaseId: "orbit",
+                collectionId: "blockedUsers"
+            )
+            let blockedIds = blockedUsersList.documents.compactMap { document in
+                document.data["blockedUserId"].map {String(describing: $0)}
+                        }
+                
+            // Update local blockedUsers list
+            self.blockedUsers = Set(blockedIds)
+
+            print("Fetched blocked users: \(self.blockedUsers)")
+        } catch {
+            print("Error fetching blocked users: \(error.localizedDescription)")
+        }
+    }
+    
+    func isUserBlocked(userId: String) -> Bool {
+        return blockedUsers.contains(userId)
+    }
+
+    @MainActor
+    func blockUser(userId: String) async {
+        guard !blockedUsers.contains(userId) else {
+            print("User is already blocked.")
+            return
+        }
+
+        do {
+            // Store the blocked user in the Appwrite database
+            let createdDocument = try await appwriteService.databases.createDocument(
+                databaseId: "orbit",
+                collectionId: "blockedUsers",
+                documentId: ID.unique(),
+                data: ["blockedUserId": userId, "blockingUserId": currentUser?.id ?? ""]
+            )
+            
+            print("Block entry created with ID:\(createdDocument)")
+
+            // Update local state
+            self.blockedUsers.insert(userId)
+
+            print("User \(userId) has been blocked.")
+        } catch {
+            print("Error blocking user: \(error)")
+        }
     }
 
     @MainActor
@@ -637,6 +690,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             self.error = error.localizedDescription
         }
     }
+    
 
     @MainActor
     func handleRealtimeUserUpdate(_ updatedUser: UserModel) {
