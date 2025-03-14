@@ -9,10 +9,11 @@ import SwiftUI
 
 struct OnboardingFlow: View {
     @StateObject private var viewModel = OnboardingViewModel()
+    @EnvironmentObject private var userVM: UserViewModel
 
     var body: some View {
         NavigationStack(path: $viewModel.navigationPath) {
-            WelcomeView(viewModel: viewModel)
+            IntentionView(viewModel: viewModel)
                 .navigationDestination(
                     for: OnboardingViewModel.OnboardingStep.self
                 ) { step in
@@ -25,14 +26,16 @@ struct OnboardingFlow: View {
                         InteractionPreferencesView(onboardingVM: viewModel)
                     case .friendshipValues:
                         FriendshipValuesView(onboardingVM: viewModel)
-                    case .languages:
-                        LanguagesView(viewModel: viewModel)
-                    case .genderPronouns:
-                        GenderPronounsView(viewModel: viewModel)
-                    case .dobAndStarSign:
-                        DOBAndStarSignView(viewModel: viewModel)
-                    case .userLinks:
-                        UserLinksView(viewModel: viewModel)
+                    //                    case .languages:
+                    //                        LanguagesView(viewModel: viewModel)
+                    //                    case .genderPronouns:
+                    //                        GenderPronounsView(viewModel: viewModel)
+                    //                    case .dobAndStarSign:
+                    //                        DOBAndStarSignView(viewModel: viewModel)
+                    case .userInfo:
+                        UserInfoView(onboardingVM: viewModel)
+                    //                    case .userLinks:
+                    //                        UserLinksView(viewModel: viewModel)
                     //                    case .complete:
                     //                        CompleteView(viewModel: viewModel)
                     default:

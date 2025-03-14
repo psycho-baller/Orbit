@@ -96,7 +96,7 @@ struct FriendshipValuesView: View {
                         let selectedAnswers = viewModel.getFriendshipValues()
                         onboardingVM.navigationPath.append(
                             OnboardingViewModel.OnboardingStep
-                                .languages)
+                                .userInfo)
                         Task {
                             await userVM.saveOnboardingData(
                                 friendshipValues: selectedAnswers

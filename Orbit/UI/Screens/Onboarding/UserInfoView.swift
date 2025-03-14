@@ -102,11 +102,11 @@ struct UserInfoView: View {
                 // Always visible footer button
                 VStack {
                     Button(action: {
-                        onboardingVM.navigationPath.append(
-                            OnboardingViewModel.OnboardingStep.personalPreferences)
+//                        onboardingVM.navigationPath.append(
+//                            OnboardingViewModel.OnboardingStep.complete)
                         Task {
                             await userVM.saveOnboardingData(
-                                bio: viewModel.bio, dob: viewModel.dateOfBirth)
+                                bio: viewModel.bio, dob: viewModel.dateOfBirth, markComplete: true)
                         }
                     }) {
                         Text("Next")

@@ -15,7 +15,7 @@ class OnboardingViewModel: ObservableObject {
 
     // Define each step of the onboarding flow
     enum OnboardingStep: String, CaseIterable, Hashable {
-        case welcome
+//        case welcome
         case intention                // What brings you to Orbit?
         case personalPreferences      // Combined screen for personal preferences questions
         case interactionPreferences   // Combined screen for interaction questions
