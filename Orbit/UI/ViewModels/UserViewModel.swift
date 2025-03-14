@@ -136,11 +136,11 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         bio: String? = nil,
         dob: Date? = nil,
         showStarSign: Bool? = nil,
-        intentions: [UserIntention]? = [],
-        userLanguages: [UserLanguageModel]? = [],
-        userLinks: [UserLinkModel]? = [],
+        intentions: [UserIntention]? = nil,
+        userLanguages: [UserLanguageModel]? = nil,
+        userLinks: [UserLinkModel]? = nil,
         gender: UserGender? = nil,
-        pronouns: [UserPronouns] = [],
+        pronouns: [UserPronouns]? = nil,
         markComplete: Bool = false
     ) async {
         guard var currentUser = currentUser else {
