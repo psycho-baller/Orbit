@@ -30,7 +30,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var activitiesHobbies: [String]?
     var friendActivities: [String]?
     //    var interactionPreferences: InteractionPreferencesModel?
-    var events: [String]?
+    var preferredMeetupType: [String]?
     var convoTopics: [String]?
     var preferredMinAge: Int?
     var preferredMaxAge: Int?
@@ -65,7 +65,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case accountId, username, firstName, lastName, interests, conversations,
             currentAreaId
         case profilePictureUrl, bio, dob
-        case activitiesHobbies, friendActivities, events, convoTopics,
+        case activitiesHobbies, friendActivities, preferredMeetupType, convoTopics,
             preferredMinAge, preferredMaxAge, preferredGender, friendshipValues, friendshipQualities
         case requestedMeetups, approvedMeetups
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
@@ -92,7 +92,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         /// onboarding stuff
         activitiesHobbies: [String]? = nil,
         friendActivities: [String]? = nil,
-        events: [String]? = nil,
+        preferredMeetupType: [String]? = nil,
         convoTopics: [String]? = nil,
         preferredMinAge: Int? = nil,
         preferredMaxAge: Int? = nil,
@@ -136,7 +136,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         /// onboarding stuff
         self.activitiesHobbies = activitiesHobbies
         self.friendActivities = friendActivities
-        self.events = events
+        self.preferredMeetupType = preferredMeetupType
         self.convoTopics = convoTopics
         self.preferredMinAge = preferredMinAge
         self.preferredMaxAge = preferredMaxAge
@@ -192,7 +192,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         /// onboarding stuff
         activitiesHobbies: [String]? = nil,
         friendActivities: [String]? = nil,
-        events: [String]? = nil,
+        preferredMeetupType: [String]? = nil,
         convoTopics: [String]? = nil,
         preferredMinAge: Int? = nil,
         preferredMaxAge: Int? = nil,
@@ -228,7 +228,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             /// onboarding stuff
             activitiesHobbies: activitiesHobbies ?? self.activitiesHobbies,
             friendActivities: friendActivities ?? self.friendActivities,
-            events: events ?? self.events,
+            preferredMeetupType: preferredMeetupType ?? self.preferredMeetupType,
             convoTopics: convoTopics ?? self.convoTopics,
             preferredMinAge: preferredMinAge ?? self.preferredMinAge,
             preferredMaxAge: preferredMaxAge ?? self.preferredMaxAge,
@@ -269,7 +269,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             /// onboarding stuff
             activitiesHobbies: ["Photography", "Hiking", "Art"],
             friendActivities: ["Creative Collaborator", "Travel Buddy"],
-            events: ["Photography Exhibition", "Hiking Trip"],
+            preferredMeetupType: ["Photography Exhibition", "Hiking Trip"],
             convoTopics: ["Photography", "Hiking", "Art"],
             preferredMinAge: 18,
             preferredMaxAge: 30,
@@ -307,7 +307,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             /// onboarding stuff
             activitiesHobbies: ["Gaming", "Coding", "Music"],
             friendActivities: ["Hobby Buddy", "Deep Conversations"],
-            events: ["Tech Meetups", "Hiking Trips"],
+            preferredMeetupType: ["Tech Meetups", "Hiking Trips"],
             convoTopics: ["AI", "Space Exploration"],
             preferredMinAge: 20,
             preferredMaxAge: 35,
@@ -335,7 +335,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             /// onboarding stuff
             activitiesHobbies: ["Yoga", "Reading", "Meditation"],
             friendActivities: ["Workout Partner", "Deep Conversations"],
-            events: ["Tech Meetups", "Hiking Trips"],
+            preferredMeetupType: ["Tech Meetups", "Hiking Trips"],
             convoTopics: ["AI", "Startups", "Philosophy"],
             preferredMinAge: 20,
             preferredMaxAge: 35,
@@ -374,7 +374,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             /// onboarding stuff
             activitiesHobbies: ["Yoga", "Reading", "Meditation"],
             friendActivities: ["Workout Partner", "Deep Conversations"],
-            events: ["Tech Meetups", "Hiking Trips"],
+            preferredMeetupType: ["Tech Meetups", "Hiking Trips"],
             convoTopics: ["AI", "Startups", "Philosophy"],
             preferredMinAge: 20,
             preferredMaxAge: 35,
@@ -423,7 +423,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 /// onboarding stuff
                 activitiesHobbies: ["Gaming", "Coding", "Music"],
                 friendActivities: ["Hobby Buddy", "Deep Conversations"],
-                events: ["Tech Meetups", "Hiking Trips"],
+                preferredMeetupType: ["Tech Meetups", "Hiking Trips"],
                 convoTopics: ["AI", "Space Exploration"],
                 preferredMinAge: 20,
                 preferredMaxAge: 35,
@@ -453,7 +453,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 /// onboarding stuff
                 activitiesHobbies: ["Yoga", "Reading", "Meditation"],
                 friendActivities: ["Workout Partner", "Deep Conversations"],
-                events: ["Tech Meetups", "Hiking Trips"],
+                preferredMeetupType: ["Tech Meetups", "Hiking Trips"],
                 convoTopics: ["AI", "Space Exploration"],
                 preferredMinAge: 20,
                 preferredMaxAge: 35,

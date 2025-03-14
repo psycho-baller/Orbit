@@ -8,20 +8,20 @@
 import Foundation
 
 struct InteractionPreferencesModel: Codable, Equatable {
-    let events: [String]?
+    let preferredMeetupType: [String]?
     let convoTopics: [String]?
     let preferredMinAge: Int?
     let preferredMaxAge: Int?
     let preferredGender: [UserGender]?
 
     //    init(
-    //        events: [String]? = nil,
+    //        preferredMeetupType: [String]? = nil,
     //        convoTopics: [String]? = nil,
     //        preferredMinAge: Int? = nil,
     //        preferredMaxAge: Int? = nil,
     //        preferredGender: UserGender? = nil
     //    ) {
-    //        self.events = events
+    //        self.preferredMeetupType = preferredMeetupType
     //        self.convoTopics = convoTopics
     //        self.preferredMinAge = preferredMinAge
     //        self.preferredMaxAge = preferredMaxAge
@@ -30,7 +30,7 @@ struct InteractionPreferencesModel: Codable, Equatable {
 
     static func mock() -> Self {
         return .init(
-            events: ["Tech Conferences", "Hackathons"],
+            preferredMeetupType: ["Tech Conferences", "Hackathons"],
             convoTopics: ["AI", "Space Exploration"],
             preferredMinAge: 18,
             preferredMaxAge: 25,

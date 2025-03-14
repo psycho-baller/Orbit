@@ -132,7 +132,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     func saveOnboardingData(
         activitiesHobbies: [String]? = nil,
         friendActivities: [String]? = nil,
-        events: [String]? = nil,
+        preferredMeetupType: [String]? = nil,
         convoTopics: [String]? = nil,
         preferredMinAge: Int? = nil,
         preferredMaxAge: Int? = nil,
@@ -176,7 +176,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             activitiesHobbies ?? currentUser.activitiesHobbies
         currentUser.friendActivities =
             friendActivities ?? currentUser.friendActivities
-        currentUser.events = events ?? currentUser.events
+        currentUser.preferredMeetupType = preferredMeetupType ?? currentUser.preferredMeetupType
         currentUser.convoTopics = convoTopics ?? currentUser.convoTopics
         currentUser.preferredMinAge =
             preferredMinAge ?? currentUser.preferredMinAge

@@ -32,7 +32,7 @@ class InteractionPreferencesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.events?.contains(title)
+                        isSelected: currentUser?.preferredMeetupType?.contains(title)
                             ?? false
                     )
                 }
@@ -152,7 +152,7 @@ class InteractionPreferencesViewModel: ObservableObject {
 
     func getInteractionPreferences() -> InteractionPreferencesModel {
         return InteractionPreferencesModel(
-            events:
+            preferredMeetupType:
                 questions
                 .first(where: { $0.text.contains("Which activities") })?
                 .options

@@ -25,7 +25,7 @@ Workout Partner, Study Partner, Hobby Buddy, Group Hangouts, Deep Conversations,
 
 ## interactionPreferences
 
-### Which activities would you enjoy doing with other Astronauts? - events
+### Which activities would you enjoy doing with other Astronauts? - preferredMeetupType
 
   (public)
 Grab a coffee together, Share a meal, Enjoy hobbies together, Try an outdoor adventure, Play or participate in sports activities, Practice speaking a new language
