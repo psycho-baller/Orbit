@@ -97,6 +97,11 @@
 		25DC75002CC0522300731939 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25DC74F72CC0522300731939 /* Poppins-SemiBold.ttf */; };
 		25E1ABC12CD004F500F27722 /* CampusLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E1ABC02CD004F500F27722 /* CampusLocationManagerDelegate.swift */; };
 		25E1ABC32CD00FAD00F27722 /* AreaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E1ABC22CD00FAD00F27722 /* AreaModel.swift */; };
+		25E829412D84EE27009D49CE /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E829402D84EE27009D49CE /* ChatModel.swift */; };
+		25E829432D84EE36009D49CE /* ChatMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E829422D84EE36009D49CE /* ChatMessageModel.swift */; };
+		25E829452D84F1EF009D49CE /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E829442D84F1EF009D49CE /* ChatService.swift */; };
+		25E829472D84F2E0009D49CE /* ChatMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E829462D84F2E0009D49CE /* ChatMessageService.swift */; };
+		25E829492D84F39C009D49CE /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E829482D84F39C009D49CE /* ChatViewModel.swift */; };
 		25ECBA1C2CD0390600256104 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECBA1B2CD0390600256104 /* DataLoader.swift */; };
 		25ECBA1E2CD03A0A00256104 /* CleanedUofCLocationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 25ECBA1D2CD03A0A00256104 /* CleanedUofCLocationData.json */; };
 		25ECBA202CD1B1F300256104 /* UserLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */; };
@@ -233,6 +238,11 @@
 		25DC74F82CC0522300731939 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25E1ABC02CD004F500F27722 /* CampusLocationManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusLocationManagerDelegate.swift; sourceTree = "<group>"; };
 		25E1ABC22CD00FAD00F27722 /* AreaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaModel.swift; sourceTree = "<group>"; };
+		25E829402D84EE27009D49CE /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
+		25E829422D84EE36009D49CE /* ChatMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageModel.swift; sourceTree = "<group>"; };
+		25E829442D84F1EF009D49CE /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		25E829462D84F2E0009D49CE /* ChatMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageService.swift; sourceTree = "<group>"; };
+		25E829482D84F39C009D49CE /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		25ECBA1B2CD0390600256104 /* DataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		25ECBA1D2CD03A0A00256104 /* CleanedUofCLocationData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CleanedUofCLocationData.json; sourceTree = "<group>"; };
 		25ECBA1F2CD1B1F300256104 /* UserLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationModel.swift; sourceTree = "<group>"; };
@@ -299,6 +309,8 @@
 		259CB2782CC0460400C9F285 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				25E829462D84F2E0009D49CE /* ChatMessageService.swift */,
+				25E829442D84F1EF009D49CE /* ChatService.swift */,
 				255A67FF2D83833F009CFF3F /* CloudFunctionsService.swift */,
 				257454B82D67C4D500C7747F /* MeetupApprovalService.swift */,
 				257454B22D67BC2600C7747F /* MeetupRequestService.swift */,
@@ -329,6 +341,7 @@
 		259CB2842CC0465600C9F285 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				25E829482D84F39C009D49CE /* ChatViewModel.swift */,
 				257454B62D67C4B700C7747F /* MeetupApprovalViewModel.swift */,
 				257454B02D67BB1B00C7747F /* MeetupRequestViewModel.swift */,
 				00ACBBB32D0B80C9008F321C /* Onboarding */,
@@ -408,6 +421,8 @@
 		259CB2A12CC046F300C9F285 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				25E829422D84EE36009D49CE /* ChatMessageModel.swift */,
+				25E829402D84EE27009D49CE /* ChatModel.swift */,
 				2512755E2D6BDB2400BB1FCB /* UserLanguageModel.swift */,
 				2512755C2D6BD9DC00BB1FCB /* UserLinkModel.swift */,
 				257454AE2D67AED400C7747F /* MeetupRequestModel.swift */,
@@ -697,6 +712,7 @@
 				0088BFE32CD890B2002B4B9D /* InboxView.swift in Sources */,
 				259CB2942CC0465600C9F285 /* UserViewModel.swift in Sources */,
 				000AE7452CD5F3BA00431CDB /* MessageView.swift in Sources */,
+				25E829472D84F2E0009D49CE /* ChatMessageService.swift in Sources */,
 				252746E62CE82AC800365712 /* MeetUpRequestDetailsView.swift in Sources */,
 				259CB29B2CC0465600C9F285 /* AppwriteLogo.swift in Sources */,
 				259CB29A2CC0465600C9F285 /* ContentView.swift in Sources */,
@@ -705,6 +721,7 @@
 				257454B72D67C4B700C7747F /* MeetupApprovalViewModel.swift in Sources */,
 				25B823A22D1346D0007F63B6 /* FriendshipValuesModel.swift in Sources */,
 				619993D12D13D09000440533 /* ProfilePageView.swift in Sources */,
+				25E829412D84EE27009D49CE /* ChatModel.swift in Sources */,
 				257454B92D67C4D500C7747F /* MeetupApprovalService.swift in Sources */,
 				257454AF2D67AED400C7747F /* MeetupRequestModel.swift in Sources */,
 				258B23FB2D6A90CB00B987F3 /* UserDetailsView.swift in Sources */,
@@ -720,6 +737,7 @@
 				25F1BDAF2CF2656B0036D7E1 /* NotificationService.swift in Sources */,
 				61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */,
 				259CB2AA2CC0486D00C9F285 /* OrbitApp.swift in Sources */,
+				25E829452D84F1EF009D49CE /* ChatService.swift in Sources */,
 				258769852CF4CAC900D4D4EA /* NoUsersAroundView.swift in Sources */,
 				259CB2A02CC0465600C9F285 /* ErrorView.swift in Sources */,
 				259CB2972CC0465600C9F285 /* LoginView.swift in Sources */,
@@ -783,6 +801,8 @@
 				AE36B86D2CF2D79B00C7078F /* ProfileQuestionsModel.swift in Sources */,
 				61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */,
 				2553B44E2CF019E500E14E2B /* (null) in Sources */,
+				25E829492D84F39C009D49CE /* ChatViewModel.swift in Sources */,
+				25E829432D84EE36009D49CE /* ChatMessageModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

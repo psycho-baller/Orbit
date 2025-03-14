@@ -16,23 +16,20 @@ struct MeetupApprovalModel: Codable, Equatable, CodableDictionaryConvertible {
     let approvedByUser: UserModel?
     //    let meetupRequestId: String
     let meetupRequest: MeetupRequestModel?
-    let firstMessage: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"  // Maps Appwrite's `$id` to `id`
-        case approvedByUser, meetupRequest, firstMessage
+        case approvedByUser, meetupRequest
     }
 
     init(
         id: String = UUID().uuidString,  // Generates a random ID if not provided
         approvedByUser: UserModel?,
-        meetupRequest: MeetupRequestModel?,
-        firstMessage: String? = ""
+        meetupRequest: MeetupRequestModel?
     ) {
         self.id = id
         self.approvedByUser = approvedByUser
         self.meetupRequest = meetupRequest
-        self.firstMessage = firstMessage
     }
     static func mock() -> Self {
         return .init(
@@ -40,8 +37,7 @@ struct MeetupApprovalModel: Codable, Equatable, CodableDictionaryConvertible {
             //            approvedByUserId: "",
             approvedByUser: .mock(),
             //            meetupRequestId: "",
-            meetupRequest: .mock(),
-            firstMessage: "Looking forward to this!"
+            meetupRequest: .mock()
         )
     }
     // var id: String {
