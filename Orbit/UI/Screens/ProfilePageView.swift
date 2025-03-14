@@ -124,11 +124,11 @@ struct ProfilePageView: View {
                     }
 
                     // Friendship Values Section
-                    let values = (user.values ?? []) + (user.qualities ?? [])
-                    if !values.isEmpty {
+                    let friendshipValues = (user.friendshipValues ?? []) + (user.qualities ?? [])
+                    if !friendshipValues.isEmpty {
                         PreferenceSection(
                             title: "Friendship Values",
-                            items: values
+                            items: friendshipValues
                         )
                     }
                 }

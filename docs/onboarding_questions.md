@@ -37,7 +37,7 @@ Books, Movies, Tech, Philosophy, Psychology, Wellness, Personal Growth, Sports, 
 
 ## friendshipValues
 
-### What do you value most in a friendship? - values
+### What do you value most in a friendship? - friendshipValues
 
   (public)
 Deep Conversations, Adventure, Humor, Loyalty, Honesty, Kindness, Respect, Similar Interests, Mutual Support
@@ -48,6 +48,7 @@ Deep Conversations, Adventure, Humor, Loyalty, Honesty, Kindness, Respect, Simil
 Good Listener, Outgoing, Empathetic, Reliable, Intelligent, Creative, Curious, Funny, Open-Minded, Positive, Thoughtful, Passionate, Ambitious, Adventurous
 
 ## What are some languages you speak or are interested in learning? - [userLanguages: String]
+
   (later)
 
 ```json

@@ -31,7 +31,7 @@ class FriendshipValuesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.values?
+                        isSelected: currentUser?.friendshipValues?
                             .contains(
                                 title)
                             ?? false
@@ -80,7 +80,7 @@ class FriendshipValuesViewModel: ObservableObject {
 
     func getFriendshipValues() -> FriendshipValuesModel {
         return FriendshipValuesModel(
-            values:
+            friendshipValues:
                 questions
                 .first(where: { $0.text.contains("value most") })?
                 .options

@@ -137,7 +137,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         preferredMinAge: Int? = nil,
         preferredMaxAge: Int? = nil,
         preferredGender: [UserGender]? = nil,
-        values: [String]? = nil,
+        friendshipValues: [String]? = nil,
         qualities: [String]? = nil,
         bio: String? = nil,
         dob: Date? = nil,
@@ -184,7 +184,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             preferredMaxAge ?? currentUser.preferredMaxAge
         currentUser.preferredGender =
             preferredGender ?? currentUser.preferredGender
-        currentUser.values = values ?? currentUser.values
+        currentUser.friendshipValues = friendshipValues ?? currentUser.friendshipValues
         currentUser.qualities = qualities ?? currentUser.qualities
         currentUser.bio = bio ?? currentUser.bio
         currentUser.intentions = intentions ?? currentUser.intentions
