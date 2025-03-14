@@ -134,9 +134,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         friendActivities: [String]? = nil,
         preferredMeetupType: [String]? = nil,
         convoTopics: [String]? = nil,
-        preferredMinAge: Int? = nil,
-        preferredMaxAge: Int? = nil,
-        preferredGender: [UserGender]? = nil,
+//        preferredMinAge: Int? = nil,
+//        preferredMaxAge: Int? = nil,
+//        preferredGender: [UserGender]? = nil,
         friendshipValues: [String]? = nil,
         friendshipQualities: [String]? = nil,
         bio: String? = nil,
@@ -178,12 +178,12 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             friendActivities ?? currentUser.friendActivities
         currentUser.preferredMeetupType = preferredMeetupType ?? currentUser.preferredMeetupType
         currentUser.convoTopics = convoTopics ?? currentUser.convoTopics
-        currentUser.preferredMinAge =
-            preferredMinAge ?? currentUser.preferredMinAge
-        currentUser.preferredMaxAge =
-            preferredMaxAge ?? currentUser.preferredMaxAge
-        currentUser.preferredGender =
-            preferredGender ?? currentUser.preferredGender
+//        currentUser.preferredMinAge =
+//            preferredMinAge ?? currentUser.preferredMinAge
+//        currentUser.preferredMaxAge =
+//            preferredMaxAge ?? currentUser.preferredMaxAge
+//        currentUser.preferredGender =
+//            preferredGender ?? currentUser.preferredGender
         currentUser.friendshipValues = friendshipValues ?? currentUser.friendshipValues
         currentUser.friendshipQualities = friendshipQualities ?? currentUser.friendshipQualities
         currentUser.bio = bio ?? currentUser.bio

@@ -51,7 +51,7 @@ struct IntentionView: View {
                 Button(action: {
                     viewModel.navigationPath.append(
                         OnboardingViewModel.OnboardingStep
-                            .interactionPreferences)
+                            .personalPreferences)
 
                     Task {
                         await userVM.saveOnboardingData(
