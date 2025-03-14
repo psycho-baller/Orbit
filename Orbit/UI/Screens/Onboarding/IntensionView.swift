@@ -14,15 +14,15 @@ struct IntentionView: View {
 
     // All possible intentions from your enum
     @State private var availableintentions: [String] = UserIntention.allCases
-        .map { $0.rawValue }
+        .map { $0.description }
     // Basket items (user’s ordered priorities)
     @State private var selectedintentions: [UserIntention] = []
     private var selectedintentionsString: Binding<[String]> {
         Binding<[String]>(
-            get: { selectedintentions.map { $0.rawValue } },
+            get: { selectedintentions.map { $0.description } },
             set: { newValues in
                 selectedintentions = newValues.compactMap {
-                    UserIntention(rawValue: $0)
+                    UserIntention(description: $0)
                 }
             }
         )
@@ -76,7 +76,7 @@ struct IntentionView: View {
                 //                .padding(.bottom, -10)
             }
         }
-//        .navigationTitle("What brings you to Orbit?")
+        //        .navigationTitle("What brings you to Orbit?")
         //        .toolbar {
         //            ToolbarItem(placement: .principal) {
         //                Text("Your Custom Title")
@@ -84,6 +84,21 @@ struct IntentionView: View {
         //            }
         //        }
         .background(ColorPalette.background(for: colorScheme))
+        .onAppear {
+            if let userIntentions = userVM.currentUser?.intentions {
+                selectedintentions = userIntentions.compactMap {
+                    print(
+                        "$0.rawValue: \($0.rawValue), \(String(describing: UserIntention(rawValue: $0.rawValue)))"
+                    )
+                    return UserIntention(rawValue: $0.rawValue)
+                }
+                // remove these intentions from the available list
+                availableintentions.removeAll {
+                    selectedintentions.map { $0.description }.contains($0)
+                }
+
+            }
+        }
     }
 
     //    canProceed
@@ -96,6 +111,7 @@ struct IntentionView: View {
 #Preview {
     NavigationView {
         IntentionView(viewModel: .init())
+            .environmentObject(UserViewModel.mock())
     }
     .navigationBarTitleDisplayMode(.inline)
 

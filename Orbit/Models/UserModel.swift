@@ -147,6 +147,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             json.removeValue(forKey: "$id")  // ✅ Remove Appwrite's `$id`
         }
 
+        // Convert `intentions` enum list to a short-form array of strings
+        if let userIntentions = self.intentions {
+            json["intentions"] = userIntentions.map { $0.rawValue }
+        }
+
         return json
     }
 
@@ -412,11 +417,34 @@ enum UserPronouns: String, Codable {
 }
 
 enum UserIntention: String, Codable, CaseIterable {
-    case hobbies = "Making friends who share my interests and hobbies"
-    case conversations = "Having meaningful conversations and deep discussions"
-    case friendships = "Building long-term friendships"
-    case dating = "Exploring romantic relationships"
-    case exploring = "Idk, I'm just a chill guy"
+    case hobbies = "hobbies"
+    case conversations = "conversations"
+    case friendships = "friendships"
+    case dating = "dating"
+    case exploring = "exploring"
+
+    /// Display-friendly description
+    var description: String {
+        switch self {
+        case .hobbies:
+            return "Making friends who share my interests and hobbies"
+        case .conversations:
+            return "Having meaningful conversations and deep discussions"
+        case .friendships: return "Building long-term friendships"
+        case .dating: return "Exploring romantic relationships"
+        case .exploring: return "Idk, I'm just a chill guy"
+        }
+    }
+    init?(description: String) {
+        guard
+            let match = UserIntention.allCases.first(where: {
+                $0.description == description
+            })
+        else {
+            return nil
+        }
+        self = match
+    }
 }
 
 typealias UserDocument = AppwriteModels.Document<UserModel>
