@@ -50,6 +50,7 @@ struct OrbitApp: App {
             .font: UIFont.systemFont(ofSize: 24, weight: .bold),
         ]
         UINavigationBar.appearance().scrollEdgeAppearance = scrollEdgeAppearance
+        
     }
 
     var body: some Scene {
@@ -59,7 +60,7 @@ struct OrbitApp: App {
                 .environmentObject(authVM)
                 .environmentObject(userVM)
                 .environmentObject(msgVM)
-                .environmentObject(chatRequestVM)
+                 .environmentObject(chatRequestVM)
                 .environmentObject(meetupRequestVM)
                 .environmentObject(meetupApprovalVM)
                 .environmentObject(appDelegate.appState)

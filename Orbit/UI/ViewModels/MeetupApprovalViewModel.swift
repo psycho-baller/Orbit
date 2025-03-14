@@ -83,25 +83,31 @@ class MeetupApprovalViewModel: ObservableObject {
             )
         }
     }
+    /// Declines (removes) a meetup approval request
+    func declineMeetup(meetupRequest: MeetupRequestModel) async {
+        isLoading = true
+        defer { isLoading = false }
 
-    /// Reject (or remove) a meetup approval
-    //    func removeApproval(_ approval: MeetupApprovalModel) async {
-    //        isLoading = true
-    //        defer { isLoading = false }
-    //
-    //        do {
-    //            try await meetupApprovalService.deleteApproval(
-    //                approvalId: approval.meetupRequest.title)
-    //            self.approvals.removeAll {
-    //                $0.meetupRequest.title == approval.meetupRequest.title
-    //            }
-    //        } catch {
-    //            self.error = error.localizedDescription
-    //            print(
-    //                "MeetupApprovalViewModel - removeApproval: Error: \(error.localizedDescription)"
-    //            )
-    //        }
-    //    }
+        do {
+            // Find the approval linked to this meetup request
+            if let approval = approvals.first(where: { $0.data.meetupRequest?.id == meetupRequest.id }) {
+                // Call the service to delete it
+                try await meetupApprovalService.deleteApproval(approvalId: approval.id)
+
+                // Update UI by removing the declined approval
+                await MainActor.run {
+                    self.approvals.removeAll { $0.id == approval.id }
+                }
+
+                print("Successfully declined meetup request.")
+            } else {
+                print("Error: Approval not found for meetup request \(meetupRequest.id)")
+            }
+        } catch {
+            self.error = error.localizedDescription
+            print("MeetupApprovalViewModel - declineMeetup: Error: \(error.localizedDescription)")
+        }
+    }
 
     #if DEBUG
         static func mock() -> MeetupApprovalViewModel {
@@ -113,3 +119,4 @@ class MeetupApprovalViewModel: ObservableObject {
         }
     #endif
 }
+

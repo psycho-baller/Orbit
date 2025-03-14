@@ -86,19 +86,19 @@ class MeetupApprovalService: MeetupApprovalServiceProtocol {
     }
 
     // Delete an approval
-    func deleteApproval(approvalId: String) async throws {
-        do {
-            try await appwriteService.databases.deleteDocument(
-                databaseId: appwriteService.databaseId,
-                collectionId: collectionId,
-                documentId: approvalId
-            )
-        } catch {
-            throw NSError(
-                domain: "Failed to delete approval", code: 500, userInfo: nil)
+        func deleteApproval(approvalId: String) async throws {
+            do {
+                let result = try await appwriteService.databases.deleteDocument(
+                    databaseId: appwriteService.databaseId,
+                    collectionId: collectionId,
+                    documentId: approvalId
+                )
+            } catch {
+                throw NSError(
+                    domain: "Failed to delete approval", code: 500, userInfo: nil)
+            }
         }
-    }
-
+    
     // List all approvals
     func listApprovals(queries: [String]? = nil) async throws
         -> [MeetupApprovalDocument]

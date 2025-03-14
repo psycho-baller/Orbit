@@ -18,8 +18,9 @@ class MeetupRequestViewModel: ObservableObject {
 
     private var meetupService: MeetupRequestServiceProtocol =
         MeetupRequestService()
-
-    init() {
+    private var userVM: UserViewModel
+    
+    init(userVM: UserViewModel) {
         if !isPreviewMode {
             Task {
                 await fetchAllMeetups()
@@ -35,13 +36,17 @@ class MeetupRequestViewModel: ObservableObject {
         do {
             let meetups = try await meetupService.listMeetups(queries: nil)
             self.meetupRequests = meetups
-        } catch {
-            self.error = error.localizedDescription
-            print(
-                "MeetupRequestViewModel - fetchAllMeetups: Error: \(error.localizedDescription)"
-            )
-        }
-    }
+            await MainActor.run {
+                        self.meetupRequests = meetups.filter { request in
+                            guard let userId = request.data.createdByUser?.id else { return true }
+                            return !userVM.isUserBlocked(userId: userId)
+                        }
+                    }
+                } catch {
+                    self.error = error.localizedDescription
+                    print("MeetupRequestViewModel - fetchAllMeetups: Error: \(error.localizedDescription)")
+                }
+            }
 
     /// Fetch a specific meetup by ID
     func fetchMeetup(by id: String) async {
