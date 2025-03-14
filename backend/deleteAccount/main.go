@@ -81,7 +81,7 @@ func Main(Context openruntimes.Context) openruntimes.Response {
         )
     }
 
-    Context.Log("Account deleted successfully: %+v", response)
+    Context.Log("Account deleted successfully: %s", response)
     return Context.Res.Json(
         responseData{
             Status: 200,
