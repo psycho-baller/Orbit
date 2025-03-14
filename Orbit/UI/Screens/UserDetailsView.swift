@@ -115,12 +115,6 @@ struct UserDetailsView: View {
                 Spacer()
             }
             .padding([.leading, .trailing], 27.5)
-            .onAppear {
-                print("\(accountId) onAppear")
-                Task {
-                    await userVM.fetchAllUsernames()
-                }
-            }
         }
         .background(ColorPalette.background(for: colorScheme))
         .accentColor(ColorPalette.accent(for: colorScheme))

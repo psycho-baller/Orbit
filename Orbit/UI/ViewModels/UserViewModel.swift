@@ -203,7 +203,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     // setCurrentUser
     @MainActor
     func updateCurrentUser(accountId: String) async -> Bool {
-        #warning("This function only updates CURRENTUSER variable, not the backend DB.")
+        #warning(
+            "This function only updates CURRENTUSER variable, not the backend DB."
+        )
         if let userFromDatabase = users.first(where: {
             $0.accountId == accountId
         }) {
@@ -286,16 +288,17 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     @MainActor
     /// Load all usernames once when the app starts or when needed
-    func fetchAllUsernames() async {
+    func prefillUsefulUserData() async {
         isLoading = true
         defer { isLoading = false }
 
         do {
             let allUsers = try await userManagementService.listUsers(
                 queries: nil)
+            self.users = allUsers.map(\.data)
             DispatchQueue.main.async {
                 self.cachedUsernames = Set(
-                    allUsers.map { $0.data.username.lowercased() })
+                    self.users.map { $0.username.lowercased() })
             }
         } catch {
             print("Error fetching usernames: \(error.localizedDescription)")
