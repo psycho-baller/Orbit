@@ -27,7 +27,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     let createdByUser: UserModel?
     //    let meetupApprovalIds: [String]
     //    let meetupApprovals: [MeetupApprovalModel]?
-    let chats: [ChatModel]
+    let chats: [ChatModel]?
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
     let type: MeetupType
 
@@ -63,6 +63,22 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         self.chats = chats
         self.type = type
     }
+    
+//    init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        id = try container.decode(String.self, forKey: .id)
+//        title = try container.decode(String.self, forKey: .title)
+//        startTime = try container.decode(String.self, forKey: .startTime)
+//        endTime = try container.decode(String.self, forKey: .endTime)
+//        areaId = try container.decode(Int.self, forKey: .areaId)
+//        description = try container.decode(String.self, forKey: .description)
+//        status = try container.decode(MeetupStatus.self, forKey: .status)
+//        intention = try container.decode(MeetupIntention.self, forKey: .intention)
+//        createdByUser = try container.decodeIfPresent(UserModel.self, forKey: .createdByUser)
+//        chats = try container.decodeIfPresent([ChatModel].self, forKey: .chats) ?? []
+//        type = try container.decode(MeetupType.self, forKey: .type)
+//    }
+
 
     // Helper computed properties to get Date objects when needed
     var startTimeDate: Date? {
@@ -106,7 +122,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         }
 
         json["createdByUser"] = self.createdByUser?.id
-        json["chats"] = self.chats.map(\.id)
+        json["chats"] = self.chats?.map(\.id)
 
         print("data: \(json)")
 

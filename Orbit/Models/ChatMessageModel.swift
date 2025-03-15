@@ -11,9 +11,9 @@ import Foundation
 struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
     let id: String
     let sentByUser: UserModel
-    let chat: ChatModel
+    let chat: ChatModel?
     let content: String
-    let isRead: Bool?
+    var isRead: Bool?
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"
@@ -23,7 +23,7 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
     init(
         id: String = UUID().uuidString,
         sentByUser: UserModel,
-        chat: ChatModel,
+        chat: ChatModel? = nil,
         content: String,
         isRead: Bool? = false
     ) {
@@ -56,7 +56,7 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
         }
 
         json["sentByUser"] = self.sentByUser.id
-        json["chat"] = self.chat.id
+        json["chat"] = self.chat?.id
 
         return json
     }

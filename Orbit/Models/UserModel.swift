@@ -38,12 +38,13 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     //    var friendshipValues: FriendshipValuesModel?
     var friendshipValues: [String]?
     var friendshipQualities: [String]?
-    var hasCompletedOnboarding: Bool? = false
+    var hasCompletedOnboarding: Bool = false
 
     //    var requestedMeetupIds: [String]?  // Relationship with meetups
     //    var approvedMeetupIds: [String]?  // Relationship with approvals
-    var requestedMeetups: [MeetupRequestModel]?  // Relationship with meetups
-    var approvedMeetups: [MeetupApprovalModel]?  // Relationship with approvals
+    var requestedMeetups: [MeetupRequestModel]? = []  // Relationship with meetups
+    var createdChats: [ChatModel]? = []  // Chats where the user was the chat creator
+    var otherChats: [ChatModel]? = []  // Chats where the user was the one who created the post
 
     // New Attributes
     var showLastOnline: Bool = true
@@ -65,9 +66,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case accountId, username, firstName, lastName, interests, conversations,
             currentAreaId
         case profilePictureUrl, bio, dob
-        case activitiesHobbies, friendActivities, preferredMeetupType, convoTopics,
-            preferredMinAge, preferredMaxAge, preferredGender, friendshipValues, friendshipQualities
-        case requestedMeetups, approvedMeetups
+        case activitiesHobbies, friendActivities, preferredMeetupType,
+            convoTopics,
+            preferredMinAge, preferredMaxAge, preferredGender, friendshipValues,
+            friendshipQualities, hasCompletedOnboarding
+        case requestedMeetups, createdChats, otherChats
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
         case userLanguages, gender, pronouns, showStarSign, userLinks,
             intentions
@@ -100,7 +103,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         friendshipValues: [String]? = nil,
         friendshipQualities: [String]? = nil,
 
-        hasCompletedOnboarding: Bool? = false,
+        hasCompletedOnboarding: Bool = false,
 
         /// personal prefs
         showLastOnline: Bool = true,
@@ -109,8 +112,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
         //        requestedMeetupIds: [String]? = nil,
         //        approvedMeetupIds: [String]? = nil,
-        requestedMeetups: [MeetupRequestModel]? = nil,
-        approvedMeetups: [MeetupApprovalModel]? = nil,
+        requestedMeetups: [MeetupRequestModel]? = [],
+        createdChats: [ChatModel]? = [],
+        otherChats: [ChatModel]? = [],
 
         /// newly added attributes
         lastOnline: String? = nil,
@@ -149,9 +153,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.showJoinedDate = showJoinedDate
         self.showSentReceivedRatio = showSentReceivedRatio
         self.requestedMeetups = requestedMeetups
-        self.approvedMeetups = approvedMeetups
-        //        self.requestedMeetupIds = requestedMeetupIds
-        //        self.approvedMeetupIds = approvedMeetupIds
+        self.createdChats = createdChats
+        self.otherChats = otherChats
         self.lastOnline = lastOnline
         self.userLanguages = userLanguages
         self.gender = gender
@@ -177,6 +180,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             json["intentions"] = userIntentions.map { $0.rawValue }
         }
         json["preferredGender"] = self.preferredGender?.map { $0.rawValue }
+        json["createdChats"] = self.createdChats?.map(\.id)
+        json["otherChats"] = self.otherChats?.map(\.id)
 
         return json
     }
@@ -202,10 +207,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showLastOnline: Bool? = nil,
         showJoinedDate: Bool? = nil,
         showSentReceivedRatio: Bool? = nil,
-        //        requestedMeetupIds: [String]? = nil,
-        //        approvedMeetupIds: [String]? = nil,
         requestedMeetups: [MeetupRequestModel]? = nil,
-        meetupsApproved: [MeetupApprovalModel]? = nil,
+        createdChats: [ChatModel]? = nil,
+        otherChats: [ChatModel]? = nil,
         lastOnline: String? = nil,
         userLanguages: [UserLanguageModel]? = nil,
         gender: UserGender? = nil,
@@ -228,22 +232,23 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             /// onboarding stuff
             activitiesHobbies: activitiesHobbies ?? self.activitiesHobbies,
             friendActivities: friendActivities ?? self.friendActivities,
-            preferredMeetupType: preferredMeetupType ?? self.preferredMeetupType,
+            preferredMeetupType: preferredMeetupType
+                ?? self.preferredMeetupType,
             convoTopics: convoTopics ?? self.convoTopics,
             preferredMinAge: preferredMinAge ?? self.preferredMinAge,
             preferredMaxAge: preferredMaxAge ?? self.preferredMaxAge,
             preferredGender: preferredGender ?? self.preferredGender,
             friendshipValues: friendshipValues ?? self.friendshipValues,
-            friendshipQualities: friendshipQualities ?? self.friendshipQualities,
+            friendshipQualities: friendshipQualities
+                ?? self.friendshipQualities,
             hasCompletedOnboarding: self.hasCompletedOnboarding,
             showLastOnline: showLastOnline ?? self.showLastOnline,
             showJoinedDate: showJoinedDate ?? self.showJoinedDate,
             showSentReceivedRatio: showSentReceivedRatio
                 ?? self.showSentReceivedRatio,
-            //            requestedMeetupIds: requestedMeetupIds ?? self.requestedMeetupIds,
-            //            approvedMeetupIds: approvedMeetupIds ?? self.approvedMeetupIds,
             requestedMeetups: requestedMeetups ?? self.requestedMeetups,
-            approvedMeetups: approvedMeetups ?? self.approvedMeetups,
+            createdChats: createdChats ?? self.createdChats,
+            otherChats: otherChats ?? self.otherChats,
             lastOnline: lastOnline ?? self.lastOnline,
             userLanguages: userLanguages ?? self.userLanguages,
             gender: gender ?? self.gender,

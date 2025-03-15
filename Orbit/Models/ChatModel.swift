@@ -11,10 +11,10 @@ import Foundation
 struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
 {
     let id: String
-    let createdByUser: UserModel
-    let otherUser: UserModel
-    let meetupRequest: MeetupRequestModel
-    let messages: [ChatMessageModel]
+    let createdByUser: UserModel?
+    let otherUser: UserModel?
+    let meetupRequest: MeetupRequestModel?
+    let messages: [ChatMessageModel]?
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"  // Maps Appwrite's `$id` to `id`
@@ -27,10 +27,10 @@ struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
 
     init(
         id: String = UUID().uuidString,
-        createdByUser: UserModel,
-        otherUser: UserModel,
-        meetupRequest: MeetupRequestModel,
-        messages: [ChatMessageModel] = []
+        createdByUser: UserModel? = nil,
+        otherUser: UserModel? = nil,
+        meetupRequest: MeetupRequestModel? = nil,
+        messages: [ChatMessageModel]? = []
     ) {
         self.id = id
         self.createdByUser = createdByUser
@@ -62,9 +62,9 @@ struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
         }
 
         // Convert Users and MeetupRequest to their respective IDs
-        json["createdByUser"] = self.createdByUser.id
-        json["otherUser"] = self.otherUser.id
-        json["meetupRequest"] = self.meetupRequest.id
+        json["createdByUser"] = self.createdByUser?.id
+        json["otherUser"] = self.otherUser?.id
+        json["meetupRequest"] = self.meetupRequest?.id
 
         return json
     }
