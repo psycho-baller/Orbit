@@ -10,7 +10,7 @@ import SwiftUI
 struct MeetupRequestCardView: View {
     let meetupRequest: MeetupRequestModel
     @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
-    @EnvironmentObject var meetupApprovalVM: MeetupApprovalViewModel
+    @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var isHidden = false
@@ -132,21 +132,19 @@ struct MeetupRequestCardView: View {
             return
         }
 
-        let meetupApproval = MeetupApprovalModel(
-            //            approvedByUserId: sender.id,
-            approvedByUser: sender,
-            //            meetupRequestId: meetupRequest.id,
-            meetupRequest: meetupRequest, firstMessage: ""
+        let newChat = ChatModel(
+            createdByUser: sender, otherUser: meetupRequest.createdByUser!,
+            meetupRequest: meetupRequest
         )
 
         Task {
-            await meetupApprovalVM.approveMeetup(approval: meetupApproval)
+            await chatVM.createChat(chat: newChat)
         }
     }
 
     private func formatMeetupTime(meetup: MeetupRequestModel) -> String {
         guard let startTime = meetup.startTimeDate,
-              let endTime = meetup.endTimeDate
+            let endTime = meetup.endTimeDate
         else {
             return "Invalid date"
         }
@@ -159,7 +157,9 @@ struct MeetupRequestCardView: View {
         }
 
         // If start time is within the next hour
-        let minutesUntilStart = Calendar.current.dateComponents([.minute], from: now, to: startTime).minute ?? 0
+        let minutesUntilStart =
+            Calendar.current.dateComponents([.minute], from: now, to: startTime)
+            .minute ?? 0
         if minutesUntilStart > 0 && minutesUntilStart < 60 {
             return "in \(minutesUntilStart) minutes"
         }
@@ -177,6 +177,6 @@ struct MeetupRequestCardView: View {
 #Preview {
     MeetupRequestCardView(meetupRequest: .mock())
         .environmentObject(MeetupRequestViewModel.mock())
-        .environmentObject(MeetupApprovalViewModel.mock())
+        .environmentObject(ChatViewModel.mock())
         .environmentObject(UserViewModel.mock())
 }
