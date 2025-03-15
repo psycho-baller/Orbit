@@ -83,8 +83,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 self.currentUser = user
 
                 print(
-                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(user.hasCompletedOnboarding)."
+                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(String(describing: user.hasCompletedOnboarding))."
                 )
+                print("\(String(describing: user))")
             } else {
                 print(
                     "UserViewModel - fetchCurrentUser: No current user found."
@@ -134,9 +135,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         friendActivities: [String]? = nil,
         preferredMeetupType: [String]? = nil,
         convoTopics: [String]? = nil,
-//        preferredMinAge: Int? = nil,
-//        preferredMaxAge: Int? = nil,
-//        preferredGender: [UserGender]? = nil,
+        //        preferredMinAge: Int? = nil,
+        //        preferredMaxAge: Int? = nil,
+        //        preferredGender: [UserGender]? = nil,
         friendshipValues: [String]? = nil,
         friendshipQualities: [String]? = nil,
         bio: String? = nil,
@@ -176,16 +177,19 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             activitiesHobbies ?? currentUser.activitiesHobbies
         currentUser.friendActivities =
             friendActivities ?? currentUser.friendActivities
-        currentUser.preferredMeetupType = preferredMeetupType ?? currentUser.preferredMeetupType
+        currentUser.preferredMeetupType =
+            preferredMeetupType ?? currentUser.preferredMeetupType
         currentUser.convoTopics = convoTopics ?? currentUser.convoTopics
-//        currentUser.preferredMinAge =
-//            preferredMinAge ?? currentUser.preferredMinAge
-//        currentUser.preferredMaxAge =
-//            preferredMaxAge ?? currentUser.preferredMaxAge
-//        currentUser.preferredGender =
-//            preferredGender ?? currentUser.preferredGender
-        currentUser.friendshipValues = friendshipValues ?? currentUser.friendshipValues
-        currentUser.friendshipQualities = friendshipQualities ?? currentUser.friendshipQualities
+        //        currentUser.preferredMinAge =
+        //            preferredMinAge ?? currentUser.preferredMinAge
+        //        currentUser.preferredMaxAge =
+        //            preferredMaxAge ?? currentUser.preferredMaxAge
+        //        currentUser.preferredGender =
+        //            preferredGender ?? currentUser.preferredGender
+        currentUser.friendshipValues =
+            friendshipValues ?? currentUser.friendshipValues
+        currentUser.friendshipQualities =
+            friendshipQualities ?? currentUser.friendshipQualities
         currentUser.bio = bio ?? currentUser.bio
         currentUser.intentions = intentions ?? currentUser.intentions
         currentUser.userLanguages = userLanguages ?? currentUser.userLanguages
