@@ -16,7 +16,7 @@ struct OrbitApp: App {
     @StateObject var msgVM = MessagingViewModel()
     @StateObject var chatRequestVM = ChatRequestViewModel()
     @StateObject var meetupRequestVM = MeetupRequestViewModel()
-    @StateObject var meetupApprovalVM = MeetupApprovalViewModel()
+    @StateObject var chatVM = ChatViewModel()
     @StateObject var navigationCoordinator = AuthNavigationCoordinator()
     @Environment(\.colorScheme) var colorScheme
 
@@ -61,7 +61,7 @@ struct OrbitApp: App {
                 .environmentObject(msgVM)
                 .environmentObject(chatRequestVM)
                 .environmentObject(meetupRequestVM)
-                .environmentObject(meetupApprovalVM)
+                .environmentObject(chatVM)
                 .environmentObject(appDelegate.appState)
                 .environmentObject(navigationCoordinator)
                 .accentColor(ColorPalette.accent(for: colorScheme))
