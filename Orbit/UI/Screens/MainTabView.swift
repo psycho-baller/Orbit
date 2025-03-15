@@ -31,18 +31,18 @@ struct MainTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
                 .tag(MainViewTabs.home)
-            
+
             //            NavigationView {
-            
+
             //InboxView()
-            MyMessages()
-                            //            }
+            //            MyMessages()
+            ChatListView()
+                //            }
                 .tabItem {
                     Label("Messages", systemImage: "message.fill")
                 }
                 .tag(MainViewTabs.messages)
-            
-            
+
             MyOrbitView()
                 .tabItem {
                     Label("My Plans", systemImage: "circle.circle.fill")
