@@ -5,22 +5,24 @@
 //  Created by Nathaniel D'Orazio on 2025-03-09.
 //
 
-#warning ("Basic Outline to build off using hard coded data. Add navigation and real data")
-
 import SwiftUI
+
+#warning(
+    "Basic Outline to build off using hard coded data. Add navigation and real data"
+)
 
 struct MyOrbitView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var selectedRequest: MeetupRequestModel?
     @State private var showDetailView = false
     @State private var isShowingCreateMeetup = false
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
                 ColorPalette.background(for: colorScheme)
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         // My Posts Section
@@ -30,19 +32,20 @@ struct MyOrbitView: View {
                                     .font(.title2)
                                     .bold()
                                     .foregroundColor(Color.accentColor)
-                                
+
                                 Spacer()
                             }
-                            
+
                             MyPostRow(
-                                title: "What's your favorite food place in MacHall?",
+                                title:
+                                    "What's your favorite food place in MacHall?",
                                 tags: ["Food", "Friendship"],
                                 responseCount: 2,
                                 responders: ["user1", "user2"]
                             )
                         }
                         .padding(.horizontal)
-                        
+
                         // Meetups Section
                         VStack(alignment: .leading, spacing: 16) {
                             Text("Meetups")
@@ -50,11 +53,18 @@ struct MyOrbitView: View {
                                 .bold()
                                 .foregroundColor(Color.accentColor)
                                 .padding(.horizontal)
-                            
-                            MeetupRequestRow(title: "Best Prof in UofC?", time: "Today 12:00 PM", location: "MacEwan Hall", tags: ["Volunteering", "Meditation", "Bouldering"])
-                                .padding(.horizontal)
+
+                            NewerMeetupRequestRow(
+                                title: "Best Prof in UofC?",
+                                time: "Today 12:00 PM",
+                                location: "MacEwan Hall",
+                                tags: [
+                                    "Volunteering", "Meditation", "Bouldering",
+                                ]
+                            )
+                            .padding(.horizontal)
                         }
-                        
+
                         // Pending Requests Section
                         VStack(alignment: .leading, spacing: 16) {
                             Text("Pending Requests")
@@ -62,9 +72,14 @@ struct MyOrbitView: View {
                                 .bold()
                                 .foregroundColor(Color.accentColor)
                                 .padding(.horizontal)
-                            
-                            MeetupRequestRow(title: "What is your spirit animal?", time: "Today 16:00 PM", location: "MacEwan Hall", tags: ["Procrastinating"])
-                                .padding(.horizontal)
+
+                            NewerMeetupRequestRow(
+                                title: "What is your spirit animal?",
+                                time: "Today 16:00 PM",
+                                location: "MacEwan Hall",
+                                tags: ["Procrastinating"]
+                            )
+                            .padding(.horizontal)
                         }
                     }
                     .padding(.vertical)
@@ -97,7 +112,7 @@ struct MyPostRow: View {
     let tags: [String]
     let responseCount: Int
     let responders: [String]
-    
+
     var body: some View {
         Button(action: {
             // Handle navigation
@@ -117,31 +132,39 @@ struct MyPostRow: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 40, height: 40)
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
                     }
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
                         Text(title)
                             .font(.headline)
-                            .foregroundColor(ColorPalette.text(for: colorScheme))
-                        
+                            .foregroundColor(
+                                ColorPalette.text(for: colorScheme))
+
                         HStack {
                             ForEach(tags, id: \.self) { tag in
                                 Text(tag)
                                     .font(.caption)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
-                                    .background(ColorPalette.main(for: colorScheme))
+                                    .background(
+                                        ColorPalette.main(for: colorScheme)
+                                    )
                                     .cornerRadius(12)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                    .foregroundColor(
+                                        ColorPalette.secondaryText(
+                                            for: colorScheme))
                             }
-                            
+
                             Spacer()
-                            
+
                             // Profile pictures of responders
                             HStack(spacing: -8) {
                                 ForEach(responders, id: \.self) { _ in
-                                    AsyncImage(url: URL(string: "placeholder_url")) { image in
+                                    AsyncImage(
+                                        url: URL(string: "placeholder_url")
+                                    ) { image in
                                         image
                                             .resizable()
                                             .aspectRatio(contentMode: .fill)
@@ -152,24 +175,29 @@ struct MyPostRow: View {
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 24, height: 24)
-                                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                            .foregroundColor(
+                                                ColorPalette.secondaryText(
+                                                    for: colorScheme))
                                     }
                                 }
                             }
-                            
+
                             Text("\(responseCount) requests")
                                 .font(.caption)
-                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
                         }
                     }
-                    
+
                     Spacer()
-                    
+
                     Image(systemName: "chevron.right")
-                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .foregroundColor(
+                            ColorPalette.secondaryText(for: colorScheme))
                 }
                 .padding()
-                
+
                 // Notification Badge
                 if responseCount > 0 {
                     Text("\(responseCount)")
@@ -187,13 +215,13 @@ struct MyPostRow: View {
     }
 }
 
-struct MeetupRequestRow: View {
+struct NewerMeetupRequestRow: View {
     @Environment(\.colorScheme) var colorScheme
     let title: String
     let time: String
     let location: String
     let tags: [String]
-    
+
     var body: some View {
         HStack {
             AsyncImage(url: URL(string: "placeholder_url")) { image in
@@ -207,14 +235,15 @@ struct MeetupRequestRow: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 40, height: 40)
-                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                    .foregroundColor(
+                        ColorPalette.secondaryText(for: colorScheme))
             }
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.headline)
                     .foregroundColor(ColorPalette.text(for: colorScheme))
-                
+
                 HStack {
                     Text(time)
                         .font(.subheadline)
@@ -222,7 +251,7 @@ struct MeetupRequestRow: View {
                         .font(.subheadline)
                 }
                 .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                
+
                 HStack {
                     ForEach(tags, id: \.self) { tag in
                         Text(tag)
@@ -231,13 +260,14 @@ struct MeetupRequestRow: View {
                             .padding(.vertical, 4)
                             .background(ColorPalette.main(for: colorScheme))
                             .cornerRadius(12)
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.secondaryText(for: colorScheme))
                     }
                 }
             }
-            
+
             Spacer()
-            
+
             Image(systemName: "chevron.right")
                 .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
         }
@@ -248,5 +278,8 @@ struct MeetupRequestRow: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+
     MyOrbitView()
+        .accentColor(ColorPalette.accent(for: colorScheme))
 }

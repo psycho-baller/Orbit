@@ -263,6 +263,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		00ACBBB22D0B80A2008F321C /* Onboarding */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Onboarding; sourceTree = "<group>"; };
 		00ACBBB32D0B80C9008F321C /* Onboarding */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Onboarding; sourceTree = "<group>"; };
+		257699842D8899E800640E75 /* MyOrbit */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MyOrbit; sourceTree = "<group>"; };
 		25E8297C2D84FD81009D49CE /* Chat */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Chat; sourceTree = "<group>"; };
 		25F1BDB02CF29EDB0036D7E1 /* System */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = System; sourceTree = "<group>"; };
 		619E06722D7DE4B700D9AAB1 /* Meetup */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Meetup; sourceTree = "<group>"; };
@@ -352,6 +353,7 @@
 		259CB2872CC0465600C9F285 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				257699842D8899E800640E75 /* MyOrbit */,
 				25E8297C2D84FD81009D49CE /* Chat */,
 				6141694D2D809E3600829319 /* LocationPickerView.swift */,
 				619E06722D7DE4B700D9AAB1 /* Meetup */,
@@ -560,6 +562,7 @@
 			fileSystemSynchronizedGroups = (
 				00ACBBB22D0B80A2008F321C /* Onboarding */,
 				00ACBBB32D0B80C9008F321C /* Onboarding */,
+				257699842D8899E800640E75 /* MyOrbit */,
 				25E8297C2D84FD81009D49CE /* Chat */,
 				25F1BDB02CF29EDB0036D7E1 /* System */,
 				619E06722D7DE4B700D9AAB1 /* Meetup */,

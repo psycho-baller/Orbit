@@ -63,22 +63,21 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         self.chats = chats
         self.type = type
     }
-    
-//    init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        id = try container.decode(String.self, forKey: .id)
-//        title = try container.decode(String.self, forKey: .title)
-//        startTime = try container.decode(String.self, forKey: .startTime)
-//        endTime = try container.decode(String.self, forKey: .endTime)
-//        areaId = try container.decode(Int.self, forKey: .areaId)
-//        description = try container.decode(String.self, forKey: .description)
-//        status = try container.decode(MeetupStatus.self, forKey: .status)
-//        intention = try container.decode(MeetupIntention.self, forKey: .intention)
-//        createdByUser = try container.decodeIfPresent(UserModel.self, forKey: .createdByUser)
-//        chats = try container.decodeIfPresent([ChatModel].self, forKey: .chats) ?? []
-//        type = try container.decode(MeetupType.self, forKey: .type)
-//    }
 
+    //    init(from decoder: Decoder) throws {
+    //        let container = try decoder.container(keyedBy: CodingKeys.self)
+    //        id = try container.decode(String.self, forKey: .id)
+    //        title = try container.decode(String.self, forKey: .title)
+    //        startTime = try container.decode(String.self, forKey: .startTime)
+    //        endTime = try container.decode(String.self, forKey: .endTime)
+    //        areaId = try container.decode(Int.self, forKey: .areaId)
+    //        description = try container.decode(String.self, forKey: .description)
+    //        status = try container.decode(MeetupStatus.self, forKey: .status)
+    //        intention = try container.decode(MeetupIntention.self, forKey: .intention)
+    //        createdByUser = try container.decodeIfPresent(UserModel.self, forKey: .createdByUser)
+    //        chats = try container.decodeIfPresent([ChatModel].self, forKey: .chats) ?? []
+    //        type = try container.decode(MeetupType.self, forKey: .type)
+    //    }
 
     // Helper computed properties to get Date objects when needed
     var startTimeDate: Date? {
@@ -103,7 +102,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
                 "It's been hard for me to balance out grades and social life. Wondering how others do it",
             status: .active,
             intention: .friendship,
-            createdByUser: .mock(),
+            createdByUser: .mock2(),
             chats: [],
             type: .meal
         )
@@ -128,12 +127,18 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
 
         return json
     }
+
+    //    func hasChatWith(userId: String) -> Bool {
+    //        return createdByUser?.id != userId
+    //            && createdChats.contains { $0.createdByUser.id == userId }
+    //    }
 }
 
 enum MeetupStatus: String, Codable {
     case active
     case completed
     case cancelled
+    case filled
 }
 
 enum MeetupIntention: String, Codable {

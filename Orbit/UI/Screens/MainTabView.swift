@@ -43,9 +43,9 @@ struct MainTabView: View {
                 }
                 .tag(MainViewTabs.messages)
 
-            MyOrbitView()
+            MyOrbitScreen()
                 .tabItem {
-                    Label("My Plans", systemImage: "circle.circle.fill")
+                    Label("My Orbit", systemImage: "circle.circle.fill")
                 }
                 .tag(MainViewTabs.create)
 

@@ -756,7 +756,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let mockVM = UserViewModel()
 
             // Set current user
-            mockVM.currentUser = .mock()
+            mockVM.currentUser = .mock2()
 
             // Set other users
             mockVM.users = UserModel.mockUsers()

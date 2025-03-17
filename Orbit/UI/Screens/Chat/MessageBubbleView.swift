@@ -13,12 +13,6 @@ struct MessageBubbleView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var isFromCurrentUser: Bool {
-        print(
-            "message.sentByUser?.id: \(String(describing: message.sentByUser?.id))"
-        )
-        print(
-            "userVM.currentUser?.id: \(String(describing: userVM.currentUser?.id))"
-        )
         // Assuming `userVM.currentUser?.id` is available
         return message.sentByUser?.id == userVM.currentUser?.id
     }

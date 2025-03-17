@@ -42,8 +42,8 @@ struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
     static func mock() -> Self {
         return .init(
             id: "chat-123",
-            createdByUser: .mock(),
-            otherUser: .mock2(),
+            createdByUser: .mock2(),
+            otherUser: .mock(),
             meetupRequest: .mock(),
             messages: [.mock(), .mockOtherUserSent()]
         )
