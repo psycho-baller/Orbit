@@ -38,7 +38,7 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
         return .init(
             id: "message-123",
             sentByUser: .mock(),
-            chat: .mock(),
+//            chat: .mock(),
             content: "Hey, looking forward to meeting up!",
             isRead: false
         )

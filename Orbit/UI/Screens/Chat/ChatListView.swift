@@ -10,10 +10,11 @@ import SwiftUI
 struct ChatListView: View {
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var userVM: UserViewModel
+    @EnvironmentObject var appState: AppState
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $appState.messagesNavigationPath) {
             ZStack {
                 LinearGradient(
                     gradient: Gradient(colors: [
@@ -81,3 +82,15 @@ struct ChatListView: View {
         }
     }
 }
+
+#if DEBUG
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
+        ChatListView()
+            .environmentObject(ChatViewModel.mock())
+            .environmentObject(UserViewModel.mock())
+            .environmentObject(AppState())
+            .accentColor(ColorPalette.accent(for: colorScheme))
+    }
+#endif
