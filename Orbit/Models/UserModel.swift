@@ -261,6 +261,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     static func mock() -> UserModel {
         UserModel(
+            id: "imjustken",
             accountId: "imjustken",
             username: "imjustken",
             firstName: "Ken",
@@ -303,6 +304,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     static func mock2() -> UserModel {
         UserModel(
+            id: "user2",
             accountId: "user2",
             username: "slingshot69",
             firstName: "Mark",
@@ -331,6 +333,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     static func mock3() -> UserModel {
         UserModel(
+            id: "user3",
             accountId: "user3",
             username: "jordan_taylor",
             firstName: "Jordan",
@@ -359,6 +362,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
 
     static func mockNoPendingMeetups() -> UserModel {
         UserModel(
+            id: "slingshot69",
             accountId: "slingshot69",
             username: "slingshot69",
             firstName: "Mark",
@@ -410,6 +414,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             .mock2(),
             .mock3(),
             UserModel(
+                id: "user4",
                 accountId: "user4",
                 username: "alexrivera42",
                 firstName: "Alex",
@@ -438,6 +443,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 hasCompletedOnboarding: true
             ),
             UserModel(
+                id: "user5",
                 accountId: "user5",
                 username: "noob",
                 firstName: "Klay",

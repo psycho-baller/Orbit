@@ -67,3 +67,14 @@ struct ChatDetailView: View {
         }
     }
 }
+
+#if DEBUG
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
+        ChatDetailView(chat: .mock())
+            .environmentObject(UserViewModel.mock())
+            .accentColor(ColorPalette.accent(for: colorScheme))
+
+    }
+#endif

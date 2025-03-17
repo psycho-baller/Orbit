@@ -103,7 +103,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
                 "It's been hard for me to balance out grades and social life. Wondering how others do it",
             status: .active,
             intention: .friendship,
-            createdByUser: .mockNoPendingMeetups(),
+            createdByUser: .mock(),
             chats: [],
             type: .meal
         )

@@ -10,10 +10,17 @@ import SwiftUI
 struct MessageBubbleView: View {
     let message: ChatMessageModel
     @EnvironmentObject var userVM: UserViewModel
+    @Environment(\.colorScheme) var colorScheme
 
     var isFromCurrentUser: Bool {
+        print(
+            "message.sentByUser?.id: \(String(describing: message.sentByUser?.id))"
+        )
+        print(
+            "userVM.currentUser?.id: \(String(describing: userVM.currentUser?.id))"
+        )
         // Assuming `userVM.currentUser?.id` is available
-        message.sentByUser.id == userVM.currentUser?.id
+        return message.sentByUser?.id == userVM.currentUser?.id
     }
 
     var body: some View {
@@ -22,9 +29,11 @@ struct MessageBubbleView: View {
             Text(message.content)
                 .padding()
                 .background(
-                    isFromCurrentUser ? Color.blue : Color.gray.opacity(0.2)
+                    isFromCurrentUser
+                        ? .accentColor
+                        : ColorPalette.lightGray(for: colorScheme)
                 )
-                .foregroundColor(isFromCurrentUser ? .white : .black)
+                .foregroundColor(isFromCurrentUser ? .white : .white)
                 .cornerRadius(10)
             if !isFromCurrentUser { Spacer() }
         }
@@ -33,3 +42,14 @@ struct MessageBubbleView: View {
             alignment: isFromCurrentUser ? .trailing : .leading)
     }
 }
+
+#if DEBUG
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
+        ChatDetailView(chat: .mock())
+            .environmentObject(UserViewModel.mock())
+            .accentColor(ColorPalette.accent(for: colorScheme))
+
+    }
+#endif

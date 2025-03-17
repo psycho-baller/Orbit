@@ -45,7 +45,7 @@ struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
             createdByUser: .mock(),
             otherUser: .mock2(),
             meetupRequest: .mock(),
-            messages: [ChatMessageModel.mock()]
+            messages: [.mock(), .mockOtherUserSent()]
         )
     }
 
