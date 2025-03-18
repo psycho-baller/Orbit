@@ -11,7 +11,7 @@ import SwiftUI
 
 class AppState: ObservableObject {
     @Published var selectedTab: MainViewTabs = .home
-    @Published var messagesNavigationPath: [ConversationDetailModel] = []
+    @Published var messagesNavigationPath: [ChatDocument] = []
     @Published var targetScreen: String? = nil  // Tracks the target screen for deep links
     @Published var selectedRequestId: String? = nil
     @Published var isShowingHomeSettings = false
