@@ -25,7 +25,7 @@ class ChatMessageViewModel: ObservableObject {
     }
 
     /// Fetch all messages for this chat
-    func fetchMessages() async throws -> [ChatMessageModel] {
+    func fetchMessages() async -> [ChatMessageModel] {
         isLoading = true
         defer { isLoading = false }
 
