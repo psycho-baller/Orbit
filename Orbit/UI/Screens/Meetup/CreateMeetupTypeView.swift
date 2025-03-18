@@ -140,6 +140,7 @@ struct MeetupTypeButton: View {
             )
             .cornerRadius(12)
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 }
 
