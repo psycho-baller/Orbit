@@ -70,8 +70,6 @@ struct MainTabView: View {
                     .clipShape(Circle())
                     .shadow(radius: 4)
             }
-            // Adjust button position if needed
-            .padding(.bottom, 10)
         }
         .sheet(isPresented: $showCreateSheet) {
             CreateMeetupTypeView()
@@ -87,5 +85,6 @@ struct MainTabView: View {
             .environmentObject(AuthViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
             .environmentObject(MeetupRequestViewModel.mock())
+            .environmentObject(ChatViewModel.mock())
     }
 #endif
