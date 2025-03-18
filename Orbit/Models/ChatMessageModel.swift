@@ -13,11 +13,13 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
     let sentByUser: UserModel?
     let chat: ChatModel?
     let content: String
+    let timestamp: String
+    let createdAt: String
     var isRead: Bool?
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"
-        case sentByUser, chat, content, isRead
+        case sentByUser, chat, content, isRead, timestamp, createdAt
     }
 
     init(
@@ -25,6 +27,8 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
         sentByUser: UserModel? = nil,
         chat: ChatModel? = nil,
         content: String,
+        timestamp: String = ISO8601DateFormatter().string(from: Date()),
+        createdAt: String = DateFormatterUtility.formatISO8601(Date()),
         isRead: Bool? = false
     ) {
         self.id = id
@@ -32,23 +36,32 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
         self.chat = chat
         self.content = content
         self.isRead = isRead
+        self.timestamp = timestamp
+        self.createdAt = createdAt
     }
-
+    
+    var createdAtDate: Date? {
+            return DateFormatterUtility.parseISO8601(timestamp)
+        }
+    
     static func mock() -> Self {
         return .init(
             id: "message-123",
             sentByUser: .mock(),
-            //            chat: .mock(),
             content: "Hey, looking forward to meeting up!",
+            timestamp: DateFormatterUtility.formatISO8601(Date()),
+            createdAt: DateFormatterUtility.formatISO8601(Date()),  // Store as ISO8601
             isRead: false
         )
     }
-    
+
     static func mockOtherUserSent() -> Self {
         return .init(
             id: "message-12",
             sentByUser: .mock2(),
             content: "Hey, looking forward to meeting up!",
+            timestamp: DateFormatterUtility.formatISO8601(Date()),
+            createdAt: DateFormatterUtility.formatISO8601(Date().addingTimeInterval(-300)),  // 5 mins ago
             isRead: true
         )
     }
