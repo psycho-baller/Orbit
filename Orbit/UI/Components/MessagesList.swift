@@ -18,7 +18,7 @@ struct MessagesList: View {
             LazyVStack(spacing: 0) {
                 ForEach(conversations) { conversation in
                     Button {
-                        appState.messagesNavigationPath.append(conversation)
+//                        appState.messagesNavigationPath.append(conversation)
                     } label: {
                         InboxRow(
                             messagerName: conversation.messagerName,

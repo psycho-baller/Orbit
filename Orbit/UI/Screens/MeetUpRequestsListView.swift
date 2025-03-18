@@ -36,16 +36,16 @@ struct MeetUpRequestsListView: View {
         {
 
             appState.selectedTab = .messages
-            appState.messagesNavigationPath.append(
-                ConversationDetailModel(
-                    id: conversation.id,
-                    messagerName: receiverName,
-                    lastMessage: "",
-                    timestamp: "Today",
-                    isRead: false,
-                    lastSenderId: request.data.senderAccountId
-                )
-            )
+            //            appState.messagesNavigationPath.append(
+            //                ConversationDetailModel(
+            //                    id: conversation.id,
+            //                    messagerName: receiverName,
+            //                    lastMessage: "",
+            //                    timestamp: "Today",
+            //                    isRead: false,
+            //                    lastSenderId: request.data.senderAccountId
+            //                )
+            //            )
         }
     }
 
