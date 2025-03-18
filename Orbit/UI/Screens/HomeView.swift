@@ -245,7 +245,6 @@ struct HomeView: View {
                     LazyVStack(spacing: 16) {
                         ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
                             MeetupRequestCardView(meetupRequest: meetupRequest.data)
-                                .padding(.horizontal)
                         }
                     }
                     .padding(.vertical)
