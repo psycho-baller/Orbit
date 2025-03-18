@@ -10,6 +10,7 @@ import Foundation
 import JSONCodable
 
 protocol ChatMessageServiceProtocol {
+    var collectionId: String { get }
     func createMessage(message: ChatMessageModel) async throws
         -> ChatMessageDocument
     func getMessage(messageId: String) async throws -> ChatMessageDocument?
@@ -20,7 +21,7 @@ protocol ChatMessageServiceProtocol {
 
 class ChatMessageService: ChatMessageServiceProtocol {
     private let appwriteService: AppwriteService = AppwriteService.shared
-    private let collectionId = "chatMessages"
+    let collectionId = "chatMessages"
 
     func createMessage(message: ChatMessageModel) async throws
         -> ChatMessageDocument

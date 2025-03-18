@@ -14,90 +14,97 @@ struct ChatListView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        NavigationStack(path: $appState.messagesNavigationPath) {
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        ColorPalette.background(for: colorScheme),
-                        ColorPalette.main(for: colorScheme),
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+        // Check if user exists
+        if let currentUser = userVM.currentUser {
+            NavigationStack(path: $appState.messagesNavigationPath) {
+                ZStack {
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            ColorPalette.background(for: colorScheme),
+                            ColorPalette.main(for: colorScheme),
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .ignoresSafeArea()
 
-                VStack {
-                    if chatVM.chats.isEmpty {
-                        VStack(spacing: 16) {
-                            Image(
-                                systemName: "bubble.left.and.bubble.right.fill"
-                            )
-                            .font(.system(size: 70))
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme))
-                            Text("No Chats Yet")
-                                .font(.title)
+                    VStack {
+                        if chatVM.chats.isEmpty {
+                            VStack(spacing: 16) {
+                                Image(
+                                    systemName:
+                                        "bubble.left.and.bubble.right.fill"
+                                )
+                                .font(.system(size: 70))
                                 .foregroundColor(
-                                    ColorPalette.text(for: colorScheme))
-                            Text(
-                                "Your chats will appear here when you start a conversation."
-                            )
-                            .font(.body)
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme)
-                            )
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                        }
-                        .frame(maxHeight: .infinity)
-                    } else {
-                        List {
-                            ForEach(chatVM.chats, id: \.id) { chat in
-                                Button {
-                                    appState.messagesNavigationPath.append(
-                                        chat)
-                                } label: {
-                                    ChatRowView(
-                                        chat: chat,
-                                        currentUser: userVM.currentUser)
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
+                                Text("No Chats Yet")
+                                    .font(.title)
+                                    .foregroundColor(
+                                        ColorPalette.text(for: colorScheme))
+                                Text(
+                                    "Your chats will appear here when you start a conversation."
+                                )
+                                .font(.body)
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                            }
+                            .frame(maxHeight: .infinity)
+                        } else {
+                            List {
+                                ForEach(chatVM.chats, id: \.id) { chat in
+                                    Button {
+                                        appState.messagesNavigationPath.append(
+                                            chat)
+                                    } label: {
+                                        ChatRowView(
+                                            chat: chat,
+                                            currentUser: userVM.currentUser
+                                        )
+                                    }
                                 }
                             }
+                            .scrollContentBackground(.hidden)
                         }
-                        .scrollContentBackground(.hidden)
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Text("Chats")
+                                .largeBoldFont()
+                                .foregroundColor(
+                                    ColorPalette.text(for: colorScheme))
+                        }
                     }
                 }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Text("Chats")
-                            .largeBoldFont()
-                            .foregroundColor(
-                                ColorPalette.text(for: colorScheme))
-                    }
+                .navigationDestination(for: ChatDocument.self) { chat in
+                    ChatDetailView(
+                        chat: chat,
+                        user: currentUser
+                    )
                 }
             }
-            .navigationDestination(for: ChatDocument.self) {
-                chat in
-                ChatDetailView(
-                    chat: chat
-                )
+            .onAppear {
+                Task {
+                    await chatVM.fetchChats()
+                }
             }
-        }
-        .onAppear {
-            Task {
-                await chatVM.fetchChats()
-            }
+        } else {
+            // If no user is available, show an error screen.
+            ErrorScreen()
         }
     }
 }
 
 #if DEBUG
     #Preview {
-        @Previewable @Environment(\.colorScheme) var colorScheme
-
         ChatListView()
             .environmentObject(ChatViewModel.mock())
             .environmentObject(UserViewModel.mock())
             .environmentObject(AppState())
-            .accentColor(ColorPalette.accent(for: colorScheme))
+            .accentColor(ColorPalette.accent(for: .light))
     }
 #endif

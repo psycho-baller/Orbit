@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct MessageBubbleView: View {
-    let message: ChatMessageModel
+    let message: ChatMessageDocument
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
 
     var isFromCurrentUser: Bool {
         // Assuming `userVM.currentUser?.id` is available
-        return message.sentByUser?.id == userVM.currentUser?.id
+        return message.data.sentByUser?.id == userVM.currentUser?.id
     }
 
     var body: some View {
         HStack {
             if isFromCurrentUser { Spacer() }
-            Text(message.content)
+            Text(message.data.content)
                 .padding()
                 .background(
                     isFromCurrentUser
@@ -41,7 +41,7 @@ struct MessageBubbleView: View {
     #Preview {
         @Previewable @Environment(\.colorScheme) var colorScheme
 
-        ChatDetailView(chat: .mock())
+        ChatDetailView(chat: .mock(), user: .mock())
             .environmentObject(UserViewModel.mock())
             .accentColor(ColorPalette.accent(for: colorScheme))
 

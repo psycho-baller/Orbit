@@ -9,21 +9,24 @@ import SwiftUI
 
 struct ChatDetailView: View {
     let chat: ChatDocument
+    let user: UserModel
     @EnvironmentObject var userVM: UserViewModel
     @StateObject var chatMessageVM: ChatMessageViewModel
     @State private var messageText: String = ""
 
-    init(chat: ChatDocument) {
+    init(chat: ChatDocument, user: UserModel) {
         self.chat = chat
+        self.user = user
         _chatMessageVM = StateObject(
-            wrappedValue: ChatMessageViewModel(chatId: chat.id))
+            wrappedValue: ChatMessageViewModel(
+                chatId: chat.id, userId: user.id))
     }
 
     var body: some View {
         VStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(chat.data.messages ?? [], id: \.id) { message in
+                    ForEach(chatMessageVM.messages, id: \.id) { message in
                         MessageBubbleView(message: message)
                     }
                 }
@@ -72,7 +75,7 @@ struct ChatDetailView: View {
     #Preview {
         @Previewable @Environment(\.colorScheme) var colorScheme
 
-        ChatDetailView(chat: .mock())
+        ChatDetailView(chat: .mock(), user: .mock())
             .environmentObject(UserViewModel.mock())
             .accentColor(ColorPalette.accent(for: colorScheme))
 
