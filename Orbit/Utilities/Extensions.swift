@@ -138,6 +138,20 @@ where T: Identifiable, T.ID == String {
     //        return self.id
     //    }
 }
+extension AppwriteModels.Document: Equatable
+where T: Identifiable, T.ID == String {
+    public static func == (
+        lhs: AppwriteModels.Document<T>, rhs: AppwriteModels.Document<T>
+    ) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+extension AppwriteModels.Document: Hashable
+where T: Identifiable, T.ID == String {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
 extension AppwriteModels.Document
 where T: Codable & CodableDictionaryConvertible {
     static func mock(
