@@ -28,9 +28,6 @@ struct ContentView: View {
                     && !authVM.isLoading
                 {
                     LoginView()
-                        //                            .navigationDestination(for: String.self) { screen in
-                        //                                navigateToView(screen: screen)
-                        //                            }
                         .transition(
                             .asymmetric(
                                 insertion: isOneSecondAfterLaunch
@@ -52,24 +49,6 @@ struct ContentView: View {
                 try await Task.sleep(nanoseconds: 1_000_000_000)
                 isOneSecondAfterLaunch = true
             }
-        }
-    }
-
-    @ViewBuilder
-    func navigateToView(screen: MainViewTabs) -> some View {
-        switch screen {
-        case .home:
-            HomeView()
-        case .create:
-            CreateMeetupTypeView()
-        case .messages:
-            InboxView()
-        case .profile:
-            ProfileView()
-        case .myOrbit:
-            MyOrbitView()
-        //        default:
-        //            Text("Unknown Destination")
         }
     }
 }

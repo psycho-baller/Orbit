@@ -6,16 +6,15 @@
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
 
-//import AnimatedTabBar
 import SwiftUI
 
 enum MainViewTabs {
     case home
-    case create
     case messages
     case profile
     case myOrbit
 }
+
 struct MainTabView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
@@ -23,6 +22,8 @@ struct MainTabView: View {
     @EnvironmentObject var appState: AppState
 
     @Environment(\.colorScheme) var colorScheme
+
+    @State private var showCreateSheet = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -32,25 +33,23 @@ struct MainTabView: View {
                         Label("Home", systemImage: "house.fill")
                     }
                     .tag(MainViewTabs.home)
-                
-                MyOrbitView()
+
+                MyOrbitScreen()
                     .tabItem {
                         Label("My Plans", systemImage: "circle.circle.fill")
                     }
                     .tag(MainViewTabs.myOrbit)
-                
-                
+
                 // Empty tab for center button
                 Color.clear
                     .tabItem { Label("", systemImage: "") }
-                    .tag(MainViewTabs.create)
-                    
-                MyMessages()
+
+                ChatListView()
                     .tabItem {
                         Label("Messages", systemImage: "message.fill")
                     }
                     .tag(MainViewTabs.messages)
-                
+
                 ProfileView()
                     .tabItem {
                         Label("Profile", systemImage: "person.circle.fill")
@@ -58,12 +57,11 @@ struct MainTabView: View {
                     .tag(MainViewTabs.profile)
             }
             .accentColor(ColorPalette.accent(for: colorScheme))
-            
+
             // Custom center button
             Button {
-                appState.selectedTab = .create
+                showCreateSheet = true
             } label: {
-                
                 Image(systemName: "plus")
                     .font(.system(size: 36, weight: .light))
                     .foregroundColor(.white)
@@ -72,14 +70,10 @@ struct MainTabView: View {
                     .clipShape(Circle())
                     .shadow(radius: 4)
             }
-
-
-            
+            // Adjust button position if needed
+            .padding(.bottom, 10)
         }
-        .sheet(isPresented: .init(
-            get: { appState.selectedTab == .create },
-            set: { if !$0 { appState.selectedTab = .home } }
-        )) {
+        .sheet(isPresented: $showCreateSheet) {
             CreateMeetupTypeView()
         }
     }
@@ -93,6 +87,5 @@ struct MainTabView: View {
             .environmentObject(AuthViewModel.mock())
             .environmentObject(ChatRequestViewModel.mock())
             .environmentObject(MeetupRequestViewModel.mock())
-
     }
 #endif
