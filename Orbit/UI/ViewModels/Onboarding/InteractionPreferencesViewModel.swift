@@ -32,8 +32,7 @@ class InteractionPreferencesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.interactionPreferences?
-                            .events?.contains(title)
+                        isSelected: currentUser?.preferredMeetupType?.contains(title)
                             ?? false
                     )
                 }
@@ -72,45 +71,45 @@ class InteractionPreferencesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.interactionPreferences?
-                            .topics?.contains(title)
+                        isSelected: currentUser?
+                            .convoTopics?.contains(title)
                             ?? false
                     )
                 }
             ),
-            Question(
-                text: "What is your preferred age range for interactions?",
-                options: (16...60).map { age in
-                    QuestionOption(
-                        title: "\(age)",
-                        isSelected: (age
-                            == currentUser?.interactionPreferences?
-                            .preferredMinAge
-                            || age
-                                == currentUser?.interactionPreferences?
-                                .preferredMaxAge)
-                    )
-                }
-            ),
-            Question(
-                text: "What is your preferred gender for interactions?",
-                options: UserGender.allCases.map { gender in
-                    QuestionOption(
-                        title: gender.rawValue.capitalized,
-                        isSelected: currentUser?.interactionPreferences?
-                            .preferredGender?.contains(where: {
-                                $0.rawValue == gender.rawValue
-                            }) ?? false
-                    )
-                }
-            ),
+            //            Question(
+            //                text: "What is your preferred age range for interactions?",
+            //                options: (16...60).map { age in
+            //                    QuestionOption(
+            //                        title: "\(age)",
+            //                        isSelected: (age
+            //                            == currentUser?.interactionPreferences?
+            //                            .preferredMinAge
+            //                            || age
+            //                                == currentUser?.interactionPreferences?
+            //                                .preferredMaxAge)
+            //                    )
+            //                }
+            //            ),
+            //            Question(
+            //                text: "What is your preferred gender for interactions?",
+            //                options: UserGender.allCases.map { gender in
+            //                    QuestionOption(
+            //                        title: gender.rawValue.capitalized,
+            //                        isSelected: currentUser?.interactionPreferences?
+            //                            .preferredGender?.contains(where: {
+            //                                $0.rawValue == gender.rawValue
+            //                            }) ?? false
+            //                    )
+            //                }
+            //            ),
         ]
 
         // Initialize age and gender values
-        preferredMinAge = currentUser?.interactionPreferences?.preferredMinAge
-        preferredMaxAge = currentUser?.interactionPreferences?.preferredMaxAge
+        preferredMinAge = currentUser?.preferredMinAge
+        preferredMaxAge = currentUser?.preferredMaxAge
         preferredGender =
-            currentUser?.interactionPreferences?.preferredGender
+            currentUser?.preferredGender
             ?? []
     }
 
@@ -153,13 +152,13 @@ class InteractionPreferencesViewModel: ObservableObject {
 
     func getInteractionPreferences() -> InteractionPreferencesModel {
         return InteractionPreferencesModel(
-            events:
+            preferredMeetupType:
                 questions
                 .first(where: { $0.text.contains("Which activities") })?
                 .options
                 .filter { $0.isSelected }
                 .map { $0.title } ?? [],
-            topics:
+            convoTopics:
                 questions
                 .first(where: { $0.text.contains("Which conversation topics") }
                 )?

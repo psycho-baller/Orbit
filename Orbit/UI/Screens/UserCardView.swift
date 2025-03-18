@@ -61,7 +61,7 @@ struct UserCardView: View {
                                 .lineLimit(1)
 
                             // User Interests
-                            if let activities = user.personalPreferences?
+                            if let activities = user
                                 .activitiesHobbies
                             {
                                 InterestsHorizontalTags(

@@ -12,7 +12,7 @@ struct MeetupRequestDetailedView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
-    @EnvironmentObject var meetupApprovalVM: MeetupApprovalViewModel
+    @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var userVM: UserViewModel
     @State private var areaName: String = ""
 
@@ -213,26 +213,24 @@ struct MeetupRequestDetailedView: View {
     }
 
     private var allInterests: [String] {
-        meetupRequest.createdByUser?.personalPreferences?.activitiesHobbies
+        meetupRequest.createdByUser?.activitiesHobbies
             ?? []
     }
 
     private func approveMeetupRequest() {
-        guard let currentUser = userVM.currentUser else {
+        guard let sender = userVM.currentUser else {
             print("Error: Current user is nil.")
             return
         }
 
-        let meetupApproval = MeetupApprovalModel(
-            //            approvedByUserId: currentUser.id,
-            approvedByUser: currentUser,
-            //            meetupRequestId: meetupRequest.id,
+        let newChat = ChatModel(
+            createdByUser: sender, otherUser: meetupRequest.createdByUser!,
             meetupRequest: meetupRequest
         )
 
         Task {
-            await meetupApprovalVM.approveMeetup(approval: meetupApproval)
             dismiss()
+            await chatVM.createChat(chat: newChat)
         }
     }
 
@@ -252,7 +250,7 @@ struct MeetupRequestDetailedView: View {
             MeetupRequestDetailedView(meetupRequest: .mock())
                 .environmentObject(UserViewModel.mock())
                 .environmentObject(MeetupRequestViewModel.mock())
-                .environmentObject(MeetupApprovalViewModel())
+                .environmentObject(ChatViewModel.mock())
         }
     }
 #endif

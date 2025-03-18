@@ -26,14 +26,15 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     //    let createdByUserId: String
     let createdByUser: UserModel?
     //    let meetupApprovalIds: [String]
-    let meetupApprovals: [MeetupApprovalModel]?
+    //    let meetupApprovals: [MeetupApprovalModel]?
+    let chats: [ChatModel]?
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
     let type: MeetupType
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"  // Maps Appwrite's `$id` to `id`
         case title, startTime, endTime, areaId, description, status
-        case intention, createdByUser, meetupApprovals, type
+        case intention, createdByUser, chats, type
     }
 
     init(
@@ -46,7 +47,8 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         status: MeetupStatus,
         intention: MeetupIntention,
         createdByUser: UserModel? = nil,
-        meetupApprovals: [MeetupApprovalModel]? = [],
+        //        meetupApprovals: [MeetupApprovalModel] = [],
+        chats: [ChatModel] = [],
         type: MeetupType
     ) {
         self.id = id
@@ -58,9 +60,24 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         self.status = status
         self.intention = intention
         self.createdByUser = createdByUser
-        self.meetupApprovals = meetupApprovals
+        self.chats = chats
         self.type = type
     }
+
+    //    init(from decoder: Decoder) throws {
+    //        let container = try decoder.container(keyedBy: CodingKeys.self)
+    //        id = try container.decode(String.self, forKey: .id)
+    //        title = try container.decode(String.self, forKey: .title)
+    //        startTime = try container.decode(String.self, forKey: .startTime)
+    //        endTime = try container.decode(String.self, forKey: .endTime)
+    //        areaId = try container.decode(Int.self, forKey: .areaId)
+    //        description = try container.decode(String.self, forKey: .description)
+    //        status = try container.decode(MeetupStatus.self, forKey: .status)
+    //        intention = try container.decode(MeetupIntention.self, forKey: .intention)
+    //        createdByUser = try container.decodeIfPresent(UserModel.self, forKey: .createdByUser)
+    //        chats = try container.decodeIfPresent([ChatModel].self, forKey: .chats) ?? []
+    //        type = try container.decode(MeetupType.self, forKey: .type)
+    //    }
 
     // Helper computed properties to get Date objects when needed
     var startTimeDate: Date? {
@@ -76,15 +93,17 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         let endTime = startTime.addingTimeInterval(3600)  // Add 1 hour
         return .init(
             id: "67ce15c07501e11e1fa3",
-            title: "\"How do you plan to make the best of your university experience?\"",
+            title:
+                "\"How do you plan to make the best of your university experience?\"",
             startTime: DateFormatterUtility.formatISO8601(startTime),
             endTime: DateFormatterUtility.formatISO8601(endTime),
             areaId: 521_659_157,
-            description: "It's been hard for me to balance out grades and social life. Wondering how others do it",
+            description:
+                "It's been hard for me to balance out grades and social life. Wondering how others do it",
             status: .active,
             intention: .friendship,
-            createdByUser: .mockNoPendingMeetups(),
-            meetupApprovals: [],
+            createdByUser: .mock2(),
+            chats: [],
             type: .meal
         )
     }
@@ -102,18 +121,24 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         }
 
         json["createdByUser"] = self.createdByUser?.id
-        json["meetupApprovals"] = self.meetupApprovals?.map { $0.id }
+        json["chats"] = self.chats?.map(\.id)
 
         print("data: \(json)")
 
         return json
     }
+
+    //    func hasChatWith(userId: String) -> Bool {
+    //        return createdByUser?.id != userId
+    //            && createdChats.contains { $0.createdByUser.id == userId }
+    //    }
 }
 
 enum MeetupStatus: String, Codable {
     case active
     case completed
     case cancelled
+    case filled
 }
 
 enum MeetupIntention: String, Codable {

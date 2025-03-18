@@ -71,7 +71,7 @@ struct ProfilePageView: View {
                     }
 
                     // Orbiting Activities
-                    if let activities = user.personalPreferences?
+                    if let activities = user
                         .activitiesHobbies
                     {
                         ForEach(Array(activities.enumerated()), id: \.element) {
@@ -103,29 +103,32 @@ struct ProfilePageView: View {
                         .foregroundColor(ColorPalette.text(for: colorScheme))
 
                     // Personal Preferences Section
-                    if let personalPrefs = user.personalPreferences {
+                    let personalPrefs =
+                        (user.activitiesHobbies ?? [])
+                        + (user.friendActivities ?? [])
+
+                    if !personalPrefs.isEmpty {
                         PreferenceSection(
                             title: "Personal Preferences",
-                            items: (personalPrefs.activitiesHobbies ?? [])
-                                + (personalPrefs.friendActivities ?? [])
+                            items: personalPrefs
                         )
                     }
 
                     // Interaction Preferences Section
-                    if let interactions = user.interactionPreferences {
+                    let interactions = (user.preferredMeetupType ?? []) + (user.convoTopics ?? [])
+                    if !interactions.isEmpty {
                         PreferenceSection(
                             title: "Connection Style",
-                            items: (interactions.events ?? [])
-                                + (interactions.topics ?? [])
+                            items: interactions
                         )
                     }
 
                     // Friendship Values Section
-                    if let values = user.friendshipValues {
+                    let friendshipValues = (user.friendshipValues ?? []) + (user.friendshipQualities ?? [])
+                    if !friendshipValues.isEmpty {
                         PreferenceSection(
                             title: "Friendship Values",
-                            items: (values.values ?? [])
-                                + (values.qualities ?? [])
+                            items: friendshipValues
                         )
                     }
                 }
@@ -261,6 +264,7 @@ struct PreferenceSection: View {
     PreferenceSection(
         title: "hiii",
         items: [
-            "1OldFlowLayout", "2OldFlowLayout", "3", "4", "5", "6", "7", "8", "9", "10",
+            "1OldFlowLayout", "2OldFlowLayout", "3", "4", "5", "6", "7", "8",
+            "9", "10",
         ])
 }

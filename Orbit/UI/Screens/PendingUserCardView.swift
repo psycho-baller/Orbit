@@ -55,7 +55,7 @@ struct PendingUserCardView: View {
                             .lineLimit(1)
 
                         // User Interests
-                        if let activities = user.personalPreferences?.activitiesHobbies {
+                        if let activities = user.activitiesHobbies {
                             InterestsHorizontalTags(
                                 interests: activities,
                                 onTapInterest: { activity in

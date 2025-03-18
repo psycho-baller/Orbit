@@ -67,7 +67,15 @@ struct InteractionPreferencesView: View {
                             OnboardingViewModel.OnboardingStep.friendshipValues)
                         Task {
                             await userVM.saveOnboardingData(
-                                interactionPreferences: selectedAnswers)
+                                preferredMeetupType: selectedAnswers
+                                    .preferredMeetupType,
+                                convoTopics: selectedAnswers.convoTopics
+                                    //                                preferredMinAge: selectedAnswers
+                                    //                                    .preferredMinAge,
+                                    //                                preferredMaxAge: selectedAnswers
+                                    //                                    .preferredMaxAge,
+                                    //                                preferredGender: selectedAnswers.preferredGender
+                            )
                         }
                     }) {
                         Text("Next")
@@ -101,11 +109,11 @@ struct InteractionPreferencesView: View {
             question.options.contains { $0.isSelected }
         }
 
-        let hasValidAgeRange =
-            viewModel.preferredMinAge != nil && viewModel.preferredMaxAge != nil
-        let hasSelectedGenders = !viewModel.preferredGender.isEmpty
+        //        let hasValidAgeRange =
+        //            viewModel.preferredMinAge != nil && viewModel.preferredMaxAge != nil
+        //        let hasSelectedGenders = !viewModel.preferredGender.isEmpty
 
-        return hasSelectedQuestions && hasValidAgeRange && hasSelectedGenders
+        return hasSelectedQuestions  // && hasValidAgeRange && hasSelectedGenders
     }
 
     private func tagView(for option: QuestionOption, in question: Question)

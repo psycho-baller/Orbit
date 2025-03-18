@@ -123,7 +123,7 @@ struct MeetUpRequestsListView: View {
                                 }
                             ) { request in
                                 SwipeView {
-                                    MeetUpRequestRow(request: request)
+                                    OldMeetUpRequestRow(request: request)
                                         .onTapGesture {
                                             chatRequestVM.selectedRequest =
                                                 request
@@ -219,7 +219,7 @@ struct MeetUpRequestsListView: View {
     }
 }
 
-struct MeetUpRequestRow: View {
+struct OldMeetUpRequestRow: View {
     var request: ChatRequestDocument
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme

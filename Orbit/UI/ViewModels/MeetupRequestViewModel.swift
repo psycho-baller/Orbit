@@ -148,3 +148,11 @@ class MeetupRequestViewModel: ObservableObject {
     #endif
 
 }
+
+#if DEBUG
+    #Preview {
+        let vm = MeetupRequestViewModel()
+        vm.meetupRequests = [MeetupRequestDocument.mock()]
+        return MyOrbitScreen()
+    }
+#endif

@@ -83,8 +83,9 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                 self.currentUser = user
 
                 print(
-                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(user.hasCompletedOnboarding)."
+                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(String(describing: user.hasCompletedOnboarding))."
                 )
+                print("\(String(describing: user))")
             } else {
                 print(
                     "UserViewModel - fetchCurrentUser: No current user found."
@@ -130,9 +131,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
 
     @MainActor
     func saveOnboardingData(
-        personalPreferences: PersonalPreferences? = nil,
-        interactionPreferences: InteractionPreferencesModel? = nil,
-        friendshipValues: FriendshipValuesModel? = nil,
+        activitiesHobbies: [String]? = nil,
+        friendActivities: [String]? = nil,
+        preferredMeetupType: [String]? = nil,
+        convoTopics: [String]? = nil,
+        //        preferredMinAge: Int? = nil,
+        //        preferredMaxAge: Int? = nil,
+        //        preferredGender: [UserGender]? = nil,
+        friendshipValues: [String]? = nil,
+        friendshipQualities: [String]? = nil,
         bio: String? = nil,
         dob: Date? = nil,
         showStarSign: Bool? = nil,
@@ -166,12 +173,23 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         //        }
 
         // Update the user's onboarding data locally
-        currentUser.personalPreferences =
-            personalPreferences ?? currentUser.personalPreferences
-        currentUser.interactionPreferences =
-            interactionPreferences ?? currentUser.interactionPreferences
+        currentUser.activitiesHobbies =
+            activitiesHobbies ?? currentUser.activitiesHobbies
+        currentUser.friendActivities =
+            friendActivities ?? currentUser.friendActivities
+        currentUser.preferredMeetupType =
+            preferredMeetupType ?? currentUser.preferredMeetupType
+        currentUser.convoTopics = convoTopics ?? currentUser.convoTopics
+        //        currentUser.preferredMinAge =
+        //            preferredMinAge ?? currentUser.preferredMinAge
+        //        currentUser.preferredMaxAge =
+        //            preferredMaxAge ?? currentUser.preferredMaxAge
+        //        currentUser.preferredGender =
+        //            preferredGender ?? currentUser.preferredGender
         currentUser.friendshipValues =
             friendshipValues ?? currentUser.friendshipValues
+        currentUser.friendshipQualities =
+            friendshipQualities ?? currentUser.friendshipQualities
         currentUser.bio = bio ?? currentUser.bio
         currentUser.intentions = intentions ?? currentUser.intentions
         currentUser.userLanguages = userLanguages ?? currentUser.userLanguages
@@ -429,7 +447,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     // Aggregate unique interests from all users
     var allInterests: [String] {
         let activitiesArray = users.compactMap {
-            $0.personalPreferences?.activitiesHobbies
+            $0.activitiesHobbies
         }.flatMap { $0 }
         return Array(Set(activitiesArray)).sorted()
     }
@@ -446,15 +464,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let matchesSearchText =
                 lowercasedSearchText.isEmpty
                 || user.username.lowercased().contains(lowercasedSearchText)
-                || (user.personalPreferences?.activitiesHobbies?.joined(
+                || (user.activitiesHobbies?.joined(
                     separator: " "
                 ).lowercased()
                     .contains(lowercasedSearchText) ?? false)
 
             let matchesInterests =
                 selectedInterests.isEmpty
-                || (user.personalPreferences?.activitiesHobbies != nil
-                    && !Set(user.personalPreferences!.activitiesHobbies!)
+                || (user.activitiesHobbies != nil
+                    && !Set(user.activitiesHobbies!)
                         .intersection(selectedInterestsSet)
                         .isEmpty)
 
@@ -738,7 +756,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             let mockVM = UserViewModel()
 
             // Set current user
-            mockVM.currentUser = .mock()
+            mockVM.currentUser = .mock2()
 
             // Set other users
             mockVM.users = UserModel.mockUsers()

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InboxView: View {
-    @EnvironmentObject private var msgVM: MessagingViewModel
+    @EnvironmentObject private var chatVM: ChatViewModel
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject var appState: AppState
     @State private var showNewMessageView = false
@@ -32,7 +32,7 @@ struct InboxView: View {
                     if isLoading {
                         ProgressView("Loading Messages")
                             .padding()
-                    } else if msgVM.conversations.isEmpty {
+                    } else if chatVM.chats.isEmpty {
                         VStack(spacing: 16) {
                             Image(systemName: "message")
                                 .font(.system(size: 70))
@@ -55,7 +55,7 @@ struct InboxView: View {
                         }
                         .frame(maxHeight: .infinity)
                     } else {
-                        MessagesList(conversations: msgVM.conversations)
+//                        MessagesList(conversations: chatVM.chats)
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -82,18 +82,18 @@ struct InboxView: View {
                 "InboxView - onAppear: Loading messages for user \(userVM.currentUser?.accountId ?? "nil")"
             )
             Task {
-                isLoading = true
-                await msgVM.initializeInbox(for: userVM.currentUser?.accountId)
-                { fetchedConversations in
-                    msgVM.conversations = fetchedConversations
-                    isLoading = false
-                }
+//                isLoading = true
+//                await msgVM.initializeInbox(for: userVM.currentUser?.accountId)
+//                { fetchedConversations in
+//                    msgVM.conversations = fetchedConversations
+//                    isLoading = false
+//                }
             }
         }
         .onDisappear {
             Task {
                 print("InboxView - Unsubscribed from messages")
-                await msgVM.unsubscribeFromInboxMessages()
+//                await msgVM.unsubscribeFromInboxMessages()
             }
         }
         .accentColor(ColorPalette.accent(for: colorScheme))

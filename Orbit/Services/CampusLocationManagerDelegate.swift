@@ -65,7 +65,7 @@ class CampusLocationManager: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    // Handle entry and exit events
+    // Handle entry and exit preferredMeetupType
     func locationManager(
         _ manager: CLLocationManager, didEnterRegion region: CLRegion
     ) {

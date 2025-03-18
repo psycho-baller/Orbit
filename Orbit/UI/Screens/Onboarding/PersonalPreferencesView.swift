@@ -104,7 +104,10 @@ struct PersonalPreferencesView: View {
                             .getPersonalPreferences()
                         Task {
                             await userVM.saveOnboardingData(
-                                personalPreferences: selectedAnswers
+                                activitiesHobbies: selectedAnswers
+                                    .activitiesHobbies,
+                                friendActivities: selectedAnswers
+                                    .friendActivities
                             )
                         }
                     }) {

@@ -6,6 +6,6 @@
 //
 
 struct FriendshipValuesModel: Codable, Equatable {
-    var values: [String]?
-    var qualities: [String]?
+    var friendshipValues: [String]?
+    var friendshipQualities: [String]?
 }

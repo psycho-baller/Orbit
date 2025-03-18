@@ -52,7 +52,7 @@ class PersonalPreferencesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.personalPreferences?
+                        isSelected: currentUser?
                             .activitiesHobbies?.contains(
                                 title)
                             ?? false
@@ -76,7 +76,7 @@ class PersonalPreferencesViewModel: ObservableObject {
                 ].map { title in
                     QuestionOption(
                         title: title,
-                        isSelected: currentUser?.personalPreferences?
+                        isSelected: currentUser?
                             .friendActivities?.contains(
                                 title)
                             ?? false
