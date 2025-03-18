@@ -8,7 +8,8 @@
 import Appwrite
 import Foundation
 
-struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
+struct ChatModel: Codable, Equatable, Hashable, Identifiable,
+    CodableDictionaryConvertible
 {
     let id: String
     let createdByUser: UserModel?
@@ -23,6 +24,10 @@ struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
 
     static func == (lhs: ChatModel, rhs: ChatModel) -> Bool {
         return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 
     init(
@@ -68,7 +73,6 @@ struct ChatModel: Codable, Equatable, Identifiable, CodableDictionaryConvertible
 
         return json
     }
-
 }
 
 typealias ChatDocument = AppwriteModels.Document<ChatModel>

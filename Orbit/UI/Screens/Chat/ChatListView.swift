@@ -53,9 +53,10 @@ struct ChatListView: View {
                     } else {
                         List {
                             ForEach(chatVM.chats, id: \.id) { chat in
-                                NavigationLink(
-                                    destination: ChatDetailView(chat: chat)
-                                ) {
+                                Button {
+                                    appState.messagesNavigationPath.append(
+                                        chat)
+                                } label: {
                                     ChatRowView(
                                         chat: chat,
                                         currentUser: userVM.currentUser)
@@ -73,6 +74,12 @@ struct ChatListView: View {
                                 ColorPalette.text(for: colorScheme))
                     }
                 }
+            }
+            .navigationDestination(for: ChatDocument.self) {
+                chat in
+                ChatDetailView(
+                    chat: chat
+                )
             }
         }
         .onAppear {

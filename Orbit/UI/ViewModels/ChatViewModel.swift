@@ -33,21 +33,27 @@ class ChatViewModel: ObservableObject {
             self.chats = fetchedChats
         } catch {
             self.error = error.localizedDescription
-            print("ChatViewModel - fetchChats: Error: \(error.localizedDescription)")
+            print(
+                "ChatViewModel - fetchChats: Error: \(error.localizedDescription)"
+            )
         }
     }
 
     /// Create a new chat
-    func createChat(chat: ChatModel) async {
+    func createChat(chat: ChatModel) async -> ChatDocument? {
         isLoading = true
         defer { isLoading = false }
 
         do {
             let savedChat = try await chatService.createChat(chat: chat)
             self.chats.append(savedChat)
+            return savedChat
         } catch {
             self.error = error.localizedDescription
-            print("ChatViewModel - createChat: Error: \(error.localizedDescription)")
+            print(
+                "ChatViewModel - createChat: Error: \(error.localizedDescription)"
+            )
+            return nil
         }
     }
 
@@ -59,12 +65,15 @@ class ChatViewModel: ObservableObject {
         do {
             if let updatedChat = try await chatService.updateChat(
                 chatId: chat.id, updatedChat: chat.data
-            ), let index = chats.firstIndex(where: { $0.id == updatedChat.id }) {
+            ), let index = chats.firstIndex(where: { $0.id == updatedChat.id })
+            {
                 chats[index] = updatedChat
             }
         } catch {
             self.error = error.localizedDescription
-            print("ChatViewModel - updateChat: Error: \(error.localizedDescription)")
+            print(
+                "ChatViewModel - updateChat: Error: \(error.localizedDescription)"
+            )
         }
     }
 
@@ -78,15 +87,17 @@ class ChatViewModel: ObservableObject {
             self.chats.removeAll { $0.id == chat.id }
         } catch {
             self.error = error.localizedDescription
-            print("ChatViewModel - deleteChat: Error: \(error.localizedDescription)")
+            print(
+                "ChatViewModel - deleteChat: Error: \(error.localizedDescription)"
+            )
         }
     }
 
     #if DEBUG
-    static func mock() -> ChatViewModel {
-        let chatVM = ChatViewModel()
-        chatVM.chats = [ChatDocument.mock()]
-        return chatVM
-    }
+        static func mock() -> ChatViewModel {
+            let chatVM = ChatViewModel()
+            chatVM.chats = [ChatDocument.mock()]
+            return chatVM
+        }
     #endif
 }

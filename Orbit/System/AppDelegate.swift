@@ -127,16 +127,16 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                                     print("Sender ID: \(senderId)")
 
                                     self.appState.selectedTab = .messages
-                                    self.appState.messagesNavigationPath.append(
-                                        ConversationDetailModel(
-                                            id: conversationId,
-                                            messagerName: receiverName,
-                                            lastMessage: "",
-                                            timestamp: "Today",
-                                            isRead: false,
-                                            lastSenderId: senderId
-                                        )
-                                    )
+//                                    self.appState.messagesNavigationPath.append(
+//                                        ConversationDetailModel(
+//                                            id: conversationId,
+//                                            messagerName: receiverName,
+//                                            lastMessage: "",
+//                                            timestamp: "Today",
+//                                            isRead: false,
+//                                            lastSenderId: senderId
+//                                        )
+//                                    )
                                     print(
                                         "Navigation path updated for conversation."
                                     )

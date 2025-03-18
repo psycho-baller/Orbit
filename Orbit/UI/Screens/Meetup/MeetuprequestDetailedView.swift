@@ -15,6 +15,7 @@ struct MeetupRequestDetailedView: View {
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var userVM: UserViewModel
     @State private var areaName: String = ""
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
         NavigationStack {
@@ -227,10 +228,13 @@ struct MeetupRequestDetailedView: View {
             createdByUser: sender, otherUser: meetupRequest.createdByUser!,
             meetupRequest: meetupRequest
         )
+        dismiss()
 
         Task {
-            dismiss()
-            await chatVM.createChat(chat: newChat)
+            if let createdChat = await chatVM.createChat(chat: newChat) {
+                appState.selectedTab = .messages
+                appState.messagesNavigationPath.append(createdChat)
+            }
         }
     }
 
@@ -251,6 +255,7 @@ struct MeetupRequestDetailedView: View {
                 .environmentObject(UserViewModel.mock())
                 .environmentObject(MeetupRequestViewModel.mock())
                 .environmentObject(ChatViewModel.mock())
+                .environmentObject(AppState())
         }
     }
 #endif
