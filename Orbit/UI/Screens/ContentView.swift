@@ -66,6 +66,8 @@ struct ContentView: View {
             InboxView()
         case .profile:
             ProfileView()
+        case .myOrbit:
+            MyOrbitView()
         //        default:
         //            Text("Unknown Destination")
         }
