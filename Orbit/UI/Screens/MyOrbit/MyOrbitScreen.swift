@@ -95,45 +95,6 @@ struct SuccessScreen: View {
     }
 }
 
-// ❌ Error Screen (User ID Missing)
-struct ErrorScreen: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 80)
-                .foregroundColor(.red)
-                .padding(.bottom, 10)
-
-            Text("Error Loading Meetup Requests")
-                .font(.headline)
-                .foregroundColor(.primary)
-
-            Text(
-                "We couldn't retrieve your user information. Please try logging in again."
-            )
-            .font(.subheadline)
-            .multilineTextAlignment(.center)
-            .padding()
-
-            Button(action: {
-                // Handle retry or logout (if needed)
-            }) {
-                Text("Retry")
-                    .font(.headline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal, 40)
-        }
-        .padding()
-    }
-}
-
 #if DEBUG
     #Preview {
         MyOrbitScreen()
