@@ -15,6 +15,7 @@ protocol AppwriteServiceProtocol {
     var account: Account { get }
     var databases: Databases { get }
     var storage: Storage { get }
+    var realtime: Realtime { get }
 }
 
 class AppwriteService: AppwriteServiceProtocol {
@@ -23,7 +24,7 @@ class AppwriteService: AppwriteServiceProtocol {
     let databases: Databases
     let storage: Storage
     let realtime: Realtime
-    let realtime2: Realtime
+    //    let realtime2: Realtime
     let messaging: Messaging
     let functions: Functions
 
@@ -51,9 +52,8 @@ class AppwriteService: AppwriteServiceProtocol {
         self.databases = Databases(client)
         self.storage = Storage(client)
         self.realtime = Realtime(client)
-        self.realtime2 = Realtime(client)
+        //        self.realtime2 = Realtime(client)
         self.messaging = Messaging(client)
         self.functions = Functions(client)
-
     }
 }
