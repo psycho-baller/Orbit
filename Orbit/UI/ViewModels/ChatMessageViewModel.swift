@@ -25,9 +25,16 @@ class ChatMessageViewModel: ObservableObject {
     init(chatId: String, userId: String? = nil) {
         self.chatId = chatId
         self.userId = userId
-        Task {
-            await fetchMessages()
-            await subscribeToRealtime()
+        if isPreviewMode {
+            self.messages = [
+                .mock(data: .mock()),
+                .mock(data: .mockOtherUserSent()),
+            ]
+        } else {
+            Task {
+                await fetchMessages()
+                await subscribeToRealtime()
+            }
         }
     }
 
@@ -224,7 +231,7 @@ class ChatMessageViewModel: ObservableObject {
     #if DEBUG
         static func mock() -> ChatMessageViewModel {
             let messageVM = ChatMessageViewModel(chatId: "chat-123")
-            messageVM.messages = [ChatMessageDocument.mock()]
+            messageVM.messages = [.mock()]
             return messageVM
         }
     #endif
