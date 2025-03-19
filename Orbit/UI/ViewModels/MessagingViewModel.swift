@@ -321,24 +321,24 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
         conversationId: String,
         onNewMessage: @escaping (MessageDocument) -> Void
     ) async {
-        do {
-            try await messagingService.subscribeToMessages(
-                conversationId: conversationId,
-                onNewMessage: { newMessage in
-                    DispatchQueue.main.async {
-                        onNewMessage(newMessage)  // Safely call the optional closure
-                    }
-                }
-            )
-            print(
-                "MessagingViewModel - Subscribed to real-time messages for conversation: \(conversationId)"
-            )
-
-        } catch {
-            print(
-                "MessagingViewModel - Failed to subscribe to real-time messages: \(error.localizedDescription)"
-            )
-        }
+//        do {
+//            try await messagingService.subscribeToMessages(
+//                conversationId: conversationId,
+//                onNewMessage: { newMessage in
+//                    DispatchQueue.main.async {
+//                        onNewMessage(newMessage)  // Safely call the optional closure
+//                    }
+//                }
+//            )
+//            print(
+//                "MessagingViewModel - Subscribed to real-time messages for conversation: \(conversationId)"
+//            )
+//
+//        } catch {
+//            print(
+//                "MessagingViewModel - Failed to subscribe to real-time messages: \(error.localizedDescription)"
+//            )
+//        }
 
     }
 

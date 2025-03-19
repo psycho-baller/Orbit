@@ -144,7 +144,7 @@ class MessagingService: MessagingServiceProtocol {
         onNewMessage: @escaping (MessageDocument) -> Void
     ) async throws {
 
-        inboxSubscription = try await AppwriteService.shared.realtime2
+        inboxSubscription = try await AppwriteService.shared.realtime
             .subscribe(
                 channels: [
                     "databases.\(AppwriteService.shared.databaseId).collections.messages.documents"
@@ -187,7 +187,7 @@ class MessagingService: MessagingServiceProtocol {
 
     func unsubscribeFromInboxMessages() async {
         do {
-            try await inboxSubscription?.close()
+//            try await inboxSubscription?.close()
             inboxSubscription = nil
         } catch {
             print(
@@ -201,7 +201,7 @@ class MessagingService: MessagingServiceProtocol {
         onNewMessage: @escaping (MessageDocument) -> Void
     ) async throws {
 
-        messagesSubscription = try await AppwriteService.shared.realtime2
+        messagesSubscription = try await AppwriteService.shared.realtime
             .subscribe(
                 channels: [
                     "databases.\(AppwriteService.shared.databaseId).collections.messages.documents"
@@ -253,7 +253,7 @@ class MessagingService: MessagingServiceProtocol {
 
     func unsubscribeFromMessages() async {
         do {
-            try await messagesSubscription?.close()
+//            try await messagesSubscription?.close()
             messagesSubscription = nil
         } catch {
             print(
