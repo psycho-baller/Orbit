@@ -76,39 +76,39 @@ struct MessageView: View {
             Task {
                 // Fetch messages and subscribe to updates
                 await msgVM.getMessages(conversationId)
-                await msgVM.subscribeToMessages(
-                    conversationId: conversationId
-                ) { newMessage in
-                    DispatchQueue.main.async {
-                        print(
-                            "MessageView - Received new message: \(newMessage.data.message)"
-                        )
-
-                        if !msgVM.messages.contains(where: {
-                            $0.id == newMessage.id
-                        }) {
-                            msgVM.messages.append(newMessage)
-                            msgVM.messages.sort { $0.createdAt < $1.createdAt }
-                            msgVM.lastMessageId = newMessage.id
-                        }
-
-                        Task {
-                            if let currentUserId = userVM.currentUser?.accountId
-                            {
-                                await msgVM.markMessagesRead(
-                                    conversationId: conversationId,
-                                    currentAccountId: currentUserId)
-                            }
-
-                        }
-                    }
-
-                }
-                if let currentUserId = userVM.currentUser?.accountId {
-                    await msgVM.markMessagesRead(
-                        conversationId: conversationId,
-                        currentAccountId: currentUserId)
-                }
+//                await msgVM.subscribeToMessages(
+//                    conversationId: conversationId
+//                ) { newMessage in
+//                    DispatchQueue.main.async {
+//                        print(
+//                            "MessageView - Received new message: \(newMessage.data.message)"
+//                        )
+//
+//                        if !msgVM.messages.contains(where: {
+//                            $0.id == newMessage.id
+//                        }) {
+//                            msgVM.messages.append(newMessage)
+//                            msgVM.messages.sort { $0.createdAt < $1.createdAt }
+//                            msgVM.lastMessageId = newMessage.id
+//                        }
+//
+//                        Task {
+//                            if let currentUserId = userVM.currentUser?.accountId
+//                            {
+//                                await msgVM.markMessagesRead(
+//                                    conversationId: conversationId,
+//                                    currentAccountId: currentUserId)
+//                            }
+//
+//                        }
+//                    }
+//
+//                }
+//                if let currentUserId = userVM.currentUser?.accountId {
+//                    await msgVM.markMessagesRead(
+//                        conversationId: conversationId,
+//                        currentAccountId: currentUserId)
+//                }
             }
         }
         .onDisappear {
