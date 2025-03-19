@@ -34,8 +34,9 @@ struct ChatDetailView: View {
                 }
                 .padding()
                 // When messages update, scroll to the last one.
-                .onChange(of: chatMessageVM.messages) { messages in
-                    if let lastMessage = messages.last {
+                .onChange(of: chatMessageVM.messages) {
+                    oldMessages, newMessages in
+                    if let lastMessage = newMessages.last {
                         withAnimation {
                             scrollProxy.scrollTo(
                                 lastMessage.id, anchor: .bottom)
@@ -50,7 +51,7 @@ struct ChatDetailView: View {
 
                 Button(action: sendMessage) {
                     Image(systemName: "paperplane.fill")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.accentColor)
                 }
                 .disabled(messageText.isEmpty)
             }
