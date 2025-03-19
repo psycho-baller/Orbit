@@ -24,25 +24,25 @@ struct ChatDetailView: View {
 
     var body: some View {
         VStack {
-            //            ScrollViewReader { scrollProxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(chatMessageVM.messages, id: \.id) { message in
-                        MessageBubbleView(message: message)
+            ScrollViewReader { scrollProxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(chatMessageVM.messages, id: \.id) { message in
+                            MessageBubbleView(message: message)
+                        }
+                    }
+                }
+                .padding()
+                // When messages update, scroll to the last one.
+                .onChange(of: chatMessageVM.messages) { messages in
+                    if let lastMessage = messages.last {
+                        withAnimation {
+                            scrollProxy.scrollTo(
+                                lastMessage.id, anchor: .bottom)
+                        }
                     }
                 }
             }
-            .padding()
-            // When messages update, scroll to the last one.
-            //                .onChange(of: chatMessageVM.messages) { messages in
-            //                    if let lastMessage = messages.last {
-            //                        withAnimation {
-            //                            scrollProxy.scrollTo(
-            //                                lastMessage.id, anchor: .bottom)
-            //                        }
-            //                    }
-            //                }
-            //            }
 
             HStack {
                 TextField("Type a message...", text: $messageText)
@@ -57,26 +57,21 @@ struct ChatDetailView: View {
             .padding()
         }
         .navigationTitle(chat.data.meetupRequest?.title ?? "Chat")
-        .onAppear {
-            Task {
-                await chatMessageVM.fetchMessages()
-            }
-        }
     }
 
     func sendMessage() {
-        // Task {
-        //     let newMessage = ChatMessageModel(
-        //         sentByUser: user,
-        //         chat: chat.data,
-        //         content: messageText
-        //     )
-        //     messageText = ""
-        //     // Add a mock Document which will be replaced by the actual data once the message gets sent
-        //     chatMessageVM.messages.append(
-        //         ChatMessageDocument.mock(data: newMessage))
-        //     await chatMessageVM.sendMessage(message: newMessage)
-        //        }
+        Task {
+            let newMessage = ChatMessageModel(
+                sentByUser: user,
+                chat: chat.data,
+                content: messageText
+            )
+            messageText = ""
+            // Add a mock Document which will be replaced by the actual data once the message gets sent
+            chatMessageVM.messages.append(
+                ChatMessageDocument.mock(data: newMessage))
+            await chatMessageVM.sendMessage(message: newMessage)
+        }
     }
 }
 
