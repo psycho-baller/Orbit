@@ -24,6 +24,7 @@ struct ChatDetailView: View {
 
     var body: some View {
         VStack {
+            //            ScrollViewReader { scrollProxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
                     ForEach(chatMessageVM.messages, id: \.id) { message in
@@ -32,6 +33,16 @@ struct ChatDetailView: View {
                 }
             }
             .padding()
+            // When messages update, scroll to the last one.
+            //                .onChange(of: chatMessageVM.messages) { messages in
+            //                    if let lastMessage = messages.last {
+            //                        withAnimation {
+            //                            scrollProxy.scrollTo(
+            //                                lastMessage.id, anchor: .bottom)
+            //                        }
+            //                    }
+            //                }
+            //            }
 
             HStack {
                 TextField("Type a message...", text: $messageText)
@@ -54,20 +65,18 @@ struct ChatDetailView: View {
     }
 
     func sendMessage() {
-        if let currentUser = userVM.currentUser {
-            Task {
-                let newMessage = ChatMessageModel(
-                    sentByUser: currentUser,
-                    chat: chat.data,
-                    content: messageText
-                )
-                await chatMessageVM.sendMessage(message: newMessage)
-                messageText = ""
-            }
-        } else {
-            #warning("TODO: Handle this error. e.g. show toast")
-            print("failed to send message: no current user")
-        }
+        // Task {
+        //     let newMessage = ChatMessageModel(
+        //         sentByUser: user,
+        //         chat: chat.data,
+        //         content: messageText
+        //     )
+        //     messageText = ""
+        //     // Add a mock Document which will be replaced by the actual data once the message gets sent
+        //     chatMessageVM.messages.append(
+        //         ChatMessageDocument.mock(data: newMessage))
+        //     await chatMessageVM.sendMessage(message: newMessage)
+        //        }
     }
 }
 
@@ -75,7 +84,7 @@ struct ChatDetailView: View {
     #Preview {
         @Previewable @Environment(\.colorScheme) var colorScheme
 
-        ChatDetailView(chat: .mock(), user: .mock())
+        ChatDetailView(chat: .mock(), user: .mock2())
             .environmentObject(UserViewModel.mock())
             .accentColor(ColorPalette.accent(for: colorScheme))
 

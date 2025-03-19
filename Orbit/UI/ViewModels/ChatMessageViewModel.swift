@@ -165,10 +165,13 @@ class ChatMessageViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let savedMessage = try await chatMessageService.createMessage(
+            let createdMessage = try await chatMessageService.createMessage(
                 message: message)
-            self.messages.append(savedMessage)
+            // update the final element with the data from savedMessage
+            messages[messages.count - 1] = createdMessage
         } catch {
+            // remove the final element (the mock one)
+            messages.popLast()
             self.error = error.localizedDescription
             print(
                 "ChatMessageViewModel - sendMessage: Error: \(error.localizedDescription)"
