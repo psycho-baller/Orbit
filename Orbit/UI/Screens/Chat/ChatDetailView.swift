@@ -12,6 +12,7 @@ struct ChatDetailView: View {
     let user: UserModel
     @EnvironmentObject var userVM: UserViewModel
     @EnvironmentObject var chatVM: ChatViewModel
+    @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
     @StateObject var chatMessageVM: ChatMessageViewModel
     @State private var messageText: String = ""
 
@@ -112,6 +113,11 @@ struct ChatDetailView: View {
     /// Confirm the meetup: mark the current chat as confirmed and archive other chats.
     func confirmMeetup() async {
         await chatVM.confirmMeetup(for: chat)
+        // make the meetup request 'filled'
+        if var meetupRequest = chat.data.meetupRequest {
+            meetupRequest.status = .filled
+            await meetupRequestVM.updateMeetup(meetupRequest)
+        }
     }
 
     /// Ignore (archive) this chat. For this design, you might choose to simply delete it.
