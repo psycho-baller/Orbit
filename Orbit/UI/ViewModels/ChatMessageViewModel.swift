@@ -40,6 +40,7 @@ class ChatMessageViewModel: ObservableObject {
                 "ChatMessageViewModel - fetchMessages: Error: \(error.localizedDescription)"
             )
         }
+        return []
     }
 
     /// Send a new message

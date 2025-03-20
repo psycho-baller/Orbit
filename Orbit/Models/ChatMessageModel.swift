@@ -27,7 +27,7 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
         sentByUser: UserModel? = nil,
         chat: ChatModel? = nil,
         content: String,
-        timestamp: String = ISO8601DateFormatter().string(from: Date()),
+        timestamp: String = DateFormatterUtility.formatISO8601(Date()),
         createdAt: String = DateFormatterUtility.formatISO8601(Date()),
         isRead: Bool? = false
     ) {

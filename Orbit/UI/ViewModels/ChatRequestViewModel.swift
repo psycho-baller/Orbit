@@ -77,7 +77,7 @@ class ChatRequestViewModel: ObservableObject {
             
             // Ensure UI updates happen on the main thread
             await MainActor.run {
-                self.chatRequests = fetchedRequests
+
             }
         } catch {
             await MainActor.run {

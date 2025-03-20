@@ -10,32 +10,38 @@ import SwiftUI
 struct MessageBubbleView: View {
     let message: ChatMessageModel
     @EnvironmentObject var userVM: UserViewModel
-    @Environment(\.colorScheme) var colorScheme
 
     var isFromCurrentUser: Bool {
-        // Assuming `userVM.currentUser?.id` is available
         return message.sentByUser?.id == userVM.currentUser?.id
     }
 
     var body: some View {
         HStack {
             if isFromCurrentUser { Spacer() }
-            Text(message.content)
-                .padding()
-                .background(
-                    isFromCurrentUser
-                        ? .accentColor
-                        : ColorPalette.lightGray(for: colorScheme)
-                )
-                .foregroundColor(isFromCurrentUser ? .white : .white)
-                .cornerRadius(10)
+
+            VStack(alignment: isFromCurrentUser ? .trailing : .leading, spacing: 4) {
+                Text(message.content)
+                    .padding()
+                    .background(
+                        isFromCurrentUser
+                        ? Color.blue.opacity(0.8)  // Dark bubble for sender
+                        : Color.white  // Light bubble for received
+                    )
+                    .foregroundColor(isFromCurrentUser ? .white : .black)
+                    .cornerRadius(15)
+
+                Text("Today at \(message.timestamp)") // Example timestamp format
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+
             if !isFromCurrentUser { Spacer() }
         }
-        .frame(
-            maxWidth: .infinity,
-            alignment: isFromCurrentUser ? .trailing : .leading)
+        .padding(.horizontal)
     }
 }
+
+
 
 #if DEBUG
     #Preview {

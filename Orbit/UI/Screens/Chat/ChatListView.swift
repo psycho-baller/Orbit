@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct ChatListView: View {
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var userVM: UserViewModel
@@ -14,81 +16,98 @@ struct ChatListView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        NavigationStack(path: $appState.messagesNavigationPath) {
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        ColorPalette.background(for: colorScheme),
-                        ColorPalette.main(for: colorScheme),
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
-
-                VStack {
-                    if chatVM.chats.isEmpty {
-                        VStack(spacing: 16) {
-                            Image(
-                                systemName: "bubble.left.and.bubble.right.fill"
-                            )
-                            .font(.system(size: 70))
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme))
-                            Text("No Chats Yet")
-                                .font(.title)
-                                .foregroundColor(
-                                    ColorPalette.text(for: colorScheme))
-                            Text(
-                                "Your chats will appear here when you start a conversation."
-                            )
-                            .font(.body)
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme)
-                            )
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(chatVM.chats) { chat in
+                        NavigationLink(destination: ChatDetailView(chat: chat)) {
+                            ChatListRow(chat: chat)
                         }
-                        .frame(maxHeight: .infinity)
-                    } else {
-                        List {
-                            ForEach(chatVM.chats, id: \.id) { chat in
-                                Button {
-                                    appState.messagesNavigationPath.append(
-                                        chat)
-                                } label: {
-                                    ChatRowView(
-                                        chat: chat,
-                                        currentUser: userVM.currentUser)
-                                }
-                            }
-                        }
-                        .scrollContentBackground(.hidden)
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Text("Chats")
-                            .largeBoldFont()
-                            .foregroundColor(
-                                ColorPalette.text(for: colorScheme))
-                    }
+                .padding()
+            }
+            .background(Color.darkIndigo.ignoresSafeArea())
+            .navigationBarTitleDisplayMode(.inline) // Make space for custom title
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("My Messages")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.cyan) // ✅ Cyan title
                 }
-            }
-            .navigationDestination(for: ChatDocument.self) {
-                chat in
-                ChatDetailView(
-                    chat: chat
-                )
-            }
-        }
-        .onAppear {
-            Task {
-                await chatVM.fetchChats()
             }
         }
     }
 }
+
+struct ChatListRow: View {
+    let chat: ChatDocument
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 12) {
+                // Profile Image
+                Image("profile_pic") // Replace with actual image logic
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.white.opacity(0.3), lineWidth: 1))
+
+                // Chat Info
+                VStack(alignment: .leading, spacing: 4) {
+                    Text( "No messages yet")
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.8))
+                        .lineLimit(1)
+                }
+
+                Spacer()
+            }
+            
+        
+            Button(action: {
+                sendAutoResponse(chat)
+            }) {
+                HStack {
+                    Image(systemName: "cup.and.saucer.fill")
+                        .foregroundColor(.white)
+                    
+                    Text("What's your favorite food place in MacHall?")
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right") // ✅ Arrow icon for interaction
+                        .foregroundColor(.white)
+                }
+                .padding()
+                .background(Color.cyan.opacity(0.9)) // ✅ Cyan background
+                .cornerRadius(12)
+            }
+        }
+        .padding()
+        .background(Color.white.opacity(0.05)) // ✅ Light overlay for message bubble
+        .cornerRadius(12)
+    }
+
+ 
+    func formatTime(_ timestamp: String) -> String {
+        guard let date = DateFormatterUtility.parseISO8601(timestamp) else { return "" }
+        return DateFormatterUtility.dateOnlyFormatter.string(from: date)
+    }
+
+   
+    func sendAutoResponse(_ chat: ChatDocument) {
+        print("Auto-response sent to \(chat.id)")
+        // Implement actual message sending logic here
+    }
+}
+
+
 
 #if DEBUG
     #Preview {
