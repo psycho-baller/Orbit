@@ -72,6 +72,8 @@ flowchart TD
 
 ### **API Key Handling Guidelines**
 
+if you do not have access to the API keys, contact the project maintainers like [Rami](https://github.com/psycho-baller).
+
 #### **Overview**
 
 To ensure the security of sensitive information, API keys must not be committed to the repository. This guide outlines the steps you should follow to manage API keys locally in your development environment.
