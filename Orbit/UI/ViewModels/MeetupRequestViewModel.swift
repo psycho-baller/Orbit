@@ -99,13 +99,13 @@ class MeetupRequestViewModel: ObservableObject {
     }
 
     /// Update an existing meetup
-    func updateMeetup(_ meetup: MeetupRequestDocument) async {
+    func updateMeetup(_ meetup: MeetupRequestModel) async {
         isLoading = true
         defer { isLoading = false }
 
         do {
             if let updatedMeetup = try await meetupService.updateMeetup(
-                meetupId: meetup.id, updatedMeetup: meetup.data),
+                meetupId: meetup.id, updatedMeetup: meetup),
                 let index = meetupRequests.firstIndex(where: {
                     $0.id == updatedMeetup.id
                 })

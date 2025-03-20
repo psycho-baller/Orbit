@@ -12,7 +12,7 @@ struct MyOrbitScreen: View {
     @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
 
     @Environment(\.colorScheme) var colorScheme
-    
+
     @State private var showCreateSheet = false
 
 
@@ -24,7 +24,7 @@ struct MyOrbitScreen: View {
         NavigationView {
             ZStack {
                 ColorPalette.background(for: colorScheme).edgesIgnoringSafeArea(.all)
-                
+
                 if let userId = userId {
                     SuccessScreen(
                         userId: userId,
@@ -45,18 +45,19 @@ struct SuccessScreen: View {
     @ObservedObject var meetupRequestVM: MeetupRequestViewModel
 
     var myMeetupPosts: [MeetupRequestDocument] {
-        meetupRequestVM.meetupRequests.filter {
-            $0.data.createdByUser?.id == userId && $0.data.status != .filled
+        meetupRequestVM.meetupRequests.filter { request in
+            request.data.createdByUser?.id == userId
+                && request.data.status != .filled
         }
     }
 
     var myConfirmedMeetups: [MeetupRequestDocument] {
-        meetupRequestVM.meetupRequests.filter {
-            $0.data.createdByUser?.id == userId
-                && ($0.data.chats ?? []).contains { (chat: ChatModel) in
+        meetupRequestVM.meetupRequests.filter { request in
+            request.data.createdByUser?.id == userId
+                || (request.data.chats ?? []).contains { (chat: ChatModel) in
                     chat.createdByUser?.id == userId
                 }
-                && $0.data.status == .filled
+                    && request.data.status == .filled
         }
     }
 
@@ -64,6 +65,7 @@ struct SuccessScreen: View {
         meetupRequestVM.meetupRequests.filter { request in
             (request.data.chats ?? []).contains { (chat: ChatModel) in
                 chat.createdByUser?.id == userId
+                    && request.data.status != .filled
             }
         }
     }
