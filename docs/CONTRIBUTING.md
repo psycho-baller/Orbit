@@ -1,6 +1,6 @@
-# Contributing
+# **Contributing**
 
-## Background Information
+## **Background Information**
 
 ### User journey flow
 
@@ -65,16 +65,66 @@ flowchart TD
         - **longitude**: -122.00902
 3. Click `OK` to set the custom location.
 
-
 ## **Prerequisites**
 
 1. **Download Orbit** by [installing the zip file of this repository](https://github.com/psycho-baller/Orbit/archive/refs/heads/main.zip)
 2. Build the app and open it to get started.
 
+### **API Key Handling Guidelines**
 
-# **Development**
+#### **Overview**
 
-## **Architecture: MVVM + Services**
+To ensure the security of sensitive information, API keys must not be committed to the repository. This guide outlines the steps you should follow to manage API keys locally in your development environment.
+
+#### 1. Creating Your Local APIKeys.plist
+
+1. **Copy the Template:**
+   - Create a new file in your project’s Resources folder named `APIKeys.plist`.
+
+2. **Insert the Following Template:**
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+   <plist version="1.0">
+   <dict>
+       <key>APPWRITE_PROJECT_ID</key>
+       <string></string>
+   </dict>
+   </plist>
+   ```
+
+3. **Location:**
+   - Place the `APIKeys.plist` file in the **Resources** folder of your project (e.g., `Orbit/Resources/APIKeys.plist`). This ensures it will be bundled with the app while remaining separate from the source code.
+
+#### **2. Excluding APIKeys.plist from Version Control**
+
+- The `APIKeys.plist` file is already listed in the `.gitignore` file to prevent it from being committed to the repository.
+- **Important:** Do not remove or modify the `.gitignore` entry related to API key files.
+
+#### **3. Accessing the API Keys in Code**
+
+- The application is configured to load API keys from the `APIKeys.plist` file in the Resources folder. For example, you can load the API key in Swift as follows:
+
+  ```swift
+  import Foundation
+
+  class APIManager {
+      static let shared = APIManager()
+      var apiKey: String?
+
+      private init() {
+          if let url = Bundle.main.url(forResource: "APIKeys", withExtension: "plist"),
+             let data = try? Data(contentsOf: url),
+             let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] {
+              apiKey = plist["APPWRITE_PROJECT_ID"] as? String
+          }
+      }
+  }
+
+## **Development**
+
+### **Architecture: MVVM + Services**
 
 The project uses the **MVVM** architecture with Services for backend calls where:
 
@@ -82,11 +132,11 @@ The project uses the **MVVM** architecture with Services for backend calls where
 2. **View** (V): Is the frontend graphic user interface (GUI/screen) the user interacts with.
 3. **ViewModel** (VM): Connects the Model to View ensuring the screens are redrawn with the data loaded in the ViewModel changes.
 4. **Service**: Are backend calls to the Appwrite database.
-   - https://appwrite.io/
+   - <https://appwrite.io/>
 
-### **Example**
+#### **Example**
 
-#### **Model**
+##### **Model**
 
 ```swift
 struct UserModel {
@@ -102,7 +152,7 @@ struct UserModel {
 typealias UserDocument = AppwriteModels.Document<UserModel>
 ```
 
-#### **View**
+##### **View**
 
 ```swift
 struct UserView: View {
@@ -123,7 +173,7 @@ struct UserView: View {
 }
 ```
 
-#### **ViewModel**
+##### **ViewModel**
 
 ```swift
 class UserViewModel {
@@ -147,7 +197,7 @@ class UserViewModel {
 }
 ```
 
-#### **Service**
+##### **Service**
 
 ```swift
 import Appwrite
