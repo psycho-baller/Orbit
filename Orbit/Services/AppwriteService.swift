@@ -45,7 +45,7 @@ class AppwriteService: AppwriteServiceProtocol {
 
         self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1")
-            .setProject("67017126001e334dd053")
+            .setProject(APIManager.shared.APPWRITE_PROJECT_ID!)
             .setSelfSigned(true)  // For self signed certificates, only use for development
 
         self.account = Account(client)
