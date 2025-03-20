@@ -51,6 +51,7 @@
 		258B23FB2D6A90CB00B987F3 /* UserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258B23FA2D6A90CB00B987F3 /* UserDetailsView.swift */; };
 		258B24022D6AD5E200B987F3 /* AuthNavigationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258B24002D6AD5E200B987F3 /* AuthNavigationPath.swift */; };
 		258B24382D6AF67700B987F3 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258B24372D6AF67700B987F3 /* LoadingButton.swift */; };
+		258F6CA72D8CCCE100DC3291 /* APIKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 258F6CA62D8CCCE100DC3291 /* APIKeys.plist */; };
 		2590D8A12CF7E43200D9E35D /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2590D8A02CF7E42C00D9E35D /* Views.swift */; };
 		259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2252CC02F0D00C9F285 /* Appwrite */; };
 		259CB2292CC02F2500C9F285 /* EnvironmentOverrides in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2282CC02F2500C9F285 /* EnvironmentOverrides */; };
@@ -182,6 +183,7 @@
 		258B23FA2D6A90CB00B987F3 /* UserDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsView.swift; sourceTree = "<group>"; };
 		258B24002D6AD5E200B987F3 /* AuthNavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigationPath.swift; sourceTree = "<group>"; };
 		258B24372D6AF67700B987F3 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
+		258F6CA62D8CCCE100DC3291 /* APIKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = APIKeys.plist; sourceTree = "<group>"; };
 		2590D8A02CF7E42C00D9E35D /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		259CB2792CC0460400C9F285 /* PreciseLocationManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreciseLocationManagerDelegate.swift; sourceTree = "<group>"; };
 		259CB27A2CC0460400C9F285 /* AccountManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManagementService.swift; sourceTree = "<group>"; };
@@ -518,6 +520,7 @@
 		25DC74E72CC0522300731939 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				258F6CA62D8CCCE100DC3291 /* APIKeys.plist */,
 				2513832E2D6E0FB500FAF309 /* Languages.json */,
 				25DC74E82CC0522300731939 /* Localizable.strings */,
 				25DC74EA2CC0522300731939 /* LaunchScreen.storyboard */,
@@ -670,6 +673,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */,
+				258F6CA72D8CCCE100DC3291 /* APIKeys.plist in Resources */,
 				25ECBA1E2CD03A0A00256104 /* CleanedUofCLocationData.json in Resources */,
 				2513832F2D6E0FB500FAF309 /* Languages.json in Resources */,
 				25DC74FD2CC0522300731939 /* Poppins-Light.ttf in Resources */,

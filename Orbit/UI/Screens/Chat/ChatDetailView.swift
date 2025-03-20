@@ -11,6 +11,7 @@ struct ChatDetailView: View {
     let chat: ChatDocument
     let user: UserModel
     @EnvironmentObject var userVM: UserViewModel
+    @EnvironmentObject var chatVM: ChatViewModel
     @StateObject var chatMessageVM: ChatMessageViewModel
     @State private var messageText: String = ""
 
@@ -45,6 +46,39 @@ struct ChatDetailView: View {
                 }
             }
 
+            if let meetupCreatorId = chat.data.meetupRequest?.createdByUser?.id,
+                user.id == meetupCreatorId
+            {
+                HStack(spacing: 16) {
+                    Button(action: { Task { await ignoreChat() } }) {
+                        HStack {
+                            Image(systemName: "xmark.circle.fill")
+                            Text("Ignore")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color.red)
+                        .cornerRadius(16)
+                    }
+                    Button(action: { Task { await confirmMeetup() } }) {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Confirm Meetup")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color.green)
+                        .cornerRadius(16)
+                    }
+                }
+                .padding(.horizontal, 24)
+                //            .padding(.vertical, 2)
+            }
+
             HStack {
                 TextField("Type a message...", text: $messageText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -73,6 +107,16 @@ struct ChatDetailView: View {
                 ChatMessageDocument.mock(data: newMessage))
             await chatMessageVM.sendMessage(message: newMessage)
         }
+    }
+
+    /// Confirm the meetup: mark the current chat as confirmed and archive other chats.
+    func confirmMeetup() async {
+        await chatVM.confirmMeetup(for: chat)
+    }
+
+    /// Ignore (archive) this chat. For this design, you might choose to simply delete it.
+    func ignoreChat() async {
+        //        await chatVM.deleteChat(chat)
     }
 }
 
