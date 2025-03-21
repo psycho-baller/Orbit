@@ -20,7 +20,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     let areaId: Int
     let description: String
     // enum status: active, completed, cancelled
-    let status: MeetupStatus
+    var status: MeetupStatus
     // enum intention: friendship, relationship
     let intention: MeetupIntention
     //    let createdByUserId: String

@@ -19,7 +19,7 @@ import JSONCodable
 protocol ChatServiceProtocol {
     func createChat(chat: ChatModel) async throws -> ChatDocument
     func getChat(chatId: String) async throws -> ChatDocument?
-    func updateChat(chatId: String, updatedChat: ChatModel) async throws
+    func updateChat(chatId: String, updatedChat: ChatModel) async
         -> ChatDocument?
     func deleteChat(chatId: String) async throws
     func listChats(queries: [String]?) async throws -> [ChatDocument]
@@ -60,7 +60,7 @@ class ChatService: ChatServiceProtocol {
         }
     }
 
-    func updateChat(chatId: String, updatedChat: ChatModel) async throws
+    func updateChat(chatId: String, updatedChat: ChatModel) async
         -> ChatDocument?
     {
         do {
@@ -78,7 +78,8 @@ class ChatService: ChatServiceProtocol {
             print(
                 "ChatService - updateChat: Error: \(error.localizedDescription)"
             )
-            throw error
+            return nil
+            //            throw error
         }
     }
 

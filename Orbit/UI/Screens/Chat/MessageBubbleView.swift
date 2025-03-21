@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct MessageBubbleView: View {
-    let message: ChatMessageModel
+    let message: ChatMessageDocument
     @EnvironmentObject var userVM: UserViewModel
 
     var isFromCurrentUser: Bool {
-        return message.sentByUser?.id == userVM.currentUser?.id
+        // Assuming `userVM.currentUser?.id` is available
+        return message.data.sentByUser?.id == userVM.currentUser?.id
     }
 
     var body: some View {
         HStack {
             if isFromCurrentUser { Spacer() }
-
             VStack(alignment: isFromCurrentUser ? .trailing : .leading, spacing: 4) {
-                Text(message.content)
+                Text(message.data.content)
                     .padding()
                     .background(
-                        isFromCurrentUser
-                        ? Color.blue.opacity(0.8)  // Dark bubble for sender
-                        : Color.white  // Light bubble for received
+                    isFromCurrentUser
+                        ? .accentColor
+                        : ColorPalette.lightGray(for: colorScheme)
                     )
                     .foregroundColor(isFromCurrentUser ? .white : .black)
                     .cornerRadius(15)
@@ -34,7 +34,6 @@ struct MessageBubbleView: View {
 //                    .font(.caption)
 //                    .foregroundColor(.gray)
             }
-
             if !isFromCurrentUser { Spacer() }
         }
         .padding(.horizontal)
@@ -47,7 +46,7 @@ struct MessageBubbleView: View {
     #Preview {
         @Previewable @Environment(\.colorScheme) var colorScheme
 
-        ChatDetailView(chat: .mock())
+        ChatDetailView(chat: .mock(), user: .mock())
             .environmentObject(UserViewModel.mock())
             .accentColor(ColorPalette.accent(for: colorScheme))
 

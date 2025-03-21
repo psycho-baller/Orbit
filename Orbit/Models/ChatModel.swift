@@ -16,10 +16,11 @@ struct ChatModel: Codable, Equatable, Hashable, Identifiable,
     let otherUser: UserModel?
     let meetupRequest: MeetupRequestModel?
     let messages: [ChatMessageModel]?
+    var meetupConfirmed: Bool
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"  // Maps Appwrite's `$id` to `id`
-        case createdByUser, otherUser, meetupRequest, messages
+        case createdByUser, otherUser, meetupRequest, messages, meetupConfirmed
     }
 
     static func == (lhs: ChatModel, rhs: ChatModel) -> Bool {
@@ -35,13 +36,15 @@ struct ChatModel: Codable, Equatable, Hashable, Identifiable,
         createdByUser: UserModel? = nil,
         otherUser: UserModel? = nil,
         meetupRequest: MeetupRequestModel? = nil,
-        messages: [ChatMessageModel]? = []
+        messages: [ChatMessageModel]? = [],
+        meetupConfirmed: Bool = false
     ) {
         self.id = id
         self.createdByUser = createdByUser
         self.otherUser = otherUser
         self.meetupRequest = meetupRequest
         self.messages = messages
+        self.meetupConfirmed = meetupConfirmed
     }
 
     static func mock() -> Self {

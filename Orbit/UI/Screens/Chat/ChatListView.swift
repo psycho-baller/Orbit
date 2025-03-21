@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct ChatListView: View {
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var userVM: UserViewModel
@@ -16,29 +14,103 @@ struct ChatListView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 12) {
-                    ForEach(chatVM.chats) { chat in
-                        NavigationLink(destination: ChatDetailView(chat: chat)) {
-                            ChatListRow(chat: chat)
+        // Check if user exists
+        if let currentUser = userVM.currentUser {
+            NavigationStack(path: $appState.messagesNavigationPath) {
+                ZStack {
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            ColorPalette.background(for: colorScheme),
+                            ColorPalette.main(for: colorScheme),
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .ignoresSafeArea()
+
+                    VStack {
+                        if chatVM.chats.isEmpty {
+                            VStack(spacing: 16) {
+                                Image(
+                                    systemName:
+                                        "bubble.left.and.bubble.right.fill"
+                                )
+                                .font(.system(size: 70))
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
+                                Text("No Chats Yet")
+                                    .font(.title)
+                                    .foregroundColor(
+                                        ColorPalette.text(for: colorScheme))
+                                Text(
+                                    "Your chats will appear here when you start a conversation."
+                                )
+                                .font(.body)
+                                .foregroundColor(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                )
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                            }
+                            .frame(maxHeight: .infinity)
+                        } else {
+                            List {
+                                ForEach(chatVM.chats, id: \.id) { chat in
+                                    Button {
+                                        appState.messagesNavigationPath.append(
+                                            chat)
+                                    } label: {
+                                        ChatRowView(
+                                            chat: chat,
+                                            currentUser: userVM.currentUser
+                                        )
+                                    }
+                                }
+                            }
+                            .scrollContentBackground(.hidden)
                         }
-                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Text("Chats")
+                                .largeBoldFont()
+                                .foregroundColor(
+                                    ColorPalette.text(for: colorScheme))
+                        }
                     }
                 }
-                .padding()
-            }
-            .background(Color.darkIndigo.ignoresSafeArea())
-            .navigationBarTitleDisplayMode(.inline) // Make space for custom title
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("My Messages")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.cyan) // ✅ Cyan title
+                .navigationDestination(for: ChatDocument.self) { chat in
+                    ChatDetailView(
+                        chat: chat,
+                        user: currentUser
+                    )
                 }
             }
+            .onAppear {
+                Task {
+                    await chatVM.fetchChats()
+                }
+            }
+        } else {
+            // If no user is available, show an error screen.
+            ErrorScreen()
         }
+        .padding()
+        .background(Color.white.opacity(0.05)) // ✅ Light overlay for message bubble
+        .cornerRadius(12)
+    }
+
+ 
+    func formatTime(_ timestamp: String) -> String {
+        guard let date = DateFormatterUtility.parseISO8601(timestamp) else { return "" }
+        return DateFormatterUtility.dateOnlyFormatter.string(from: date)
+    }
+
+   
+    func sendAutoResponse(_ chat: ChatDocument) {
+        print("Auto-response sent to \(chat.id)")
+        // Implement actual message sending logic here
     }
 }
 
@@ -89,21 +161,6 @@ struct ChatListRow: View {
                 .cornerRadius(12)
             }
         }
-        .padding()
-        .background(Color.white.opacity(0.05)) // ✅ Light overlay for message bubble
-        .cornerRadius(12)
-    }
-
- 
-    func formatTime(_ timestamp: String) -> String {
-        guard let date = DateFormatterUtility.parseISO8601(timestamp) else { return "" }
-        return DateFormatterUtility.dateOnlyFormatter.string(from: date)
-    }
-
-   
-    func sendAutoResponse(_ chat: ChatDocument) {
-        print("Auto-response sent to \(chat.id)")
-        // Implement actual message sending logic here
     }
 }
 
@@ -111,12 +168,10 @@ struct ChatListRow: View {
 
 #if DEBUG
     #Preview {
-        @Previewable @Environment(\.colorScheme) var colorScheme
-
         ChatListView()
             .environmentObject(ChatViewModel.mock())
             .environmentObject(UserViewModel.mock())
             .environmentObject(AppState())
-            .accentColor(ColorPalette.accent(for: colorScheme))
+            .accentColor(ColorPalette.accent(for: .light))
     }
 #endif

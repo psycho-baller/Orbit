@@ -15,6 +15,7 @@ protocol AppwriteServiceProtocol {
     var account: Account { get }
     var databases: Databases { get }
     var storage: Storage { get }
+    var realtime: Realtime { get }
 }
 
 class AppwriteService: AppwriteServiceProtocol {
@@ -23,7 +24,7 @@ class AppwriteService: AppwriteServiceProtocol {
     let databases: Databases
     let storage: Storage
     let realtime: Realtime
-    let realtime2: Realtime
+    //    let realtime2: Realtime
     let messaging: Messaging
     let functions: Functions
 
@@ -44,16 +45,15 @@ class AppwriteService: AppwriteServiceProtocol {
 
         self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1")
-            .setProject("67017126001e334dd053")
+            .setProject(APIManager.shared.APPWRITE_PROJECT_ID!)
             .setSelfSigned(true)  // For self signed certificates, only use for development
 
         self.account = Account(client)
         self.databases = Databases(client)
         self.storage = Storage(client)
         self.realtime = Realtime(client)
-        self.realtime2 = Realtime(client)
+        //        self.realtime2 = Realtime(client)
         self.messaging = Messaging(client)
         self.functions = Functions(client)
-
     }
 }

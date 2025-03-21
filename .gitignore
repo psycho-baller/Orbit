@@ -58,3 +58,4 @@ fastlane/test_output
 fastlane/app_archive
 
 .env
+APIKeys.plist
