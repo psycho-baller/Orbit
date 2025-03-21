@@ -48,7 +48,7 @@ struct ChatDetailView: View {
             }
 
             if let meetupCreatorId = chat.data.meetupRequest?.createdByUser?.id,
-                user.id == meetupCreatorId
+                user.id != meetupCreatorId
             {
                 HStack(spacing: 16) {
                     Button(action: { Task { await ignoreChat() } }) {
@@ -78,6 +78,8 @@ struct ChatDetailView: View {
                 }
                 .padding(.horizontal, 24)
                 //            .padding(.vertical, 2)
+            } else if chat.data.meetupRequest?.status != .filled {
+                Text("Meetup confirmed!")
             }
 
             HStack {
