@@ -30,9 +30,9 @@ struct MessageBubbleView: View {
                     .foregroundColor(isFromCurrentUser ? .white : .black)
                     .cornerRadius(15)
 
-                Text("Today at \(message.timestamp)") // Example timestamp format
-                    .font(.caption)
-                    .foregroundColor(.gray)
+//                Text("Today at \(message.timestamp)") // Example timestamp format
+//                    .font(.caption)
+//                    .foregroundColor(.gray)
             }
 
             if !isFromCurrentUser { Spacer() }

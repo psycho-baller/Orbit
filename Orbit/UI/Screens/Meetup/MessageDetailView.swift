@@ -5,8 +5,8 @@
 //  Created by Nathaniel D'Orazio on 2025-03-09.
 //
 
-import SwiftUI
 import Foundation
+import SwiftUI
 
 struct MessageDetailView: View {
     let request: ChatRequestDocument
@@ -19,34 +19,36 @@ struct MessageDetailView: View {
     @State private var senderName: String = "Unknown"
     @StateObject private var chatMessageVM: ChatMessageViewModel
 
-    
     init(request: ChatRequestDocument) {
         self.request = request
-        _chatMessageVM = StateObject(wrappedValue: ChatMessageViewModel(chatId: request.id))
+        _chatMessageVM = StateObject(
+            wrappedValue: ChatMessageViewModel(chatId: request.id))
     }
-    
+
     var body: some View {
         ZStack {
             Color.blue.opacity(0.9).ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
-                ChatProfileTitle(messagerName: senderName, isInMessageView: true)
-                
+                ChatProfileTitle(
+                    messagerName: senderName, isInMessageView: true)
+
                 ScrollView {
                     VStack(spacing: 16) {
-                        ForEach(messages, id: \ .id) { message in
+                        ForEach(messages, id: \.id) { message in
                             MessageBubble(
                                 message: message.content,
-                                isFromSender: message.sentByUser?.id == userVM.currentUser?.id,
-                                timestamp: message.createdAtDate != nil
-                                            ? DateFormatterUtility.formatForDisplay(message.createdAtDate!)
-                                            : "Unknown Time"
+                                isFromSender: message.sentByUser?.id
+                                    == userVM.currentUser?.id
+                                    //                                timestamp: message.createdAtDate != nil
+                                    //                                            ? DateFormatterUtility.formatForDisplay(message.createdAtDate!)
+                                    //                                            : "Unknown Time"
                             )
                         }
                     }
                     .padding()
                 }
-                
+
                 VStack(spacing: 16) {
                     HStack(spacing: 12) {
                         Button(action: acceptRequest) {
@@ -100,7 +102,7 @@ struct MessageDetailView: View {
             senderName = userVM.getUserName(from: request.data.senderAccountId)
         }
     }
-    
+
     private func fetchMessages() {
         Task {
             do {
@@ -113,8 +115,6 @@ struct MessageDetailView: View {
             }
         }
     }
-
-
 
     private func acceptRequest() {
         print("Request accepted")
@@ -133,25 +133,27 @@ struct MessageDetailView: View {
 struct MessageBubble: View {
     let message: String
     let isFromSender: Bool
-    let timestamp: String  // Pass in a formatted timestamp as a string
+    //    let timestamp: String  // Pass in a formatted timestamp as a string
 
     var body: some View {
         HStack {
-            if isFromSender { Spacer() } // Align sender's messages to the right
-            
+            if isFromSender { Spacer() }  // Align sender's messages to the right
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(message)
                     .padding()
-                    .background(isFromSender ? Color.green : Color.gray.opacity(0.8))
+                    .background(
+                        isFromSender ? Color.green : Color.gray.opacity(0.8)
+                    )
                     .foregroundColor(.white)
                     .cornerRadius(20)
 
-                Text(timestamp)
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.7))
+                //                Text(timestamp)
+                //                    .font(.caption)
+                //                    .foregroundColor(.white.opacity(0.7))
             }
 
-            if !isFromSender { Spacer() } // Align received messages to the left
+            if !isFromSender { Spacer() }  // Align received messages to the left
         }
         .padding(.horizontal)
         .padding(.vertical, 4)
