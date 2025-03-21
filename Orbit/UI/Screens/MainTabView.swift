@@ -5,7 +5,6 @@
 //  Created by Rami Maalouf on 2024-10-08.
 //  Copyright © 2024 CPSC 575. All rights reserved.
 //
-
 import SwiftUI
 
 enum MainViewTabs {
@@ -56,7 +55,12 @@ struct MainTabView: View {
                     }
                     .tag(MainViewTabs.profile)
             }
-            .accentColor(ColorPalette.accent(for: colorScheme))
+            .background(Color.darkIndigo.ignoresSafeArea())
+            .accentColor(.cyan)
+            .onAppear {
+                UITabBar.appearance().barTintColor = UIColor(Color.darkIndigo.opacity(0.8))
+                UITabBar.appearance().isTranslucent = true
+            }
 
             // Custom center button
             Button {
@@ -66,7 +70,7 @@ struct MainTabView: View {
                     .font(.system(size: 36, weight: .light))
                     .foregroundColor(.white)
                     .frame(width: 60, height: 60)
-                    .background(ColorPalette.accent(for: colorScheme))
+                    .background(Color.cyan)
                     .clipShape(Circle())
                     .shadow(radius: 4)
             }

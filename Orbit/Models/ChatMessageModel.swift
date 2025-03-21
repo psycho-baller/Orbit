@@ -33,17 +33,16 @@ struct ChatMessageModel: Codable, Identifiable, CodableDictionaryConvertible {
         self.content = content
         self.isRead = isRead
     }
-
+    
     static func mock() -> Self {
         return .init(
             id: "message-123",
             sentByUser: .mock(),
-            //            chat: .mock(),
             content: "Hey, looking forward to meeting up!",
             isRead: false
         )
     }
-    
+
     static func mockOtherUserSent() -> Self {
         return .init(
             id: "message-12",
