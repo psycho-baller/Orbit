@@ -15,12 +15,6 @@ struct MyOrbitScreen: View {
 
     @State private var showCreateSheet = false
 
-
-    @Environment(\.colorScheme) var colorScheme
-
-    @State private var showCreateSheet = false
-
-
     var userId: String? {
         userVM.currentUser?.id
     }
@@ -28,7 +22,8 @@ struct MyOrbitScreen: View {
     var body: some View {
         NavigationView {
             ZStack {
-                ColorPalette.background(for: colorScheme).edgesIgnoringSafeArea(.all)
+                ColorPalette.background(for: colorScheme).edgesIgnoringSafeArea(
+                    .all)
 
                 if let userId = userId {
                     SuccessScreen(
@@ -38,10 +33,11 @@ struct MyOrbitScreen: View {
                     ErrorScreen()
                 }
             }
-            .accentColor(ColorPalette.accent(for :colorScheme))
+            .accentColor(ColorPalette.accent(for: colorScheme))
             .navigationTitle("My Orbit")
             ZStack {
-                ColorPalette.background(for: colorScheme).edgesIgnoringSafeArea(.all)
+                ColorPalette.background(for: colorScheme).edgesIgnoringSafeArea(
+                    .all)
 
                 if let userId = userId {
                     SuccessScreen(
@@ -51,7 +47,7 @@ struct MyOrbitScreen: View {
                     ErrorScreen()
                 }
             }
-            .accentColor(ColorPalette.accent(for :colorScheme))
+            .accentColor(ColorPalette.accent(for: colorScheme))
             .navigationTitle("My Orbit")
         }
     }
@@ -71,15 +67,14 @@ struct SuccessScreen: View {
 
     var myConfirmedMeetups: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
-            request.data.createdByUser?.id == userId
+            (request.data.createdByUser?.id == userId
                 || (request.data.chats ?? []).contains { (chat: ChatModel) in
                     chat.createdByUser?.id == userId
-                }
-                    && request.data.status == .filled
+                })
+                && request.data.status == .filled
         }
     }
 
-    var myPendingMeetups: [MeetupRequestDocument] {
     var myPendingMeetups: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
             (request.data.chats ?? []).contains { (chat: ChatModel) in
@@ -95,10 +90,7 @@ struct SuccessScreen: View {
                 MyOrbitSection(
                     title: "My Posts",
                     requests: myMeetupPosts,
-                    title: "My Posts",
-                    requests: myMeetupPosts,
                     destination: { request in
-                        MyMeetupPostDetailScreen(meetupRequest: request)
                         MyMeetupPostDetailScreen(meetupRequest: request)
                     }
                 )
@@ -112,8 +104,6 @@ struct SuccessScreen: View {
                 )
 
                 MyOrbitSection(
-                    title: "Pending Requests",
-                    requests: myPendingMeetups,
                     title: "Pending Requests",
                     requests: myPendingMeetups,
                     destination: { request in
