@@ -63,14 +63,12 @@ struct SuccessScreen: View {
     @ObservedObject var meetupRequestVM: MeetupRequestViewModel
 
     var myMeetupPosts: [MeetupRequestDocument] {
-    var myMeetupPosts: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
             request.data.createdByUser?.id == userId
                 && request.data.status != .filled
         }
     }
 
-    var myConfirmedMeetups: [MeetupRequestDocument] {
     var myConfirmedMeetups: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
             request.data.createdByUser?.id == userId
