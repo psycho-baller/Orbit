@@ -16,12 +16,30 @@ struct MyOrbitScreen: View {
     @State private var showCreateSheet = false
 
 
+    @Environment(\.colorScheme) var colorScheme
+
+    @State private var showCreateSheet = false
+
+
     var userId: String? {
         userVM.currentUser?.id
     }
 
     var body: some View {
         NavigationView {
+            ZStack {
+                ColorPalette.background(for: colorScheme).edgesIgnoringSafeArea(.all)
+
+                if let userId = userId {
+                    SuccessScreen(
+                        userId: userId,
+                        meetupRequestVM: meetupRequestVM)
+                } else {
+                    ErrorScreen()
+                }
+            }
+            .accentColor(ColorPalette.accent(for :colorScheme))
+            .navigationTitle("My Orbit")
             ZStack {
                 ColorPalette.background(for: colorScheme).edgesIgnoringSafeArea(.all)
 
@@ -45,12 +63,14 @@ struct SuccessScreen: View {
     @ObservedObject var meetupRequestVM: MeetupRequestViewModel
 
     var myMeetupPosts: [MeetupRequestDocument] {
+    var myMeetupPosts: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
             request.data.createdByUser?.id == userId
                 && request.data.status != .filled
         }
     }
 
+    var myConfirmedMeetups: [MeetupRequestDocument] {
     var myConfirmedMeetups: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
             request.data.createdByUser?.id == userId
@@ -61,6 +81,7 @@ struct SuccessScreen: View {
         }
     }
 
+    var myPendingMeetups: [MeetupRequestDocument] {
     var myPendingMeetups: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
             (request.data.chats ?? []).contains { (chat: ChatModel) in
@@ -76,13 +97,16 @@ struct SuccessScreen: View {
                 MyOrbitSection(
                     title: "My Posts",
                     requests: myMeetupPosts,
+                    title: "My Posts",
+                    requests: myMeetupPosts,
                     destination: { request in
+                        MyMeetupPostDetailScreen(meetupRequest: request)
                         MyMeetupPostDetailScreen(meetupRequest: request)
                     }
                 )
 
                 MyOrbitSection(
-                    title: "Meetups",
+                    title: "Confirmed Meetups",
                     requests: myConfirmedMeetups,
                     destination: { request in
                         ConfirmedMeetupScreen(meetupRequest: request)
@@ -90,6 +114,8 @@ struct SuccessScreen: View {
                 )
 
                 MyOrbitSection(
+                    title: "Pending Requests",
+                    requests: myPendingMeetups,
                     title: "Pending Requests",
                     requests: myPendingMeetups,
                     destination: { request in
