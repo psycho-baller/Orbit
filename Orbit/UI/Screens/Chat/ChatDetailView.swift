@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 struct ProfileHeaderView: View {
     let chat: ChatDocument
 
@@ -13,7 +14,7 @@ struct ProfileHeaderView: View {
         VStack(spacing: 10) {
             // Profile Picture & Username
             HStack {
-                Image("profile_pic") // Replace with actual image
+                Image("profile_pic")  // Replace with actual image
                     .resizable()
                     .frame(width: 50, height: 50)
                     .clipShape(Circle())
@@ -69,7 +70,6 @@ struct ProfileHeaderView: View {
     }
 }
 
-
 // Interests Tag View
 struct InterestsView: View {
     var body: some View {
@@ -96,7 +96,7 @@ struct InterestTag: View {
 struct ActionButtonsView: View {
     var body: some View {
         HStack {
-            Button(action: { /* Deny Action */ }) {
+            Button(action: { /* Deny Action */  }) {
                 Text("Deny")
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -110,7 +110,7 @@ struct ActionButtonsView: View {
                     )
             }
 
-            Button(action: { /* Accept Action */ }) {
+            Button(action: { /* Accept Action */  }) {
                 Text("Accept")
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -134,7 +134,7 @@ struct ChatInputBar: View {
 
     var body: some View {
         HStack {
-            Button(action: { /* Add Action */ }) {
+            Button(action: { /* Add Action */  }) {
                 Image(systemName: "plus")
                     .foregroundColor(.white)
                     .padding(10)
@@ -169,7 +169,6 @@ struct ChatInputBar: View {
         .background(Color.darkIndigo)
     }
 }
-
 
 struct ChatDetailView: View {
     let chat: ChatDocument
@@ -252,11 +251,9 @@ struct ChatDetailView: View {
                 .padding(.bottom)
         }
         .background(Color.darkIndigo.ignoresSafeArea())
-                Button(action: sendMessage) {
-                    Image(systemName: "paperplane.fill")
-                        .foregroundColor(.accentColor)
-                }
-            }
+        Button(action: sendMessage) {
+            Image(systemName: "paperplane.fill")
+                .foregroundColor(.accentColor)
         }
         .navigationTitle(chat.data.meetupRequest?.title ?? "Chat")
     }
@@ -294,7 +291,8 @@ struct ChatDetailView: View {
 
 // Custom Dark Indigo Color
 extension Color {
-    static let darkIndigo = Color(red: 13/255, green: 16/255, blue: 48/255)
+    static let darkIndigo = Color(
+        red: 13 / 255, green: 16 / 255, blue: 48 / 255)
 }
 
 #if DEBUG

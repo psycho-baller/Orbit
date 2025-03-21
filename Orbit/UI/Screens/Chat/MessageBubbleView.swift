@@ -10,6 +10,7 @@ import SwiftUI
 struct MessageBubbleView: View {
     let message: ChatMessageDocument
     @EnvironmentObject var userVM: UserViewModel
+    @Environment(\.colorScheme) var colorScheme
 
     var isFromCurrentUser: Bool {
         // Assuming `userVM.currentUser?.id` is available
@@ -19,28 +20,28 @@ struct MessageBubbleView: View {
     var body: some View {
         HStack {
             if isFromCurrentUser { Spacer() }
-            VStack(alignment: isFromCurrentUser ? .trailing : .leading, spacing: 4) {
+            VStack(
+                alignment: isFromCurrentUser ? .trailing : .leading, spacing: 4
+            ) {
                 Text(message.data.content)
                     .padding()
                     .background(
-                    isFromCurrentUser
-                        ? .accentColor
-                        : ColorPalette.lightGray(for: colorScheme)
+                        isFromCurrentUser
+                            ? .accentColor
+                            : ColorPalette.lightGray(for: colorScheme)
                     )
                     .foregroundColor(isFromCurrentUser ? .white : .black)
                     .cornerRadius(15)
 
-//                Text("Today at \(message.timestamp)") // Example timestamp format
-//                    .font(.caption)
-//                    .foregroundColor(.gray)
+                //                Text("Today at \(message.timestamp)") // Example timestamp format
+                //                    .font(.caption)
+                //                    .foregroundColor(.gray)
             }
             if !isFromCurrentUser { Spacer() }
         }
         .padding(.horizontal)
     }
 }
-
-
 
 #if DEBUG
     #Preview {
