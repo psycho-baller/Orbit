@@ -10,6 +10,7 @@ import SwiftUI
 struct MeetupInfoSection: View {
     let meetupRequest: MeetupRequestDocument
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var userVM: UserViewModel
 
     var body: some View {
         VStack(spacing: 12) {
@@ -19,7 +20,7 @@ struct MeetupInfoSection: View {
                     ?? "Unknown")
             MeetupInfoRow(
                 icon: "mappin.circle", label: "Location",
-                value: "Area ID: \(meetupRequest.data.areaId)")
+                value: userVM.getAreaName(forId: meetupRequest.data.areaId))
             MeetupInfoRow(
                 icon: "person.fill", label: "Created By",
                 value: meetupRequest.data.createdByUser?.username ?? "Unknown")
@@ -43,7 +44,7 @@ struct MeetupInfoRow: View {
     var body: some View {
         HStack {
             Image(systemName: icon)
-                .foregroundColor(.blue)
+                .foregroundColor(.accentColor)
                 .frame(width: 24, height: 24)
 
             Text(label)
@@ -61,5 +62,9 @@ struct MeetupInfoRow: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+
     MeetupInfoSection(meetupRequest: MeetupRequestDocument.mock())
+        .environmentObject(UserViewModel.mock())
+        .accentColor(ColorPalette.accent(for: colorScheme))
 }
