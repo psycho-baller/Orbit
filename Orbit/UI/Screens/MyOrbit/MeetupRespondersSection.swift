@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MeetupApprovedRespondersSection: View {
+struct MeetupRespondersSection: View {
     let chats: [ChatModel]
     @Environment(\.colorScheme) var colorScheme
 
@@ -62,5 +62,5 @@ struct MeetupResponderRow: View {
 }
 
 #Preview {
-    MeetupApprovedRespondersSection(chats: [ChatModel.mock()])
+    MeetupRespondersSection(chats: [ChatModel.mock()])
 }
