@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MeetupRequestRow: View {
+struct MyMeetupPosts: View {
     let meetupRequest: MeetupRequestModel
     @Environment(\.colorScheme) var colorScheme
 
@@ -39,6 +39,6 @@ struct MeetupRequestRow: View {
 
 #if DEBUG
     #Preview {
-        MeetupRequestRow(meetupRequest: MeetupRequestModel.mock())
+        MyMeetupPosts(meetupRequest: MeetupRequestModel.mock())
     }
 #endif

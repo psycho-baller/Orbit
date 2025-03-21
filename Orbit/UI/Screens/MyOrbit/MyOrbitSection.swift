@@ -25,7 +25,7 @@ struct MyOrbitSection<Destination: View>: View {
             } else {
                 ForEach(requests) { request in
                     NavigationLink(destination: destination(request)) {
-                        MeetupRequestRow(meetupRequest: request.data)
+                        MyMeetupPosts(meetupRequest: request.data)
                     }
                     .padding(.vertical, 5)
                 }

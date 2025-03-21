@@ -12,21 +12,26 @@ struct MeetupInfoSection: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        VStack(spacing: 12) {
-            MeetupInfoRow(
-                icon: "calendar", label: "Date",
-                value: meetupRequest.data.startTimeDate?.formatted()
-                    ?? "Unknown")
-            MeetupInfoRow(
-                icon: "mappin.circle", label: "Location",
-                value: "Area ID: \(meetupRequest.data.areaId)")
-            MeetupInfoRow(
-                icon: "person.fill", label: "Created By",
-                value: meetupRequest.data.createdByUser?.username ?? "Unknown")
-            MeetupInfoRow(
-                icon: "checkmark.circle.fill", label: "Status",
-                value: meetupRequest.data.status.rawValue.capitalized)
+        VStack(alignment: .leading, spacing: 12) {
+            HStack{
+                Spacer()
+                Text(meetupRequest.data.title)
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                Spacer()
+            }
+            
+            MeetupPostInfoRow(icon: "clock", value: meetupRequest.data.startTimeDate?.formatted() ?? "Meetup Load Failed")
+            
+            MeetupPostInfoRow(icon: "mappin.circle", value: "Area ID: \(meetupRequest.data.areaId)")
+            
+            Text(meetupRequest.data.description)
+            
+            MeetupPostInfoRow(icon: MeetupRequestViewModel.iconForType(meetupRequest.data.type), value: meetupRequest.data.type.rawValue.capitalized)
+            
+            MeetupPostInfoRow(icon: MeetupRequestViewModel.iconForIntention(meetupRequest.data.intention), value: meetupRequest.data.intention.rawValue.capitalized)
         }
+        
         .padding()
         .background(ColorPalette.main(for: colorScheme))
         .cornerRadius(12)
@@ -35,22 +40,15 @@ struct MeetupInfoSection: View {
     }
 }
 
-struct MeetupInfoRow: View {
+struct MeetupPostInfoRow: View {
     let icon: String
-    let label: String
     let value: String
 
     var body: some View {
         HStack {
             Image(systemName: icon)
-                .foregroundColor(.blue)
-                .frame(width: 24, height: 24)
-
-            Text(label)
-                .font(.subheadline)
                 .foregroundColor(.gray)
-
-            Spacer()
+                .frame(width: 24, height: 24)
 
             Text(value)
                 .font(.subheadline)
