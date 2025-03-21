@@ -42,11 +42,11 @@ struct SuccessScreen: View {
 
     var confirmedMeetups: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
-            request.data.createdByUser?.id == userId
+            (request.data.createdByUser?.id == userId
                 || (request.data.chats ?? []).contains { (chat: ChatModel) in
                     chat.createdByUser?.id == userId
-                }
-                    && request.data.status == .filled
+                })
+                && request.data.status == .filled
         }
     }
 

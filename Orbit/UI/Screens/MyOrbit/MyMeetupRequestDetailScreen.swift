@@ -49,7 +49,7 @@ struct MyMeetupRequestDetailScreen: View {
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
+                            .background(Color.accentColor)
                             .foregroundColor(.white)
                             .cornerRadius(12)
                     }
@@ -75,7 +75,10 @@ struct MyMeetupRequestDetailScreen: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+
     MyMeetupRequestDetailScreen(
         meetupRequest: MeetupRequestDocument.mock()
     )
+    .accentColor(ColorPalette.accent(for: colorScheme))
 }
