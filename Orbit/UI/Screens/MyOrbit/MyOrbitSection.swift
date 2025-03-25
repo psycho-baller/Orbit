@@ -32,10 +32,6 @@ struct MyOrbitSection<Destination: View>: View {
             }
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 8).fill(
-                Color(UIColor.systemBackground)
-            ).shadow(radius: 1))
     }
 }
 
