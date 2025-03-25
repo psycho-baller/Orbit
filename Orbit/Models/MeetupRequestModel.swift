@@ -139,12 +139,21 @@ enum MeetupStatus: String, Codable {
     case completed
     case cancelled
     case filled
+
 }
 
 enum MeetupIntention: String, Codable {
     case friendship
     case relationship
+
+    var icon: String {
+        switch self {
+        case .friendship: return "figure.2"
+        case .relationship: return "heart.fill"
+        }
+    }
 }
+
 enum MeetupType: String, Codable {
     case coffee
     case meal
@@ -152,6 +161,17 @@ enum MeetupType: String, Codable {
     case outdoorActivity
     case event
     case other
+
+    var icon: String {
+        switch self {
+        case .coffee: return "cup.and.saucer.fill"
+        case .meal: return "fork.knife"
+        case .indoorActivity: return "house.fill"
+        case .outdoorActivity: return "figure.hiking"
+        case .event: return "calendar"
+        case .other: return "ellipsis.circle.fill"
+        }
+    }
 }
 
 typealias MeetupRequestDocument = AppwriteModels.Document<MeetupRequestModel>
