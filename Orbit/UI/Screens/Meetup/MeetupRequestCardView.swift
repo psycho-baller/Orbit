@@ -26,7 +26,14 @@ struct MeetupRequestCardView: View {
                         Image(systemName: meetupRequest.data.type.icon)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 60, height: 60)
+                            .frame(width: 20)
+                            .padding(16)  // Padding inside the circle
+                            .overlay(
+                                Circle()
+                                    .stroke(
+                                        ColorPalette.secondaryText(
+                                            for: colorScheme), lineWidth: 3)
+                            )
                             .foregroundColor(
                                 ColorPalette.secondaryText(
                                     for: colorScheme)
@@ -154,8 +161,12 @@ struct MeetupRequestCardView: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+
     MeetupRequestCardView(meetupRequest: .mock())
         .environmentObject(MeetupRequestViewModel.mock())
         .environmentObject(ChatViewModel.mock())
         .environmentObject(UserViewModel.mock())
+        .accentColor(ColorPalette.accent(for: colorScheme))
+
 }
