@@ -8,62 +8,33 @@
 
 ```mermaid
 flowchart TD
- subgraph Campus_Geofencing["Campus_Geofencing"]
-        D["Detect Campus Entry or Exit"]
-        C["CampusLocationManager Geofence"]
-        E["Activate Precise Location Tracking"]
-        F["Stop Tracking"]
-  end
- subgraph Location_Identification["Location_Identification_Backend"]
-        H["Calculate Nearest Area"]
-        G["Precise Location Tracking with 10m Accuracy"]
-        I["Update Backend with Area Name"]
-  end
- subgraph Frontend["Frontend"]
-        J["Display Current Area to User"]
-        K["Show Users in Same Area"]
-  end
- subgraph Meetup_Process["Meetup_Process"]
-        L["User A Requests Meetup with User B"]
-        M["Notify User B for Approval"]
-        N{"Approval Granted?"}
-        O["Redirect to Chat Interface"]
-        P["End Request"]
-  end
- subgraph Chat_Interface["Chat_Interface"]
-        Q["Chat Interface for Planning Meetup and Sharing Location"]
-  end
-    C --> D
-    D -- Enter --> E
-    D -- Exit --> F
-    G --> H
-    H --> I
-    I --> J
-    J --> K
-    K --> L
-    L --> M
-    M --> N
-    N -- Yes --> O
-    N -- No --> P
-    O --> Q
-    E --> G
+    A["Splash Screen"] --> B["Welcome Screen"]
+    B --> C["Sign Up / Login"]
+    C --> D["Personal Information Form"]
+    D --> E["University ID Verification"]
+    E --> F["Onboarding Complete → Home Screen"]
+    F -- Edit Profile --> G["Profile Settings"]
+    F -- Start Meetup Request --> J["Create Meetup Request Screen"]
+    F -- View Chats --> X["Chats List"]
+    G --> H["Update Preferences & Interests"]
+    H --> I["Save Changes & Return to Home"]
+    J --> K["Set Topic, Time & Location"]
+    K --> L["Review & Send Request"]
+    L -- Other User Browses Requests --> M["Meetup Requests List"]
+    M --> N["View Meetup Details"]
+    N --> O["Approve or Decline Request"]
+    O -- Request Approved --> P["Chat Screen"]
+    X --> P
+    P --> Q["Confirm Meetup Details"]
+    Q --> R["Meetup Reminder Notification"]
+    R -- Meetup Happens --> S["Post-Meetup Experience"]
+    S --> T{"Positive Interaction?"}
+    T -- Yes --> U["User Continues Using App"]
+    T -- No --> V["Block / Report Screen"]
+    V --> W["Report Submitted → Return to Home"]
+    U -- Can Create More Meetups --> J
+    W -- Ensures Safe Community --> J
 ```
-
-### **How To Set Custom Location in Xcode Simulator**
-
-1. In the simulator, go to `Features > Location > Custom Location`
-2. Enter the desired location in latitude and longitude:
-   - Examples:
-     - University of Calgary
-        - **latitude**: 51.078621
-        - **longitude**: -114.136719
-     - Science A:
-        - **latitude**: 51.079549
-        - **longitude**: 114.127
-     - Apple Park (already in the simulator):
-        - **latitude**: 37.3349
-        - **longitude**: -122.00902
-3. Click `OK` to set the custom location.
 
 ## **Prerequisites**
 
