@@ -224,17 +224,6 @@ struct HomeView: View {
                 placeholder: "Search for a meetup request"
             )
 
-            HStack {
-                InterestsHorizontalTags(
-                    interests: userVM.allInterests,
-                    onTapInterest: { interest in
-                        withAnimation {
-                            userVM.toggleInterest(interest)
-                        }
-                    }
-                )
-            }
-
             //            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
             //                .padding(.bottom, 16)
 
@@ -244,7 +233,7 @@ struct HomeView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
-                            MeetupRequestCardView(meetupRequest: meetupRequest.data)
+                            MeetupRequestCardView(meetupRequest: meetupRequest)
                         }
                     }
                     .padding(.vertical)

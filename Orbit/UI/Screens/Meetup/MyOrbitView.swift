@@ -85,23 +85,11 @@ struct MyOrbitView: View {
                     .padding(.vertical)
                 }
             }
-            .sheet(isPresented: $showDetailView) {
-                if let request = selectedRequest {
-                    MeetupRequestDetailedView(meetupRequest: request)
-                }
-            }
-            .sheet(isPresented: $isShowingCreateMeetup) {
-                CreateMeetupTypeView()
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        isShowingCreateMeetup = true
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
+            //            .sheet(isPresented: $showDetailView) {
+            //                if let request = selectedRequest {
+            //                    MeetupRequestDetailedView(meetupRequest: request)
+            //                }
+            //            }
         }
     }
 }

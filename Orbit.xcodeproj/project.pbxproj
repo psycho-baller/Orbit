@@ -76,6 +76,7 @@
 		259CB2A72CC047D000C9F285 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CB2A52CC047D000C9F285 /* Extensions.swift */; };
 		259CB2A82CC047D000C9F285 /* LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CB2A62CC047D000C9F285 /* LazyList.swift */; };
 		259CB2AA2CC0486D00C9F285 /* OrbitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CB2A92CC0486D00C9F285 /* OrbitApp.swift */; };
+		25A1C5FA2D930EC80020C3F2 /* TagSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A1C5F92D930EC80020C3F2 /* TagSectionView.swift */; };
 		25A399692CBF30C700D6BCE8 /* OrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399682CBF30C700D6BCE8 /* OrbitTests.swift */; };
 		25A399732CBF30C700D6BCE8 /* OrbitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399722CBF30C700D6BCE8 /* OrbitUITests.swift */; };
 		25A399752CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A399742CBF30C700D6BCE8 /* OrbitUITestsLaunchTests.swift */; };
@@ -208,6 +209,7 @@
 		259CB2A52CC047D000C9F285 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		259CB2A62CC047D000C9F285 /* LazyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazyList.swift; sourceTree = "<group>"; };
 		259CB2A92CC0486D00C9F285 /* OrbitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitApp.swift; sourceTree = "<group>"; };
+		25A1C5F92D930EC80020C3F2 /* TagSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSectionView.swift; sourceTree = "<group>"; };
 		25A399522CBF30C500D6BCE8 /* Orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25A3995E2CBF30C700D6BCE8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		25A399642CBF30C700D6BCE8 /* OrbitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -398,6 +400,7 @@
 			children = (
 				258F6CF82D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift */,
 				258F6CF62D8CDE5800DC3291 /* ChatTextBox.swift */,
+				25A1C5F92D930EC80020C3F2 /* TagSectionView.swift */,
 				257440C92D6E3781009DEAA9 /* RangeSliderView.swift */,
 				25AE2B232D6E1F17001834B6 /* MultipleSelectionRow.swift */,
 				25F3F0DB2D6CC2C300CEB34B /* FlowLayout.swift */,
@@ -730,6 +733,7 @@
 				25F5B9CF2CEEA4F90062438B /* SwipeActions.swift in Sources */,
 				25797F632D89C0040039698C /* ErrorScreen.swift in Sources */,
 				25B823A22D1346D0007F63B6 /* FriendshipValuesModel.swift in Sources */,
+				25A1C5FA2D930EC80020C3F2 /* TagSectionView.swift in Sources */,
 				619993D12D13D09000440533 /* ProfilePageView.swift in Sources */,
 				25E829412D84EE27009D49CE /* ChatModel.swift in Sources */,
 				257454AF2D67AED400C7747F /* MeetupRequestModel.swift in Sources */,
