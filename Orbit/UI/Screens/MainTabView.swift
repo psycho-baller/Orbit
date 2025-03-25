@@ -26,7 +26,7 @@ struct MainTabView: View {
     @State private var showCreateSheet = false
 
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack {
             TabView(selection: $appState.selectedTab) {
                 HomeView()
                     .tabItem {
@@ -41,19 +41,12 @@ struct MainTabView: View {
                     .tag(MainViewTabs.myOrbit)
 
                 // Empty tab for center button
-                Button {
-                    showCreateSheet = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 36, weight: .light))
-                        .foregroundColor(.white)
-                        .frame(width: 60, height: 60)
-                        .background(ColorPalette.accent(for: colorScheme))
-                        .clipShape(Circle())
-                        .shadow(radius: 4)
-                }
-                //Color.clear
-                //    .tabItem { Label("", systemImage: "") }
+                Color.clear
+                    .tabItem { 
+                        Label(" ", systemImage: "plus.circle.fill")
+                            .opacity(0)
+                    }
+
 
                 ChatListView()
                     .tabItem {
@@ -69,23 +62,38 @@ struct MainTabView: View {
             }
             .accentColor(ColorPalette.accent(for: colorScheme))
 
-            // Custom center button
-            
-            Button {
-                showCreateSheet = true
-            } label: {
-                Image(systemName: "plus")
-                    .font(.system(size: 36, weight: .light))
-                    .foregroundColor(.white)
-                    .frame(width: 60, height: 60)
-                    .background(ColorPalette.accent(for: colorScheme))
-                    .clipShape(Circle())
-                    .shadow(radius: 4)
+            // Custom "Create" button in a fixed positon
+            VStack {
+                Spacer()
+                Button {
+                    showCreateSheet = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 36, weight: .light))
+                        .foregroundColor(.white)
+                        .frame(width: 60, height: 60)
+                        .background(ColorPalette.accent(for: colorScheme))
+                        .clipShape(Circle())
+                        .shadow(radius: 4)
+                }
+                .buttonStyle(CreateButtonStyle())
+                .offset(y: 0) // Adjust this value to position above tab bar
             }
+            .ignoresSafeArea(.keyboard)
         }
         .sheet(isPresented: $showCreateSheet) {
             CreateMeetupTypeView()
         }
+    }
+}
+
+// Button Press Animation
+struct CreateButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+            .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
     }
 }
 
