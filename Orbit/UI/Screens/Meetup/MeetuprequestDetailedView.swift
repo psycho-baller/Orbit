@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MeetupRequestDetailedView: View {
-    let meetupRequest: MeetupRequestModel
+    let meetupRequest: MeetupRequestDocument
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
@@ -23,123 +23,83 @@ struct MeetupRequestDetailedView: View {
                 ColorPalette.background(for: colorScheme)
                     .ignoresSafeArea()
                 ScrollView {
-                    VStack(spacing: 24) {
-                        if let profileUrl = meetupRequest.createdByUser?
-                            .profilePictureUrl,
-                            let url = URL(string: profileUrl)
-                        {
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(Circle())
-                            } placeholder: {
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .frame(width: 80, height: 80)
-                                    .foregroundColor(
-                                        ColorPalette.secondaryText(
-                                            for: colorScheme))
-                            }
-                        }
-                        Text(meetupRequest.createdByUser?.username ?? "")
+                    VStack(spacing: 20) {
+                        Text(meetupRequest.data.createdByUser?.username ?? "")
                             .font(.title)
                             .padding(.bottom, 1)
                             .foregroundColor(Color.accentColor)
                             .lineLimit(1)
 
-                        VStack(alignment: .leading, spacing: 16) {
-                            // Title
-                            Text(meetupRequest.title)
-                                .font(.title3)
-                                .fontWeight(.semibold)
-
-                            // Time
-                            HStack(spacing: 12) {
-                                Image(systemName: "clock")
-                                    .frame(width: 24)
-                                if let startDate = meetupRequest.startTimeDate,
-                                    let endDate = meetupRequest.endTimeDate
-                                {
-                                    Text(
-                                        "\(DateFormatterUtility.formatForDisplay(startDate)) - \(DateFormatterUtility.formatTimeOnly(endDate))"
-                                    )
-                                } else {
-                                    Text("Invalid date format")
-                                }
-                            }
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme))
-
-                            #warning(
-                                "TODO: Make Location work"
-                            )
-                            // Area
-                            HStack(spacing: 12) {
-                                Image(systemName: "mappin.circle.fill")
-                                    .frame(width: 24)
-                                Text(areaName)
-                            }
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme))
-
-                            // Description
-                            Text(meetupRequest.description)
-                                .font(.body)
-
-                            // Type and Intention
-                            HStack(spacing: 12) {
-                                Image(
-                                    systemName: iconForType(meetupRequest.type)
-                                )
-                                .frame(width: 24)
-                                Text(meetupRequest.type.rawValue.capitalized)
-                            }
-                            .foregroundColor(
-                                ColorPalette.accent(for: colorScheme))
-
-                            HStack(spacing: 12) {
-                                Image(
-                                    systemName: iconForIntention(
-                                        meetupRequest.intention)
-                                )
-                                .frame(width: 24)
-                                Text(
-                                    meetupRequest.intention.rawValue.capitalized
-                                )
-                            }
-                            .foregroundColor(
-                                ColorPalette.accent(for: colorScheme))
-                        }
-                        .padding()
-                        .background(ColorPalette.main(for: colorScheme))
-                        .cornerRadius(16)
-                        .padding(.horizontal, 12)
-
+                        MeetupInfoSection(meetupRequest: meetupRequest)
+                        //                        VStack(alignment: .leading, spacing: 20) {
                         // Interests Section
-                        if !allInterests.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Interests")
-                                    .font(.headline)
-                                    .foregroundColor(
-                                        ColorPalette.text(for: colorScheme))
+                        if let currentUser = userVM.currentUser,
+                            let otherUser = meetupRequest.data.createdByUser
+                        {
 
-                                InterestsHorizontalTags(
-                                    interests: allInterests,
-                                    onTapInterest: { _ in }
-                                )
-                                #warning(
-                                    "TODO: Add common interests"
+                            if let otherQualities = otherUser
+                                .friendshipQualities,
+                                !otherQualities.isEmpty,
+                                let currentQualities = currentUser
+                                    .friendshipQualities
+                            {
+                                TagSectionView(
+                                    description:
+                                        "What qualities do you look for in someone you’d like to meet?",
+                                    otherUserTags: otherQualities,
+                                    currentUserTags: currentQualities
                                 )
                             }
-                            .padding(.horizontal, 24)
-                            .padding(.top, 8)
-                        }
-                        Text(meetupRequest.createdByUser?.bio ?? "")
-                            .padding()
 
+                            if let otherValues = otherUser.friendshipValues,
+                                !otherValues.isEmpty,
+                                let currentValues = currentUser
+                                    .friendshipValues
+                            {
+                                TagSectionView(
+                                    description:
+                                        "What do you value most in a friendship?",
+                                    otherUserTags: otherValues,
+                                    currentUserTags: currentValues
+                                )
+                            }
+
+                            if let otherActivities = otherUser
+                                .friendActivities,
+                                !otherActivities.isEmpty,
+                                let currentActivities = currentUser
+                                    .friendActivities
+                            {
+                                TagSectionView(
+                                    description:
+                                        "What's something you'd love to find a friend to do with you?",
+                                    otherUserTags: otherActivities,
+                                    currentUserTags: currentActivities
+                                )
+                            }
+
+                            if let otherHobbies = otherUser
+                                .activitiesHobbies,
+                                !otherHobbies.isEmpty,
+                                let currentHobbies = currentUser
+                                    .activitiesHobbies
+                            {
+                                TagSectionView(
+                                    description:
+                                        "What are some activities or hobbies that bring you joy?",
+                                    otherUserTags: otherHobbies,
+                                    currentUserTags: currentHobbies
+                                )
+                            }
+                        }
+                        if let bio = meetupRequest.data.createdByUser?.bio {
+                            Text(bio)
+                                .padding()
+                        }
+                        //                        }
+                        Spacer().frame(height: 50)
                     }
+                    .padding()
                 }
 
                 HStack(spacing: 16) {
@@ -186,36 +146,10 @@ struct MeetupRequestDetailedView: View {
                     }
                 }
             }
-
         }
         .onAppear {
-            areaName = userVM.getAreaName(forId: meetupRequest.areaId)
+            areaName = userVM.getAreaName(forId: meetupRequest.data.areaId)
         }
-    }
-
-    // helper function to get icon for meetup type
-    private func iconForType(_ type: MeetupType) -> String {
-        switch type {
-        case .coffee: return "cup.and.saucer.fill"
-        case .meal: return "fork.knife"
-        case .indoorActivity: return "house.fill"
-        case .outdoorActivity: return "figure.hiking"
-        case .event: return "calendar"
-        case .other: return "ellipsis.circle.fill"
-        }
-    }
-
-    // helper function to get icon for meetup intention
-    private func iconForIntention(_ intention: MeetupIntention) -> String {
-        switch intention {
-        case .friendship: return "figure.2"
-        case .relationship: return "heart.fill"
-        }
-    }
-
-    private var allInterests: [String] {
-        meetupRequest.createdByUser?.activitiesHobbies
-            ?? []
     }
 
     private func approveMeetupRequest() {
@@ -225,8 +159,8 @@ struct MeetupRequestDetailedView: View {
         }
 
         let newChat = ChatModel(
-            createdByUser: sender, otherUser: meetupRequest.createdByUser!,
-            meetupRequest: meetupRequest
+            createdByUser: sender, otherUser: meetupRequest.data.createdByUser!,
+            meetupRequest: meetupRequest.data
         )
         dismiss()
 
@@ -249,13 +183,15 @@ struct MeetupRequestDetailedView: View {
 }
 
 #if DEBUG
-    struct MeetupRequestDetailedView_Previews: PreviewProvider {
-        static var previews: some View {
-            MeetupRequestDetailedView(meetupRequest: .mock())
-                .environmentObject(UserViewModel.mock())
-                .environmentObject(MeetupRequestViewModel.mock())
-                .environmentObject(ChatViewModel.mock())
-                .environmentObject(AppState())
-        }
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
+        MeetupRequestDetailedView(meetupRequest: .mock())
+            .environmentObject(UserViewModel.mock())
+            .environmentObject(MeetupRequestViewModel.mock())
+            .environmentObject(ChatViewModel.mock())
+            .environmentObject(AppState())
+            .accentColor(ColorPalette.accent(for: colorScheme))
     }
+
 #endif

@@ -35,13 +35,24 @@ struct MainTabView: View {
 
                 MyOrbitScreen()
                     .tabItem {
-                        Label("My Plans", systemImage: "circle.circle.fill")
+                        Label("My Orbit", systemImage: "circle.circle.fill")
                     }
                     .tag(MainViewTabs.myOrbit)
 
                 // Empty tab for center button
-                Color.clear
-                    .tabItem { Label("", systemImage: "") }
+                Button {
+                    showCreateSheet = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 36, weight: .light))
+                        .foregroundColor(.white)
+                        .frame(width: 60, height: 60)
+                        .background(ColorPalette.accent(for: colorScheme))
+                        .clipShape(Circle())
+                        .shadow(radius: 4)
+                }
+                //Color.clear
+                //    .tabItem { Label("", systemImage: "") }
 
                 ChatListView()
                     .tabItem {
@@ -63,6 +74,7 @@ struct MainTabView: View {
             }
 
             // Custom center button
+            
             Button {
                 showCreateSheet = true
             } label: {
