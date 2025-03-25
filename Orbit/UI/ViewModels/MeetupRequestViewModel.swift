@@ -135,6 +135,25 @@ class MeetupRequestViewModel: ObservableObject {
     //            )
     //        }
     //    }
+    
+    static func iconForType(_ type: MeetupType) -> String {
+        switch type {
+        case .coffee: return "cup.and.saucer.fill"
+        case .meal: return "fork.knife"
+        case .indoorActivity: return "house.fill"
+        case .outdoorActivity: return "figure.hiking"
+        case .event: return "calendar"
+        case .other: return "ellipsis.circle.fill"
+        }
+    }
+
+    // helper function to get icon for meetup intention
+    static func iconForIntention(_ intention: MeetupIntention) -> String {
+        switch intention {
+        case .friendship: return "figure.2"
+        case .relationship: return "heart.fill"
+        }
+    }
 
     #if DEBUG
         static func mock() -> MeetupRequestViewModel {

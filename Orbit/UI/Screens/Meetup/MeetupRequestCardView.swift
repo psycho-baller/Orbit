@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MeetupRequestCardView: View {
-    let meetupRequest: MeetupRequestModel
+    let meetupRequest: MeetupRequestDocument
     @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var userVM: UserViewModel
@@ -23,46 +23,32 @@ struct MeetupRequestCardView: View {
             ) {
                 SwipeView {
                     HStack(spacing: 16) {
-                        // Profile Picture
-                        if let profileUrl = meetupRequest.createdByUser?
-                            .profilePictureUrl,
-                            let url = URL(string: profileUrl)
-                        {
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 60, height: 60)
-                                    .clipShape(Circle())
-                            } placeholder: {
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 60, height: 60)
-                                    .foregroundColor(
+                        Image(systemName: meetupRequest.data.type.icon)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 20)
+                            .padding(16)  // Padding inside the circle
+                            .overlay(
+                                Circle()
+                                    .stroke(
                                         ColorPalette.secondaryText(
-                                            for: colorScheme))
-                            }
-                        } else {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(
-                                    ColorPalette.secondaryText(
-                                        for: colorScheme)
-                                )
-                        }
+                                            for: colorScheme), lineWidth: 3)
+                            )
+                            .foregroundColor(
+                                ColorPalette.secondaryText(
+                                    for: colorScheme)
+                            )
 
                         VStack(alignment: .leading, spacing: 8) {
-                            // User Name
-                            Text(meetupRequest.createdByUser?.username ?? "")
-                                .font(.headline)
-                                .foregroundColor(Color.accentColor)
-                                .lineLimit(1)
+                            Text(
+                                meetupRequest.data.createdByUser?.username ?? ""
+                            )
+                            .font(.headline)
+                            .foregroundColor(Color.accentColor)
+                            .lineLimit(1)
 
                             // Meetup Title
-                            Text(meetupRequest.title)
+                            Text(meetupRequest.data.title)
                                 .font(.body)
                                 .foregroundColor(
                                     ColorPalette.text(for: colorScheme)
@@ -70,7 +56,7 @@ struct MeetupRequestCardView: View {
                                 .lineLimit(2)
 
                             // Time
-                            Text(formatMeetupTime(meetup: meetupRequest))
+                            Text(formatMeetupTime(meetup: meetupRequest.data))
                                 .font(.subheadline)
                                 .foregroundColor(
                                     ColorPalette.secondaryText(for: colorScheme)
@@ -133,8 +119,8 @@ struct MeetupRequestCardView: View {
         }
 
         let newChat = ChatModel(
-            createdByUser: sender, otherUser: meetupRequest.createdByUser!,
-            meetupRequest: meetupRequest
+            createdByUser: sender, otherUser: meetupRequest.data.createdByUser!,
+            meetupRequest: meetupRequest.data
         )
 
         Task {
@@ -175,8 +161,12 @@ struct MeetupRequestCardView: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+
     MeetupRequestCardView(meetupRequest: .mock())
         .environmentObject(MeetupRequestViewModel.mock())
         .environmentObject(ChatViewModel.mock())
         .environmentObject(UserViewModel.mock())
+        .accentColor(ColorPalette.accent(for: colorScheme))
+
 }

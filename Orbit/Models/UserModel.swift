@@ -311,6 +311,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             lastName: "",
             interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
             profilePictureUrl: "https://picsum.photos/201",
+            bio: "I'm just a chill dude",
             /// onboarding stuff
             activitiesHobbies: ["Gaming", "Coding", "Music"],
             friendActivities: ["Hobby Buddy", "Deep Conversations"],
@@ -340,6 +341,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             lastName: "Taylor",
             interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
             profilePictureUrl: "https://picsum.photos/202",
+            bio: "I'm just a chill dude",
             /// onboarding stuff
             activitiesHobbies: ["Yoga", "Reading", "Meditation"],
             friendActivities: ["Workout Partner", "Deep Conversations"],

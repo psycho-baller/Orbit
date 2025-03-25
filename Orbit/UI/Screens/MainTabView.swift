@@ -36,7 +36,7 @@ struct MainTabView: View {
 
                 MyOrbitScreen()
                     .tabItem {
-                        Label("My Plans", systemImage: "circle.circle.fill")
+                        Label("My Orbit", systemImage: "circle.circle.fill")
                     }
                     .tag(MainViewTabs.myOrbit)
 
@@ -46,6 +46,7 @@ struct MainTabView: View {
                         Label(" ", systemImage: "plus.circle.fill")
                             .opacity(0)
                     }
+
 
                 ChatListView()
                     .tabItem {
