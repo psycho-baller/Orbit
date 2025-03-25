@@ -10,33 +10,48 @@ import SwiftUI
 struct MeetupInfoSection: View {
     let meetupRequest: MeetupRequestDocument
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var userVM: UserViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack{
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
                 Spacer()
                 Text(meetupRequest.data.title)
-                    .font(.headline)
+                    .font(.title2)
+                    .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
                 Spacer()
             }
-            
-            MeetupPostInfoRow(icon: "clock", value: meetupRequest.data.startTimeDate?.formatted() ?? "Meetup Load Failed")
-            
-            MeetupPostInfoRow(icon: "mappin.circle", value: "Area ID: \(meetupRequest.data.areaId)")
-            
+
             Text(meetupRequest.data.description)
-            
-            MeetupPostInfoRow(icon: MeetupRequestViewModel.iconForType(meetupRequest.data.type), value: meetupRequest.data.type.rawValue.capitalized)
-            
-            MeetupPostInfoRow(icon: MeetupRequestViewModel.iconForIntention(meetupRequest.data.intention), value: meetupRequest.data.intention.rawValue.capitalized)
+            if let startDate = meetupRequest.data
+                .startTimeDate,
+                let endDate = meetupRequest.data.endTimeDate
+            {
+                MeetupPostInfoRow(
+                    icon: "clock",
+                    value:
+                        "\(DateFormatterUtility.formatForDisplay(startDate)) - \(DateFormatterUtility.formatTimeOnly(endDate))"
+                )
+            }
+
+            MeetupPostInfoRow(
+                icon: "mappin.circle",
+                value: userVM.getAreaName(forId: meetupRequest.data.areaId))
+
+            MeetupPostInfoRow(
+                icon: meetupRequest.data.type.icon,
+                value: meetupRequest.data.type.rawValue.capitalized)
+
+            MeetupPostInfoRow(
+                icon: meetupRequest.data.intention.icon,
+                value: meetupRequest.data.intention.rawValue.capitalized)
         }
-        
+
         .padding()
         .background(ColorPalette.main(for: colorScheme))
         .cornerRadius(12)
         .shadow(radius: 1)
-        .padding(.horizontal)
     }
 }
 
@@ -47,17 +62,19 @@ struct MeetupPostInfoRow: View {
     var body: some View {
         HStack {
             Image(systemName: icon)
-                .foregroundColor(.gray)
-                .frame(width: 24, height: 24)
+                .foregroundColor(.accentColor)
+                .frame(width: 28)
 
             Text(value)
-                .font(.subheadline)
-                .fontWeight(.bold)
                 .foregroundColor(.primary)
         }
     }
 }
 
 #Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+
     MeetupInfoSection(meetupRequest: MeetupRequestDocument.mock())
+        .environmentObject(UserViewModel.mock())
+        .accentColor(ColorPalette.accent(for: colorScheme))
 }
