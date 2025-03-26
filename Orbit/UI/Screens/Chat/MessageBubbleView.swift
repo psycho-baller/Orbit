@@ -20,20 +20,26 @@ struct MessageBubbleView: View {
     var body: some View {
         HStack {
             if isFromCurrentUser { Spacer() }
-            Text(message.data.content)
-                .padding()
-                .background(
-                    isFromCurrentUser
-                        ? .accentColor
-                        : ColorPalette.lightGray(for: colorScheme)
-                )
-                .foregroundColor(isFromCurrentUser ? .white : .white)
-                .cornerRadius(10)
+            VStack(
+                alignment: isFromCurrentUser ? .trailing : .leading, spacing: 4
+            ) {
+                Text(message.data.content)
+                    .padding()
+                    .background(
+                        isFromCurrentUser
+                            ? .accentColor
+                            : ColorPalette.lightGray(for: colorScheme)
+                    )
+                    .foregroundColor(isFromCurrentUser ? .white : .black)
+                    .cornerRadius(15)
+
+                //                Text("Today at \(message.timestamp)") // Example timestamp format
+                //                    .font(.caption)
+                //                    .foregroundColor(.gray)
+            }
             if !isFromCurrentUser { Spacer() }
         }
-        .frame(
-            maxWidth: .infinity,
-            alignment: isFromCurrentUser ? .trailing : .leading)
+        .padding(.horizontal)
     }
 }
 
