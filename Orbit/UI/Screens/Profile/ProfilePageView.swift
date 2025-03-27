@@ -112,9 +112,9 @@ struct ProfilePageView: View {
                     }
                 }
 
-                // User Info Sections
-                VStack(alignment: .leading, spacing: 24) {
-                    // Basic Info
+                // name, age, pronouns, username and bio
+                VStack(alignment: .center, spacing: 12) {
+                    // name, age, pronouns
                     HStack(spacing: 8) {
                         Text(user.firstName + " " + (user.lastName ?? ""))
                             .font(.title)
@@ -133,47 +133,68 @@ struct ProfilePageView: View {
                                 .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                         }
                     }
-                    //Username
                     
-                    //Bio
-                    
-                    //Interests (choose up to 6 to display floating around profile pic)
-                    
-                    // Languages
-                    
-                    // Social Links
+                    // Username
+                    Text("@" + user.username)
+                        .font(.subheadline)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
 
-                    // Personal Preferences Section
-//                    let personalPrefs =
-//                        (user.activitiesHobbies ?? [])
-//                        + (user.friendActivities ?? [])
-//
-//                    if !personalPrefs.isEmpty {
-//                        PreferenceSection(
-//                            title: "Personal Preferences",
-//                            items: personalPrefs
-//                        )
-//                    }
-//
-//                    // Interaction Preferences Section
-//                    let interactions = (user.preferredMeetupType ?? []) + (user.convoTopics ?? [])
-//                    if !interactions.isEmpty {
-//                        PreferenceSection(
-//                            title: "Connection Style",
-//                            items: interactions
-//                        )
-//                    }
-//
-//                    // Friendship Values Section
-//                    let friendshipValues = (user.friendshipValues ?? []) + (user.friendshipQualities ?? [])
-//                    if !friendshipValues.isEmpty {
-//                        PreferenceSection(
-//                            title: "Friendship Values",
-//                            items: friendshipValues
-//                        )
-//                    }
+                    Spacer()
+                    
+                    // Bio
+                    Text(user.bio ?? "")
+                        .font(.caption)
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                 }
                 .padding(.horizontal)
+
+                // All interest fields from onboarding
+                VStack {
+                    // Interests Section (choose up to 6 to display floating around profile pic)
+                    if let activities = user.activitiesHobbies, !activities.isEmpty {
+                        ProfileTagSection(title: "Interests", items: activities)
+                    }
+                    
+                    // Friend Activities Section
+                    if let friendActivities = user.friendActivities, !friendActivities.isEmpty {
+                        ProfileTagSection(title: "Friend Activities", items: friendActivities)
+                    }
+                    
+                    // Meetup Types Section
+                    if let meetupTypes = user.preferredMeetupType, !meetupTypes.isEmpty {
+                        ProfileTagSection(title: "Preferred Meetups", items: meetupTypes)
+                    }
+                    
+                    // Conversation Topics Section
+                    if let convoTopics = user.convoTopics, !convoTopics.isEmpty {
+                        ProfileTagSection(title: "Conversation Topics", items: convoTopics)
+                    }
+                    
+                    // Friendship Values Section
+                    if let values = user.friendshipValues, !values.isEmpty {
+                        ProfileTagSection(title: "Friendship Values", items: values)
+                    }
+                    
+                    // Friendship Qualities Section
+                    if let qualities = user.friendshipQualities, !qualities.isEmpty {
+                        ProfileTagSection(title: "Friendship Qualities", items: qualities)
+                    }
+                    
+                    // Intentions Section
+                    if let intentions = user.intentions, !intentions.isEmpty {
+                        ProfileTagSection(
+                            title: "Intentions", 
+                            items: intentions.map { $0.rawValue }
+                        )
+                    }
+                }
+                .padding(.horizontal)
+                
+                // Languages
+                
+                // Social Links
+
+
             }
         }
         .background(ColorPalette.background(for: colorScheme))
@@ -299,6 +320,36 @@ struct PreferenceSection: View {
                     .clipShape(Capsule())
             }
         }
+    }
+}
+
+// Display section of tags
+struct ProfileTagSection: View {
+    let title: String
+    let items: [String]
+    @Environment(\.colorScheme) var colorScheme
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                .padding(.top, 10)
+            
+            FlowLayout(items: items) { item in
+                Text(item.capitalized)
+                    .font(.subheadline)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(
+                        Capsule()
+                            .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                    )
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+            }
+        }
+        .padding(.horizontal)
     }
 }
 
