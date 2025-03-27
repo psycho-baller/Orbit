@@ -112,7 +112,6 @@
 		61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61129BC62CEC10D10076C793 /* UserCardView.swift */; };
 		614168E82D80982700829319 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614168E72D80982300829319 /* DateFormatter.swift */; };
 		6141694E2D809E3C00829319 /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6141694D2D809E3600829319 /* LocationPickerView.swift */; };
-		61416CF92D947E7600829319 /* AgeGenderUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61416CF82D947E6C00829319 /* AgeGenderUtils.swift */; };
 		6190F7192CF508BF00DAEBDE /* PendingRequestsDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */; };
 		6190F71B2CF5644A00DAEBDE /* PendingUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */; };
 		619992A12D13768D00440533 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619992A02D13768300440533 /* UserProfileView.swift */; };
@@ -252,7 +251,6 @@
 		61129BC62CEC10D10076C793 /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
 		614168E72D80982300829319 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		6141694D2D809E3600829319 /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
-		61416CF82D947E6C00829319 /* AgeGenderUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeGenderUtils.swift; sourceTree = "<group>"; };
 		6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestsDropdown.swift; sourceTree = "<group>"; };
 		6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingUserCardView.swift; sourceTree = "<group>"; };
 		619992A02D13768300440533 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
@@ -447,7 +445,6 @@
 		259CB2A42CC047D000C9F285 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				61416CF82D947E6C00829319 /* AgeGenderUtils.swift */,
 				614168E72D80982300829319 /* DateFormatter.swift */,
 				2590D8A02CF7E42C00D9E35D /* Views.swift */,
 				25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */,
@@ -720,7 +717,6 @@
 				259CB2942CC0465600C9F285 /* UserViewModel.swift in Sources */,
 				000AE7452CD5F3BA00431CDB /* MessageView.swift in Sources */,
 				25E829472D84F2E0009D49CE /* ChatMessageService.swift in Sources */,
-				61416CF92D947E7600829319 /* AgeGenderUtils.swift in Sources */,
 				252746E62CE82AC800365712 /* MeetUpRequestDetailsView.swift in Sources */,
 				259CB29B2CC0465600C9F285 /* AppwriteLogo.swift in Sources */,
 				259CB29A2CC0465600C9F285 /* ContentView.swift in Sources */,
