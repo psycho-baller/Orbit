@@ -272,6 +272,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             profilePictureUrl: "https://picsum.photos/200",
             bio:
                 "I love photography, hiking, and art. I'm also a big fan of travel!",
+            dob: "1995-06-15",
             /// onboarding stuff
             activitiesHobbies: ["Photography", "Hiking", "Art"],
             friendActivities: ["Creative Collaborator", "Travel Buddy"],
@@ -312,6 +313,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
             profilePictureUrl: "https://picsum.photos/201",
             bio: "I'm just a chill dude",
+            dob: "1995-06-15",
             /// onboarding stuff
             activitiesHobbies: ["Gaming", "Coding", "Music"],
             friendActivities: ["Hobby Buddy", "Deep Conversations"],
@@ -328,7 +330,18 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showSentReceivedRatio: false,
             //            requestedMeetups: [MeetupRequestModel.mock()],
             //            approvedMeetups: [],
-            lastOnline: "2024-02-19T10:45:00Z"
+            lastOnline: "2024-02-19T10:45:00Z",
+            gender: .man,
+            pronouns: [.heHim],
+            userLinks: [
+                .mock()
+            ],
+            intentions: [
+                .friendships,
+                .conversations,
+                .hobbies,
+            ]
+            
         )
     }
 
