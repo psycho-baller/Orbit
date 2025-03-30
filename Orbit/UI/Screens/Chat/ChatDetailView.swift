@@ -222,14 +222,15 @@ struct ChatDetailView: View {
                     onConfirm: {
                         await confirmMeetup()
                     }
-                }
+                )
                 .padding(.horizontal, 24)
                 //            .padding(.vertical, 2)
             } else if chat.data.meetupRequest?.status != .filled {
                 Text("Meetup confirmed!")
             }
 
-            ChatInputBar(messageText: $messageText, sendMessage: sendMessage)
+            ChatTextBox(message: $messageText, onSend: sendMessage)
+//                .ignoresSafeArea()
         }
         .background(Color.darkIndigo.ignoresSafeArea())
         .navigationTitle(chat.data.meetupRequest?.title ?? "Chat")
