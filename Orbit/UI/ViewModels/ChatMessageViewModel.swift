@@ -29,6 +29,8 @@ class ChatMessageViewModel: ObservableObject {
             self.messages = [
                 .mock(data: .mock()),
                 .mock(data: .mockOtherUserSent()),
+                .mock(data: .mock2()),
+                .mock(data: .mockOtherUserSent()),
             ]
         } else {
             Task {
