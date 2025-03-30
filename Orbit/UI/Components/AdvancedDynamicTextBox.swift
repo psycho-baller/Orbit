@@ -4,29 +4,53 @@
 //
 //  Created by Rami Maalouf on 2025-03-20.
 //
-
 import SwiftUI
 import UIKit
 
-// MARK: - UIKit-backed TextView
+struct AdvancedDynamicTextBox: View {
+    @Binding var text: String
+    // The dynamic height will be updated by the underlying UITextView.
+    @State private var dynamicHeight: CGFloat =
+        UIFont.preferredFont(forTextStyle: .body).lineHeight + 16  // Default: one line + vertical insets
+
+    var body: some View {
+        TextView(text: $text, calculatedHeight: $dynamicHeight)
+            .frame(height: dynamicHeight)
+            .background(Color.clear)  // transparent background
+            .animation(.easeInOut(duration: 0.2), value: dynamicHeight)
+    }
+}
+
 struct TextView: UIViewRepresentable {
     @Binding var text: String
+    @Binding var calculatedHeight: CGFloat
 
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
-        textView.isScrollEnabled = true
+        textView.isScrollEnabled = false  // allow expansion
         textView.isEditable = true
         textView.backgroundColor = .clear
+        textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.textContainerInset = UIEdgeInsets(
             top: 8, left: 4, bottom: 8, right: 4)
         textView.delegate = context.coordinator
-        textView.font = UIFont.preferredFont(forTextStyle: .body)
+        // Lower the horizontal compression resistance to let SwiftUI decide the width.
+        textView.setContentCompressionResistancePriority(
+            .defaultLow, for: .horizontal)
         return textView
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
         if uiView.text != text {
             uiView.text = text
+        }
+        // Update height on the next runloop to let the text view layout its text.
+        DispatchQueue.main.async {
+            let size = uiView.sizeThatFits(
+                CGSize(width: uiView.frame.size.width, height: .infinity))
+            if self.calculatedHeight != size.height {
+                self.calculatedHeight = size.height
+            }
         }
     }
 
@@ -43,54 +67,22 @@ struct TextView: UIViewRepresentable {
 
         func textViewDidChange(_ textView: UITextView) {
             parent.text = textView.text
-        }
-    }
-}
-
-// MARK: - Advanced Dynamic Text Input with Integrated Send Button
-struct AdvancedDynamicTextInput: View {
-    @Binding var text: String
-    let minHeight: CGFloat = 40
-    let maxHeight: CGFloat = 200
-    var sendAction: () -> Void
-
-    var body: some View {
-        HStack(spacing: 8) {
-            // Our dynamic text editor.
-            TextView(text: $text)
-                .frame(minHeight: minHeight, maxHeight: maxHeight)
-                .background(Color.clear)
-            if !text.isEmpty {
-                Button(action: sendAction) {
-                    Image(systemName: "paperplane.fill")
-                        .font(.title2)
-                        .padding(8)
-                        .foregroundColor(.accentColor)
+            let size = textView.sizeThatFits(
+                CGSize(width: textView.frame.size.width, height: .infinity))
+            if parent.calculatedHeight != size.height {
+                DispatchQueue.main.async {
+                    self.parent.calculatedHeight = size.height
                 }
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(.ultraThinMaterial)
-        .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-        )
-        .animation(.easeInOut(duration: 0.2), value: text)
     }
 }
-
 // MARK: - Preview Example
 struct AdvancedDynamicTextBox_Previews: PreviewProvider {
     @State static var text: String =
         "Hello, this is a dynamic text input.\nIt supports multiple lines."
     static var previews: some View {
-        AdvancedDynamicTextInput(text: $text) {
-            // Send action example
-            print("Send tapped with text: \(text)")
-            text = ""
-        }
+        AdvancedDynamicTextBox(text: $text)
         .padding()
         .previewLayout(.sizeThatFits)
     }

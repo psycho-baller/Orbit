@@ -12,32 +12,40 @@ struct ChatTextBox: View {
     let onSend: () -> Void
 
     var body: some View {
-//        HStack {
-//            TextField("Type a message...", text: $message)
-//                .padding(.vertical, 12)
-//                .padding(.leading, 16)
-//
-//            if message.isEmpty {
-//                Button(action: onSend) {
-//                    Image(systemName: "paperplane.fill")
-//                        .font(.title2)
-//                        .padding(.trailing, 16)
-//                        .foregroundColor(.accentColor)
-//                }
-//            }
-//        }
-//        .background(
-//            // Apply the material background with only the top corners rounded.
-//            RoundedCorner(radius: 16, corners: [.topLeft, .topRight])
-//                .fill(.ultraThinMaterial)
-//        )
-//        .foregroundColor(.primary)
-
+        HStack(alignment: .bottom) {
+            AdvancedDynamicTextBox(text: $message)
+                .padding(.vertical, 12)
+                .padding(.leading, 16)
+            Button(action: onSend) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            message.isEmpty
+                                ? Color.accentColor.opacity(0.3)
+                                : Color.accentColor
+                        )
+                        .frame(width: 36)
+                    Image(systemName: "arrow.up")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                }
+                .padding([.trailing, .bottom], 16)
+            }
+        }
+        .background(
+            // Apply the material background with only the top corners rounded.
+            RoundedCorner(radius: 20, corners: [.topLeft, .topRight])
+                .fill(.ultraThinMaterial)
+        )
+        .foregroundColor(.primary)
+        // Animate changes (such as height) when the message changes.
+        .animation(.easeInOut(duration: 0.2), value: message)
     }
 }
 
-struct ChatTextBox_Previews: PreviewProvider {
-    static var previews: some View {
-        ChatTextBox(message: .constant(""), onSend: {})
-    }
+#Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+
+    ChatTextBox(message: .constant("Hello\nbro\nyo\nno"), onSend: {})
+        .accentColor(ColorPalette.accent(for: colorScheme))
 }
