@@ -31,6 +31,7 @@ struct ChatTextBox: View {
                 }
                 .padding([.trailing, .bottom], 16)
             }
+            .disabled(message.isEmpty)
         }
         .background(
             // Apply the material background with only the top corners rounded.
