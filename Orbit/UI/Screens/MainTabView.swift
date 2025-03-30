@@ -61,7 +61,6 @@ struct MainTabView: View {
                     .tag(MainViewTabs.profile)
             }
             .accentColor(ColorPalette.accent(for: colorScheme))
-
             // Custom "Create" button in a fixed positon
             VStack {
                 Spacer()
