@@ -135,6 +135,41 @@ struct ChatInputBar: View {
     }
 }
 
+struct ActionButtonsView: View {
+    let onIgnore: () async -> Void
+    let onConfirm: () async -> Void
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Button(action: { Task { await onIgnore() } }) {
+                HStack {
+                    Image(systemName: "xmark.circle.fill")
+                    Text("Ignore")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.red)
+                .cornerRadius(12)
+            }
+            Button(action: { Task { await onConfirm() } }) {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                    Text("Confirm Meetup")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.green)
+                .cornerRadius(12)
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+}
+
 struct ChatDetailView: View {
     let chat: ChatDocument
     let user: UserModel
@@ -191,49 +226,9 @@ struct ChatDetailView: View {
             }
 
             ChatInputBar(messageText: $messageText, sendMessage: sendMessage)
-                .padding(.bottom)
         }
         .background(Color.darkIndigo.ignoresSafeArea())
-        Button(action: sendMessage) {
-            Image(systemName: "paperplane.fill")
-                .foregroundColor(.accentColor)
-        }
         .navigationTitle(chat.data.meetupRequest?.title ?? "Chat")
-    }
-
-    struct ActionButtonsView: View {
-        let onIgnore: () async -> Void
-        let onConfirm: () async -> Void
-
-        var body: some View {
-            HStack(spacing: 16) {
-                Button(action: { Task { await onIgnore() } }) {
-                    HStack {
-                        Image(systemName: "xmark.circle.fill")
-                        Text("Ignore")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.red)
-                    .cornerRadius(12)
-                }
-                Button(action: { Task { await onConfirm() } }) {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                        Text("Confirm Meetup")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.green)
-                    .cornerRadius(12)
-                }
-            }
-            .padding(.horizontal, 20)
-        }
     }
 
     func sendMessage() {
