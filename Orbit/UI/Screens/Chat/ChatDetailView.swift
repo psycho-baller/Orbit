@@ -25,7 +25,7 @@ struct ProfileHeaderView: View {
 
                 VStack(alignment: .leading) {
                     Text("@financegirl_._")
-                        .foregroundColor(.cyan)
+                        .foregroundColor(.accentColor)
                         .font(.headline)
                     Text("Christie")
                         .foregroundColor(.gray)
@@ -93,40 +93,6 @@ struct InterestTag: View {
             .font(.caption)
     }
 }
-struct ActionButtonsView: View {
-    var body: some View {
-        HStack {
-            Button(action: { /* Deny Action */  }) {
-                Text("Deny")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .overlay(
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.white)
-                            .offset(x: -40)
-                    )
-            }
-
-            Button(action: { /* Accept Action */  }) {
-                Text("Accept")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .overlay(
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.white)
-                            .offset(x: -40)
-                    )
-            }
-        }
-        .padding()
-    }
-}
 
 struct ChatInputBar: View {
     @Binding var messageText: String
@@ -166,7 +132,6 @@ struct ChatInputBar: View {
             }
         }
         .padding()
-        .background(Color.darkIndigo)
     }
 }
 
@@ -215,37 +180,15 @@ struct ChatDetailView: View {
             if let meetupCreatorId = chat.data.meetupRequest?.createdByUser?.id,
                 user.id == meetupCreatorId
             {
-                HStack(spacing: 16) {
-                    Button(action: { Task { await ignoreChat() } }) {
-                        HStack {
-                            Image(systemName: "xmark.circle.fill")
-                            Text("Ignore")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(Color.red)
-                        .cornerRadius(16)
+                ActionButtonsView(
+                    onIgnore: {
+                        await ignoreChat()
+                    },
+                    onConfirm: {
+                        await confirmMeetup()
                     }
-                    Button(action: { Task { await confirmMeetup() } }) {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                            Text("Confirm Meetup")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(Color.green)
-                        .cornerRadius(16)
-                    }
-                }
-                .padding(.horizontal, 24)
-                //            .padding(.vertical, 2)
+                )
             }
-
-            ActionButtonsView()
 
             ChatInputBar(messageText: $messageText, sendMessage: sendMessage)
                 .padding(.bottom)
@@ -256,6 +199,41 @@ struct ChatDetailView: View {
                 .foregroundColor(.accentColor)
         }
         .navigationTitle(chat.data.meetupRequest?.title ?? "Chat")
+    }
+
+    struct ActionButtonsView: View {
+        let onIgnore: () async -> Void
+        let onConfirm: () async -> Void
+
+        var body: some View {
+            HStack(spacing: 16) {
+                Button(action: { Task { await onIgnore() } }) {
+                    HStack {
+                        Image(systemName: "xmark.circle.fill")
+                        Text("Ignore")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Color.red)
+                    .cornerRadius(12)
+                }
+                Button(action: { Task { await onConfirm() } }) {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Confirm Meetup")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Color.green)
+                    .cornerRadius(12)
+                }
+            }
+            .padding(.horizontal, 20)
+        }
     }
 
     func sendMessage() {
