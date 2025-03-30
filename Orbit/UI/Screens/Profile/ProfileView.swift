@@ -17,7 +17,7 @@ struct ProfileView: View {
     
     var body: some View {
         if let currentUser = userViewModel.currentUser {
-            ProfilePageView(user: currentUser)
+            ProfilePageView(user: currentUser, isCurrentUserProfile: true) //Only place where this is true
         } else {
             ProgressView()
         }

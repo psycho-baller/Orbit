@@ -41,6 +41,7 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     @Published var selectedRadius: Double = 10.0
     @Published var isOnCampus = false  // Track if the user is inside campus
     @Published var allUsers: [UserModel] = []
+    @Published var tempUserData: UserModel?
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -746,6 +747,102 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
             return area.name
         }
         return "Unknown Location"
+    }
+
+    // Update temporary user data without saving to the database
+    func updateTempUserData(
+        username: String? = nil,
+        firstName: String? = nil,
+        lastName: String? = nil,
+        bio: String? = nil,
+        dob: String? = nil,
+        activitiesHobbies: [String]? = nil,
+        friendActivities: [String]? = nil,
+        preferredMeetupType: [String]? = nil,
+        convoTopics: [String]? = nil,
+        friendshipValues: [String]? = nil,
+        friendshipQualities: [String]? = nil,
+        pronouns: [UserPronouns]? = nil,
+        intentions: [UserIntention]? = nil
+    ) {
+        guard var user = currentUser else { return }
+        
+        // Create a copy of the current user with the updates
+        var updatedUser = user
+        
+        // Update only the fields that were provided
+        if let username = username {
+            updatedUser.username = username
+        }
+        if let firstName = firstName {
+            updatedUser.firstName = firstName
+        }
+        if let lastName = lastName {
+            updatedUser.lastName = lastName
+        }
+        if let bio = bio {
+            updatedUser.bio = bio
+        }
+        if let dob = dob {
+            updatedUser.dob = dob
+        }
+        if let activitiesHobbies = activitiesHobbies {
+            updatedUser.activitiesHobbies = activitiesHobbies
+        }
+        if let friendActivities = friendActivities {
+            updatedUser.friendActivities = friendActivities
+        }
+        if let preferredMeetupType = preferredMeetupType {
+            updatedUser.preferredMeetupType = preferredMeetupType
+        }
+        if let convoTopics = convoTopics {
+            updatedUser.convoTopics = convoTopics
+        }
+        if let friendshipValues = friendshipValues {
+            updatedUser.friendshipValues = friendshipValues
+        }
+        if let friendshipQualities = friendshipQualities {
+            updatedUser.friendshipQualities = friendshipQualities
+        }
+        if let pronouns = pronouns {
+            updatedUser.pronouns = pronouns
+        }
+        if let intentions = intentions {
+            updatedUser.intentions = intentions
+        }
+        
+        // Store in temporary variable
+        tempUserData = updatedUser
+    }
+
+    // Save temporary changes to the database
+    @MainActor
+    func saveProfileChanges() async {
+        guard let updatedUser = tempUserData else { return }
+        
+        isLoading = true
+        
+        do {
+            // Save to database
+            _ = try await userManagementService.updateUser(
+                accountId: updatedUser.accountId,
+                updatedUser: updatedUser
+            )
+            
+            // Update current user with saved changes
+            self.currentUser = updatedUser
+            tempUserData = nil
+        } catch {
+            print("Error saving profile changes: \(error.localizedDescription)")
+            self.error = error.localizedDescription
+        }
+        
+        isLoading = false
+    }
+
+    // Discard temporary changes
+    func discardProfileChanges() {
+        tempUserData = nil
     }
 }
 

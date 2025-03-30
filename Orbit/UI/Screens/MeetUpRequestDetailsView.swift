@@ -26,7 +26,7 @@ struct MeetUpRequestDetailsView: View {
                     .ignoresSafeArea()
 
                 ScrollView {
-                    ProfilePageView(user: sender)
+                    ProfilePageView(user: sender, isCurrentUserProfile: false)
                         .padding(.bottom, 80)
                 }
             }
