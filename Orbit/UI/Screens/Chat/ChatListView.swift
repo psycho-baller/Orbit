@@ -165,10 +165,12 @@ struct ChatListRow: View {
 
 #if DEBUG
     #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
         ChatListView()
             .environmentObject(ChatViewModel.mock())
             .environmentObject(UserViewModel.mock())
             .environmentObject(AppState())
-            .accentColor(ColorPalette.accent(for: .light))
+            .accentColor(ColorPalette.accent(for: colorScheme))
     }
 #endif
