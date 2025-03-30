@@ -29,6 +29,8 @@ class ChatMessageViewModel: ObservableObject {
             self.messages = [
                 .mock(data: .mock()),
                 .mock(data: .mockOtherUserSent()),
+                .mock(data: .mock2()),
+                .mock(data: .mockOtherUserSent()),
             ]
         } else {
             Task {
@@ -149,7 +151,7 @@ class ChatMessageViewModel: ObservableObject {
     }
 
     /// Fetch all messages for this chat
-    func fetchMessages() async {
+    func fetchMessages() async -> [ChatMessageModel] {
         isLoading = true
         defer { isLoading = false }
 
@@ -164,6 +166,7 @@ class ChatMessageViewModel: ObservableObject {
                 "ChatMessageViewModel - fetchMessages: Error: \(error.localizedDescription)"
             )
         }
+        return []
     }
 
     /// Send a new message

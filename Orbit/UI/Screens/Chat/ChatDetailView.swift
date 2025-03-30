@@ -7,6 +7,169 @@
 
 import SwiftUI
 
+struct ProfileHeaderView: View {
+    let chat: ChatDocument
+
+    var body: some View {
+        VStack(spacing: 10) {
+            // Profile Picture & Username
+            HStack {
+                Image("profile_pic")  // Replace with actual image
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white.opacity(0.5), lineWidth: 2)
+                    )
+
+                VStack(alignment: .leading) {
+                    Text("@financegirl_._")
+                        .foregroundColor(.accentColor)
+                        .font(.headline)
+                    Text("Christie")
+                        .foregroundColor(.gray)
+                        .font(.subheadline)
+                }
+                Spacer()
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.white)
+            }
+            .padding(.horizontal)
+
+            // Interests
+            InterestsView()
+
+            // Bio Section
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Bio")
+                    .foregroundColor(.white.opacity(0.5))
+                    .font(.caption)
+
+                Text("Loves money. Spending a lot recently.")
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.blue.opacity(0.5))
+                    .cornerRadius(10)
+            }
+            .padding(.horizontal)
+
+        }
+        .padding()
+        .background(
+            Color.blue.opacity(0.15)
+                .blur(radius: 1)
+        )
+        .cornerRadius(15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+        )
+        .padding(.horizontal, 16)
+    }
+}
+
+// Interests Tag View
+struct InterestsView: View {
+    var body: some View {
+        HStack {
+            InterestTag(title: "intrest 1")
+            InterestTag(title: "intrest 2")
+            InterestTag(title: "wow another intrest")
+        }
+    }
+}
+
+struct InterestTag: View {
+    let title: String
+
+    var body: some View {
+        Text(title)
+            .padding(8)
+            .background(Color.blue.opacity(0.3))
+            .foregroundColor(.white)
+            .cornerRadius(10)
+            .font(.caption)
+    }
+}
+
+struct ChatInputBar: View {
+    @Binding var messageText: String
+    let sendMessage: () -> Void
+
+    var body: some View {
+        HStack {
+            Button(action: { /* Add Action */  }) {
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+                    .padding(10)
+                    .background(Color.gray.opacity(0.3))
+                    .clipShape(Circle())
+            }
+
+            ZStack(alignment: .leading) {
+                if messageText.isEmpty {
+                    Text("Hmm...")
+                        .foregroundColor(Color.white.opacity(0.85))
+                        .font(.system(size: 15, weight: .bold))
+                        .padding(.leading, 12)
+                }
+
+                TextField("", text: $messageText)
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(Color.white.opacity(0.2))
+                    .cornerRadius(20)
+            }
+
+            Button(action: sendMessage) {
+                Image(systemName: "mic.fill")
+                    .foregroundColor(.white)
+                    .padding(10)
+                    .background(Color.gray.opacity(0.3))
+                    .clipShape(Circle())
+            }
+        }
+        .padding()
+    }
+}
+
+struct ActionButtonsView: View {
+    let onIgnore: () async -> Void
+    let onConfirm: () async -> Void
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Button(action: { Task { await onIgnore() } }) {
+                HStack {
+                    Image(systemName: "xmark.circle.fill")
+                    Text("Ignore")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.red)
+                .cornerRadius(12)
+            }
+            Button(action: { Task { await onConfirm() } }) {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                    Text("Confirm Meetup")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.green)
+                .cornerRadius(12)
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+}
+
 struct ChatDetailView: View {
     let chat: ChatDocument
     let user: UserModel
@@ -26,6 +189,8 @@ struct ChatDetailView: View {
 
     var body: some View {
         VStack {
+            ProfileHeaderView(chat: chat)
+                .padding(.bottom, 10)
             ScrollViewReader { scrollProxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 8) {
@@ -45,53 +210,24 @@ struct ChatDetailView: View {
                         }
                     }
                 }
+                .padding(.horizontal)
             }
-
             if let meetupCreatorId = chat.data.meetupRequest?.createdByUser?.id,
                 user.id == meetupCreatorId
             {
-                HStack(spacing: 16) {
-                    Button(action: { Task { await ignoreChat() } }) {
-                        HStack {
-                            Image(systemName: "xmark.circle.fill")
-                            Text("Ignore")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(Color.red)
-                        .cornerRadius(16)
+                ActionButtonsView(
+                    onIgnore: {
+                        await ignoreChat()
+                    },
+                    onConfirm: {
+                        await confirmMeetup()
                     }
-                    Button(action: { Task { await confirmMeetup() } }) {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                            Text("Confirm Meetup")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(Color.green)
-                        .cornerRadius(16)
-                    }
-                }
-                .padding(.horizontal, 24)
-                //            .padding(.vertical, 2)
+                )
             }
 
-            HStack {
-                TextField("Type a message...", text: $messageText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-
-                Button(action: sendMessage) {
-                    Image(systemName: "paperplane.fill")
-                        .foregroundColor(.accentColor)
-                }
-                .disabled(messageText.isEmpty)
-            }
-            .padding()
+            ChatInputBar(messageText: $messageText, sendMessage: sendMessage)
         }
+        .background(Color.darkIndigo.ignoresSafeArea())
         .navigationTitle(chat.data.meetupRequest?.title ?? "Chat")
     }
 
@@ -124,6 +260,12 @@ struct ChatDetailView: View {
     func ignoreChat() async {
         //        await chatVM.deleteChat(chat)
     }
+}
+
+// Custom Dark Indigo Color
+extension Color {
+    static let darkIndigo = Color(
+        red: 13 / 255, green: 16 / 255, blue: 48 / 255)
 }
 
 #if DEBUG
