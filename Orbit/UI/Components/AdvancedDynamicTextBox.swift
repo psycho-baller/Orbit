@@ -8,26 +8,7 @@
 import SwiftUI
 import UIKit
 
-struct AdvancedDynamicTextBox: View {
-    @Binding var text: String
-    let minHeight: CGFloat = 40
-    let maxHeight: CGFloat = 200
-
-    var body: some View {
-        TextView(text: $text)
-            .frame(minHeight: minHeight, maxHeight: maxHeight)
-            .background(.ultraThinMaterial)
-            .cornerRadius(8)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8).stroke(
-                    Color.gray.opacity(0.3))
-            )
-            .padding(.vertical, 12)
-            .padding(.horizontal, 16)
-            .animation(.easeInOut(duration: 0.2))
-    }
-}
-
+// MARK: - UIKit-backed TextView
 struct TextView: UIViewRepresentable {
     @Binding var text: String
 
@@ -35,11 +16,11 @@ struct TextView: UIViewRepresentable {
         let textView = UITextView()
         textView.isScrollEnabled = true
         textView.isEditable = true
-        //        textView.backgroundColor = .clear
+        textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(
-            top: 0, left: -4, bottom: 0, right: -4)
+            top: 8, left: 4, bottom: 8, right: 4)
         textView.delegate = context.coordinator
-
+        textView.font = UIFont.preferredFont(forTextStyle: .body)
         return textView
     }
 
@@ -65,6 +46,52 @@ struct TextView: UIViewRepresentable {
         }
     }
 }
-#Preview {
-    TextView(text: .constant("hi"))
+
+// MARK: - Advanced Dynamic Text Input with Integrated Send Button
+struct AdvancedDynamicTextInput: View {
+    @Binding var text: String
+    let minHeight: CGFloat = 40
+    let maxHeight: CGFloat = 200
+    var sendAction: () -> Void
+
+    var body: some View {
+        HStack(spacing: 8) {
+            // Our dynamic text editor.
+            TextView(text: $text)
+                .frame(minHeight: minHeight, maxHeight: maxHeight)
+                .background(Color.clear)
+            if !text.isEmpty {
+                Button(action: sendAction) {
+                    Image(systemName: "paperplane.fill")
+                        .font(.title2)
+                        .padding(8)
+                        .foregroundColor(.accentColor)
+                }
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.ultraThinMaterial)
+        .cornerRadius(radius: 16, corners: [.topLeft, .topRight])
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        )
+        .animation(.easeInOut(duration: 0.2), value: text)
+    }
+}
+
+// MARK: - Preview Example
+struct AdvancedDynamicTextBox_Previews: PreviewProvider {
+    @State static var text: String =
+        "Hello, this is a dynamic text input.\nIt supports multiple lines."
+    static var previews: some View {
+        AdvancedDynamicTextInput(text: $text) {
+            // Send action example
+            print("Send tapped with text: \(text)")
+            text = ""
+        }
+        .padding()
+        .previewLayout(.sizeThatFits)
+    }
 }
