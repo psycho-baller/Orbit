@@ -34,7 +34,6 @@ struct CreateMeetupDetailsView: View {
         ZStack {
             ColorPalette.background(for: colorScheme)
                 .ignoresSafeArea()
-            
             VStack {
                 ScrollView {
                     VStack(spacing: 24) {
@@ -62,12 +61,12 @@ struct CreateMeetupDetailsView: View {
 
                         // Location Selection
                         VStack(alignment: .leading) {
-                            
                             LocationPickerView(
                                 locationSearchText: $locationSearchText,
                                 selectedLocation: $selectedLocation,
                                 selectedLocationId: $selectedLocationId,
-                                isShowingLocationDropdown: $isShowingLocationDropdown,
+                                isShowingLocationDropdown:
+                                    $isShowingLocationDropdown,
                                 locations: locations,
                                 colorScheme: colorScheme
                             )
@@ -144,8 +143,11 @@ struct CreateMeetupDetailsView: View {
             return
         }
 
-        let startTimeString: String = DateFormatterUtility.formatISO8601(startTime)
-        let endTime = Calendar.current.date(byAdding: .hour, value: 1, to: startTime) ?? startTime.addingTimeInterval(3600)
+        let startTimeString: String = DateFormatterUtility.formatISO8601(
+            startTime)
+        let endTime =
+            Calendar.current.date(byAdding: .hour, value: 1, to: startTime)
+            ?? startTime.addingTimeInterval(3600)
         let endTimeString = DateFormatterUtility.formatISO8601(endTime)
 
         print("Debug - Creating meetup:")
