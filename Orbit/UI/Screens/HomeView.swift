@@ -191,7 +191,11 @@ struct HomeView: View {
             )
             ScrollView {
                 LazyVStack(spacing: 16) {
-                    ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
+                    ForEach(
+                        meetupRequestVM.filteredMeetupRequests(
+                            for: userVM.currentUser)
+                    ) {
+                        meetupRequest in
                         MeetupRequestCardView(meetupRequest: meetupRequest)
                     }
                 }

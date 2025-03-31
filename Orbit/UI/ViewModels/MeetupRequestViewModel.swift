@@ -34,7 +34,7 @@ class MeetupRequestViewModel: ObservableObject {
 
         do {
             let meetups =
-            // try await Task.detached(priority: .userInitiated) {
+                // try await Task.detached(priority: .userInitiated) {
                 try await self.meetupService.listMeetups(queries: nil)
             // }.value
             print("meetups: \(meetups)")
@@ -46,6 +46,36 @@ class MeetupRequestViewModel: ObservableObject {
             print(
                 "MeetupRequestViewModel - fetchAllMeetups: Error: \(error.localizedDescription)"
             )
+        }
+    }
+
+    func doesUserGenderMatchPreference(
+        userGender: UserGender, preference: GenderPreference
+    ) -> Bool {
+        print("userGender: \(userGender), preference: \(preference)")
+        switch preference {
+        case .any:
+            return true
+        case .men:
+            return userGender == .man
+        case .women:
+            return userGender == .woman
+        case .nonBinary:
+            return userGender == .nonBinary
+        }
+    }
+    // This assumes that your UserModel now includes a `gender: GenderPreference` property.
+    func filteredMeetupRequests(for user: UserModel?) -> [MeetupRequestDocument]
+    {
+        if let userGender = user?.gender {
+            return meetupRequests.filter { meetup in
+                // If the meetup is open to any gender, include it.
+                return doesUserGenderMatchPreference(
+                    userGender: userGender,
+                    preference: meetup.data.genderPreference)
+            }
+        } else {
+            return meetupRequests
         }
     }
 
@@ -75,8 +105,8 @@ class MeetupRequestViewModel: ObservableObject {
         status: MeetupStatus,
         intention: MeetupIntention,
         createdByUser: UserModel,
-        //        meetupApprovals: [MeetupApprovalModel] = [],
-        type: MeetupType
+        type: MeetupType,
+        genderPreference: GenderPreference
     ) async {
         isLoading = true
         defer { isLoading = false }
@@ -90,7 +120,8 @@ class MeetupRequestViewModel: ObservableObject {
             status: status,
             intention: intention,
             createdByUser: createdByUser,
-            type: type
+            type: type,
+            genderPreference: genderPreference
         )
 
         do {
@@ -171,7 +202,6 @@ class MeetupRequestViewModel: ObservableObject {
             return meetupRequestVM
         }
     #endif
-
 }
 
 #if DEBUG
