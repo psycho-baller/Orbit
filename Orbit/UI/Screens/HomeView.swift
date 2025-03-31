@@ -15,7 +15,7 @@ struct HomeView: View {
     @State private var showLogoutAlert = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 content
                     .navigationTitle(
@@ -195,7 +195,7 @@ struct HomeView: View {
             ScrollView {
                 LazyVStack(spacing: 16) {
                     ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
-                        MeetupRequestDetailedView(meetupRequest: meetupRequest)
+                        MeetupRequestCardView(meetupRequest: meetupRequest)
                     }
                 }
                 .padding(.vertical)
@@ -224,7 +224,6 @@ struct HomeView: View {
         HomeView()
             .environmentObject(AuthViewModel.mock())
             .environmentObject(UserViewModel.mock())
-            .environmentObject(ChatRequestViewModel.mock())
             .environmentObject(MeetupRequestViewModel.mock())
             .environmentObject(AppState())
             .accentColor(ColorPalette.accent(for: colorScheme))

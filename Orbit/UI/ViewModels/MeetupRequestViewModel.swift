@@ -33,8 +33,14 @@ class MeetupRequestViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let meetups = try await meetupService.listMeetups(queries: nil)
+            let meetups =
+            // try await Task.detached(priority: .userInitiated) {
+                try await self.meetupService.listMeetups(queries: nil)
+            // }.value
+            print("meetups: \(meetups)")
+
             self.meetupRequests = meetups
+
         } catch {
             self.error = error.localizedDescription
             print(
@@ -135,7 +141,7 @@ class MeetupRequestViewModel: ObservableObject {
     //            )
     //        }
     //    }
-    
+
     static func iconForType(_ type: MeetupType) -> String {
         switch type {
         case .coffee: return "cup.and.saucer.fill"
