@@ -4,7 +4,6 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
-    @EnvironmentObject private var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject private var meetupRequestVM: MeetupRequestViewModel
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) var colorScheme
@@ -21,15 +20,10 @@ struct HomeView: View {
                 content
                     .navigationTitle(
                         "Astronauts around you"
-                        //                        userVM.isOnCampus || isPreviewMode
-                        //                            ? (userVM.currentArea.map { "\($0)" }
-                        //                                ?? "Astronauts around you")
-                        //                            : ""
                     )
 
                     .navigationBarTitleDisplayMode(
-                        userVM.isOnCampus || isPreviewMode
-                            ? .automatic : .inline
+                        .automatic
                     )
                     .toolbar {
                         // Leading toolbar: Logout button
@@ -50,7 +44,7 @@ struct HomeView: View {
                         }
                     }
                     .sheet(isPresented: $isShowingChatRequests) {
-                        MeetUpRequestsListView(
+                        NotificationsListView(
                             chatRequestListDetent: $chatRequestListDetent
                         )
                         .presentationDetents(
@@ -58,16 +52,6 @@ struct HomeView: View {
                         )
                         .presentationBackground(.ultraThinMaterial)
                     }
-                    //                    .sheet(item: $selectedMeetupRequest) { meetupRequest in
-                    //                        ZStack {
-                    //                            ScrollView {
-                    //
-                    //                                //                                .padding(.bottom, 80)
-                    //                            }
-                    //                        }
-                    //                        .presentationDetents([.large])
-                    //                        .presentationDragIndicator(.visible)
-                    //                    }
                     .sheet(isPresented: $appState.isShowingHomeSettings) {  // Present Config screen
                         HomeSettings()
                             .presentationDetents([.fraction(0.7), .large])
@@ -95,17 +79,17 @@ struct HomeView: View {
 
     private func handleNotificationNavigation() async {
         if let requestId = appState.selectedRequestId {
-            if let request = await chatRequestVM.getMeetUpRequest(
-                requestId: requestId)
-            {
-                print("Selected request ID changed: ", requestId)
-                isShowingChatRequests = true
-                chatRequestListDetent = .large
-                //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                chatRequestVM.selectedRequest = request
-                //                }
-            }
-            appState.selectedRequestId = nil  // Reset after handling
+            //            if let request = await chatRequestVM.getMeetUpRequest(
+            //                requestId: requestId)
+            //            {
+            //                print("Selected request ID changed: ", requestId)
+            //                isShowingChatRequests = true
+            //                chatRequestListDetent = .large
+            //                //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            //                chatRequestVM.selectedRequest = request
+            //                //                }
+            //            }
+            //            appState.selectedRequestId = nil  // Reset after handling
         }
     }
     @ViewBuilder private var content: some View {
@@ -126,7 +110,7 @@ struct HomeView: View {
         Button(action: {
             isShowingChatRequests = true
         }) {
-            Image(systemName: "tray")
+            Image(systemName: "bell")
                 .font(.headline)
                 .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
@@ -134,16 +118,15 @@ struct HomeView: View {
 
     private var notificationBadge: some View {
         Group {
-            if chatRequestVM.incomingRequests.count > 0 {
-                Text("\(chatRequestVM.incomingRequests.count)")
-                    .font(.caption2)
-                    .padding(5)
-                    .foregroundColor(.white)
-                    .background(Color.red)
-                    .clipShape(Circle())
-                    .offset(x: 10, y: -10)
-            }
+            Text("\(5)")
+                .font(.caption2)
+                .padding(5)
+                .foregroundColor(.white)
+                .background(Color.red)
+                .clipShape(Circle())
+                .offset(x: 10, y: -10)
         }
+
     }
 
     private var logoutButton: some View {
@@ -203,30 +186,12 @@ struct HomeView: View {
         .background(ColorPalette.background(for: colorScheme))
     }
 
-    private func hasPendingRequest(for userInQuestion: UserModel) -> Bool {
-        guard let currentUserId = userVM.currentUser?.accountId else {
-            return false
-        }
-
-        return chatRequestVM.requests.contains { request in
-            let requestReceiverId = request.data.receiverAccountId
-            let requestSenderId = request.data.senderAccountId
-            return requestReceiverId == userInQuestion.accountId
-                && requestSenderId == currentUserId
-                && request.data.status == .pending
-        }
-    }
-
     private func loadedView() -> some View {
         VStack(alignment: .leading, spacing: 0) {
             SearchBar(
                 text: $userVM.searchText,
                 placeholder: "Search for a meetup request"
             )
-
-            //            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
-            //                .padding(.bottom, 16)
-
             ScrollView {
                 LazyVStack(spacing: 16) {
                     ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
@@ -240,7 +205,6 @@ struct HomeView: View {
             if !isPreviewMode {
                 Task {
                     await userVM.initialize()
-                    await loadRequests()
                 }
             }
         }
@@ -249,17 +213,6 @@ struct HomeView: View {
         .refreshable {
             await meetupRequestVM.fetchAllMeetups()
         }
-    }
-
-    private func loadRequests() async {
-        guard let currentUserId = userVM.currentUser?.accountId else {
-            chatRequestVM.errorMessage = "Unable to determine the current user."
-            print("Error: currentUserId is nil.")
-            return
-        }
-
-        print("Loading requests for user: \(currentUserId)")
-        await chatRequestVM.fetchRequestsForUser(userId: currentUserId)
     }
 }
 

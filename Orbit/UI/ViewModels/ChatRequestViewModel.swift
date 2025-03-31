@@ -185,12 +185,6 @@ class ChatRequestViewModel: ObservableObject {
                 try await messagingService.findOrCreateConversation(
                     conversationData)
                 self.newConversationId = conversation.id
-                
-                // Update both users' conversation lists
-                try await addConversationToUser(
-                    userId: participants[0], conversationId: conversation.id)
-                try await addConversationToUser(
-                    userId: participants[1], conversationId: conversation.id)
                 try await notificationService.sendPushNotification(
                     to: [updatedRequest.data.senderAccountId],
                     title: "Request Approved!",
@@ -215,29 +209,6 @@ class ChatRequestViewModel: ObservableObject {
             )
         }
         return nil
-        
-        
-        @MainActor
-        func addConversationToUser(
-            userId: String, conversationId: String
-        ) async throws {
-            if let userModel = try await userManagementService.getUser(
-                userId)
-            {
-                var conversations = userModel.data.conversations ?? []
-                if !conversations.contains(conversationId) {
-                    conversations.append(conversationId)
-                    let updatedUser = userModel.data.update(
-                        conversations: conversations)
-                    try await userManagementService.updateUser(
-                        accountId: userId, updatedUser: updatedUser)
-                    print(
-                        "DEBUG: Updated conversations for user \(userId): \(conversations)"
-                    )
-                }
-            }
-            
-        }
     }
 }
     // MARK: - Mock for SwiftUI Preview

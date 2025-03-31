@@ -26,11 +26,6 @@ struct ChatRequestView: View {
                     .padding()
                     .foregroundColor(ColorPalette.text(for: colorScheme))
 
-                Text(
-                    "Interests: \(receiver.interests?.joined(separator: ", ") ?? "No interests available")"
-                )
-                .foregroundColor(ColorPalette.text(for: colorScheme))
-
                 Spacer()  // This pushes the text field and button down to the bottom
             }
 
