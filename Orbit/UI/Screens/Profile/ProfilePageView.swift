@@ -116,8 +116,34 @@ struct ProfilePageView: View {
                         }
                         
                         // Orbiting Activities
-                        if let activities = displayUser.activitiesHobbies, !activities.isEmpty {
-                            OrbitContainer(interests: activities)
+                        ZStack {
+                            if let activities = displayUser.featuredInterests, !activities.isEmpty {
+                                OrbitContainer(interests: activities)
+                            }
+                            
+                            if editMode {
+                                VStack {
+                                    Spacer()
+                                    Button(action: {
+                                        editSection("featuredInterests")
+                                    }) {
+                                        Text(displayUser.featuredInterests?.isEmpty == false ? "Edit Featured Interests" : "Add Featured Interests")
+                                            .font(.caption)
+                                            .padding(.vertical, 6)
+                                            .padding(.horizontal, 12)
+                                            .background(
+                                                Capsule()
+                                                    .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                            )
+                                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                                            .overlay(
+                                                Capsule()
+                                                    .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 1)
+                                            )
+                                    }
+                                    .padding(.bottom, 10)  // Add padding to avoid overlapping with name
+                                }
+                            }
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -337,6 +363,9 @@ struct ProfilePageView: View {
             case .intentions:
                 IntentionsEditSheet(user: displayUser)
                     .environmentObject(userVM)
+            case .featuredInterests:
+                FeaturedInterestsEditSheet(user: displayUser)
+                    .environmentObject(userVM)
             }
         }
     }
@@ -373,6 +402,7 @@ struct ProfilePageView: View {
         case "friendshipValues": activeSheet = .friendshipValues
         case "friendshipQualities": activeSheet = .friendshipQualities
         case "intentions": activeSheet = .intentions
+        case "featuredInterests": activeSheet = .featuredInterests
         default: break
         }
     }
@@ -457,18 +487,10 @@ struct ProfileTagSection: View {
 //}
 
 // Define an enum for the different sheet types
-enum ProfileEditType: Identifiable {
-    case personalInfo
-    case bio
-    case username
-    case profile
-    case interests
-    case friendActivities
-    case meetupTypes
-    case convoTopics
-    case friendshipValues
-    case friendshipQualities
-    case intentions
+enum ProfileEditType: String, Identifiable {
+    case personalInfo, bio, username, profile, interests, friendActivities, 
+         meetupTypes, convoTopics, friendshipValues, friendshipQualities, 
+         intentions, featuredInterests
     
-    var id: Self { self } // Conform to Identifiable
+    var id: String { rawValue }
 }

@@ -110,14 +110,16 @@ struct OrbitContainer: View {
     
     // Internal state for animation
     @State private var orbitAngle: Double = 0
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack {
-            ForEach(Array(interests.enumerated()), id: \.element) { index, activity in
+            // Orbiting interests
+            ForEach(Array(interests.prefix(6).enumerated()), id: \.element) { index, activity in
                 InterestOrbit(
                     interest: activity,
                     index: index,
-                    totalCount: interests.count,
+                    totalCount: min(interests.count, 6),
                     orbitAngle: orbitAngle
                 )
             }

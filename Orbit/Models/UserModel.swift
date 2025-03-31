@@ -64,6 +64,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var showAge: Bool = true
     var showPronouns: Bool = true
 
+    // New property for featured interests
+    var featuredInterests: [String]?
+
     // Define CodingKeys to map "$id" to "id"
     enum CodingKeys: String, CodingKey {
         case id = "$id"
@@ -78,6 +81,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
         case userLanguages, gender, pronouns, showStarSign, userLinks,
             intentions
+        case featuredInterests
     }
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
@@ -127,7 +131,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         pronouns: [UserPronouns] = [],
         showStarSign: Bool = true,
         userLinks: [UserLinkModel]? = nil,
-        intentions: [UserIntention]? = nil
+        intentions: [UserIntention]? = nil,
+        featuredInterests: [String]? = nil
     ) {
         self.id = id
         self.accountId = accountId
@@ -166,6 +171,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.showStarSign = showStarSign
         self.userLinks = userLinks
         self.intentions = intentions
+        self.featuredInterests = featuredInterests
     }
 
     func toJson(excludeId: Bool = false) -> [String: Any] {
@@ -220,7 +226,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         pronouns: [UserPronouns]? = nil,
         showStarSign: Bool? = nil,
         userLinks: [UserLinkModel]? = nil,
-        intentions: [UserIntention]? = nil
+        intentions: [UserIntention]? = nil,
+        featuredInterests: [String]? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,
@@ -259,7 +266,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             pronouns: pronouns ?? self.pronouns,
             showStarSign: showStarSign ?? self.showStarSign,
             userLinks: userLinks ?? self.userLinks,
-            intentions: intentions ?? self.intentions
+            intentions: intentions ?? self.intentions,
+            featuredInterests: featuredInterests ?? self.featuredInterests
         )
     }
 
@@ -303,7 +311,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .friendships,
                 .conversations,
                 .hobbies,
-            ]
+            ],
+            featuredInterests: ["Photography", "Hiking", "Art"]
         )
     }
 
@@ -344,8 +353,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .friendships,
                 .conversations,
                 .hobbies,
-            ]
-            
+            ],
+            featuredInterests: ["Gaming", "Tech", "Music"]
         )
     }
 
@@ -375,7 +384,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showSentReceivedRatio: true,
             //            requestedMeetups: [],
             //            approvedMeetups: [MeetupApprovalModel.mock()],
-            lastOnline: "2024-02-18T20:15:00Z"
+            lastOnline: "2024-02-18T20:15:00Z",
+            featuredInterests: ["Yoga", "Reading", "Meditation"]
         )
     }
 
@@ -423,7 +433,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .friendships,
                 .conversations,
                 .hobbies,
-            ]
+            ],
+            featuredInterests: ["Yoga", "Reading", "Meditation"]
         )
     }
 
@@ -459,7 +470,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 preferredGender: [.man, .woman],
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
-                hasCompletedOnboarding: true
+                hasCompletedOnboarding: true,
+                featuredInterests: ["Gaming", "Tech", "Music"]
             ),
             UserModel(
                 id: "user5",
@@ -490,7 +502,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 preferredGender: [.man, .woman],
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
-                hasCompletedOnboarding: true
+                hasCompletedOnboarding: true,
+                featuredInterests: ["Yoga", "Reading", "Meditation"]
             ),
         ]
     }

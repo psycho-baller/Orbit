@@ -763,7 +763,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         friendshipValues: [String]? = nil,
         friendshipQualities: [String]? = nil,
         pronouns: [UserPronouns]? = nil,
-        intentions: [UserIntention]? = nil
+        intentions: [UserIntention]? = nil,
+        featuredInterests: [String]? = nil
     ) {
         guard var user = currentUser else { return }
         
@@ -812,6 +813,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
         if let intentions = intentions {
             updatedUser.intentions = intentions
+        }
+        
+        if let featuredInterests = featuredInterests {
+            updatedUser.featuredInterests = featuredInterests
         }
         
         // Store in temporary variable
@@ -865,7 +870,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                tempData.pronouns != currentUser.pronouns ||
                tempData.intentions != currentUser.intentions ||
                tempData.showAge != currentUser.showAge ||
-               tempData.showPronouns != currentUser.showPronouns
+               tempData.showPronouns != currentUser.showPronouns ||
+               tempData.featuredInterests != currentUser.featuredInterests
     }
 
     func updateDisplayPreferences(showAge: Bool? = nil, showPronouns: Bool? = nil) {
