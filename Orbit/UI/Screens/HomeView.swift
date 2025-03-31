@@ -97,12 +97,9 @@ struct HomeView: View {
             ActivityIndicatorView().padding()
         } else if let error = userVM.error {
             failedView(error)
-            //        } else if userVM.currentUser?.isInterestedToMeet == false {
-            //            NotInterestedToMeetView()
-            //        } else {
-            //            OffCampusView()
+        } else {
+            loadedView()
         }
-        loadedView()
     }
 
     // MARK: - Buttons
@@ -199,13 +196,6 @@ struct HomeView: View {
                     }
                 }
                 .padding(.vertical)
-            }
-        }
-        .onAppear {
-            if !isPreviewMode {
-                Task {
-                    await userVM.initialize()
-                }
             }
         }
         .padding(.horizontal)

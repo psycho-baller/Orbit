@@ -53,8 +53,10 @@ class UserViewModel: NSObject, ObservableObject {
         print(
             "UserViewModel - initialize: Initializing user list and subscribing to real-time updates."
         )
-        await self.fetchCurrentUser()
-        await self.prefillUsefulUserData()
+        if !isPreviewMode {
+            await self.fetchCurrentUser()
+            await self.prefillUsefulUserData()
+        }
     }
 
     @MainActor
