@@ -184,15 +184,45 @@ struct HomeView: View {
     }
 
     private func loadedView() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            SearchBar(
-                text: $userVM.searchText,
-                placeholder: "Search for a meetup request"
+        VStack(alignment: .leading, spacing: 16) {
+            // Search Bar
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+                TextField("Smart search", text: $userVM.searchText)
+                    .foregroundColor(.white)
+            }
+            .padding()
+            .background(Color(.systemGray5).opacity(0.2))
+            .cornerRadius(25)
+            .overlay(
+                RoundedRectangle(cornerRadius: 25)
+                    .stroke(Color.white.opacity(0.1), lineWidth: 1)
             )
+
+            // Filter Chips
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    FilterChip(text: "Recommended", systemImage: "sparkles")
+                    FilterChip(text: "Time", systemImage: "clock")
+                    FilterChip(text: "Proximity", systemImage: "location")
+                    Button {
+                        // filter action
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                            .padding(10)
+                            .background(ColorPalette.accent(for: colorScheme))
+                            .clipShape(Circle())
+                    }
+                }
+            }
+            .padding(.bottom, 4)
+
+            // Meetup Requests
             ScrollView {
                 LazyVStack(spacing: 16) {
                     ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
-                        MeetupRequestCardView(meetupRequest: meetupRequest)
+                        RedesignedMeetupRequestCard(meetupRequest: meetupRequest)
                     }
                 }
                 .padding(.vertical)
@@ -203,6 +233,24 @@ struct HomeView: View {
         .refreshable {
             await meetupRequestVM.fetchAllMeetups()
         }
+    }
+}
+
+struct FilterChip: View {
+    let text: String
+    let systemImage: String
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: systemImage)
+            Text(text)
+                .font(.caption)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(Color(.systemGray5).opacity(0.2))
+        .foregroundColor(.white)
+        .cornerRadius(20)
     }
 }
 
