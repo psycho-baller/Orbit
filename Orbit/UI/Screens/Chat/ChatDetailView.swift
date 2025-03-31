@@ -152,6 +152,7 @@ struct ActionButtonsView: View {
                 .padding(.vertical, 16)
                 .background(Color.red)
                 .cornerRadius(12)
+                .padding(.horizontal, 1)
             }
             Button(action: { Task { await onConfirm() } }) {
                 HStack {
@@ -164,71 +165,209 @@ struct ActionButtonsView: View {
                 .padding(.vertical, 16)
                 .background(Color.green)
                 .cornerRadius(12)
+                .padding(.horizontal, 1)
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 10)
     }
 }
 
 struct ChatDetailView: View {
     let chat: ChatDocument
     let user: UserModel
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var userVM: UserViewModel
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
     @StateObject var chatMessageVM: ChatMessageViewModel
     @State private var messageText: String = ""
+    @State private var isKeyboardVisible: Bool = false
+    @State private var isShowingOptions: Bool = false
+    @State private var isShowingMeetupDetails: Bool = false
+    @Environment(\.presentationMode) private var presentationMode
 
     init(chat: ChatDocument, user: UserModel) {
         self.chat = chat
         self.user = user
         _chatMessageVM = StateObject(
-            wrappedValue: ChatMessageViewModel(
-                chatId: chat.id, userId: user.id))
+            wrappedValue: ChatMessageViewModel(chatId: chat.id, userId: user.id)
+        )
+    }
+
+    // Determines if the current user is the meetupRequest creator.
+    private var isCurrentUserCreator: Bool {
+        user.id == chat.data.meetupRequest?.createdByUser?.id
+    }
+
+    // The "other user" is the one that is not the current user.
+    private var otherUser: UserModel? {
+        isCurrentUserCreator ? chat.data.otherUser : chat.data.createdByUser
+    }
+
+    // Check if the meetupRequest creator (requestor) has sent any message in this chat.
+    private var didRequestorSendMessage: Bool {
+        chatMessageVM.messages.contains(where: {
+            (message: ChatMessageDocument) in
+            message.data.sentByUser?.id
+                == chat.data.meetupRequest?.createdByUser?.id
+        })
     }
 
     var body: some View {
-        VStack {
-            ProfileHeaderView(chat: chat)
-                .padding(.bottom, 10)
-            ScrollViewReader { scrollProxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(chatMessageVM.messages, id: \.id) { message in
-                            MessageBubbleView(message: message)
+        ZStack {
+            // The dark background covers the entire screen.
+            ColorPalette.background(for: colorScheme)
+
+            // The main content: header and messages scroll view.
+            VStack {
+                ScrollViewReader { scrollProxy in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(chatMessageVM.messages, id: \.id) {
+                                message in
+                                MessageBubbleView(message: message)
+                            }
                         }
                     }
-                }
-                .padding()
-                // When messages update, scroll to the last one.
-                .onChange(of: chatMessageVM.messages) {
-                    oldMessages, newMessages in
-                    if let lastMessage = newMessages.last {
-                        withAnimation {
-                            scrollProxy.scrollTo(
-                                lastMessage.id, anchor: .bottom)
+                    .padding()
+                    // When messages update, scroll to the last one.
+                    .onChange(of: chatMessageVM.messages) {
+                        oldMessages, newMessages in
+                        if let lastMessage = newMessages.last {
+                            withAnimation {
+                                scrollProxy.scrollTo(
+                                    lastMessage.id, anchor: .bottom)
+                            }
                         }
                     }
+                    //                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-            }
-            if let meetupCreatorId = chat.data.meetupRequest?.createdByUser?.id,
-                user.id == meetupCreatorId
-            {
-                ActionButtonsView(
-                    onIgnore: {
-                        await ignoreChat()
-                    },
-                    onConfirm: {
-                        await confirmMeetup()
-                    }
-                )
+                Spacer()
             }
 
-            ChatInputBar(messageText: $messageText, sendMessage: sendMessage)
+            // Overlay: Floating action buttons and chat text box.
+            VStack {
+                Spacer()
+                if !isKeyboardVisible {
+                    if let meetupCreatorId = chat.data.meetupRequest?
+                        .createdByUser?
+                        .id,
+                        user.id == meetupCreatorId
+                    {
+                        ActionButtonsView(
+                            onIgnore: { await ignoreChat() },
+                            onConfirm: { await confirmMeetup() }
+                        )
+                        .padding(.horizontal, 24)
+                    } else if chat.data.meetupRequest?.status != .filled {
+                        Text("Meetup confirmed!")
+                            .foregroundColor(.white)
+                    }
+                }
+                ChatTextBox(message: $messageText, onSend: sendMessage)
+            }
         }
-        .background(Color.darkIndigo.ignoresSafeArea())
-        .navigationTitle(chat.data.meetupRequest?.title ?? "Chat")
+        .onReceive(
+            NotificationCenter.default.publisher(
+                for: UIResponder.keyboardWillShowNotification)
+        ) { _ in
+            isKeyboardVisible = true
+        }
+        .onReceive(
+            NotificationCenter.default.publisher(
+                for: UIResponder.keyboardWillHideNotification)
+        ) { _ in
+            isKeyboardVisible = false
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+
+            ToolbarItem(placement: .navigationBarLeading) {
+
+                HStack(spacing: 8) {
+                    Button(action: {
+                        // Dismiss or pop the view.
+                        // For example, using an environment presentationMode:
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.accentColor)
+                    }
+                    Button(action: {
+                        // go to the meetup details
+                        isShowingMeetupDetails = true
+                    }) {
+                        if let other = otherUser {
+                            if didRequestorSendMessage {
+                                // Detailed view: Show profile picture and full name (first + last).
+                                AsyncImage(
+                                    url: URL(
+                                        string: other.profilePictureUrl ?? "")
+                                ) { image in
+                                    image.resizable()
+                                        .frame(width: 32, height: 32)
+                                        .clipShape(Circle())
+                                } placeholder: {
+                                    Image(systemName: "person.circle.fill")
+                                        .resizable()
+                                        .frame(width: 32, height: 32)
+                                        .clipShape(Circle())
+                                }
+                                Text(
+                                    "\(other.firstName) \(other.lastName ?? "")"
+                                )
+                                .font(.headline)
+                                .foregroundColor(.accentColor)
+                            } else {
+                                // Simple view: Show only the username.
+                                Text(other.username)
+                                    .font(.headline)
+                                    .foregroundColor(.accentColor)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 10))
+                                .padding(.leading, 5)
+                        }
+                    }
+                }
+            }
+
+            // Trailing: Icons for call, video, etc.
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    // open up a bottom sheet of options like blocking/reporting and of course a dismiss to remove that bottom sheet of options
+                    isShowingOptions.toggle()
+                }) {
+                    Image(systemName: "ellipsis")
+                        .foregroundColor(.accentColor)
+                }
+            }
+        }
+        .confirmationDialog(
+            "Options", isPresented: $isShowingOptions, titleVisibility: .visible
+        ) {
+            Button("Block User", role: .destructive) {
+                // Handle block action.
+            }
+            Button("Report User", role: .destructive) {
+                // Handle report action.
+            }
+            Button("Dismiss", role: .cancel) {}
+        }
+        .navigationDestination(isPresented: $isShowingMeetupDetails) {
+            if let other = otherUser,
+                let meetupRequest = chat.data.meetupRequest
+            {
+                // Pass the same user and same logic flag (didRequestorSendMessage)
+                MeetupDetailsInsideChat(
+                    user: other,
+                    meetupRequest: .mock(data: meetupRequest),
+                    showFullDetails: didRequestorSendMessage)
+            } else {
+                EmptyView()
+            }
+        }
     }
 
     func sendMessage() {
@@ -271,10 +410,10 @@ extension Color {
 #if DEBUG
     #Preview {
         @Previewable @Environment(\.colorScheme) var colorScheme
-
-        ChatDetailView(chat: .mock(), user: .mock2())
-            .environmentObject(UserViewModel.mock())
-            .accentColor(ColorPalette.accent(for: colorScheme))
-
+        NavigationStack {
+            ChatDetailView(chat: .mock(), user: .mock2())
+                .environmentObject(UserViewModel.mock())
+                .accentColor(ColorPalette.accent(for: colorScheme))
+        }
     }
 #endif

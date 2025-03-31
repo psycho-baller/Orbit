@@ -227,19 +227,15 @@ struct HomeView: View {
             //            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
             //                .padding(.bottom, 16)
 
-//            if userVM.filteredUsers.isEmpty {
-//                NoUsersAroundView()
-//            } else {
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
-                            MeetupRequestCardView(meetupRequest: meetupRequest)
-                        }
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
+                        MeetupRequestDetailedView(meetupRequest: meetupRequest)
                     }
-                    .padding(.vertical)
                 }
+                .padding(.vertical)
             }
-//        }
+        }
         .onAppear {
             if !isPreviewMode {
                 Task {
