@@ -60,6 +60,10 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var userLinks: [UserLinkModel]?
     var intentions: [UserIntention]?
 
+    // Display settings for the user's profile
+    var showAge: Bool = true
+    var showPronouns: Bool = true
+
     // Define CodingKeys to map "$id" to "id"
     enum CodingKeys: String, CodingKey {
         case id = "$id"

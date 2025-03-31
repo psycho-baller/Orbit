@@ -753,8 +753,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     func updateTempUserData(
         username: String? = nil,
         firstName: String? = nil,
-        lastName: String? = nil,
-        bio: String? = nil,
+        lastName: Optional<String?> = .none,
+        bio: Optional<String?> = .none,
         dob: String? = nil,
         activitiesHobbies: [String]? = nil,
         friendActivities: [String]? = nil,
@@ -777,12 +777,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         if let firstName = firstName {
             updatedUser.firstName = firstName
         }
-        if let lastName = lastName {
-            updatedUser.lastName = lastName
+        
+        // Handle optional fields differently
+        if case .some(let value) = lastName {
+            updatedUser.lastName = value
         }
-        if let bio = bio {
-            updatedUser.bio = bio
+        if case .some(let value) = bio {
+            updatedUser.bio = value
         }
+        
         if let dob = dob {
             updatedUser.dob = dob
         }
@@ -865,6 +868,22 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                tempData.userLinks != currentUser.userLinks ||
                tempData.dob != currentUser.dob ||
                tempData.showStarSign != currentUser.showStarSign
+    }
+
+    func updateDisplayPreferences(showAge: Bool? = nil, showPronouns: Bool? = nil) {
+        guard var tempUser = tempUserData ?? currentUser else { return }
+        
+        var updatedUser = tempUser
+        
+        if let showAge = showAge {
+            updatedUser.showAge = showAge
+        }
+        
+        if let showPronouns = showPronouns {
+            updatedUser.showPronouns = showPronouns
+        }
+        
+        tempUserData = updatedUser
     }
 }
 

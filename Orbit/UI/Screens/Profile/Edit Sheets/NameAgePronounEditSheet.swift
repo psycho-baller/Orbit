@@ -19,6 +19,8 @@ struct NameAgePronounEditSheet: View {
     @State private var lastName: String
     @State private var dateOfBirth: Date
     @State private var selectedPronouns: Set<UserPronouns> = []
+    @State private var showAge: Bool
+    @State private var showPronouns: Bool
     @FocusState private var isFirstNameFocused: Bool
     @FocusState private var isLastNameFocused: Bool
     
@@ -37,6 +39,10 @@ struct NameAgePronounEditSheet: View {
         self.user = user
         _firstName = State(initialValue: user.firstName)
         _lastName = State(initialValue: user.lastName ?? "")
+        
+        // Initialize display preferences
+        _showAge = State(initialValue: user.showAge)
+        _showPronouns = State(initialValue: user.showPronouns)
         
         // Initialize date of birth
         if let dobString = user.dob {
@@ -116,6 +122,16 @@ struct NameAgePronounEditSheet: View {
                         .padding()
                         .background(ColorPalette.lightGray(for: colorScheme))
                         .cornerRadius(10)
+                        
+                        // Age display preference
+                        Toggle(isOn: $showAge) {
+                            Text("Display age on profile")
+                                .font(.body)
+                                .foregroundColor(ColorPalette.text(for: colorScheme))
+                        }
+                        .padding()
+                        .background(ColorPalette.lightGray(for: colorScheme))
+                        .cornerRadius(10)
                     }
                     .padding(.horizontal)
                     
@@ -169,6 +185,16 @@ struct NameAgePronounEditSheet: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
+                            
+                            // Pronouns display preference
+                            Toggle(isOn: $showPronouns) {
+                                Text("Display pronouns on profile")
+                                    .font(.body)
+                                    .foregroundColor(ColorPalette.text(for: colorScheme))
+                            }
+                            .padding()
+                            .background(ColorPalette.lightGray(for: colorScheme))
+                            .cornerRadius(10)
                         }
                     }
                     .padding(.horizontal)
@@ -212,6 +238,12 @@ struct NameAgePronounEditSheet: View {
                             pronouns: Array(selectedPronouns)
                         )
                         
+                        // Update display preferences
+                        userVM.updateDisplayPreferences(
+                            showAge: showAge,
+                            showPronouns: showPronouns
+                        )
+                        
                         dismiss()
                     }
                     .disabled(!isFormValid)
@@ -223,8 +255,7 @@ struct NameAgePronounEditSheet: View {
     
     // Validation
     private var isFormValid: Bool {
-        !firstName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && 
-        !selectedPronouns.isEmpty
+        !firstName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
 

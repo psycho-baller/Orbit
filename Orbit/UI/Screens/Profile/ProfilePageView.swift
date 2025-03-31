@@ -133,17 +133,16 @@ struct ProfilePageView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(ColorPalette.text(for: colorScheme))
                             
-                            if !ageText.isEmpty {
+                            if displayUser.showAge, !ageText.isEmpty {
                                 Text(ageText)
                                     .font(.title3)
                                     .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                             }
                             
-                            if !pronounsText.isEmpty {
+                            if displayUser.showPronouns, !pronounsText.isEmpty {
                                 Text("\(pronounsText.capitalized)")
                                     .font(.title3)
                                     .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-
                             }
                         }
                         .overlay(
