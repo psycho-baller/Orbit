@@ -56,6 +56,10 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var showStarSign: Bool = true
     var userLinks: [UserLinkModel]?
     var intentions: [UserIntention]?
+    var myBlocks: [UserBlockModel]? = []
+    var blockedMe: [UserBlockModel]? = []
+    var myReports: [UserReportModel]? = []
+    var reportedMe: [UserReportModel]? = []
 
     // Define CodingKeys to map "$id" to "id"
     enum CodingKeys: String, CodingKey {
@@ -70,6 +74,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
         case userLanguages, gender, pronouns, showStarSign, userLinks,
             intentions
+        case myBlocks, blockedMe, myReports, reportedMe
     }
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
@@ -116,7 +121,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         pronouns: [UserPronouns] = [],
         showStarSign: Bool = true,
         userLinks: [UserLinkModel]? = nil,
-        intentions: [UserIntention]? = nil
+        intentions: [UserIntention]? = nil,
+        myBlocks: [UserBlockModel]? = [],
+        blockedMe: [UserBlockModel]? = [],
+        myReports: [UserReportModel]? = [],
+        reportedMe: [UserReportModel]? = []
     ) {
         self.id = id
         self.accountId = accountId
@@ -152,6 +161,10 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.showStarSign = showStarSign
         self.userLinks = userLinks
         self.intentions = intentions
+        self.myBlocks = myBlocks
+        self.blockedMe = blockedMe
+        self.myReports = myReports
+        self.reportedMe = reportedMe
     }
 
     func toJson(excludeId: Bool = false) -> [String: Any] {
@@ -206,7 +219,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         pronouns: [UserPronouns]? = nil,
         showStarSign: Bool? = nil,
         userLinks: [UserLinkModel]? = nil,
-        intentions: [UserIntention]? = nil
+        intentions: [UserIntention]? = nil,
+        myBlocks: [UserBlockModel]? = nil,
+        blockedMe: [UserBlockModel]? = nil,
+        myReports: [UserReportModel]? = nil,
+        reportedMe: [UserReportModel]? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,
@@ -242,7 +259,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             pronouns: pronouns ?? self.pronouns,
             showStarSign: showStarSign ?? self.showStarSign,
             userLinks: userLinks ?? self.userLinks,
-            intentions: intentions ?? self.intentions
+            intentions: intentions ?? self.intentions,
+            myBlocks: myBlocks ?? self.myBlocks,
+            blockedMe: blockedMe ?? self.blockedMe,
+            myReports: myReports ?? self.myReports,
+            reportedMe: reportedMe ?? self.reportedMe
         )
     }
 
@@ -283,6 +304,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .conversations,
                 .hobbies,
             ]
+            //            ,
+            //            myBlocks: [.mock()],
+            //            blockedMe: [.mock()],
+            //            myReports: [.mock()],
+            //            reportedMe: [.mock()]
         )
     }
 
