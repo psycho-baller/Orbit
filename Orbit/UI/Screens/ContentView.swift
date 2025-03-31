@@ -43,9 +43,10 @@ struct ContentView: View {
         )
         .onAppear {
             Task {
+                print("contentview called")
                 await authVM.initialize()
-                await userVM.fetchCurrentUser()
-                await userVM.prefillUsefulUserData()
+                await userVM.initialize()
+
                 try await Task.sleep(nanoseconds: 1_000_000_000)
                 isOneSecondAfterLaunch = true
             }

@@ -1,5 +1,12 @@
 //
-//  MeetUpRequestsListView.swift
+//  NotificationsListView.swift
+//  Orbit
+//
+//  Created by Rami Maalouf on 2025-03-31.
+//
+
+//
+//  NotificationsListView.swift
 //  Orbit
 //
 //  Created by Rami Maalouf on 2024-11-15.
@@ -7,7 +14,7 @@
 
 import SwiftUI
 
-struct MeetUpRequestsListView: View {
+struct NotificationsListView: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var userVM: UserViewModel
     @EnvironmentObject var appState: AppState
@@ -90,26 +97,26 @@ struct MeetUpRequestsListView: View {
                     $0.data.status == .pending
                 }).isEmpty {
                     VStack(spacing: 16) {
-                        Image(systemName: "tray")
+                        Image(systemName: "bell")
                             .font(.system(size: 70))
                             .foregroundColor(
                                 ColorPalette.secondaryText(for: colorScheme)
                             )
 
-                        Text("No pending requests")
+                        Text("All clear!")
                             .font(.title)
                             .foregroundColor(
                                 ColorPalette.secondaryText(for: colorScheme)
                             )
                             .fontWeight(.semibold)
 
-                        Text(
-                            "When someone sends you a meetup request, it will appear here"
-                        )
-                        .font(.headline)
-                        .foregroundColor(
-                            ColorPalette.secondaryText(for: colorScheme)
-                        )
+//                        Text(
+//                            "When someone sends you a meetup request, it will appear here"
+//                        )
+//                        .font(.headline)
+//                        .foregroundColor(
+//                            ColorPalette.secondaryText(for: colorScheme)
+//                        )
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 50)
                     }
@@ -189,33 +196,14 @@ struct MeetUpRequestsListView: View {
                     }
                 }
             }
-            .navigationTitle("Meet-up Requests")
-            .navigationBarTitleDisplayMode(.inline)
+//            .navigationTitle("Meet-up Requests")
+//            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 refreshRequests()
             }
         }
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(32)
-        .sheet(item: $chatRequestVM.selectedRequest) { request in
-            NavigationStack {
-                MeetUpRequestDetailsView(
-                    request: request,
-                    approveRequest: { request in
-                        Task {
-                            await approveRequest(request: request)
-                        }
-                    },
-                    declineRequest: { request in
-                        Task {
-                            await declineRequest(request: request)
-                        }
-                    }
-                )
-            }
-            .presentationDetents([.large])
-            .presentationBackground(.ultraThinMaterial)
-        }
     }
 }
 
@@ -227,7 +215,7 @@ struct OldMeetUpRequestRow: View {
     var body: some View {
         HStack(spacing: 16) {
             // Profile Picture
-            if let user = userVM.users.first(where: {
+            if let user = userVM.allUsers.first(where: {
                 $0.accountId == request.data.senderAccountId
             }),
                 let profileUrl = user.profilePictureUrl,
@@ -284,7 +272,7 @@ struct OldMeetUpRequestRow: View {
     #Preview {
         @Previewable @State var previewDetent: PresentationDetent = .medium
 
-        MeetUpRequestsListView(chatRequestListDetent: $previewDetent)
+        NotificationsListView(chatRequestListDetent: $previewDetent)
             .environmentObject(ChatRequestViewModel.mock())
             .environmentObject(UserViewModel.mock())
     }

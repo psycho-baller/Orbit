@@ -27,7 +27,6 @@ import SwiftUI
 
 class UserViewModel: NSObject, ObservableObject {
 
-    @Published var users: [UserModel] = []
     @Published var cachedUsernames: Set<String> = []  // Store usernames locally
     @Published var currentUser: UserModel?  // The current logged-in user
     @Published var error: String?
@@ -45,6 +44,7 @@ class UserViewModel: NSObject, ObservableObject {
     override init() {
         self.areaData = DataLoader.loadUofCLocationDataFromJSON()
         super.init()
+        Task { await initialize() }
     }
 
     @MainActor
@@ -53,11 +53,8 @@ class UserViewModel: NSObject, ObservableObject {
         print(
             "UserViewModel - initialize: Initializing user list and subscribing to real-time updates."
         )
-        //        self.preciseLocationManager = PreciseLocationManager()
-        //        preciseLocationManager?.delegate = self  // Set delegate to receive location updates
-        //        await subscribeToRealtimeUpdates()
-        //                self.allUsers = await getAllUsers()
-        // await fetchAllUsernames()
+        await self.fetchCurrentUser()
+        await self.prefillUsefulUserData()
     }
 
     @MainActor
@@ -209,7 +206,7 @@ class UserViewModel: NSObject, ObservableObject {
         #warning(
             "This function only updates CURRENTUSER variable, not the backend DB."
         )
-        if let userFromDatabase = users.first(where: {
+        if let userFromDatabase = allUsers.first(where: {
             $0.accountId == accountId
         }) {
             self.currentUser = userFromDatabase
@@ -298,10 +295,10 @@ class UserViewModel: NSObject, ObservableObject {
         do {
             let allUsers = try await userManagementService.listUsers(
                 queries: nil)
-            self.users = allUsers.map(\.data)
+            self.allUsers = allUsers.map(\.data)
             DispatchQueue.main.async {
                 self.cachedUsernames = Set(
-                    self.users.map { $0.username.lowercased() })
+                    self.allUsers.map { $0.username.lowercased() })
             }
         } catch {
             print("Error fetching usernames: \(error.localizedDescription)")
@@ -354,7 +351,7 @@ class UserViewModel: NSObject, ObservableObject {
 
     // Aggregate unique interests from all users
     var allInterests: [String] {
-        let activitiesArray = users.compactMap {
+        let activitiesArray = allUsers.compactMap {
             $0.activitiesHobbies
         }.flatMap { $0 }
         return Array(Set(activitiesArray)).sorted()
@@ -365,7 +362,7 @@ class UserViewModel: NSObject, ObservableObject {
         let lowercasedSearchText = searchText.lowercased()
         let selectedInterestsSet = Set(selectedInterests)
 
-        return users.filter { user in
+        return allUsers.filter { user in
             guard user.accountId != currentUser?.accountId else { return false }
 
             #warning("TODO: do we rlly need search for user's usernames")
@@ -437,8 +434,8 @@ class UserViewModel: NSObject, ObservableObject {
 
     @MainActor
     func handleRealtimeUserUpdate(_ updatedUser: UserModel) {
-        if let index = users.firstIndex(where: { $0.id == updatedUser.id }) {
-            users[index] = updatedUser
+        if let index = allUsers.firstIndex(where: { $0.id == updatedUser.id }) {
+            allUsers[index] = updatedUser
             if updatedUser.accountId == currentUser?.accountId {
                 self.currentUser = updatedUser  // Update currentUser if it's the one being updated in real-time
             }
@@ -446,7 +443,7 @@ class UserViewModel: NSObject, ObservableObject {
                 "UserViewModel - handleRealtimeUserUpdate: Updated user \(updatedUser.accountId) in local list."
             )
         } else {
-            users.append(updatedUser)
+            allUsers.append(updatedUser)
             print(
                 "UserViewModel - handleRealtimeUserUpdate: Added new user \(updatedUser.accountId) to local list."
             )
@@ -471,7 +468,7 @@ class UserViewModel: NSObject, ObservableObject {
             mockVM.currentUser = .mock2()
 
             // Set other users
-            mockVM.users = UserModel.mockUsers()
+            mockVM.allUsers = UserModel.mockUsers()
 
             return mockVM
         }
