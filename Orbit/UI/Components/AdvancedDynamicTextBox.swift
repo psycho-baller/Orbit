@@ -7,6 +7,14 @@
 import SwiftUI
 import UIKit
 
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder), to: nil, from: nil,
+            for: nil)
+    }
+}
+
 struct AdvancedDynamicTextBox: View {
     @Binding var text: String
     // The dynamic height will be updated by the underlying UITextView.
@@ -83,7 +91,7 @@ struct AdvancedDynamicTextBox_Previews: PreviewProvider {
         "Hello, this is a dynamic text input.\nIt supports multiple lines."
     static var previews: some View {
         AdvancedDynamicTextBox(text: $text)
-        .padding()
-        .previewLayout(.sizeThatFits)
+            .padding()
+            .previewLayout(.sizeThatFits)
     }
 }
