@@ -36,7 +36,7 @@ struct ChatTextBox: View {
         .background(
             // Apply the material background with only the top corners rounded.
             RoundedCorner(radius: 20, corners: [.topLeft, .topRight])
-                .fill(.ultraThinMaterial)
+                .fill(.thinMaterial)
         )
         .foregroundColor(.primary)
         // Animate changes (such as height) when the message changes.
