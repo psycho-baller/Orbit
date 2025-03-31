@@ -853,21 +853,19 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         // Compare relevant fields that can be edited
         return tempData.firstName != currentUser.firstName ||
                tempData.lastName != currentUser.lastName ||
-               tempData.bio != currentUser.bio ||
                tempData.username != currentUser.username ||
+               tempData.bio != currentUser.bio ||
+               tempData.dob != currentUser.dob ||
                tempData.activitiesHobbies != currentUser.activitiesHobbies ||
                tempData.friendActivities != currentUser.friendActivities ||
                tempData.preferredMeetupType != currentUser.preferredMeetupType ||
                tempData.convoTopics != currentUser.convoTopics ||
                tempData.friendshipValues != currentUser.friendshipValues ||
                tempData.friendshipQualities != currentUser.friendshipQualities ||
-               tempData.intentions != currentUser.intentions ||
-               tempData.userLanguages != currentUser.userLanguages ||
-               tempData.gender != currentUser.gender ||
                tempData.pronouns != currentUser.pronouns ||
-               tempData.userLinks != currentUser.userLinks ||
-               tempData.dob != currentUser.dob ||
-               tempData.showStarSign != currentUser.showStarSign
+               tempData.intentions != currentUser.intentions ||
+               tempData.showAge != currentUser.showAge ||
+               tempData.showPronouns != currentUser.showPronouns
     }
 
     func updateDisplayPreferences(showAge: Bool? = nil, showPronouns: Bool? = nil) {
