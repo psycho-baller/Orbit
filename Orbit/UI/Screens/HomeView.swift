@@ -223,8 +223,8 @@ struct HomeView: View {
                     ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
                         MeetupRequestDetailedView(meetupRequest: meetupRequest)
                     }
-                    .padding(.vertical)
                 }
+                .padding(.vertical)
             }
         }
         .onAppear {
