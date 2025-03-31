@@ -170,75 +170,68 @@ struct ProfilePageView: View {
                     
                     // All interest fields from onboarding
                     VStack {
-                        // Interests Section (choose up to 6 to display floating around profile pic)
-                        if let activities = displayUser.activitiesHobbies, !activities.isEmpty {
-                            ProfileTagSection(
-                                title: "Interests",
-                                items: activities,
-                                isEditable: editMode,
-                                onEdit: { editSection("interests") }
-                            )
-                        }
+                        // Interests Section
+                        ProfileTagSection(
+                            title: "Interests",
+                            items: displayUser.activitiesHobbies ?? [],
+                            isEditable: editMode,
+                            onEdit: { editSection("interests") },
+                            showWhenEmpty: editMode
+                        )
                         
                         // Friend Activities Section
-                        if let friendActivities = displayUser.friendActivities, !friendActivities.isEmpty {
-                            ProfileTagSection(
-                                title: "Friend Activities",
-                                items: friendActivities,
-                                isEditable: editMode,
-                                onEdit: { editSection("friendActivities") }
-                            )
-                        }
+                        ProfileTagSection(
+                            title: "Friend Activities",
+                            items: displayUser.friendActivities ?? [],
+                            isEditable: editMode,
+                            onEdit: { editSection("friendActivities") },
+                            showWhenEmpty: editMode
+                        )
                         
                         // Meetup Types Section
-                        if let meetupTypes = displayUser.preferredMeetupType, !meetupTypes.isEmpty {
-                            ProfileTagSection(
-                                title: "Preferred Meetups",
-                                items: meetupTypes,
-                                isEditable: editMode,
-                                onEdit: { editSection("meetupTypes") }
-                            )
-                        }
+                        ProfileTagSection(
+                            title: "Preferred Meetups",
+                            items: displayUser.preferredMeetupType ?? [],
+                            isEditable: editMode,
+                            onEdit: { editSection("meetupTypes") },
+                            showWhenEmpty: editMode
+                        )
                         
                         // Conversation Topics Section
-                        if let convoTopics = displayUser.convoTopics, !convoTopics.isEmpty {
-                            ProfileTagSection(
-                                title: "Conversation Topics",
-                                items: convoTopics,
-                                isEditable: editMode,
-                                onEdit: { editSection("convoTopics") }
-                            )
-                        }
+                        ProfileTagSection(
+                            title: "Conversation Topics",
+                            items: displayUser.convoTopics ?? [],
+                            isEditable: editMode,
+                            onEdit: { editSection("convoTopics") },
+                            showWhenEmpty: editMode
+                        )
                         
                         // Friendship Values Section
-                        if let values = displayUser.friendshipValues, !values.isEmpty {
-                            ProfileTagSection(
-                                title: "Friendship Values",
-                                items: values,
-                                isEditable: editMode,
-                                onEdit: { editSection("friendshipValues") }
-                            )
-                        }
+                        ProfileTagSection(
+                            title: "Friendship Values",
+                            items: displayUser.friendshipValues ?? [],
+                            isEditable: editMode,
+                            onEdit: { editSection("friendshipValues") },
+                            showWhenEmpty: editMode
+                        )
                         
                         // Friendship Qualities Section
-                        if let qualities = displayUser.friendshipQualities, !qualities.isEmpty {
-                            ProfileTagSection(
-                                title: "Friendship Qualities",
-                                items: qualities,
-                                isEditable: editMode,
-                                onEdit: { editSection("friendshipQualities") }
-                            )
-                        }
+                        ProfileTagSection(
+                            title: "Friendship Qualities",
+                            items: displayUser.friendshipQualities ?? [],
+                            isEditable: editMode,
+                            onEdit: { editSection("friendshipQualities") },
+                            showWhenEmpty: editMode
+                        )
                         
                         // Intentions Section
-                        if let intentions = displayUser.intentions, !intentions.isEmpty {
-                            ProfileTagSection(
-                                title: "Intentions",
-                                items: intentions.map { $0.rawValue },
-                                isEditable: editMode,
-                                onEdit: { editSection("intentions") }
-                            )
-                        }
+                        ProfileTagSection(
+                            title: "Intentions",
+                            items: displayUser.intentions?.map { $0.rawValue } ?? [],
+                            isEditable: editMode,
+                            onEdit: { editSection("intentions") },
+                            showWhenEmpty: editMode
+                        )
                         
                         // Language Section
                         
@@ -391,42 +384,54 @@ struct ProfileTagSection: View {
     let items: [String]
     var isEditable: Bool = false
     var onEdit: (() -> Void)? = nil
+    var showWhenEmpty: Bool = false
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(title)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                    .padding(.top, 10)
+        // Only show if there are items or if showWhenEmpty is true
+        if !items.isEmpty || showWhenEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text(title)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .padding(.top, 10)
+                    
+                    Spacer()
+                    
+                    if isEditable {
+                        Button(action: {
+                            onEdit?()
+                        }) {
+                            Image(systemName: "pencil")
+                                .foregroundColor(ColorPalette.accent(for: colorScheme))
+                        }
+                    }
+                }
                 
-                Spacer()
-                
-                if isEditable {
-                    Button(action: {
-                        onEdit?()
-                    }) {
-                        Image(systemName: "pencil")
+                if items.isEmpty {
+                    Text("Tap the pencil to add \(title.lowercased())")
+                        .font(.subheadline)
+                        .italic()
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .padding(.vertical, 8)
+                } else {
+                    FlowLayout(items: items) { item in
+                        Text(item.capitalized)
+                            .font(.subheadline)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(
+                                Capsule()
+                                    .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                            )
                             .foregroundColor(ColorPalette.accent(for: colorScheme))
                     }
                 }
             }
-            
-            FlowLayout(items: items) { item in
-                Text(item.capitalized)
-                    .font(.subheadline)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(
-                        Capsule()
-                            .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
-                    )
-                    .foregroundColor(ColorPalette.accent(for: colorScheme))
-            }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
 }
 
