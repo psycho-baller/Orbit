@@ -766,10 +766,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         intentions: [UserIntention]? = nil,
         featuredInterests: [String]? = nil
     ) {
-        guard var user = currentUser else { return }
-        
-        // Create a copy of the current user with the updates
-        var updatedUser = user
+        // First, make sure we're working with the most up-to-date temp data
+        guard var updatedUser = tempUserData ?? currentUser else { return }
         
         // Update only the fields that were provided
         if let username = username {
@@ -814,13 +812,15 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         if let intentions = intentions {
             updatedUser.intentions = intentions
         }
-        
         if let featuredInterests = featuredInterests {
             updatedUser.featuredInterests = featuredInterests
         }
         
         // Store in temporary variable
         tempUserData = updatedUser
+
+        // Notify observers that data has changed
+        objectWillChange.send()
     }
 
     // Save temporary changes to the database

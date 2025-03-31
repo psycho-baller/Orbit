@@ -283,7 +283,10 @@ struct ProfilePageView: View {
                                 editMode = false
                             }
                         } else {
-                            // Enter edit mode
+                            // Enter edit mode and initialize tempUserData if it's nil
+                            if userVM.tempUserData == nil && userVM.currentUser != nil {
+                                userVM.tempUserData = userVM.currentUser
+                            }
                             editMode = true
                         }
                     }
@@ -331,40 +334,40 @@ struct ProfilePageView: View {
         .sheet(item: $activeSheet) { sheetType in
             switch sheetType {
             case .personalInfo:
-                NameAgePronounEditSheet(user: displayUser)
+                NameAgePronounEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user)
                     .environmentObject(userVM)
             case .bio:
-                BioEditSheet(user: displayUser)
+                BioEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user)
                     .environmentObject(userVM)
             case .username:
-                UsernameEditSheet(user: displayUser)
+                UsernameEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user)
                     .environmentObject(userVM)
             case .profile:
-                ProfilePictureEditSheet(user: displayUser)
+                ProfilePictureEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user)
                     .environmentObject(userVM)
             case .interests:
-                InterestsEditSheet(user: displayUser, section: "activitiesHobbies")
+                InterestsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user, section: "activitiesHobbies")
                     .environmentObject(userVM)
             case .friendActivities:
-                InterestsEditSheet(user: displayUser, section: "friendActivities")
+                InterestsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user, section: "friendActivities")
                     .environmentObject(userVM)
             case .meetupTypes:
-                InterestsEditSheet(user: displayUser, section: "preferredMeetupType")
+                InterestsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user, section: "preferredMeetupType")
                     .environmentObject(userVM)
             case .convoTopics:
-                InterestsEditSheet(user: displayUser, section: "convoTopics")
+                InterestsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user, section: "convoTopics")
                     .environmentObject(userVM)
             case .friendshipValues:
-                InterestsEditSheet(user: displayUser, section: "friendshipValues")
+                InterestsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user, section: "friendshipValues")
                     .environmentObject(userVM)
             case .friendshipQualities:
-                InterestsEditSheet(user: displayUser, section: "friendshipQualities")
+                InterestsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user, section: "friendshipQualities")
                     .environmentObject(userVM)
             case .intentions:
-                IntentionsEditSheet(user: displayUser)
+                IntentionsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user)
                     .environmentObject(userVM)
             case .featuredInterests:
-                FeaturedInterestsEditSheet(user: displayUser)
+                FeaturedInterestsEditSheet(user: userVM.tempUserData ?? userVM.currentUser ?? user)
                     .environmentObject(userVM)
             }
         }
