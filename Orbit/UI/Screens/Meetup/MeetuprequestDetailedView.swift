@@ -22,86 +22,11 @@ struct MeetupRequestDetailedView: View {
             ZStack(alignment: .bottom) {
                 ColorPalette.background(for: colorScheme)
                     .ignoresSafeArea()
-                ScrollView {
-                    VStack(spacing: 20) {
-                        Text(meetupRequest.data.createdByUser?.username ?? "")
-                            .font(.title)
-                            .padding(.bottom, 1)
-                            .foregroundColor(Color.accentColor)
-                            .lineLimit(1)
-
-                        MeetupInfoSection(meetupRequest: meetupRequest)
-                        //                        VStack(alignment: .leading, spacing: 20) {
-                        // Interests Section
-                        if let currentUser = userVM.currentUser,
-                            let otherUser = meetupRequest.data.createdByUser
-                        {
-
-                            if let otherQualities = otherUser
-                                .friendshipQualities,
-                                !otherQualities.isEmpty,
-                                let currentQualities = currentUser
-                                    .friendshipQualities
-                            {
-                                TagSectionView(
-                                    description:
-                                        "What qualities do you look for in someone you’d like to meet?",
-                                    otherUserTags: otherQualities,
-                                    currentUserTags: currentQualities
-                                )
-                            }
-
-                            if let otherValues = otherUser.friendshipValues,
-                                !otherValues.isEmpty,
-                                let currentValues = currentUser
-                                    .friendshipValues
-                            {
-                                TagSectionView(
-                                    description:
-                                        "What do you value most in a friendship?",
-                                    otherUserTags: otherValues,
-                                    currentUserTags: currentValues
-                                )
-                            }
-
-                            if let otherActivities = otherUser
-                                .friendActivities,
-                                !otherActivities.isEmpty,
-                                let currentActivities = currentUser
-                                    .friendActivities
-                            {
-                                TagSectionView(
-                                    description:
-                                        "What's something you'd love to find a friend to do with you?",
-                                    otherUserTags: otherActivities,
-                                    currentUserTags: currentActivities
-                                )
-                            }
-
-                            if let otherHobbies = otherUser
-                                .activitiesHobbies,
-                                !otherHobbies.isEmpty,
-                                let currentHobbies = currentUser
-                                    .activitiesHobbies
-                            {
-                                TagSectionView(
-                                    description:
-                                        "What are some activities or hobbies that bring you joy?",
-                                    otherUserTags: otherHobbies,
-                                    currentUserTags: currentHobbies
-                                )
-                            }
-                        }
-                        if let bio = meetupRequest.data.createdByUser?.bio {
-                            Text(bio)
-                                .padding()
-                        }
-                        //                        }
-                        Spacer().frame(height: 50)
-                    }
-                    .padding()
+                if let otherUser = meetupRequest.data.createdByUser {
+                    MeetupRequestAndUserInfoView(
+                        user: otherUser, meetupRequest: meetupRequest,
+                        showFullDetails: false)
                 }
-
                 HStack(spacing: 16) {
                     Button(action: declineMeetupRequest) {
                         HStack {
