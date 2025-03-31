@@ -25,6 +25,7 @@ struct CreateMeetupDetailsView: View {
     @State private var isShowingLocationDropdown = false
     @State private var selectedLocationId: String?
     @State private var locations: [Area] = []
+    @State private var genderPreference: GenderPreference = .any
 
     private var isFormValid: Bool {
         !title.isEmpty && !description.isEmpty
@@ -89,6 +90,22 @@ struct CreateMeetupDetailsView: View {
                             .cornerRadius(12)
                         }
 
+                        // New Target Gender Section
+                        VStack(alignment: .leading) {
+                            Text("Gender Preferences")
+                                .font(.headline)
+                            Picker("", selection: $genderPreference) {
+                                ForEach(GenderPreference.allCases) { gender in
+                                    Text(gender.rawValue).tag(gender)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .padding(.horizontal)
+                            .padding(.vertical, 12)
+                            .background(ColorPalette.main(for: colorScheme))
+                            .cornerRadius(12)
+                        }
+
                         // Description Field
                         VStack(alignment: .leading) {
                             Text("Description (more info)")
@@ -134,6 +151,7 @@ struct CreateMeetupDetailsView: View {
         } message: {
             Text(alertMessage)
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 
     private func createMeetup() {
@@ -165,7 +183,8 @@ struct CreateMeetupDetailsView: View {
                 status: .active,
                 intention: selectedIntention,
                 createdByUser: currentUser,
-                type: selectedType
+                type: selectedType,
+                genderPreference: genderPreference
             )
             dismiss()
         }

@@ -30,11 +30,12 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     let chats: [ChatModel]?
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
     let type: MeetupType
+    var genderPreference: GenderPreference
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"  // Maps Appwrite's `$id` to `id`
         case title, startTime, endTime, areaId, description, status
-        case intention, createdByUser, chats, type
+        case intention, createdByUser, chats, type, genderPreference
     }
 
     init(
@@ -49,7 +50,8 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         createdByUser: UserModel? = nil,
         //        meetupApprovals: [MeetupApprovalModel] = [],
         chats: [ChatModel] = [],
-        type: MeetupType
+        type: MeetupType,
+        genderPreference: GenderPreference
     ) {
         self.id = id
         self.title = title
@@ -62,6 +64,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         self.createdByUser = createdByUser
         self.chats = chats
         self.type = type
+        self.genderPreference = genderPreference
     }
 
     //    init(from decoder: Decoder) throws {
@@ -104,7 +107,8 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
             intention: .friendship,
             createdByUser: .mock2(),
             chats: [],
-            type: .meal
+            type: .meal,
+            genderPreference: .any
         )
     }
 
@@ -152,6 +156,15 @@ enum MeetupIntention: String, Codable {
         case .relationship: return "heart.fill"
         }
     }
+}
+
+enum GenderPreference: String, CaseIterable, Identifiable, Codable {
+    case any = "Any"
+    case women = "Women"
+    case men = "Men"
+    case nonBinary = "Non-binary"
+
+    var id: String { self.rawValue }
 }
 
 enum MeetupType: String, Codable {
