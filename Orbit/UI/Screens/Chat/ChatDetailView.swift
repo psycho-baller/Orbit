@@ -183,6 +183,7 @@ struct ChatDetailView: View {
     @State private var messageText: String = ""
     @State private var isKeyboardVisible: Bool = false
     @State private var isShowingOptions: Bool = false
+    @State private var isShowingMeetupDetails: Bool = false
     @Environment(\.presentationMode) private var presentationMode
 
     init(chat: ChatDocument, user: UserModel) {
@@ -191,6 +192,25 @@ struct ChatDetailView: View {
         _chatMessageVM = StateObject(
             wrappedValue: ChatMessageViewModel(chatId: chat.id, userId: user.id)
         )
+    }
+
+    // Determines if the current user is the meetupRequest creator.
+    private var isCurrentUserCreator: Bool {
+        user.id == chat.data.meetupRequest?.createdByUser?.id
+    }
+
+    // The "other user" is the one that is not the current user.
+    private var otherUser: UserModel? {
+        isCurrentUserCreator ? chat.data.otherUser : chat.data.createdByUser
+    }
+
+    // Check if the meetupRequest creator (requestor) has sent any message in this chat.
+    private var didRequestorSendMessage: Bool {
+        chatMessageVM.messages.contains(where: {
+            (message: ChatMessageDocument) in
+            message.data.sentByUser?.id
+                == chat.data.meetupRequest?.createdByUser?.id
+        })
     }
 
     var body: some View {
@@ -265,7 +285,7 @@ struct ChatDetailView: View {
 
             ToolbarItem(placement: .navigationBarLeading) {
 
-                HStack(spacing: 2) {
+                HStack(spacing: 8) {
                     Button(action: {
                         // Dismiss or pop the view.
                         // For example, using an environment presentationMode:
@@ -274,36 +294,41 @@ struct ChatDetailView: View {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.accentColor)
                     }
-                    if let otherUser =
-                        (chat.data.createdByUser == user
-                            ? chat.data.otherUser
-                            : chat.data.createdByUser)
-                    {
-                        Button(action: {}) {
-                            // Optional: Display the user’s profile image
-                            AsyncImage(
-                                url: URL(
-                                    string: otherUser.profilePictureUrl ?? "")
-                            ) {
-                                image in
-                                image
-                                    .resizable()
-                                    .frame(width: 32, height: 32)
-                                    .clipShape(Circle())
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                            } placeholder: {
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .frame(width: 32, height: 32)
-                                    .clipShape(Circle())
-                                //                                    .foregroundColor(.gray)
+                    Button(action: {
+                        // go to the meetup details
+                        isShowingMeetupDetails = true
+                    }) {
+                        if let other = otherUser {
+                            if didRequestorSendMessage {
+                                // Detailed view: Show profile picture and full name (first + last).
+                                AsyncImage(
+                                    url: URL(
+                                        string: other.profilePictureUrl ?? "")
+                                ) { image in
+                                    image.resizable()
+                                        .frame(width: 32, height: 32)
+                                        .clipShape(Circle())
+                                } placeholder: {
+                                    Image(systemName: "person.circle.fill")
+                                        .resizable()
+                                        .frame(width: 32, height: 32)
+                                        .clipShape(Circle())
+                                }
+                                Text(
+                                    "\(other.firstName) \(other.lastName ?? "")"
+                                )
+                                .font(.headline)
+                                .foregroundColor(.accentColor)
+                            } else {
+                                // Simple view: Show only the username.
+                                Text(other.username)
+                                    .font(.headline)
+                                    .foregroundColor(.accentColor)
                             }
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 10))
+                                .padding(.leading, 5)
                         }
-                        Text(otherUser.username)  // show based on stage of meetup process
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 10))
-                            .padding(.leading, 5)
                     }
                 }
             }
@@ -329,6 +354,19 @@ struct ChatDetailView: View {
                 // Handle report action.
             }
             Button("Dismiss", role: .cancel) {}
+        }
+        .navigationDestination(isPresented: $isShowingMeetupDetails) {
+            if let other = otherUser,
+                let meetupRequest = chat.data.meetupRequest
+            {
+                // Pass the same user and same logic flag (didRequestorSendMessage)
+                MeetupDetailsInsideChat(
+                    user: other,
+                    meetupRequest: .mock(data: meetupRequest),
+                    showFullDetails: didRequestorSendMessage)
+            } else {
+                EmptyView()
+            }
         }
     }
 
