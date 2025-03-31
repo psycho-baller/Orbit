@@ -25,9 +25,7 @@ import SwiftUI
 //     case noCurrentUser
 // }
 
-class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
-    CampusLocationDelegate
-{
+class UserViewModel: NSObject, ObservableObject {
 
     @Published var users: [UserModel] = []
     @Published var cachedUsernames: Set<String> = []  // Store usernames locally
@@ -37,29 +35,16 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
     @Published var searchText: String = ""
     @Published var currentArea: String?  // Updated area name for the user
     @Published var selectedInterests: [String] = []
-    @Published var currentLocation: CLLocationCoordinate2D?
-    @Published var selectedRadius: Double = 10.0
-    @Published var isOnCampus = false  // Track if the user is inside campus
     @Published var allUsers: [UserModel] = []
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
     private var appwriteRealtimeClient = AppwriteService.shared.realtime
-    private var preciseLocationManager: PreciseLocationManager?
-    private var campusLocationManager: CampusLocationManager
     private let areaData: [Area]  // Load JSON area data
-    var lastFetchedAreaId: String?
-    var lastFetchedTimestamp: Date?
-    private var subscribeToLocationUpdates: RealtimeSubscription?
 
-    init(
-        campusLocationManager: CampusLocationManager = CampusLocationManager()
-    ) {
-        self.campusLocationManager = campusLocationManager
+    override init() {
         self.areaData = DataLoader.loadUofCLocationDataFromJSON()
         super.init()
-        campusLocationManager.delegate = self
-        campusLocationManager.checkIfInsideCampus()
     }
 
     @MainActor
@@ -367,83 +352,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
     }
 
-    @MainActor
-    func updateSurroundingUsers(areaId: String) async {
-        // Initialize lastFetchedTimestamp if it's nil
-        let currentTime = Date()
-        if lastFetchedTimestamp == nil {
-            self.lastFetchedTimestamp = currentTime
-        }
-
-        guard let lastFetchedTimestamp = self.lastFetchedTimestamp else {
-            // This guard should only ever fail if something goes wrong after initialization.
-            return
-        }
-        let timeDifference = currentTime.timeIntervalSince(lastFetchedTimestamp)
-
-        guard areaId != lastFetchedAreaId || timeDifference > 60 else {
-            // If the area hasn't changed and it's been less than a minute, skip the fetch
-            print(
-                "Area hasn't changed or hasn't been a minute since last fetch.")
-            return
-        }
-
-        // Proceed with the fetch as area has changed or it's been more than a minute
-        self.lastFetchedAreaId = areaId
-        self.lastFetchedTimestamp = currentTime
-        print(
-            "UserViewModel - fetchUsersInArea: Fetching users in area \(areaId)"
-        )
-
-        let surroundingAreas = getSurroundingAreas(areaId: areaId)
-        do {
-            let userDocuments =
-                try await userManagementService.listUsersInAreas(
-                    surroundingAreas.map(\.id))
-            self.users = userDocuments.map(\.data)
-            print(
-                "UserViewModel - fetchUsersInArea: Successfully fetched \(self.users.count) users."
-            )
-        } catch {
-            print(
-                "UserViewModel - fetchUsersInArea: Error fetching users in area: \(error.localizedDescription)"
-            )
-            self.error = error.localizedDescription
-        }
-    }
-
-    func getSurroundingAreas(areaId: String, _ radius: Int = 75) -> [Area] {
-        // Get the coordinates of the current area
-        let myArea = areaData.first(where: { $0.id == areaId })
-
-        guard let myLatitude = self.currentLocation?.latitude ?? myArea?.lat,
-            let myLongitude = self.currentLocation?.longitude ?? myArea?.lon
-        else {
-            return []
-        }
-
-        let myLocation = CLLocation(
-            latitude: myLatitude,
-            longitude: myLongitude
-        )
-
-        // Filter areas within the radius
-        let surroundingAreas = areaData.filter { area in
-            let areaLocation = CLLocation(
-                latitude: area.lat, longitude: area.lon)
-            // Calculate the distance between the current area and each area
-            let distance = myLocation.distance(
-                from: areaLocation)
-            return distance <= Double(radius)
-        }
-
-        print(
-            "UserViewModel - getSurroundingAreas: Found \(surroundingAreas.count) areas."
-        )
-        print(surroundingAreas.map(\.name))
-        return surroundingAreas
-    }
-
     // Aggregate unique interests from all users
     var allInterests: [String] {
         let activitiesArray = users.compactMap {
@@ -489,52 +397,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
     }
 
-    // MARK - Location Updates
-
-    // MARK: - CampusLocationDelegate Methods
-    func didEnterCampus() {
-        isOnCampus = true
-        print("User entered campus. Starting precise location tracking.")
-    }
-
-    func didExitCampus() {
-        isOnCampus = false
-        print("User exited campus. Stopping precise location tracking.")
-        preciseLocationManager?.stopTrackingLocation()  // Stop tracking when off-campus
-        currentArea = nil  // Clear current area when outside campus
-        Task {
-            do {
-                try await subscribeToLocationUpdates?.close()
-            } catch {
-                print(
-                    "UserViewModel - didExitCampus: Error unsubscribing to location updates: \(error.localizedDescription)"
-                )
-            }
-        }
-
-    }
-
-    // MARK: - PreciseLocationDelegate Methods
-    func didUpdateLocation(latitude: Double, longitude: Double) {
-        print(
-            "UserViewModel - didUpdateLocation: Received location update - Latitude: \(latitude), Longitude: \(longitude)."
-        )
-        self.currentLocation = CLLocationCoordinate2D(
-            latitude: latitude, longitude: longitude)
-        // Calculate nearest area based on location
-        if let nearestArea = findNearestArea(
-            latitude: latitude, longitude: longitude)
-        {
-            self.currentArea = nearestArea.name
-            Task {
-                await updateUserGeneralLocation(areaId: nearestArea.id)
-                if !isPreviewMode {
-                    await updateSurroundingUsers(areaId: nearestArea.id)
-                }
-            }
-        }
-    }
-
     // Helper to find the nearest area from a given latitude and longitude
     func findNearestArea(latitude: Double, longitude: Double) -> Area? {
         guard !areaData.isEmpty else {
@@ -571,98 +433,6 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         }
 
         return nearestArea
-    }
-    // MARK: - Meetup Control for High-Accuracy Mode
-
-    func initiateMeetup() {
-        guard isOnCampus else {
-            print("User is outside campus; high accuracy is not enabled.")
-            return
-        }
-        preciseLocationManager?
-            .enableHighAccuracyForMeetup()  // Enable high accuracy for meetup
-        print("UserViewModel: High-accuracy tracking enabled for meetup.")
-    }
-
-    func endMeetup() {
-        preciseLocationManager?
-            .disableHighAccuracyAfterMeetup()  // Return to standard accuracy after meetup
-        print("UserViewModel: High-accuracy tracking disabled after meetup.")
-    }
-
-    @MainActor
-    func updateUserGeneralLocation(areaId: String) async {
-        // assert that the area is new and the user is within campus
-        guard currentUser?.currentAreaId != areaId else {
-            print(
-                "UserViewModel - updateUserGeneralLocation: User is already in area \(areaId)."
-            )
-            return
-        }
-        guard isOnCampus else {
-            print(
-                "UserViewModel - updateUserGeneralLocation: User is outside campus."
-            )
-            return
-        }
-        do {
-            print("Updating general location for user to area ID \(areaId).")
-            guard
-                let currentUser =
-                    try await userManagementService.getCurrentUser()
-            else {
-                print("Current user not found.")
-                return
-            }
-            var updatedUser = currentUser
-            updatedUser.currentAreaId = areaId
-
-            await updateUser(id: currentUser.id, updatedUser: updatedUser)
-            self.currentUser = updatedUser
-            print("Successfully updated general location for user.")
-        } catch {
-            print(
-                "Error updating general location: \(error.localizedDescription)"
-            )
-            self.error = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    func subscribeToRealtimeUpdates() async {
-        print(
-            "UserViewModel - subscribeToRealtimeUpdates: Subscribing to real-time updates."
-        )
-        do {
-            subscribeToLocationUpdates =
-                try await appwriteRealtimeClient
-                .subscribe(
-                    channels: [
-                        "databases.\(AppwriteService.shared.databaseId).collections.users.documents"
-                    ]
-                ) { event in
-                    if let payload = event.payload {
-                        Task {
-                            let updatedUser = try JSONDecoder().decode(
-                                UserModel.self,
-                                from: JSONSerialization.data(
-                                    withJSONObject: payload))
-                            self.handleRealtimeUserUpdate(updatedUser)
-                            print(
-                                "UserViewModel - subscribeToRealtimeUpdates: Received real-time update for user \(updatedUser.accountId)."
-                            )
-                        }
-                    }
-                }
-            print(
-                "UserViewModel - subscribeToRealtimeUpdates: Successfully subscribed to real-time updates."
-            )
-        } catch {
-            print(
-                "UserViewModel - Source: subscribeToRealtimeUpdates - Error: \(error.localizedDescription)"
-            )
-            self.error = error.localizedDescription
-        }
     }
 
     @MainActor
