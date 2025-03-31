@@ -186,12 +186,14 @@ struct MeetupRequestDetailedView: View {
     #Preview {
         @Previewable @Environment(\.colorScheme) var colorScheme
 
-        MeetupRequestDetailedView(meetupRequest: .mock())
-            .environmentObject(UserViewModel.mock())
-            .environmentObject(MeetupRequestViewModel.mock())
-            .environmentObject(ChatViewModel.mock())
-            .environmentObject(AppState())
-            .accentColor(ColorPalette.accent(for: colorScheme))
+        NavigationStack {
+            MeetupRequestDetailedView(meetupRequest: .mock())
+                .environmentObject(UserViewModel.mock())
+                .environmentObject(MeetupRequestViewModel.mock())
+                .environmentObject(ChatViewModel.mock())
+                .environmentObject(AppState())
+                .accentColor(ColorPalette.accent(for: colorScheme))
+        }
     }
 
 #endif
