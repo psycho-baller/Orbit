@@ -18,7 +18,7 @@ class UserInfoViewModel: ObservableObject {
             return
         }
         
-        if let date = DateFormatterUtility.parseISO8601(dateString) {
+        if let date = DateFormatterUtility.parseDateOnly(dateString) ?? DateFormatterUtility.parseISO8601(dateString) {
             print("Converted Date: \(date)")
             dateOfBirth = date
         } else {

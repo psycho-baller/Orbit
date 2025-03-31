@@ -16,20 +16,23 @@ struct ProfilePageView: View {
     @State private var editMode = false
     @State private var showingEditOptions = false
     @State private var currentEditSection: String = ""
+    @State private var showingUnsavedChangesAlert = false
     
     // Determine if this is the current user's profile
     var isCurrentUserProfile: Bool
     
-    @StateObject private var userVM = UserViewModel()
+    @EnvironmentObject var userVM: UserViewModel
     
-    // Use tempUserData when available, otherwise use the original user
+    // Use tempUserData when available, otherwise use the current user
     private var displayUser: UserModel {
-        userVM.tempUserData ?? user
+        userVM.tempUserData ?? userVM.currentUser ?? user
     }
 
+    #warning ("TODO: Find out why dates are formatted differently than expected when sent to the database. Is Appwrite doing it?") //Dates are expected to be formatted in "DateOnly" but are in "ISO8601"
     private var ageText: String {
         guard let dateString = displayUser.dob,
-              let date = DateFormatterUtility.parseISODate(dateString) else {
+              let date = DateFormatterUtility.parseDateOnly(dateString) ?? DateFormatterUtility.parseISO8601(dateString)
+        else {
             return ""
         }
         
@@ -120,13 +123,6 @@ struct ProfilePageView: View {
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .onAppear {
-                        withAnimation(
-                            .linear(duration: 20).repeatForever(autoreverses: false)
-                        ) {
-                            orbitAngle = 45
-                        }
-                    }
                     
                     // name, age, pronouns, username and bio
                     VStack(alignment: .center, spacing: 12) {
@@ -259,52 +255,61 @@ struct ProfilePageView: View {
             
             // Floating edit button
             if isCurrentUserProfile {
-                HStack {
-                    if editMode {
-                        // Cancel button
-                        Button(action: {
-                            withAnimation(.spring()) {
-                                userVM.discardProfileChanges()
+                Button(action: {
+                    withAnimation(.spring()) {
+                        if editMode {
+                            // If exiting edit mode, check if there are changes
+                            if userVM.hasUnsavedChanges {
+                                // Show confirmation dialog
+                                showingUnsavedChangesAlert = true
+                            } else {
+                                // No changes, just exit edit mode
                                 editMode = false
                             }
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 22))
-                                .foregroundColor(.red)
-                                .padding(12)
-                        }
-                    }
-                    
-                    // Edit/Save button
-                    Button(action: {
-                        withAnimation(.spring()) {
-                            if editMode {
-                                // If exiting edit mode, save changes
-                                Task {
-                                    await userVM.saveProfileChanges()
-                                    editMode = false
-                                }
-                            } else {
-                                editMode = true
-                            }
-                        }
-                    }) {
-                        if userVM.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle())
-                                .padding(12)
                         } else {
-                            Image(systemName: editMode ? "checkmark.circle.fill" : "pencil.circle")
-                                .font(.system(size: 22))
-                                .foregroundColor(ColorPalette.accent(for: colorScheme))
-                                .padding(12)
+                            // Enter edit mode
+                            editMode = true
                         }
                     }
-                    .disabled(userVM.isLoading)
+                }) {
+                    if userVM.isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .padding(12)
+                    } else {
+                        Image(systemName: editMode ? "checkmark.circle.fill" : "pencil.circle")
+                            .font(.system(size: 22))
+                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .padding(12)
+                    }
                 }
+                .disabled(userVM.isLoading)
                 .padding(.top, 10)
                 .padding(.trailing, 16)
                 .zIndex(1) // Ensure it's above other content
+                .confirmationDialog(
+                    "Unsaved Changes",
+                    isPresented: $showingUnsavedChangesAlert,
+                    titleVisibility: .visible
+                ) {
+                    Button("Save Changes", role: .none) {
+                        Task {
+                            await userVM.saveProfileChanges()
+                            editMode = false
+                        }
+                    }
+                    
+                    Button("Discard Changes", role: .destructive) {
+                        userVM.discardProfileChanges()
+                        editMode = false
+                    }
+                    
+                    Button("Cancel", role: .cancel) {
+                        // Stay in edit mode
+                    }
+                } message: {
+                    Text("Save your changes?")
+                }
             }
         }
         .sheet(isPresented: $showingEditOptions) {
@@ -329,9 +334,8 @@ struct ProfilePageView: View {
                     .foregroundColor(ColorPalette.accent(for: colorScheme))
                     .background(Circle().fill(ColorPalette.background(for: colorScheme)))
                     .font(.system(size: 20))
-                    .shadow(radius: 2)
             }
-            .offset(x: 5, y: -5)
+            .offset(x: 30, y: -5)
         }
     }
     

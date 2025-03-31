@@ -69,7 +69,15 @@ enum DateFormatterUtility {
     }
     
     static func formatDateOnly(_ date: Date) -> String {
-        return dateOnlyFormatter.string(from: date)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
+    }
+    
+    static func parseDateOnly(_ dateString: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: dateString)
     }
     
     static func parseISODate(_ string: String) -> Date? {
