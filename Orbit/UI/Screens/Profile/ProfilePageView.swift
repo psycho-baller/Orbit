@@ -151,27 +151,60 @@ struct ProfilePageView: View {
                     // name, age, pronouns, username and bio
                     VStack(alignment: .center, spacing: 12) {
                         // name, age, pronouns
-                        HStack(spacing: 8) {
+                        VStack(alignment: .center, spacing: 4) {
+                            // Name on its own line
                             Text(displayUser.firstName + " " + (displayUser.lastName ?? ""))
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .foregroundColor(ColorPalette.text(for: colorScheme))
+                                .multilineTextAlignment(.center)
+                                .lineLimit(2)
                             
-                            if displayUser.showAge, !ageText.isEmpty {
-                                Text(ageText)
-                                    .font(.title3)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            // Age and pronouns on a second line
+                            HStack(spacing: 8) {
+                                if displayUser.showAge, !ageText.isEmpty {
+                                    Text(ageText)
+                                        .font(.title3)
+                                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                }
+                                
+                                if displayUser.showPronouns, !pronounsText.isEmpty {
+                                    // Add a separator dot if both age and pronouns are shown
+                                    if displayUser.showAge, !ageText.isEmpty {
+                                        Text("•")
+                                            .font(.title3)
+                                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                    }
+                                    
+                                    Text(pronounsText.capitalized)
+                                        .font(.title3)
+                                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                }
                             }
+                            .padding(.top, 2)
                             
-                            if displayUser.showPronouns, !pronounsText.isEmpty {
-                                Text("\(pronounsText.capitalized)")
-                                    .font(.title3)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            // Edit button for personal info - only shown in edit mode
+                            if editMode {
+                                Button(action: {
+                                    editSection("personalInfo")
+                                }) {
+                                    Text("Edit Name, Age, and Pronouns")
+                                        .font(.caption)
+                                        .padding(.vertical, 6)
+                                        .padding(.horizontal, 12)
+                                        .background(
+                                            Capsule()
+                                                .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                        )
+                                        .foregroundColor(ColorPalette.accent(for: colorScheme))
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 1)
+                                        )
+                                }
+                                .padding(.top, 6)
                             }
                         }
-                        .overlay(
-                            editMode ? editOverlay(for: "personalInfo") : nil
-                        )
                         
                         
                         // Username
@@ -387,7 +420,8 @@ struct ProfilePageView: View {
                     .background(Circle().fill(ColorPalette.background(for: colorScheme)))
                     .font(.system(size: 20))
             }
-            .offset(x: 30, y: -5)
+            // Adjust the offset to ensure it's always visible and accessible
+            .offset(x: field == "personalInfo" ? 10 : 30, y: -5)
         }
     }
     
