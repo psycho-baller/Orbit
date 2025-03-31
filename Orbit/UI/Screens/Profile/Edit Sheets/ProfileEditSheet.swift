@@ -9,43 +9,6 @@
 
 import SwiftUI
 
-struct ProfileEditSheet: View {
-    let section: String
-    let user: UserModel
-    
-    var body: some View {
-        Group {
-            switch section {
-            case "personalInfo":
-                NameAgePronounEditSheet(user: user)
-            case "bio":
-                BioEditSheet(user: user)
-            case "username":
-                UsernameEditSheet(user: user)
-            case "profile":
-                ProfilePictureEditSheet(user: user)
-            case "interests":
-                InterestsEditSheet(user: user, section: "activitiesHobbies")
-            case "friendActivities":
-                InterestsEditSheet(user: user, section: "friendActivities")
-            case "meetupTypes":
-                InterestsEditSheet(user: user, section: "preferredMeetupType")
-            case "convoTopics":
-                InterestsEditSheet(user: user, section: "convoTopics")
-            case "friendshipValues":
-                InterestsEditSheet(user: user, section: "friendshipValues")
-            case "friendshipQualities":
-                InterestsEditSheet(user: user, section: "friendshipQualities")
-            case "intentions":
-                IntentionsEditSheet(user: user)
-            default:
-                Text("Edit section not implemented: \(section)")
-                    .padding()
-            }
-        }
-    }
-}
-
 // Generic interests edit sheet
 struct InterestsEditSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -261,8 +224,7 @@ struct IntentionsEditSheet: View {
 }
 
 #Preview {
-    ProfileEditSheet(
-        section: "intentions",
+    IntentionsEditSheet(
         user: UserViewModel.mock().currentUser!
     )
     .environmentObject(UserViewModel.mock())

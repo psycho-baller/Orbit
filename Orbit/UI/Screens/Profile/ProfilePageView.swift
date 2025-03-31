@@ -5,7 +5,6 @@
 //  Created by Nathaniel D'Orazio on 2024-12-18.
 //
 
-#warning ("TODO: Fix bug where the first edit you select doesn't work")
 
 import SwiftUI
 
@@ -14,8 +13,7 @@ struct ProfilePageView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var orbitAngle: Double = 0
     @State private var editMode = false
-    @State private var showingEditOptions = false
-    @State private var currentEditSection: String = ""
+    @State private var activeSheet: ProfileEditType?
     @State private var showingUnsavedChangesAlert = false
     
     // Determine if this is the current user's profile
@@ -311,12 +309,42 @@ struct ProfilePageView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingEditOptions) {
-            ProfileEditSheet(
-                section: currentEditSection,
-                user: displayUser
-            )
-            .environmentObject(userVM)
+        .sheet(item: $activeSheet) { sheetType in
+            switch sheetType {
+            case .personalInfo:
+                NameAgePronounEditSheet(user: displayUser)
+                    .environmentObject(userVM)
+            case .bio:
+                BioEditSheet(user: displayUser)
+                    .environmentObject(userVM)
+            case .username:
+                UsernameEditSheet(user: displayUser)
+                    .environmentObject(userVM)
+            case .profile:
+                ProfilePictureEditSheet(user: displayUser)
+                    .environmentObject(userVM)
+            case .interests:
+                InterestsEditSheet(user: displayUser, section: "activitiesHobbies")
+                    .environmentObject(userVM)
+            case .friendActivities:
+                InterestsEditSheet(user: displayUser, section: "friendActivities")
+                    .environmentObject(userVM)
+            case .meetupTypes:
+                InterestsEditSheet(user: displayUser, section: "preferredMeetupType")
+                    .environmentObject(userVM)
+            case .convoTopics:
+                InterestsEditSheet(user: displayUser, section: "convoTopics")
+                    .environmentObject(userVM)
+            case .friendshipValues:
+                InterestsEditSheet(user: displayUser, section: "friendshipValues")
+                    .environmentObject(userVM)
+            case .friendshipQualities:
+                InterestsEditSheet(user: displayUser, section: "friendshipQualities")
+                    .environmentObject(userVM)
+            case .intentions:
+                IntentionsEditSheet(user: displayUser)
+                    .environmentObject(userVM)
+            }
         }
     }
     
@@ -340,8 +368,20 @@ struct ProfilePageView: View {
     
     // Function to handle editing different sections
     private func editSection(_ section: String) {
-        currentEditSection = section
-        showingEditOptions = true
+        switch section {
+        case "personalInfo": activeSheet = .personalInfo
+        case "bio": activeSheet = .bio
+        case "username": activeSheet = .username
+        case "profile": activeSheet = .profile
+        case "interests": activeSheet = .interests
+        case "friendActivities": activeSheet = .friendActivities
+        case "meetupTypes": activeSheet = .meetupTypes
+        case "convoTopics": activeSheet = .convoTopics
+        case "friendshipValues": activeSheet = .friendshipValues
+        case "friendshipQualities": activeSheet = .friendshipQualities
+        case "intentions": activeSheet = .intentions
+        default: break
+        }
     }
 }
 
@@ -410,3 +450,20 @@ struct ProfileTagSection: View {
 //            "9", "10",
 //        ])
 //}
+
+// Define an enum for the different sheet types
+enum ProfileEditType: Identifiable {
+    case personalInfo
+    case bio
+    case username
+    case profile
+    case interests
+    case friendActivities
+    case meetupTypes
+    case convoTopics
+    case friendshipValues
+    case friendshipQualities
+    case intentions
+    
+    var id: Self { self } // Conform to Identifiable
+}
