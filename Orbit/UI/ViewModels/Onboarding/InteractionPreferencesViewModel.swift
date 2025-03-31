@@ -22,14 +22,7 @@ class InteractionPreferencesViewModel: ObservableObject {
             Question(
                 text:
                     "Which activities would you enjoy doing with other Astronauts?",
-                options: [
-                    "Grab a coffee together",
-                    "Share a meal",
-                    "Enjoy hobbies together",
-                    "Try an outdoor adventure",
-                    "Play or participate in sports activities",
-                    "Practice speaking a new language",
-                ].map { title in
+                options: OnboardingOptions.preferredMeetupType.map { title in
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.preferredMeetupType?.contains(title)
@@ -39,36 +32,7 @@ class InteractionPreferencesViewModel: ObservableObject {
             ),
             Question(
                 text: "Which conversation topics do you enjoy?",
-                options: [
-                    "Books",
-                    "Movies",
-                    "Tech",
-                    "Philosophy",
-                    "Psychology",
-                    "Wellness",
-                    "Personal Growth",
-                    "Sports",
-                    "Fitness",
-                    "Relationships",
-                    "Spirituality",
-                    "Health",
-                    "Current Events",
-                    "Culture",
-                    "Food",
-                    "Travel",
-                    "Music",
-                    "Art",
-                    "Fashion",
-                    "Gaming",
-                    "Nature",
-                    "Animals",
-                    "Career",
-                    "Education",
-                    "Politics",
-                    "Social Issues",
-                    "Entrepreneurship",
-                    "History",
-                ].map { title in
+                options: OnboardingOptions.convoTopics.map { title in
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?

@@ -38,27 +38,26 @@ struct InterestsEditSheet: View {
         self.section = section
         
         // Initialize selected items based on section
-        #warning ("TODO: Use the info directly from the onboarding")
         var initialItems: [String] = []
         switch section {
         case "activitiesHobbies":
             initialItems = user.activitiesHobbies ?? []
-            _availableItems = State(initialValue: ["Hiking", "Reading", "Cooking", "Volunteering", "Photography", "Yoga", "Gaming", "Painting", "Sports", "Traveling", "Crafting", "Coding", "Music", "Meditation", "Dancing", "Gardening"])
+            _availableItems = State(initialValue: OnboardingOptions.activitiesHobbies)
         case "friendActivities":
             initialItems = user.friendActivities ?? []
-            _availableItems = State(initialValue: ["Coffee", "Lunch", "Movies", "Concerts", "Hiking", "Shopping", "Museum", "Park", "Beach", "Gym", "Study", "Game Night"])
+            _availableItems = State(initialValue: OnboardingOptions.friendActivities)
         case "preferredMeetupType":
             initialItems = user.preferredMeetupType ?? []
-            _availableItems = State(initialValue: ["Grab a coffee together", "Share a meal", "Enjoy hobbies together", "Try an outdoor adventure", "Play or participate in sports activities", "Practice speaking a new language"])
+            _availableItems = State(initialValue: OnboardingOptions.preferredMeetupType)
         case "convoTopics":
             initialItems = user.convoTopics ?? []
-            _availableItems = State(initialValue: ["Books", "Movies", "Tech", "Philosophy", "Psychology", "Wellness", "Personal Growth", "Sports", "Fitness", "Relationships", "Spirituality", "Health", "Current Events", "Culture", "Food", "Travel", "Music", "Art", "Fashion", "Gaming", "Nature", "Animals", "Career", "Education", "Politics", "Social Issues", "Entrepreneurship", "History"])
+            _availableItems = State(initialValue: OnboardingOptions.convoTopics)
         case "friendshipValues":
             initialItems = user.friendshipValues ?? []
-            _availableItems = State(initialValue: ["Trust", "Honesty", "Respect", "Communication", "Support", "Loyalty", "Empathy", "Understanding", "Acceptance", "Fun", "Growth", "Reliability"])
+            _availableItems = State(initialValue: OnboardingOptions.friendshipValues)
         case "friendshipQualities":
             initialItems = user.friendshipQualities ?? []
-            _availableItems = State(initialValue: ["Listener", "Adventurous", "Reliable", "Funny", "Thoughtful", "Supportive", "Honest", "Loyal", "Empathetic", "Respectful", "Encouraging", "Patient"])
+            _availableItems = State(initialValue: OnboardingOptions.friendshipQualities)
         default:
             _availableItems = State(initialValue: [])
         }
