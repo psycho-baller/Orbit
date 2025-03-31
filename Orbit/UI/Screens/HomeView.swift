@@ -21,15 +21,10 @@ struct HomeView: View {
                 content
                     .navigationTitle(
                         "Astronauts around you"
-                        //                        userVM.isOnCampus || isPreviewMode
-                        //                            ? (userVM.currentArea.map { "\($0)" }
-                        //                                ?? "Astronauts around you")
-                        //                            : ""
                     )
 
                     .navigationBarTitleDisplayMode(
-                        userVM.isOnCampus || isPreviewMode
-                            ? .automatic : .inline
+                        .automatic
                     )
                     .toolbar {
                         // Leading toolbar: Logout button
@@ -223,28 +218,19 @@ struct HomeView: View {
                 text: $userVM.searchText,
                 placeholder: "Search for a meetup request"
             )
-
-            //            PendingRequestsDropdown(isExpanded: $isPendingExpanded)
-            //                .padding(.bottom, 16)
-
-//            if userVM.filteredUsers.isEmpty {
-//                NoUsersAroundView()
-//            } else {
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
-                            MeetupRequestCardView(meetupRequest: meetupRequest)
-                        }
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
+                        MeetupRequestDetailedView(meetupRequest: meetupRequest)
                     }
                     .padding(.vertical)
                 }
             }
-//        }
+        }
         .onAppear {
             if !isPreviewMode {
                 Task {
                     await userVM.initialize()
-                    await loadRequests()
                 }
             }
         }
@@ -253,17 +239,6 @@ struct HomeView: View {
         .refreshable {
             await meetupRequestVM.fetchAllMeetups()
         }
-    }
-
-    private func loadRequests() async {
-        guard let currentUserId = userVM.currentUser?.accountId else {
-            chatRequestVM.errorMessage = "Unable to determine the current user."
-            print("Error: currentUserId is nil.")
-            return
-        }
-
-        print("Loading requests for user: \(currentUserId)")
-        await chatRequestVM.fetchRequestsForUser(userId: currentUserId)
     }
 }
 

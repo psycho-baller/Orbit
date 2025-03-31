@@ -24,18 +24,6 @@ struct MessagesView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            Button("Get Conversations") {
-                Task {
-                    if let currentAccountId = userVM.currentUser?.accountId {
-                        let conversations = await msgVM.getConversations(
-                            currentAccountId)
-                        print("conversations \(conversations)")
-                    }
-                }
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.green)
-            .buttonStyle(.borderedProminent)
             Button("Send Message (Alice)") {
                 Task {
                     let conversationId = "6726fe3b0728578a945a"

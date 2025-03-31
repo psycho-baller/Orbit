@@ -11,7 +11,7 @@ import CoreLocation
 import Foundation
 import SwiftUI
 
-class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
+class MessagingViewModel: ObservableObject {
     static let shared = MessagingViewModel()
     private var messagingService: MessagingServiceProtocol = MessagingService()
     private var userManagementService: UserManagementServiceProtocol =
@@ -102,25 +102,6 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
     }
 
     @MainActor
-    func getConversations(_ accountId: String) async -> [String] {
-        do {
-            if let userModel = try await userManagementService.getUser(
-                accountId)
-            {
-                if let conversations = userModel.data.conversations {
-                    return conversations
-                }
-            }
-            throw NSError(domain: "UsersNotFound: \"\(accountId)\"", code: 404)
-        } catch {
-            print(
-                "MessagingViewModel - getConversations failed \(error.localizedDescription)"
-            )
-            return []
-        }
-    }
-
-    @MainActor
     func createConversation(_ participants: [String]) async -> String? {
         do {
             print(
@@ -134,27 +115,6 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
                 "DEBUG: Created conversation entry with ID: \(conversationEntry.id)"
             )
 
-            // Update users' conversation lists
-            for accountId in participants {
-                print(
-                    "DEBUG: Updating conversation list for user: \(accountId)")
-                if let userModel = try await userManagementService.getUser(
-                    accountId)
-                {
-                    var conversations = userModel.data.conversations ?? []
-                    if !conversations.contains(conversationEntry.id) {
-                        conversations.append(conversationEntry.id)
-                        let updatedUser = userModel.data.update(
-                            conversations: conversations)
-                        try await userManagementService.updateUser(
-                            accountId: accountId, updatedUser: updatedUser)
-                        print(
-                            "DEBUG: Updated user \(accountId) with conversations: \(conversations)"
-                        )
-                    }
-                }
-            }
-
             // Create initial system message
             let systemMessage = MessageModel(
                 conversationId: conversationEntry.id,
@@ -163,20 +123,6 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
             )
             _ = try await messagingService.createMessage(systemMessage)
             print("DEBUG: Created initial system message")
-
-            // Force refresh conversations for both participants
-            for accountId in participants {
-                let conversationDetails = await getConversationDetails(
-                    accountId)
-                if accountId == participants[0] {  // Only update UI for current user
-                    DispatchQueue.main.async {
-                        self.conversations = conversationDetails
-                        print(
-                            "DEBUG: Updated conversations list with \(conversationDetails.count) conversations"
-                        )
-                    }
-                }
-            }
 
             return conversationEntry.id
         } catch {
@@ -203,36 +149,6 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
             )
             return []
         }
-    }
-
-    @MainActor
-    func getConversationDetails(_ accountId: String) async
-        -> [ConversationDetailModel]
-    {
-        print("Getting conversations for user: \(accountId)")
-
-        let conversationIds = await getConversations(accountId)
-        print("Fetched conversation IDs: \(conversationIds)")
-
-        let conversationDetails = await withTaskGroup(
-            of: ConversationDetailModel?.self
-        ) { group in
-            for conversationId in conversationIds {
-                group.addTask {
-                    await self.fetchConversationDetail(
-                        accountId: accountId, conversationId: conversationId)
-                }
-            }
-
-            var results: [ConversationDetailModel] = []
-            for await detail in group {
-                if let detail = detail {
-                    results.append(detail)
-                }
-            }
-            return results
-        }
-        return conversationDetails.sorted { $0.timestamp > $1.timestamp }
     }
 
     @MainActor
@@ -321,24 +237,24 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
         conversationId: String,
         onNewMessage: @escaping (MessageDocument) -> Void
     ) async {
-//        do {
-//            try await messagingService.subscribeToMessages(
-//                conversationId: conversationId,
-//                onNewMessage: { newMessage in
-//                    DispatchQueue.main.async {
-//                        onNewMessage(newMessage)  // Safely call the optional closure
-//                    }
-//                }
-//            )
-//            print(
-//                "MessagingViewModel - Subscribed to real-time messages for conversation: \(conversationId)"
-//            )
-//
-//        } catch {
-//            print(
-//                "MessagingViewModel - Failed to subscribe to real-time messages: \(error.localizedDescription)"
-//            )
-//        }
+        //        do {
+        //            try await messagingService.subscribeToMessages(
+        //                conversationId: conversationId,
+        //                onNewMessage: { newMessage in
+        //                    DispatchQueue.main.async {
+        //                        onNewMessage(newMessage)  // Safely call the optional closure
+        //                    }
+        //                }
+        //            )
+        //            print(
+        //                "MessagingViewModel - Subscribed to real-time messages for conversation: \(conversationId)"
+        //            )
+        //
+        //        } catch {
+        //            print(
+        //                "MessagingViewModel - Failed to subscribe to real-time messages: \(error.localizedDescription)"
+        //            )
+        //        }
 
     }
 
@@ -389,25 +305,6 @@ class MessagingViewModel: ObservableObject, PreciseLocationManagerDelegate {
 
         print("DEBUG: Initializing inbox for user: \(userId)")
 
-        // Get user's conversation list directly
-        if let userModel = try? await userManagementService.getUser(userId) {
-            print(
-                "DEBUG: User conversations from database: \(userModel.data.conversations ?? [])"
-            )
-        }
-
-        let fetchedConversations = await getConversationDetails(userId)
-        print(
-            "DEBUG: Fetched conversation details: \(fetchedConversations.map { $0.id })"
-        )
-
-        DispatchQueue.main.async {
-            self.conversations = fetchedConversations
-            print(
-                "DEBUG: Updated conversations in ViewModel for \(userId): \(self.conversations.count)"
-            )
-            completion(fetchedConversations)
-        }
 
         await subscribeToInboxMessages(onNewMessage: { newMessage in
             print(
