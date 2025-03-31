@@ -54,6 +54,8 @@
 		258F6CF72D8CDE5800DC3291 /* ChatTextBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258F6CF62D8CDE5800DC3291 /* ChatTextBox.swift */; };
 		258F6CF92D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258F6CF82D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift */; };
 		2590D8A12CF7E43200D9E35D /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2590D8A02CF7E42C00D9E35D /* Views.swift */; };
+		25982ACD2D9AFF0200AFD5F6 /* UserBlockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25982ACC2D9AFF0200AFD5F6 /* UserBlockModel.swift */; };
+		25982ACF2D9AFF3500AFD5F6 /* UserReportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25982ACE2D9AFF3500AFD5F6 /* UserReportModel.swift */; };
 		259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2252CC02F0D00C9F285 /* Appwrite */; };
 		259CB2292CC02F2500C9F285 /* EnvironmentOverrides in Frameworks */ = {isa = PBXBuildFile; productRef = 259CB2282CC02F2500C9F285 /* EnvironmentOverrides */; };
 		259CB27F2CC0460400C9F285 /* AccountManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CB27A2CC0460400C9F285 /* AccountManagementService.swift */; };
@@ -186,6 +188,8 @@
 		258F6CF62D8CDE5800DC3291 /* ChatTextBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTextBox.swift; sourceTree = "<group>"; };
 		258F6CF82D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedDynamicTextBox.swift; sourceTree = "<group>"; };
 		2590D8A02CF7E42C00D9E35D /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		25982ACC2D9AFF0200AFD5F6 /* UserBlockModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBlockModel.swift; sourceTree = "<group>"; };
+		25982ACE2D9AFF3500AFD5F6 /* UserReportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReportModel.swift; sourceTree = "<group>"; };
 		259CB27A2CC0460400C9F285 /* AccountManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManagementService.swift; sourceTree = "<group>"; };
 		259CB27C2CC0460400C9F285 /* UserManagementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserManagementService.swift; sourceTree = "<group>"; };
 		259CB27D2CC0460400C9F285 /* AppwriteService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppwriteService.swift; sourceTree = "<group>"; };
@@ -422,6 +426,8 @@
 		259CB2A12CC046F300C9F285 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				25982ACE2D9AFF3500AFD5F6 /* UserReportModel.swift */,
+				25982ACC2D9AFF0200AFD5F6 /* UserBlockModel.swift */,
 				25E829422D84EE36009D49CE /* ChatMessageModel.swift */,
 				25E829402D84EE27009D49CE /* ChatModel.swift */,
 				2512755E2D6BDB2400BB1FCB /* UserLanguageModel.swift */,
@@ -744,6 +750,7 @@
 				61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */,
 				259CB2AA2CC0486D00C9F285 /* OrbitApp.swift in Sources */,
 				25E829452D84F1EF009D49CE /* ChatService.swift in Sources */,
+				25982ACF2D9AFF3500AFD5F6 /* UserReportModel.swift in Sources */,
 				258769852CF4CAC900D4D4EA /* NoUsersAroundView.swift in Sources */,
 				259CB2972CC0465600C9F285 /* LoginView.swift in Sources */,
 				250F9B712CF5310800B734FF /* NotInterestedToMeetView.swift in Sources */,
@@ -757,6 +764,7 @@
 				25D90B092CE6D7ED00463D67 /* ChatRequestService.swift in Sources */,
 				259CB2A82CC047D000C9F285 /* LazyList.swift in Sources */,
 				25F3F0DC2D6CC2C300CEB34B /* FlowLayout.swift in Sources */,
+				25982ACD2D9AFF0200AFD5F6 /* UserBlockModel.swift in Sources */,
 				25AE6B4A2D0F1B8500D622B5 /* LoggedInView.swift in Sources */,
 				000AE7492CD5F5DD00431CDB /* MessageBox.swift in Sources */,
 				25D90B0D2CE6EC3100463D67 /* ChatRequestView.swift in Sources */,
