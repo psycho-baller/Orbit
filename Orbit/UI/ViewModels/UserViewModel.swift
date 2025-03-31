@@ -453,64 +453,6 @@ class UserViewModel: NSObject, ObservableObject {
         }
     }
 
-    // Helper function to filter users by location proximity
-    func usersNearby(users: [UserModel], radius: Double) -> [UserModel] {
-        guard let currentAreaId = currentUser?.currentAreaId else {
-            print(
-                "UserViewModel - usersInSameArea: Current area not available.")
-            return []
-        }
-
-        print(
-            "UserViewModel - usersInSameArea: Filtering users in area \(currentAreaId)."
-        )
-
-        return users.filter { user in
-            guard let userAreaId = user.currentAreaId else {
-                print(
-                    "UserViewModel - usersInSameArea: Skipping user \(user.id), missing area data."
-                )
-                return false
-            }
-            let isInSameArea = userAreaId == currentAreaId
-            if isInSameArea {
-                print(
-                    "UserViewModel - usersInSameArea: User \(user.id) is in the same area."
-                )
-            }
-            return isInSameArea
-        }
-    }
-
-    @MainActor
-    func updateUserInterests(interests: [String]) async {
-        guard var user = currentUser else { return }
-
-        user.interests = interests
-        self.currentUser?.interests = interests
-        print(
-            "UserViewModel - updateUserInterests: Updating interests to \(interests)."
-        )
-
-        do {
-            // Await the updateUser function which expects accountId and updatedUser
-            let updatedUserDocument =
-                try await userManagementService.updateUser(
-                    accountId: user.accountId, updatedUser: user)
-
-            if let updatedUserDocument = updatedUserDocument {
-                print(
-                    "Profile updated successfully for user \(updatedUserDocument.id)"
-                )
-            } else {
-                print("Failed to update user: User document not found.")
-            }
-        } catch {
-            print("Error updating profile: \(error.localizedDescription)")
-            self.error = error.localizedDescription
-        }
-    }
-
     func getAreaName(forId id: Int) -> String {
         if let area = areaData.first(where: { String($0.id) == String(id) }) {
             return area.name
