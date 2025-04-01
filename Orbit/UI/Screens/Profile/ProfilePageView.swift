@@ -248,27 +248,27 @@ struct ProfilePageView: View {
                             }
                             .padding(.top, 2)
 
-                            // Edit button for personal info - only shown in edit mode
-                            //                            if editMode {
-                            //                                Button(action: {
-                            //                                    editSection("personalInfo")
-                            //                                }) {
-                            //                                    Text("Edit Name, Age, Gender, and Pronouns")
-                            //                                        .font(.caption)
-                            //                                        .padding(.vertical, 6)
-                            //                                        .padding(.horizontal, 12)
-                            //                                        .background(
-                            //                                            Capsule()
-                            //                                                .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
-                            //                                        )
-                            //                                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                            //                                        .overlay(
-                            //                                            Capsule()
-                            //                                                .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 1)
-                            //                                        )
-                            //                                }
-                            //                                .padding(.top, 6)
-                            //                            }
+                             //Edit button for personal info - only shown in edit mode
+                            if editMode {
+                                Button(action: {
+                                    editSection("personalInfo")
+                                }) {
+                                    Text("Edit Name, Age, Gender, and Pronouns")
+                                        .font(.caption)
+                                        .padding(.vertical, 6)
+                                        .padding(.horizontal, 12)
+                                        .background(
+                                            Capsule()
+                                                .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                        )
+                                        .foregroundColor(ColorPalette.accent(for: colorScheme))
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 1)
+                                        )
+                                }
+                                .padding(.top, 6)
+                            }
                         }
 
                         // Username
