@@ -356,7 +356,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             //            approvedMeetups: [],
             lastOnline: "2024-02-19T10:45:00Z",
             gender: .other,
-            otherGender: "Cat woman",
             pronouns: [.heHim],
             userLinks: [
                 .mock()
@@ -366,7 +365,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .conversations,
                 .hobbies,
             ],
-            featuredInterests: ["Gaming", "Tech", "Music"]
+            featuredInterests: ["Gaming", "Tech", "Music"],
+            otherGender: "Cat woman"
         )
     }
 
@@ -396,8 +396,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             //            requestedMeetups: [],
             //            approvedMeetups: [MeetupApprovalModel.mock()],
             lastOnline: "2024-02-18T20:15:00Z",
-            otherGender: nil,
-            featuredInterests: ["Yoga", "Reading", "Meditation"]
+            featuredInterests: ["Yoga", "Reading", "Meditation"],
+            otherGender: nil
         )
     }
 
@@ -445,8 +445,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .conversations,
                 .hobbies,
             ],
-            otherGender: nil,
-            featuredInterests: ["Yoga", "Reading", "Meditation"]
+            featuredInterests: ["Yoga", "Reading", "Meditation"],
+            otherGender: nil
         )
     }
 
@@ -482,8 +482,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true,
-                otherGender: nil,
-                featuredInterests: ["Gaming", "Tech", "Music"]
+                featuredInterests: ["Gaming", "Tech", "Music"],
+                otherGender: nil
             ),
             UserModel(
                 id: "user5",
@@ -512,8 +512,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true,
-                otherGender: nil,
-                featuredInterests: ["Yoga", "Reading", "Meditation"]
+                featuredInterests: ["Yoga", "Reading", "Meditation"],
+                otherGender: nil
             ),
         ]
     }
