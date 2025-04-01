@@ -107,9 +107,12 @@ struct ProfilePageView: View {
                 .environmentObject(userVM)
                 .presentationDetents([.medium, .large])
             case .intentions:
-                IntentionsEditSheet(user: displayUser)
-                    .environmentObject(userVM)
-                    .presentationDetents([.medium, .large])
+                InterestsEditSheet(
+                    user: displayUser,
+                    section: "intentions"
+                )
+                .environmentObject(userVM)
+                .presentationDetents([.medium, .large])
             case .featuredInterests:
                 FeaturedInterestsEditSheet(user: displayUser)
                     .environmentObject(userVM)
