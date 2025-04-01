@@ -369,8 +369,8 @@ struct ProfilePageView: View {
                     .padding(.horizontal)
                 }
             }
-            .background(ColorPalette.background(for: colorScheme))
         }
+        .background(ColorPalette.background(for: colorScheme))
         .edgesIgnoringSafeArea(.top)
         .sheet(item: $activeSheet) { sheetType in
             // Sheet presentations
