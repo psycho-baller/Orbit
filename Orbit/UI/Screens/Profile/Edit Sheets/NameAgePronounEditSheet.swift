@@ -21,8 +21,10 @@ struct NameAgePronounEditSheet: View {
     @State private var selectedPronouns: Set<UserPronouns> = []
     @State private var showAge: Bool
     @State private var showPronouns: Bool
+    @State private var showGender: Bool
     @FocusState private var isFirstNameFocused: Bool
     @FocusState private var isLastNameFocused: Bool
+    @State private var selectedGender: UserGender?
     
     // For date picker only allow age between 16-100
     private var sixteenYearsAgo: Date {
@@ -43,6 +45,7 @@ struct NameAgePronounEditSheet: View {
         // Initialize display preferences
         _showAge = State(initialValue: user.showAge)
         _showPronouns = State(initialValue: user.showPronouns)
+        _showGender = State(initialValue: user.showGender)
         
         // Initialize date of birth
         if let dobString = user.dob {
@@ -65,8 +68,9 @@ struct NameAgePronounEditSheet: View {
             _dateOfBirth = State(initialValue: Date())
         }
         
-        // Initialize pronouns
+        // Initialize pronouns and gender
         _selectedPronouns = State(initialValue: Set(user.pronouns))
+        _selectedGender = State(initialValue: user.gender)
     }
     
     var body: some View {
@@ -132,6 +136,61 @@ struct NameAgePronounEditSheet: View {
                         .padding()
                         .background(ColorPalette.lightGray(for: colorScheme))
                         .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                    
+                    Divider()
+                        .padding(.vertical, 8)
+                    
+                    // Gender Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("What's your gender?")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(ColorPalette.text(for: colorScheme))
+                        
+                        VStack(spacing: 12) {
+                            ForEach(UserGender.allCases, id: \.self) { gender in
+                                Button(action: {
+                                    selectedGender = gender
+                                }) {
+                                    HStack {
+                                        Text(gender.rawValue.capitalized)
+                                            .font(.body)
+                                            .foregroundColor(ColorPalette.text(for: colorScheme))
+                                        
+                                        Spacer()
+                                        
+                                        // Fixed-size container for the checkmark/circle
+                                        ZStack {
+                                            if selectedGender == gender {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                                                    .font(.system(size: 20))
+                                            } else {
+                                                Circle()
+                                                    .strokeBorder(ColorPalette.secondaryText(for: colorScheme), lineWidth: 1)
+                                                    .frame(width: 20, height: 20)
+                                            }
+                                        }
+                                        .frame(width: 24, height: 24)
+                                    }
+                                    .padding()
+                                    .background(ColorPalette.lightGray(for: colorScheme))
+                                    .cornerRadius(10)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                            
+                            Toggle(isOn: $showGender) {
+                                Text("Display gender on profile")
+                                    .font(.body)
+                                    .foregroundColor(ColorPalette.text(for: colorScheme))
+                            }
+                            .padding()
+                            .background(ColorPalette.lightGray(for: colorScheme))
+                            .cornerRadius(10)
+                        }
                     }
                     .padding(.horizontal)
                     
@@ -235,13 +294,15 @@ struct NameAgePronounEditSheet: View {
                             firstName: firstName,
                             lastName: lastName.isEmpty ? nil : lastName,
                             dob: formattedDate,
-                            pronouns: Array(selectedPronouns)
+                            pronouns: Array(selectedPronouns),
+                            gender: selectedGender
                         )
                         
                         // Update display preferences
                         userVM.updateDisplayPreferences(
                             showAge: showAge,
-                            showPronouns: showPronouns
+                            showPronouns: showPronouns,
+                            showGender: showGender
                         )
                         
                         dismiss()

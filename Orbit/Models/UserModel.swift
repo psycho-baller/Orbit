@@ -63,6 +63,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     // Display settings for the user's profile
     var showAge: Bool = true
     var showPronouns: Bool = true
+    var showGender: Bool = true
 
     // New property for featured interests
     var featuredInterests: [String]?

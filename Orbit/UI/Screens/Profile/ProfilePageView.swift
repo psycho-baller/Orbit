@@ -162,15 +162,39 @@ struct ProfilePageView: View {
                             
                             // Age and pronouns on a second line
                             HStack(spacing: 8) {
+                                // Age display
                                 if displayUser.showAge, !ageText.isEmpty {
                                     Text(ageText)
                                         .font(.title3)
                                         .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                                 }
                                 
-                                if displayUser.showPronouns, !pronounsText.isEmpty {
-                                    // Add a separator dot if both age and pronouns are shown
+                                // Gender display
+                                if let gender = displayUser.gender, 
+                                   displayUser.showGender,
+                                   gender != .preferNotToSay{
+                                    // Add a separator dot if age is shown before gender
                                     if displayUser.showAge, !ageText.isEmpty {
+                                        Text("•")
+                                            .font(.title3)
+                                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                    }
+                                    
+                                    Text(gender.rawValue.capitalized)
+                                        .font(.title3)
+                                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                                }
+                                
+                                // Add pronouns display
+                                if displayUser.showPronouns, !pronounsText.isEmpty {
+                                    // Add a separator dot if either age or gender is shown before pronouns
+                                    let showAgeBefore = displayUser.showAge && !ageText.isEmpty
+                                    let showGenderBefore = displayUser.gender != nil && 
+                                                          displayUser.showGender && 
+                                                          displayUser.gender != .preferNotToSay && 
+                                                          displayUser.gender != .other
+                                    
+                                    if showAgeBefore || showGenderBefore {
                                         Text("•")
                                             .font(.title3)
                                             .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
@@ -188,7 +212,7 @@ struct ProfilePageView: View {
                                 Button(action: {
                                     editSection("personalInfo")
                                 }) {
-                                    Text("Edit Name, Age, and Pronouns")
+                                    Text("Edit Name, Age, Gender, and Pronouns")
                                         .font(.caption)
                                         .padding(.vertical, 6)
                                         .padding(.horizontal, 12)

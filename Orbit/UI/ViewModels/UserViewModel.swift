@@ -764,7 +764,8 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         friendshipQualities: [String]? = nil,
         pronouns: [UserPronouns]? = nil,
         intentions: [UserIntention]? = nil,
-        featuredInterests: [String]? = nil
+        featuredInterests: [String]? = nil,
+        gender: UserGender? = nil
     ) {
         // First, make sure we're working with the most up-to-date temp data
         guard var updatedUser = tempUserData ?? currentUser else { return }
@@ -815,10 +816,13 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         if let featuredInterests = featuredInterests {
             updatedUser.featuredInterests = featuredInterests
         }
+        if let gender = gender {
+            updatedUser.gender = gender
+        }
         
         // Store in temporary variable
         tempUserData = updatedUser
-
+        
         // Notify observers that data has changed
         objectWillChange.send()
     }
@@ -871,10 +875,12 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
                tempData.intentions != currentUser.intentions ||
                tempData.showAge != currentUser.showAge ||
                tempData.showPronouns != currentUser.showPronouns ||
-               tempData.featuredInterests != currentUser.featuredInterests
+               tempData.showGender != currentUser.showGender ||
+               tempData.featuredInterests != currentUser.featuredInterests ||
+               tempData.gender != currentUser.gender
     }
 
-    func updateDisplayPreferences(showAge: Bool? = nil, showPronouns: Bool? = nil) {
+    func updateDisplayPreferences(showAge: Bool? = nil, showPronouns: Bool? = nil, showGender: Bool? = nil) {
         guard var tempUser = tempUserData ?? currentUser else { return }
         
         var updatedUser = tempUser
@@ -885,6 +891,10 @@ class UserViewModel: NSObject, ObservableObject, PreciseLocationManagerDelegate,
         
         if let showPronouns = showPronouns {
             updatedUser.showPronouns = showPronouns
+        }
+        
+        if let showGender = showGender {
+            updatedUser.showGender = showGender
         }
         
         tempUserData = updatedUser
