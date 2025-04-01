@@ -195,13 +195,13 @@ struct ChatDetailView: View {
     }
 
     // Determines if the current user is the meetupRequest creator.
-    private var isCurrentUserCreator: Bool {
-        user.id == chat.data.meetupRequest?.createdByUser?.id
+    private var isCurrentUserChatCreator: Bool {
+        user.id == chat.data.createdByUser?.id
     }
 
     // The "other user" is the one that is not the current user.
     private var otherUser: UserModel? {
-        isCurrentUserCreator ? chat.data.otherUser : chat.data.createdByUser
+        isCurrentUserChatCreator ? chat.data.otherUser : chat.data.createdByUser
     }
 
     // Check if the meetupRequest creator (requestor) has sent any message in this chat.
@@ -252,20 +252,40 @@ struct ChatDetailView: View {
                     if let meetupCreatorId = chat.data.meetupRequest?
                         .createdByUser?
                         .id,
-                        user.id == meetupCreatorId
+                        user.id == meetupCreatorId,
+                        chat.data.meetupRequest?.status != .filled
                     {
                         ActionButtonsView(
                             onIgnore: { await ignoreChat() },
                             onConfirm: { await confirmMeetup() }
                         )
                         .padding(.horizontal, 24)
-                    } else if chat.data.meetupRequest?.status != .filled {
+                    } else if chat.data.meetupConfirmed {
                         Text("Meetup confirmed!")
                             .foregroundColor(.white)
                     }
                 }
                 ChatTextBox(message: $messageText, onSend: sendMessage)
             }
+            //            NavigationLink(
+            //                destination: {
+            //                    Group {
+            //                        if let other = otherUser,
+            //                            let meetupRequest = chat.data.meetupRequest
+            //                        {
+            //                            // Pass the same user and same logic flag (didRequestorSendMessage)
+            //                            MeetupDetailsInsideChat(
+            //                                user: other,
+            //                                meetupRequest: .mock(data: meetupRequest),
+            //                                showFullDetails: didRequestorSendMessage)
+            //                        } else {
+            //                            EmptyView()
+            //                        }
+            //                    }
+            //                }, isActive: $isShowingMeetupDetails
+            //            ) {
+            //                EmptyView()
+            //            }
         }
         .onReceive(
             NotificationCenter.default.publisher(
@@ -281,6 +301,24 @@ struct ChatDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
+        .onAppear {
+            print(
+                "other: \(otherUser) meetupRequest: \(chat.data.meetupRequest)")
+            print("chat.data: \(chat.data)")
+        }
+        .sheet(isPresented: $isShowingMeetupDetails) {
+            if let other = otherUser,
+                let meetupRequest = chat.data.meetupRequest
+            {
+                // Pass the same user and same logic flag (didRequestorSendMessage)
+                MeetupDetailsInsideChat(
+                    user: other,
+                    meetupRequest: .mock(data: meetupRequest),
+                    showFullDetails: didRequestorSendMessage)
+            } else {
+                EmptyView()
+            }
+        }
         .toolbar {
 
             ToolbarItem(placement: .navigationBarLeading) {
@@ -354,19 +392,6 @@ struct ChatDetailView: View {
                 // Handle report action.
             }
             Button("Dismiss", role: .cancel) {}
-        }
-        .navigationDestination(isPresented: $isShowingMeetupDetails) {
-            if let other = otherUser,
-                let meetupRequest = chat.data.meetupRequest
-            {
-                // Pass the same user and same logic flag (didRequestorSendMessage)
-                MeetupDetailsInsideChat(
-                    user: other,
-                    meetupRequest: .mock(data: meetupRequest),
-                    showFullDetails: didRequestorSendMessage)
-            } else {
-                EmptyView()
-            }
         }
     }
 
