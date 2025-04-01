@@ -32,84 +32,93 @@ struct UsernameEditSheet: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Choose a username")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                    .padding(.horizontal)
+            ZStack {
+                ColorPalette.background(for: colorScheme)
+                    .ignoresSafeArea()
                 
-                TextField("Username", text: $username)
-                    .padding()
-                    .background(ColorPalette.lightGray(for: colorScheme))
-                    .cornerRadius(10)
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                    .onChange(of: username) { _ in
-                        checkUsernameAvailability(username)
-                    }
-                    .padding(.horizontal)
-                
-                // Username availability indicator
-                HStack {
-                    if isCheckingUsername {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                        Text("Checking availability...")
-                            .font(.caption)
-                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                    } else if let isAvailable = isUsernameAvailable {
-                        if username == user.username {
-                            // Current username
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                            Text("This is your current username")
-                                .font(.caption)
-                                .foregroundColor(.green)
-                        } else if isAvailable {
-                            // Available username
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                            Text("Username is available")
-                                .font(.caption)
-                                .foregroundColor(.green)
-                        } else {
-                            // Unavailable username
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.red)
-                            Text("Username is not available or too short")
-                                .font(.caption)
-                                .foregroundColor(.red)
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Choose a username")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .padding(.horizontal)
+                    
+                    TextField("Username", text: $username)
+                        .padding()
+                        .background(ColorPalette.lightGray(for: colorScheme))
+                        .cornerRadius(10)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                        .onChange(of: username) { _ in
+                            checkUsernameAvailability(username)
                         }
-                    }
-                }
-                .padding(.horizontal)
-                
-                Spacer()
-            }
-            .padding(.top)
-            .navigationTitle("Edit Username")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        if isUsernameAvailable == true && username != user.username {
-                            isSaving = true
-                            
-                            Task {
-                                // Update directly without temp data
-                                await userVM.updateAndSaveUserData(username: username)
-                                dismiss()
+                        .padding(.horizontal)
+                    
+                    // Username availability indicator
+                    HStack {
+                        if isCheckingUsername {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                            Text("Checking availability...")
+                                .font(.caption)
+                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        } else if let isAvailable = isUsernameAvailable {
+                            if username == user.username {
+                                // Current username
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("This is your current username")
+                                    .font(.caption)
+                                    .foregroundColor(.green)
+                            } else if isAvailable {
+                                // Available username
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("Username is available")
+                                    .font(.caption)
+                                    .foregroundColor(.green)
+                            } else {
+                                // Unavailable username
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                                Text("Username is not available or too short")
+                                    .font(.caption)
+                                    .foregroundColor(.red)
                             }
                         }
                     }
-                    .disabled((isUsernameAvailable != true && username != user.username) || isSaving)
+                    .padding(.horizontal)
+                    
+                    Spacer()
+                }
+                .padding(.top)
+                .navigationTitle("Edit Username")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "xmark")
+                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            if isUsernameAvailable == true && username != user.username {
+                                isSaving = true
+                                
+                                Task {
+                                    // Update directly without temp data
+                                    await userVM.updateAndSaveUserData(username: username)
+                                    dismiss()
+                                }
+                            }
+                        }
+                        .disabled((isUsernameAvailable != true && username != user.username) || isSaving)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    }
                 }
             }
         }
