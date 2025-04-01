@@ -115,6 +115,7 @@
 		6141694E2D809E3C00829319 /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6141694D2D809E3600829319 /* LocationPickerView.swift */; };
 		614B93572D98C42A00F17CA6 /* OrbitingInterests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614B93562D98C42200F17CA6 /* OrbitingInterests.swift */; };
 		614B93BA2D9B222200F17CA6 /* OnboardingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614B93B92D9B221B00F17CA6 /* OnboardingOptions.swift */; };
+		614B94262D9B843C00F17CA6 /* TappableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614B94252D9B843000F17CA6 /* TappableSection.swift */; };
 		6190F7192CF508BF00DAEBDE /* PendingRequestsDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */; };
 		6190F71B2CF5644A00DAEBDE /* PendingUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */; };
 		619992A12D13768D00440533 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619992A02D13768300440533 /* UserProfileView.swift */; };
@@ -257,6 +258,7 @@
 		6141694D2D809E3600829319 /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
 		614B93562D98C42200F17CA6 /* OrbitingInterests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitingInterests.swift; sourceTree = "<group>"; };
 		614B93B92D9B221B00F17CA6 /* OnboardingOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOptions.swift; sourceTree = "<group>"; };
+		614B94252D9B843000F17CA6 /* TappableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappableSection.swift; sourceTree = "<group>"; };
 		6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestsDropdown.swift; sourceTree = "<group>"; };
 		6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingUserCardView.swift; sourceTree = "<group>"; };
 		619992A02D13768300440533 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
@@ -393,6 +395,7 @@
 		259CB28D2CC0465600C9F285 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				614B94252D9B843000F17CA6 /* TappableSection.swift */,
 				614B93562D98C42200F17CA6 /* OrbitingInterests.swift */,
 				258F6CF82D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift */,
 				258F6CF62D8CDE5800DC3291 /* ChatTextBox.swift */,
@@ -794,6 +797,7 @@
 				0669F94E2CD6CEB10031D154 /* ConversationModel.swift in Sources */,
 				25AE2B242D6E1F17001834B6 /* MultipleSelectionRow.swift in Sources */,
 				0088BFE52CD8E691002B4B9D /* InboxRow.swift in Sources */,
+				614B94262D9B843C00F17CA6 /* TappableSection.swift in Sources */,
 				250F9B6D2CF52A7100B734FF /* UpdateSettingsButton.swift in Sources */,
 				2512755F2D6BDB2400BB1FCB /* UserLanguageModel.swift in Sources */,
 				25ECBA202CD1B1F300256104 /* UserLocationModel.swift in Sources */,

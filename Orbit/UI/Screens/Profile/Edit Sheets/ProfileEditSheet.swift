@@ -20,6 +20,7 @@ struct InterestsEditSheet: View {
     
     @State private var selectedItems: [String] = []
     @State private var availableItems: [String] = []
+    @State private var isSaving = false
     
     private var sectionTitle: String {
         switch section {
@@ -95,8 +96,8 @@ struct InterestsEditSheet: View {
                                             ColorPalette.accent(for: colorScheme).opacity(0.2))
                                 )
                                 .foregroundColor(selectedItems.contains(item) ?
-                                                 ColorPalette.text(for: colorScheme) :
-                                                    ColorPalette.accent(for: colorScheme))
+                                               ColorPalette.text(for: colorScheme) :
+                                               ColorPalette.accent(for: colorScheme))
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
@@ -116,25 +117,31 @@ struct InterestsEditSheet: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        // Update the view model with temporary changes based on section
-                        switch section {
-                        case "activitiesHobbies":
-                            userVM.updateTempUserData(activitiesHobbies: selectedItems)
-                        case "friendActivities":
-                            userVM.updateTempUserData(friendActivities: selectedItems)
-                        case "preferredMeetupType":
-                            userVM.updateTempUserData(preferredMeetupType: selectedItems)
-                        case "convoTopics":
-                            userVM.updateTempUserData(convoTopics: selectedItems)
-                        case "friendshipValues":
-                            userVM.updateTempUserData(friendshipValues: selectedItems)
-                        case "friendshipQualities":
-                            userVM.updateTempUserData(friendshipQualities: selectedItems)
-                        default:
-                            break
+                        isSaving = true
+                        
+                        Task {
+                            // Update directly based on section
+                            switch section {
+                            case "activitiesHobbies":
+                                await userVM.updateAndSaveUserData(activitiesHobbies: selectedItems)
+                            case "friendActivities":
+                                await userVM.updateAndSaveUserData(friendActivities: selectedItems)
+                            case "preferredMeetupType":
+                                await userVM.updateAndSaveUserData(preferredMeetupType: selectedItems)
+                            case "convoTopics":
+                                await userVM.updateAndSaveUserData(convoTopics: selectedItems)
+                            case "friendshipValues":
+                                await userVM.updateAndSaveUserData(friendshipValues: selectedItems)
+                            case "friendshipQualities":
+                                await userVM.updateAndSaveUserData(friendshipQualities: selectedItems)
+                            default:
+                                break
+                            }
+                            
+                            dismiss()
                         }
-                        dismiss()
                     }
+                    .disabled(isSaving)
                 }
             }
         }
@@ -150,6 +157,7 @@ struct IntentionsEditSheet: View {
     let user: UserModel
     
     @State private var selectedIntentions: [UserIntention] = []
+    @State private var isSaving = false
     
     init(user: UserModel) {
         self.user = user
@@ -213,9 +221,14 @@ struct IntentionsEditSheet: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        userVM.updateTempUserData(intentions: selectedIntentions)
-                        dismiss()
+                        isSaving = true
+                        
+                        Task {
+                            await userVM.updateAndSaveUserData(intentions: selectedIntentions)
+                            dismiss()
+                        }
                     }
+                    .disabled(isSaving)
                 }
             }
         }

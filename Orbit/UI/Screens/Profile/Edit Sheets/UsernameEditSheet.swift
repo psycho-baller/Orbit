@@ -19,8 +19,10 @@ struct UsernameEditSheet: View {
     let user: UserModel
     
     @State private var username: String
-    @State private var isUsernameAvailable: Bool? = nil
     @State private var isCheckingUsername = false
+    @State private var isUsernameAvailable: Bool?
+    @State private var isSaving = false
+    
     @State private var debounceCancellable: AnyCancellable?
     
     init(user: UserModel) {
@@ -31,7 +33,7 @@ struct UsernameEditSheet: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("Choose a unique username")
+                Text("Choose a username")
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
@@ -41,29 +43,47 @@ struct UsernameEditSheet: View {
                     .padding()
                     .background(ColorPalette.lightGray(for: colorScheme))
                     .cornerRadius(10)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled(true)
-                    .onChange(of: username) { newValue in
-                        checkUsernameAvailability(newValue)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .onChange(of: username) { _ in
+                        checkUsernameAvailability(username)
                     }
                     .padding(.horizontal)
                 
                 // Username availability indicator
-                if isCheckingUsername {
-                    HStack {
+                HStack {
+                    if isCheckingUsername {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle())
                         Text("Checking availability...")
                             .font(.caption)
                             .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                    } else if let isAvailable = isUsernameAvailable {
+                        if username == user.username {
+                            // Current username
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("This is your current username")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                        } else if isAvailable {
+                            // Available username
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("Username is available")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                        } else {
+                            // Unavailable username
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.red)
+                            Text("Username is not available or too short")
+                                .font(.caption)
+                                .foregroundColor(.red)
+                        }
                     }
-                    .padding(.horizontal)
-                } else if let isAvailable = isUsernameAvailable {
-                    Text(isAvailable ? "✅ Username available" : "❌ Username taken")
-                        .foregroundColor(isAvailable ? .green : .red)
-                        .font(.caption)
-                        .padding(.horizontal)
                 }
+                .padding(.horizontal)
                 
                 Spacer()
             }
@@ -80,12 +100,16 @@ struct UsernameEditSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         if isUsernameAvailable == true && username != user.username {
-                            // Update the view model with temporary changes
-                            userVM.updateTempUserData(username: username)
+                            isSaving = true
+                            
+                            Task {
+                                // Update directly without temp data
+                                await userVM.updateAndSaveUserData(username: username)
+                                dismiss()
+                            }
                         }
-                        dismiss()
                     }
-                    .disabled(isUsernameAvailable != true && username != user.username)
+                    .disabled((isUsernameAvailable != true && username != user.username) || isSaving)
                 }
             }
         }
@@ -114,14 +138,22 @@ struct UsernameEditSheet: View {
         // Debounce the check to avoid too many requests
         debounceCancellable = Just(username)
             .delay(for: .seconds(0.5), scheduler: RunLoop.main)
-            .sink { username in
-                // In a real app, you'd call your API here
-                // For now, let's simulate a check
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    // For demo purposes, let's say usernames ending with numbers are available
-                    isUsernameAvailable = username.last?.isNumber ?? false || !username.contains(" ")
-                    isCheckingUsername = false
+            .sink { usernameToCheck in
+                Task {
+                    // Check availability with Firebase
+                    let isAvailable = await userVM.isUsernameAvailable(usernameToCheck)
+                    
+                    // Update state on main thread
+                    DispatchQueue.main.async {
+                        isUsernameAvailable = isAvailable
+                        isCheckingUsername = false
+                    }
                 }
             }
     }
+}
+
+#Preview {
+    UsernameEditSheet(user: UserViewModel.mock().currentUser!)
+        .environmentObject(UserViewModel.mock())
 } 

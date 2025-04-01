@@ -18,6 +18,7 @@ struct FeaturedInterestsEditSheet: View {
     @State private var selectedInterests: [String] = []
     @State private var availableInterests: [String] = []
     @State private var showAlert = false
+    @State private var isSaving = false
     
     init(user: UserModel) {
         self.user = user
@@ -60,21 +61,17 @@ struct FeaturedInterestsEditSheet: View {
                     
                     // Mini preview of orbiting interests
                     if !selectedInterests.isEmpty {
-                        ForEach(Array(selectedInterests.prefix(6).enumerated()), id: \.element) { index, interest in
-                            let count = min(selectedInterests.count, 6)
-                            let angle = Double(index) * .pi * 2 / Double(count)
-                            let xOffset = 60 * cos(angle)
-                            let yOffset = 60 * sin(angle)
+                        ForEach(0..<min(selectedInterests.count, maxFeaturedInterests), id: \.self) { index in
+                            let angle = Double(index) * (360.0 / Double(min(selectedInterests.count, maxFeaturedInterests)))
                             
                             Circle()
-                                .fill(ColorPalette.accent(for: colorScheme))
-                                .frame(width: 20, height: 20)
-                                .offset(x: xOffset, y: yOffset)
+                                .fill(ColorPalette.accent(for: colorScheme).opacity(0.8))
+                                .frame(width: 24, height: 24)
+                                .offset(x: 60 * cos(angle * .pi / 180), y: 60 * sin(angle * .pi / 180))
                         }
                     }
                 }
-                .frame(height: 180)
-                .padding(.vertical)
+                .padding(.vertical, 20)
                 
                 // Selected interests
                 VStack(alignment: .leading, spacing: 8) {
@@ -164,15 +161,20 @@ struct FeaturedInterestsEditSheet: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        userVM.updateTempUserData(featuredInterests: selectedInterests)
-                        dismiss()
+                        isSaving = true
+                        
+                        Task {
+                            await userVM.updateAndSaveUserData(featuredInterests: selectedInterests)
+                            dismiss()
+                        }
                     }
+                    .disabled(isSaving)
                 }
             }
             .alert(isPresented: $showAlert) {
                 Alert(
-                    title: Text("Maximum Reached"),
-                    message: Text("You can select up to \(maxFeaturedInterests) featured interests."),
+                    title: Text("Maximum Interests"),
+                    message: Text("You can select up to \(maxFeaturedInterests) interests to feature around your profile."),
                     dismissButton: .default(Text("OK"))
                 )
             }
@@ -192,4 +194,9 @@ struct FeaturedInterestsEditSheet: View {
             }
         }
     }
+}
+
+#Preview {
+    FeaturedInterestsEditSheet(user: UserViewModel.mock().currentUser!)
+        .environmentObject(UserViewModel.mock())
 }

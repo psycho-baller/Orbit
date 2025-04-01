@@ -11,18 +11,16 @@ struct ProfilePageView: View {
     let user: UserModel
     @Environment(\.colorScheme) var colorScheme
     @State private var orbitAngle: Double = 0
-    @State private var editMode = false
     @State private var activeSheet: ProfileEditType?
-    @State private var showingUnsavedChangesAlert = false
 
     // Determine if this is the current user's profile
     var isCurrentUserProfile: Bool
 
     @EnvironmentObject var userVM: UserViewModel
 
-    // Use tempUserData when available, otherwise use the current user
+    // Use current user when available, otherwise use the provided user
     private var displayUser: UserModel {
-        userVM.tempUserData ?? userVM.currentUser ?? user
+        userVM.currentUser ?? user
     }
 
     #warning(
@@ -42,21 +40,17 @@ struct ProfilePageView: View {
         return ageComponents.year.map { "\($0)" } ?? ""
     }
 
+    // Format pronouns for display
     private var pronounsText: String {
         displayUser.pronouns.map { $0.rawValue }.joined(separator: "/")
     }
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            //             Main content
-            ScrollView {
-                // Add some padding at the top to make room for the floating edit button
-                if isCurrentUserProfile {
-                    Color.clear.frame(height: 50)
-                }
-
-                VStack(spacing: 20) {
-                    // Profile Header with picture and orbiting interests
+        ScrollView {
+            VStack(spacing: 15) {
+                // Profile Header with picture and orbiting interests
+                VStack(spacing: 0) {
+                    // Profile picture with orbiting interests
                     ZStack {
                         // Background gradient
                         Circle()
@@ -73,479 +67,352 @@ struct ProfilePageView: View {
                                     endRadius: 150
                                 )
                             )
-                            .frame(maxWidth: .infinity)
-                            .scaleEffect(1.5)
-                            .padding()
-
-                        // Profile Picture
-                        if let profileUrl = displayUser.profilePictureUrl,
-                            let url = URL(string: profileUrl)
+                        
+                        // Orbiting Activities
+                        if let activities = displayUser.featuredInterests,
+                            !activities.isEmpty
                         {
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 120, height: 120)
-                                    .clipShape(Circle())
+                            OrbitContainer(interests: activities)
+                        }
+                        
+                        // Profile Picture - make it tappable if it's the current user
+                        if isCurrentUserProfile {
+                            Button {
+                                activeSheet = .profile
+                            } label: {
+                                profilePictureView
                                     .overlay(
-                                        Circle().stroke(
-                                            ColorPalette.accent(
-                                                for: colorScheme),
-                                            lineWidth: 2)
-                                    )
-                                    .overlay(
-                                        editMode
-                                            ? editOverlay(for: "profile") : nil
-                                    )
-                            } placeholder: {
-                                Image(systemName: "person.crop.circle.fill")
-                                    .resizable()
-                                    .frame(width: 120, height: 120)
-                                    .foregroundColor(
-                                        ColorPalette.secondaryText(
-                                            for: colorScheme)
+                                        Circle()
+                                            .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2)
                                     )
                             }
                         } else {
-                            Image(systemName: "person.crop.circle.fill")
-                                .resizable()
-                                .frame(width: 120, height: 120)
-                                .foregroundColor(
-                                    ColorPalette.secondaryText(for: colorScheme)
-                                )
+                            profilePictureView
                                 .overlay(
-                                    Circle().stroke(
-                                        ColorPalette.accent(for: colorScheme),
-                                        lineWidth: 2)
+                                    Circle()
+                                        .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2)
                                 )
-                                .overlay(
-                                    editMode ? editOverlay(for: "profile") : nil
-                                )
-                        }
-                        // Orbiting Activities
-                        ZStack {
-                            if let activities = displayUser.featuredInterests,
-                                !activities.isEmpty
-                            {
-                                OrbitContainer(interests: activities)
-                            }
-
-                            if editMode {
-                                VStack {
-                                    Spacer()
-                                    Button(action: {
-                                        editSection("featuredInterests")
-                                    }) {
-                                        Text(
-                                            displayUser.featuredInterests?
-                                                .isEmpty == false
-                                                ? "Edit Featured Interests"
-                                                : "Add Featured Interests"
-                                        )
-                                        .font(.caption)
-                                        .padding(.vertical, 6)
-                                        .padding(.horizontal, 12)
-                                        .background(
-                                            Capsule()
-                                                .fill(
-                                                    ColorPalette.accent(
-                                                        for: colorScheme
-                                                    ).opacity(0.2))
-                                        )
-                                        .foregroundColor(
-                                            ColorPalette.accent(
-                                                for: colorScheme)
-                                        )
-                                        .overlay(
-                                            Capsule()
-                                                .stroke(
-                                                    ColorPalette.accent(
-                                                        for: colorScheme),
-                                                    lineWidth: 1)
-                                        )
-                                    }
-                                    .padding(.bottom, 10)  // Add padding to avoid overlapping with name
-                                }
-                            }
                         }
                     }
-                    .frame(maxWidth: .infinity)
-
-                    // name, age, pronouns, username and bio
-                    VStack(alignment: .center, spacing: 12) {
-                        // name, age, pronouns
-                        VStack(alignment: .center, spacing: 4) {
-                            // Name on its own line
-                            Text(
-                                displayUser.firstName + " "
-                                    + (displayUser.lastName ?? "")
-                            )
-                            .font(.title)
+                    .padding(.top, 50)
+                    
+                    // Edit featured interests button
+                    if isCurrentUserProfile {
+                        Button {
+                            activeSheet = .featuredInterests
+                        } label: {
+                            Text("Edit Featured Interests")
+                                .font(.caption)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(
+                                    Capsule()
+                                        .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                )
+                                .foregroundColor(ColorPalette.accent(for: colorScheme))
+                        }
+                    }
+                    
+                    // Name and basic info
+                    VStack(spacing: 4) {
+                        // Name
+                        Text(displayUser.firstName + " " + (displayUser.lastName ?? ""))
+                            .font(.title2)
                             .fontWeight(.bold)
-                            .foregroundColor(
-                                ColorPalette.text(for: colorScheme)
-                            )
-                            .multilineTextAlignment(.center)
-                            .lineLimit(2)
-
-                            // Age and pronouns on a second line
-                            HStack(spacing: 8) {
-                                // Age display
-                                if displayUser.showAge, !ageText.isEmpty {
-                                    Text(ageText)
-                                        .font(.title3)
-                                        .foregroundColor(
-                                            ColorPalette.secondaryText(
-                                                for: colorScheme))
-                                }
-
-                                // Gender display
-                                if let gender = displayUser.gender,
-                                    displayUser.showGender
-                                {
-                                    // Add a separator dot if age is shown before gender
-                                    if displayUser.showAge, !ageText.isEmpty {
-                                        Text("•")
-                                            .font(.title3)
-                                            .foregroundColor(
-                                                ColorPalette.secondaryText(
-                                                    for: colorScheme))
-                                    }
-
-                                    Text(gender.rawValue.capitalized)
-                                        .font(.title3)
-                                        .foregroundColor(
-                                            ColorPalette.secondaryText(
-                                                for: colorScheme))
-                                }
-
-                                // Add pronouns display
-                                if displayUser.showPronouns,
-                                    !pronounsText.isEmpty
-                                {
-                                    // Add a separator dot if either age or gender is shown before pronouns
-                                    let showAgeBefore =
-                                        displayUser.showAge && !ageText.isEmpty
-                                    let showGenderBefore =
-                                        displayUser.gender != nil
-                                        && displayUser.showGender
-                                        && displayUser.gender != .other
-
-                                    if showAgeBefore || showGenderBefore {
-                                        Text("•")
-                                            .font(.title3)
-                                            .foregroundColor(
-                                                ColorPalette.secondaryText(
-                                                    for: colorScheme))
-                                    }
-
-                                    Text(pronounsText.capitalized)
-                                        .font(.title3)
-                                        .foregroundColor(
-                                            ColorPalette.secondaryText(
-                                                for: colorScheme))
-                                }
+                            .foregroundColor(ColorPalette.text(for: colorScheme))
+                        
+                        // Age and pronouns
+                        HStack(spacing: 8) {
+                            if !ageText.isEmpty && displayUser.showAge {
+                                Text(ageText)
+                                    .font(.subheadline)
+                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                             }
-                            .padding(.top, 2)
-
-                             //Edit button for personal info - only shown in edit mode
-                            if editMode {
-                                Button(action: {
-                                    editSection("personalInfo")
-                                }) {
-                                    Text("Edit Name, Age, Gender, and Pronouns")
-                                        .font(.caption)
-                                        .padding(.vertical, 6)
-                                        .padding(.horizontal, 12)
-                                        .background(
-                                            Capsule()
-                                                .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
-                                        )
-                                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                                        .overlay(
-                                            Capsule()
-                                                .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 1)
-                                        )
-                                }
-                                .padding(.top, 6)
+                            
+                            if !pronounsText.isEmpty && displayUser.showPronouns {
+                                Text("(\(pronounsText))")
+                                    .font(.subheadline)
+                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            }
+                            
+                            if let gender = displayUser.gender, displayUser.showGender {
+                                Text(gender.rawValue)
+                                    .font(.subheadline)
+                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                             }
                         }
-
-                        // Username
-                        Text("@" + displayUser.username)
-                            .font(.subheadline)
-                            .foregroundColor(
-                                ColorPalette.accent(for: colorScheme)
-                            )
-                            .overlay(
-                                editMode ? editOverlay(for: "username") : nil
-                            )
-
-                        Spacer()
-
-                        // Bio
-                        Text(displayUser.bio ?? "")
-                            .font(.caption)
-                            .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme)
-                            )
-                            .overlay(
-                                editMode ? editOverlay(for: "bio") : nil
-                            )
+                        
+                        // Edit button for personal info
+                        if isCurrentUserProfile {
+                            Button {
+                                activeSheet = .personalInfo
+                            } label: {
+                                Text("Edit Personal Info")
+                                    .font(.caption)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Capsule()
+                                            .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                    )
+                                    .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            }
+                            .padding(.top, 4)
+                        }
+                    }
+                    .padding(.top, 16)
+                }
+                .padding(.bottom, 16)
+                
+                // Profile content - different for current user vs other users
+                if isCurrentUserProfile {
+                    // Username Section
+                    TappableSection(title: "Username", action: {
+                        activeSheet = .username
+                    }) {
+                        Text("@\(displayUser.username)")
+                            .font(.headline)
+                            .foregroundColor(ColorPalette.accent(for: colorScheme))
                     }
                     .padding(.horizontal)
+                    
+                    // Bio Section
+                    TappableSection(title: "Bio", action: {
+                        activeSheet = .bio
+                    }) {
+                        if let bio = displayUser.bio, !bio.isEmpty {
+                            Text(bio)
+                                .font(.body)
+                                .foregroundColor(ColorPalette.text(for: colorScheme))
+                                .multilineTextAlignment(.leading)
+                        } else {
+                            Text("Tap to add a bio")
+                                .font(.subheadline)
+                                .italic()
+                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme).opacity(0.7))
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Activities & Hobbies Section
+                    TappableProfileTagSection(
+                        title: "Activities & Hobbies",
+                        items: displayUser.activitiesHobbies ?? [],
+                        onTap: { activeSheet = .interests }
+                    )
+                    .padding(.horizontal)
+                    
+                    // Friend Activities Section
+                    TappableProfileTagSection(
+                        title: "Friend Activities",
+                        items: displayUser.friendActivities ?? [],
+                        onTap: { activeSheet = .friendActivities }
+                    )
+                    .padding(.horizontal)
+                    
+                    // Preferred Meetup Types Section
+                    TappableProfileTagSection(
+                        title: "Preferred Meetups",
+                        items: displayUser.preferredMeetupType ?? [],
+                        onTap: { activeSheet = .meetupTypes }
+                    )
+                    .padding(.horizontal)
+                    
+                    // Conversation Topics Section
+                    TappableProfileTagSection(
+                        title: "Conversation Topics",
+                        items: displayUser.convoTopics ?? [],
+                        onTap: { activeSheet = .convoTopics }
+                    )
+                    .padding(.horizontal)
+                    
+                    // Friendship Values Section
+                    TappableProfileTagSection(
+                        title: "Friendship Values",
+                        items: displayUser.friendshipValues ?? [],
+                        onTap: { activeSheet = .friendshipValues }
+                    )
+                    .padding(.horizontal)
+                    
+                    // Friendship Qualities Section
+                    TappableProfileTagSection(
+                        title: "Friendship Qualities",
+                        items: displayUser.friendshipQualities ?? [],
+                        onTap: { activeSheet = .friendshipQualities }
+                    )
+                    .padding(.horizontal)
+                    
+                    // Intentions Section
+                    TappableProfileTagSection(
+                        title: "Intentions",
+                        items: displayUser.intentions?.map { $0.rawValue } ?? [],
+                        onTap: { activeSheet = .intentions }
+                    )
+                    .padding(.horizontal)
+                } else {
+                    // Non-editable view for other users' profiles
+                    VStack(alignment: .leading, spacing: 24) {
+                        // Basic Info
+                        Text(user.firstName + " " + (user.lastName ?? ""))
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(ColorPalette.text(for: colorScheme))
 
-                    // All interest fields from onboarding
-                    VStack {
+                        // Bio if available
+                        if let bio = user.bio, !bio.isEmpty {
+                            Text(bio)
+                                .font(.body)
+                                .foregroundColor(ColorPalette.text(for: colorScheme))
+                                .padding(.bottom, 8)
+                        }
+
                         // Interests Section
-                        ProfileTagSection(
-                            title: "Interests",
-                            items: displayUser.activitiesHobbies ?? [],
-                            isEditable: editMode,
-                            onEdit: { editSection("interests") },
-                            showWhenEmpty: editMode
-                        )
+                        let interests = user.activitiesHobbies ?? []
+                        if !interests.isEmpty {
+                            ProfileTagSection(
+                                title: "Interests",
+                                items: interests
+                            )
+                        }
 
-                        // Friend Activities Section
-                        ProfileTagSection(
-                            title: "Friend Activities",
-                            items: displayUser.friendActivities ?? [],
-                            isEditable: editMode,
-                            onEdit: { editSection("friendActivities") },
-                            showWhenEmpty: editMode
-                        )
+                        if let activities = user.friendActivities, !activities.isEmpty {
+                            ProfileTagSection(
+                                title: "Friend Activities",
+                                items: activities
+                            )
+                        }
 
-                        // Meetup Types Section
-                        ProfileTagSection(
-                            title: "Preferred Meetups",
-                            items: displayUser.preferredMeetupType ?? [],
-                            isEditable: editMode,
-                            onEdit: { editSection("meetupTypes") },
-                            showWhenEmpty: editMode
-                        )
+                        if let meetups = user.preferredMeetupType, !meetups.isEmpty {
+                            ProfileTagSection(
+                                title: "Preferred Meetups",
+                                items: meetups
+                            )
+                        }
 
-                        // Conversation Topics Section
-                        ProfileTagSection(
-                            title: "Conversation Topics",
-                            items: displayUser.convoTopics ?? [],
-                            isEditable: editMode,
-                            onEdit: { editSection("convoTopics") },
-                            showWhenEmpty: editMode
-                        )
+                        if let topics = user.convoTopics, !topics.isEmpty {
+                            ProfileTagSection(
+                                title: "Conversation Topics",
+                                items: topics
+                            )
+                        }
 
-                        // Friendship Values Section
-                        ProfileTagSection(
-                            title: "Friendship Values",
-                            items: displayUser.friendshipValues ?? [],
-                            isEditable: editMode,
-                            onEdit: { editSection("friendshipValues") },
-                            showWhenEmpty: editMode
-                        )
+                        if let values = user.friendshipValues, !values.isEmpty {
+                            ProfileTagSection(
+                                title: "Friendship Values",
+                                items: values
+                            )
+                        }
 
-                        // Friendship Qualities Section
-                        ProfileTagSection(
-                            title: "Friendship Qualities",
-                            items: displayUser.friendshipQualities ?? [],
-                            isEditable: editMode,
-                            onEdit: { editSection("friendshipQualities") },
-                            showWhenEmpty: editMode
-                        )
+                        if let qualities = user.friendshipQualities, !qualities.isEmpty {
+                            ProfileTagSection(
+                                title: "Friendship Qualities",
+                                items: qualities
+                            )
+                        }
 
-                        // Intentions Section
-                        ProfileTagSection(
-                            title: "Intentions",
-                            items: displayUser.intentions?.map { $0.rawValue }
-                                ?? [],
-                            isEditable: editMode,
-                            onEdit: { editSection("intentions") },
-                            showWhenEmpty: editMode
-                        )
-
-                        // Language Section
-
-                        // Social Links
-
+                        if let intentions = user.intentions, !intentions.isEmpty {
+                            ProfileTagSection(
+                                title: "Intentions",
+                                items: intentions.map { $0.rawValue }
+                            )
+                        }
                     }
                     .padding(.horizontal)
                 }
             }
             .background(ColorPalette.background(for: colorScheme))
-
-            // Floating edit button
-            if isCurrentUserProfile {
-                Button(action: {
-                    withAnimation(.spring()) {
-                        if editMode {
-                            // If exiting edit mode, check if there are changes
-                            if userVM.hasUnsavedChanges {
-                                // Show confirmation dialog
-                                showingUnsavedChangesAlert = true
-                            } else {
-                                // No changes, just exit edit mode
-                                editMode = false
-                            }
-                        } else {
-                            // Enter edit mode and initialize tempUserData if it's nil
-                            if userVM.tempUserData == nil
-                                && userVM.currentUser != nil
-                            {
-                                userVM.tempUserData = userVM.currentUser
-                            }
-                            editMode = true
-                        }
-                    }
-                }) {
-                    if userVM.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .padding(12)
-                    } else {
-                        Image(
-                            systemName: editMode
-                                ? "checkmark.circle.fill" : "pencil.circle"
-                        )
-                        .font(.system(size: 22))
-                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                        .padding(12)
-                    }
-                }
-                .disabled(userVM.isLoading)
-                .padding(.top, 10)
-                .padding(.trailing, 16)
-                .zIndex(1)  // Ensure it's above other content
-                .confirmationDialog(
-                    "Unsaved Changes",
-                    isPresented: $showingUnsavedChangesAlert,
-                    titleVisibility: .visible
-                ) {
-                    Button("Save Changes", role: .none) {
-                        Task {
-                            await userVM.saveProfileChanges()
-                            editMode = false
-                        }
-                    }
-
-                    Button("Discard Changes", role: .destructive) {
-                        userVM.discardProfileChanges()
-                        editMode = false
-                    }
-
-                    Button("Cancel", role: .cancel) {
-                        // Stay in edit mode
-                    }
-                } message: {
-                    Text("Save your changes?")
-                }
-            }
         }
+        .edgesIgnoringSafeArea(.top)
         .sheet(item: $activeSheet) { sheetType in
+            // Sheet presentations
             switch sheetType {
             case .personalInfo:
-                NameAgePronounEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user
-                )
-                .environmentObject(userVM)
+                NameAgePronounEditSheet(user: displayUser)
+                    .environmentObject(userVM)
             case .bio:
-                BioEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user
-                )
-                .environmentObject(userVM)
+                BioEditSheet(user: displayUser)
+                    .environmentObject(userVM)
             case .username:
-                UsernameEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user
-                )
-                .environmentObject(userVM)
+                UsernameEditSheet(user: displayUser)
+                    .environmentObject(userVM)
             case .profile:
-                ProfilePictureEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user
-                )
-                .environmentObject(userVM)
+                ProfilePictureEditSheet(user: displayUser)
+                    .environmentObject(userVM)
             case .interests:
                 InterestsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user,
+                    user: displayUser,
                     section: "activitiesHobbies"
                 )
                 .environmentObject(userVM)
             case .friendActivities:
                 InterestsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user,
+                    user: displayUser,
                     section: "friendActivities"
                 )
                 .environmentObject(userVM)
             case .meetupTypes:
                 InterestsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user,
+                    user: displayUser,
                     section: "preferredMeetupType"
                 )
                 .environmentObject(userVM)
             case .convoTopics:
                 InterestsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user,
+                    user: displayUser,
                     section: "convoTopics"
                 )
                 .environmentObject(userVM)
             case .friendshipValues:
                 InterestsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user,
+                    user: displayUser,
                     section: "friendshipValues"
                 )
                 .environmentObject(userVM)
             case .friendshipQualities:
                 InterestsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user,
+                    user: displayUser,
                     section: "friendshipQualities"
                 )
                 .environmentObject(userVM)
             case .intentions:
-                IntentionsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user
-                )
-                .environmentObject(userVM)
+                IntentionsEditSheet(user: displayUser)
+                    .environmentObject(userVM)
             case .featuredInterests:
-                FeaturedInterestsEditSheet(
-                    user: userVM.tempUserData ?? userVM.currentUser ?? user
-                )
-                .environmentObject(userVM)
+                FeaturedInterestsEditSheet(user: displayUser)
+                    .environmentObject(userVM)
             }
         }
     }
 
-    // Helper function to create edit overlay
-    private func editOverlay(for field: String) -> some View {
-        ZStack(alignment: .topTrailing) {
-            Color.clear
-
-            Button(action: {
-                editSection(field)
-            }) {
-                Image(systemName: "pencil.circle.fill")
-                    .foregroundColor(ColorPalette.accent(for: colorScheme))
-                    .background(
-                        Circle().fill(ColorPalette.background(for: colorScheme))
+    // Profile picture view
+    private var profilePictureView: some View {
+        Group {
+            if let profileUrl = displayUser.profilePictureUrl,
+                let url = URL(string: profileUrl)
+            {
+                AsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 120, height: 120)
+                        .clipShape(Circle())
+                } placeholder: {
+                    Image(systemName: "person.crop.circle.fill")
+                        .resizable()
+                        .frame(width: 120, height: 120)
+                        .foregroundColor(
+                            ColorPalette.secondaryText(
+                                for: colorScheme)
+                        )
+                }
+            } else {
+                Image(systemName: "person.crop.circle.fill")
+                    .resizable()
+                    .frame(width: 120, height: 120)
+                    .foregroundColor(
+                        ColorPalette.secondaryText(for: colorScheme)
                     )
-                    .font(.system(size: 20))
             }
-            // Adjust the offset to ensure it's always visible and accessible
-            .offset(x: field == "personalInfo" ? 10 : 30, y: -5)
-        }
-    }
-
-    // Function to handle editing different sections
-    private func editSection(_ section: String) {
-        switch section {
-        case "personalInfo": activeSheet = .personalInfo
-        case "bio": activeSheet = .bio
-        case "username": activeSheet = .username
-        case "profile": activeSheet = .profile
-        case "interests": activeSheet = .interests
-        case "friendActivities": activeSheet = .friendActivities
-        case "meetupTypes": activeSheet = .meetupTypes
-        case "convoTopics": activeSheet = .convoTopics
-        case "friendshipValues": activeSheet = .friendshipValues
-        case "friendshipQualities": activeSheet = .friendshipQualities
-        case "intentions": activeSheet = .intentions
-        case "featuredInterests": activeSheet = .featuredInterests
-        default: break
         }
     }
 }
@@ -555,7 +422,6 @@ struct ProfileTagSection: View {
     let title: String
     let items: [String]
     var isEditable: Bool = false
-    var onEdit: (() -> Void)? = nil
     var showWhenEmpty: Bool = false
     @Environment(\.colorScheme) var colorScheme
 
@@ -576,7 +442,7 @@ struct ProfileTagSection: View {
 
                     if isEditable {
                         Button(action: {
-                            onEdit?()
+                            // Implement edit action
                         }) {
                             Image(systemName: "pencil")
                                 .foregroundColor(
@@ -626,15 +492,6 @@ struct ProfileTagSection: View {
         .environmentObject(UserViewModel.mock())
     }
 #endif
-
-//#Preview {
-//    PreferenceSection(
-//        title: "hiii",
-//        items: [
-//            "1OldFlowLayout", "2OldFlowLayout", "3", "4", "5", "6", "7", "8",
-//            "9", "10",
-//        ])
-//}
 
 // Define an enum for the different sheet types
 enum ProfileEditType: String, Identifiable {

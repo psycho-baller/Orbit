@@ -17,12 +17,14 @@ struct BioEditSheet: View {
     let user: UserModel
     
     @State private var bio: String
+    @State private var isSaving = false
     
+    // Maximum word count for bio
+    private let maxWordCount = 50
+    
+    // Calculate current word count
     private var wordCount: Int {
-        bio.trimmingCharacters(in: .whitespacesAndNewlines)
-            .components(separatedBy: .whitespacesAndNewlines)
-            .filter { !$0.isEmpty }
-            .count
+        bio.split(separator: " ").count
     }
     
     private var isValidBio: Bool {
@@ -74,12 +76,16 @@ struct BioEditSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         if isValidBio {
-                            // Update the view model with temporary changes
-                            userVM.updateTempUserData(bio: bio)
-                            dismiss()
+                            isSaving = true
+                            
+                            Task {
+                                // Update directly without temp data
+                                await userVM.updateAndSaveUserData(bio: bio.isEmpty ? nil : bio)
+                                dismiss()
+                            }
                         }
                     }
-                    .disabled(!isValidBio)
+                    .disabled(!isValidBio || isSaving)
                 }
             }
         }

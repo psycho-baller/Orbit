@@ -25,6 +25,7 @@ struct NameAgePronounEditSheet: View {
     @FocusState private var isFirstNameFocused: Bool
     @FocusState private var isLastNameFocused: Bool
     @State private var selectedGender: UserGender?
+    @State private var isSaving = false
     
     // For date picker only allow age between 16-100
     private var sixteenYearsAgo: Date {
@@ -286,28 +287,28 @@ struct NameAgePronounEditSheet: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        isSaving = true
+                        
                         // Format date to match the format used in onboarding
                         let formattedDate = DateFormatterUtility.formatDateOnly(dateOfBirth)
                         
-                        // Update the view model with temporary changes
-                        userVM.updateTempUserData(
-                            firstName: firstName,
-                            lastName: lastName.isEmpty ? nil : lastName,
-                            dob: formattedDate,
-                            pronouns: Array(selectedPronouns),
-                            gender: selectedGender
-                        )
-                        
-                        // Update display preferences
-                        userVM.updateDisplayPreferences(
-                            showAge: showAge,
-                            showPronouns: showPronouns,
-                            showGender: showGender
-                        )
-                        
-                        dismiss()
+                        Task {
+                            // Update directly without temp data
+                            await userVM.updateAndSaveUserData(
+                                firstName: firstName,
+                                lastName: lastName.isEmpty ? nil : lastName,
+                                dob: formattedDate,
+                                pronouns: Array(selectedPronouns),
+                                gender: selectedGender,
+                                showAge: showAge,
+                                showPronouns: showPronouns,
+                                showGender: showGender
+                            )
+                            
+                            dismiss()
+                        }
                     }
-                    .disabled(!isFormValid)
+                    .disabled(!isFormValid || isSaving)
                 }
             }
             .background(ColorPalette.background(for: colorScheme))

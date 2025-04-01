@@ -610,6 +610,101 @@ class UserViewModel: NSObject, ObservableObject {
         
         tempUserData = updatedUser
     }
+
+    @MainActor
+    func updateAndSaveUserData(
+        username: String? = nil,
+        firstName: String? = nil,
+        lastName: Optional<String>? = nil,
+        bio: Optional<String>? = nil,
+        dob: String? = nil,
+        activitiesHobbies: [String]? = nil,
+        friendActivities: [String]? = nil,
+        preferredMeetupType: [String]? = nil,
+        convoTopics: [String]? = nil,
+        friendshipValues: [String]? = nil,
+        friendshipQualities: [String]? = nil,
+        pronouns: [UserPronouns]? = nil,
+        intentions: [UserIntention]? = nil,
+        featuredInterests: [String]? = nil,
+        gender: UserGender? = nil,
+        showAge: Bool? = nil,
+        showPronouns: Bool? = nil,
+        showGender: Bool? = nil
+    ) async {
+        guard var updatedUser = currentUser else { return }
+        
+        // Update only the fields that were provided
+        if let username = username {
+            updatedUser.username = username
+        }
+        if let firstName = firstName {
+            updatedUser.firstName = firstName
+        }
+        
+        // Handle optional fields differently
+        if case .some(let value) = lastName {
+            updatedUser.lastName = value
+        }
+        if case .some(let value) = bio {
+            updatedUser.bio = value
+        }
+        
+        if let dob = dob {
+            updatedUser.dob = dob
+        }
+        if let activitiesHobbies = activitiesHobbies {
+            updatedUser.activitiesHobbies = activitiesHobbies
+        }
+        if let friendActivities = friendActivities {
+            updatedUser.friendActivities = friendActivities
+        }
+        if let preferredMeetupType = preferredMeetupType {
+            updatedUser.preferredMeetupType = preferredMeetupType
+        }
+        if let convoTopics = convoTopics {
+            updatedUser.convoTopics = convoTopics
+        }
+        if let friendshipValues = friendshipValues {
+            updatedUser.friendshipValues = friendshipValues
+        }
+        if let friendshipQualities = friendshipQualities {
+            updatedUser.friendshipQualities = friendshipQualities
+        }
+        if let pronouns = pronouns {
+            updatedUser.pronouns = pronouns
+        }
+        if let intentions = intentions {
+            updatedUser.intentions = intentions
+        }
+        if let featuredInterests = featuredInterests {
+            updatedUser.featuredInterests = featuredInterests
+        }
+        if let gender = gender {
+            updatedUser.gender = gender
+        }
+        if let showAge = showAge {
+            updatedUser.showAge = showAge
+        }
+        if let showPronouns = showPronouns {
+            updatedUser.showPronouns = showPronouns
+        }
+        if let showGender = showGender {
+            updatedUser.showGender = showGender
+        }
+        
+        isLoading = true
+        defer { isLoading = false }
+        
+        // Save to database
+        await updateUser(id: updatedUser.accountId, updatedUser: updatedUser)
+        
+        // Update the current user for UI refresh
+        self.currentUser = updatedUser
+        
+        // Notify observers that data has changed
+        objectWillChange.send()
+    }
 }
 
 // MARK: - Mock for SwiftUI Preview
