@@ -222,7 +222,7 @@ struct HomeView: View {
             ScrollView {
                 LazyVStack(spacing: 16) {
                     ForEach(meetupRequestVM.meetupRequests) { meetupRequest in
-                        RedesignedMeetupRequestCard(meetupRequest: meetupRequest)
+                        MeetupRequestCard(meetupRequest: meetupRequest)
                     }
                 }
                 .padding(.vertical)
