@@ -103,117 +103,120 @@ struct InterestsEditSheet: View {
         }
     }
     
+    // Helper function to check if an item is selected
+    private func isSelected(_ item: String) -> Bool {
+        if isIntentionsSection {
+            if let intention = UserIntention(rawValue: item) {
+                return selectedIntentions.contains(intention)
+            }
+            return false
+        } else {
+            return selectedItems.contains(item)
+        }
+    }
+    
     var body: some View {
         NavigationView {
-            VStack(spacing: 16) {
-                Text(promptText)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                    .padding(.horizontal)
-                    .padding(.top)
+            ZStack {
+                ColorPalette.background(for: colorScheme)
+                    .ignoresSafeArea()
                 
-                ScrollView {
-                    if isIntentionsSection {
-                        // Intentions flow layout
-                        FlowLayout(items: UserIntention.allCases.map { $0.rawValue }) { item in
-                            Button(action: {
-                                if let intention = UserIntention(rawValue: item),
-                                   let index = selectedIntentions.firstIndex(of: intention) {
-                                    selectedIntentions.remove(at: index)
-                                } else if let intention = UserIntention(rawValue: item) {
-                                    selectedIntentions.append(intention)
-                                }
-                            }) {
-                                Text(item.capitalized)
-                                    .font(.subheadline)
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 12)
-                                    .background(
-                                        Capsule()
-                                            .fill(selectedIntentions.contains(where: { $0.rawValue == item }) ?
-                                                ColorPalette.lightGray(for: colorScheme) :
-                                                ColorPalette.accent(for: colorScheme).opacity(0.2))
-                                    )
-                                    .foregroundColor(selectedIntentions.contains(where: { $0.rawValue == item }) ?
-                                                   ColorPalette.text(for: colorScheme) :
-                                                   ColorPalette.accent(for: colorScheme))
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
+                VStack(spacing: 16) {
+                    Text(promptText)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                         .padding(.horizontal)
-                    } else {
-                        // Regular interests flow layout
-                        FlowLayout(items: availableItems) { item in
+                        .padding(.top)
+                    
+                    ScrollView {
+                        // Use a single FlowLayout approach for both types
+                        FlowLayout(items: isIntentionsSection ? 
+                                  UserIntention.allCases.map { $0.rawValue } : 
+                                  availableItems) { item in
                             Button(action: {
-                                if selectedItems.contains(item) {
-                                    selectedItems.removeAll { $0 == item }
+                                if isIntentionsSection {
+                                    if let intention = UserIntention(rawValue: item) {
+                                        if let index = selectedIntentions.firstIndex(of: intention) {
+                                            selectedIntentions.remove(at: index)
+                                        } else {
+                                            selectedIntentions.append(intention)
+                                        }
+                                    }
                                 } else {
-                                    selectedItems.append(item)
+                                    if selectedItems.contains(item) {
+                                        selectedItems.removeAll { $0 == item }
+                                    } else {
+                                        selectedItems.append(item)
+                                    }
                                 }
                             }) {
-                                Text(item)
+                                Text(isIntentionsSection ? item.capitalized : item)
                                     .font(.subheadline)
                                     .padding(.vertical, 8)
                                     .padding(.horizontal, 12)
                                     .background(
                                         Capsule()
-                                            .fill(selectedItems.contains(item) ?
-                                                ColorPalette.lightGray(for: colorScheme) :
-                                                ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                            .fill(isSelected(item) ?
+                                                ColorPalette.accent(for: colorScheme) :
+                                                ColorPalette.lightGray(for: colorScheme).opacity(0.5))
                                     )
-                                    .foregroundColor(selectedItems.contains(item) ?
-                                                   ColorPalette.text(for: colorScheme) :
-                                                   ColorPalette.accent(for: colorScheme))
+                                    .foregroundColor(isSelected(item) ?
+                                                   .white :
+                                                   ColorPalette.text(for: colorScheme))
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
                         .padding(.horizontal)
                     }
+                    
+                    Spacer()
                 }
-                
-                Spacer()
-            }
-            .navigationTitle(navTitle)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        isSaving = true
-                        
-                        Task {
-                            if isIntentionsSection {
-                                await userVM.updateAndSaveUserData(intentions: selectedIntentions)
-                            } else {
-                                // Update directly based on section
-                                switch section {
-                                case "activitiesHobbies":
-                                    await userVM.updateAndSaveUserData(activitiesHobbies: selectedItems)
-                                case "friendActivities":
-                                    await userVM.updateAndSaveUserData(friendActivities: selectedItems)
-                                case "preferredMeetupType":
-                                    await userVM.updateAndSaveUserData(preferredMeetupType: selectedItems)
-                                case "convoTopics":
-                                    await userVM.updateAndSaveUserData(convoTopics: selectedItems)
-                                case "friendshipValues":
-                                    await userVM.updateAndSaveUserData(friendshipValues: selectedItems)
-                                case "friendshipQualities":
-                                    await userVM.updateAndSaveUserData(friendshipQualities: selectedItems)
-                                default:
-                                    break
-                                }
-                            }
-                            
+                .navigationTitle(navTitle)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(action: {
                             dismiss()
+                        }) {
+                            Image(systemName: "xmark")
+                                .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                         }
                     }
-                    .disabled(isSaving)
+                    
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            isSaving = true
+                            
+                            Task {
+                                if isIntentionsSection {
+                                    await userVM.updateAndSaveUserData(intentions: selectedIntentions)
+                                } else {
+                                    // Update directly based on section
+                                    switch section {
+                                    case "activitiesHobbies":
+                                        await userVM.updateAndSaveUserData(activitiesHobbies: selectedItems)
+                                    case "friendActivities":
+                                        await userVM.updateAndSaveUserData(friendActivities: selectedItems)
+                                    case "preferredMeetupType":
+                                        await userVM.updateAndSaveUserData(preferredMeetupType: selectedItems)
+                                    case "convoTopics":
+                                        await userVM.updateAndSaveUserData(convoTopics: selectedItems)
+                                    case "friendshipValues":
+                                        await userVM.updateAndSaveUserData(friendshipValues: selectedItems)
+                                    case "friendshipQualities":
+                                        await userVM.updateAndSaveUserData(friendshipQualities: selectedItems)
+                                    default:
+                                        break
+                                    }
+                                }
+                                
+                                dismiss()
+                            }
+                        }
+                        .disabled(isSaving)
+                        .foregroundColor(ColorPalette.accent(for: colorScheme))
+                    }
                 }
             }
         }
