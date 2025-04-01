@@ -83,25 +83,6 @@ struct SuccessScreen: View {
             }
         }
     }
-    //    var myPendingMeetups: [MeetupRequestDocument] {
-    //        meetupRequestVM.meetupRequests.compactMap { request in
-    //            // Ensure the request isn't filled.
-    //            guard request.data.status != .filled,
-    //                  let chats = request.data.chats,
-    //                  let matchingChat = chats.first(where: { $0.createdByUser?.id == userId })
-    //            else {
-    //                return nil
-    //            }
-    //            request.data.chats = [matchingChat]
-    //            return request
-    //            // Create a modified copy of the request's data with chats filtered to only include the matching chat.
-    ////            var newData = request.data
-    ////            newData.chats = [matchingChat]
-    ////            // Now create a new MeetupRequestDocument with the modified data.
-    ////            // Here we use a mock helper (or a custom initializer) to create a new document.
-    ////            return MeetupRequestDocument.mock(data: newData)
-    //        }
-    //    }
 
     var body: some View {
         ScrollView {
