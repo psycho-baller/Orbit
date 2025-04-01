@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Loaf
 
 // Generic interests edit sheet
 struct InterestsEditSheet: View {
@@ -15,6 +16,7 @@ struct InterestsEditSheet: View {
     
     let user: UserModel
     let section: String
+    var onSuccess: (() -> Void)?
     
     @State private var selectedItems: [String] = []
     @State private var availableItems: [String] = []
@@ -66,9 +68,10 @@ struct InterestsEditSheet: View {
         }
     }
     
-    init(user: UserModel, section: String) {
+    init(user: UserModel, section: String, onSuccess: (() -> Void)? = nil) {
         self.user = user
         self.section = section
+        self.onSuccess = onSuccess
         
         // Initialize selected items based on section
         if section == "intentions" {
@@ -210,6 +213,9 @@ struct InterestsEditSheet: View {
                                         break
                                     }
                                 }
+                                
+                                // Call the success callback
+                                onSuccess?()
                                 
                                 dismiss()
                             }

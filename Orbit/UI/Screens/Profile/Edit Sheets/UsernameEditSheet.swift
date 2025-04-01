@@ -10,6 +10,7 @@
 
 import SwiftUI
 import Combine
+import Loaf
 
 struct UsernameEditSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -17,6 +18,7 @@ struct UsernameEditSheet: View {
     @EnvironmentObject var userVM: UserViewModel
     
     let user: UserModel
+    var onSuccess: (() -> Void)?
     
     @State private var username: String
     @State private var isCheckingUsername = false
@@ -25,8 +27,9 @@ struct UsernameEditSheet: View {
     
     @State private var debounceCancellable: AnyCancellable?
     
-    init(user: UserModel) {
+    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
         self.user = user
+        self.onSuccess = onSuccess
         _username = State(initialValue: user.username)
     }
     
@@ -112,6 +115,10 @@ struct UsernameEditSheet: View {
                                 Task {
                                     // Update directly without temp data
                                     await userVM.updateAndSaveUserData(username: username)
+                                    
+                                    // Call the success callback
+                                    onSuccess?()
+                                    
                                     dismiss()
                                 }
                             }

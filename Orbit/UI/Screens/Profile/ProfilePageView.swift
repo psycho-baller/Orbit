@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import Loaf
 
 struct ProfilePageView: View {
     let user: UserModel
     @Environment(\.colorScheme) var colorScheme
     @State private var orbitAngle: Double = 0
     @State private var activeSheet: ProfileEditType?
+    @State private var lastUpdatedSection: String?
 
     // Determine if this is the current user's profile
     var isCurrentUserProfile: Bool
@@ -51,71 +53,106 @@ struct ProfilePageView: View {
             // Sheet presentations
             switch sheetType {
             case .personalInfo:
-                NameAgePronounEditSheet(user: displayUser)
+                NameAgePronounEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Personal info" })
                     .environmentObject(userVM)
             case .bio:
-                BioEditSheet(user: displayUser)
+                BioEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Bio" })
                     .environmentObject(userVM)
                     .presentationDetents([.fraction(0.6), .large])
             case .username:
-                UsernameEditSheet(user: displayUser)
+                UsernameEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Username" })
                     .environmentObject(userVM)
                     .presentationDetents([.fraction(0.6), .large])
             case .profile:
-                ProfilePictureEditSheet(user: displayUser)
+                ProfilePictureEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Profile picture" })
                     .environmentObject(userVM)
             case .interests:
                 InterestsEditSheet(
                     user: displayUser,
-                    section: "activitiesHobbies"
+                    section: "activitiesHobbies",
+                    onSuccess: { lastUpdatedSection = "Activities and hobbies" }
                 )
                 .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .friendActivities:
                 InterestsEditSheet(
                     user: displayUser,
-                    section: "friendActivities"
+                    section: "friendActivities",
+                    onSuccess: { lastUpdatedSection = "Friend activities" }
                 )
                 .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .meetupTypes:
                 InterestsEditSheet(
                     user: displayUser,
-                    section: "preferredMeetupType"
+                    section: "preferredMeetupType",
+                    onSuccess: { lastUpdatedSection = "Meetup types" }
                 )
                 .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .convoTopics:
                 InterestsEditSheet(
                     user: displayUser,
-                    section: "convoTopics"
+                    section: "convoTopics",
+                    onSuccess: { lastUpdatedSection = "Conversation topics" }
                 )
                 .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .friendshipValues:
                 InterestsEditSheet(
                     user: displayUser,
-                    section: "friendshipValues"
+                    section: "friendshipValues",
+                    onSuccess: { lastUpdatedSection = "Friendship values" }
                 )
                 .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .friendshipQualities:
                 InterestsEditSheet(
                     user: displayUser,
-                    section: "friendshipQualities"
+                    section: "friendshipQualities",
+                    onSuccess: { lastUpdatedSection = "Friendship qualities" }
                 )
                 .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .intentions:
                 InterestsEditSheet(
                     user: displayUser,
-                    section: "intentions"
+                    section: "intentions",
+                    onSuccess: { lastUpdatedSection = "Intentions" }
                 )
                 .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .featuredInterests:
-                FeaturedInterestsEditSheet(user: displayUser)
-                    .environmentObject(userVM)
+                FeaturedInterestsEditSheet(
+                    user: displayUser,
+                    onSuccess: { lastUpdatedSection = "Featured interests" }
+                )
+                .environmentObject(userVM)
+            }
+        }
+        .onChange(of: activeSheet) { newValue in
+            if newValue == nil && lastUpdatedSection != nil {
+                showSuccessToast(lastUpdatedSection!)
+                lastUpdatedSection = nil
+            }
+        }
+    }
+    
+    // Function to show success toast
+    private func showSuccessToast(_ section: String) {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .compactMap({ $0 as? UIWindowScene })
+                .first {
+                
+                // Get the key window from the active scene
+                if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }),
+                   let rootViewController = keyWindow.rootViewController {
+                    
+                    // Show toast on the root view controller
+                    Loaf("\(section) updated successfully", state: .success, location: .top, sender: rootViewController).show()
+                }
             }
         }
     }

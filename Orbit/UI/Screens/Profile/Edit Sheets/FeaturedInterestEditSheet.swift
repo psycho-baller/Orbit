@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Loaf
 
 struct FeaturedInterestsEditSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -14,14 +15,16 @@ struct FeaturedInterestsEditSheet: View {
     
     let user: UserModel
     let maxFeaturedInterests = 6
+    var onSuccess: (() -> Void)?
     
     @State private var selectedInterests: [String] = []
     @State private var availableInterests: [String] = []
     @State private var showAlert = false
     @State private var isSaving = false
     
-    init(user: UserModel) {
+    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
         self.user = user
+        self.onSuccess = onSuccess
         
         // Initialize selected interests
         _selectedInterests = State(initialValue: user.featuredInterests ?? [])
@@ -165,6 +168,10 @@ struct FeaturedInterestsEditSheet: View {
                         
                         Task {
                             await userVM.updateAndSaveUserData(featuredInterests: selectedInterests)
+                            
+                            // Call the success callback
+                            onSuccess?()
+                            
                             dismiss()
                         }
                     }

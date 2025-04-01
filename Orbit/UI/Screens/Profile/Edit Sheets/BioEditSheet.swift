@@ -5,9 +5,9 @@
 //  Created by Nathaniel D'Orazio on 2025-03-29.
 //
 
-#warning ("TODO: Make it look nicer, Match the onboarding")
 
 import SwiftUI
+import Loaf
 
 struct BioEditSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -15,6 +15,7 @@ struct BioEditSheet: View {
     @EnvironmentObject var userVM: UserViewModel
     
     let user: UserModel
+    var onSuccess: (() -> Void)?
     
     @State private var bio: String
     @State private var isSaving = false
@@ -31,8 +32,9 @@ struct BioEditSheet: View {
         wordCount <= maxWordCount
     }
     
-    init(user: UserModel) {
+    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
         self.user = user
+        self.onSuccess = onSuccess
         _bio = State(initialValue: user.bio ?? "")
     }
     
@@ -91,6 +93,10 @@ struct BioEditSheet: View {
                             
                             Task {
                                 await userVM.updateAndSaveUserData(bio: bio.isEmpty ? nil : bio)
+                                
+                                // Call the success callback
+                                onSuccess?()
+                                
                                 dismiss()
                             }
                         }

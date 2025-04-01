@@ -118,6 +118,7 @@
 		614B94262D9B843C00F17CA6 /* TappableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614B94252D9B843000F17CA6 /* TappableSection.swift */; };
 		6190F7192CF508BF00DAEBDE /* PendingRequestsDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F7182CF508B900DAEBDE /* PendingRequestsDropdown.swift */; };
 		6190F71B2CF5644A00DAEBDE /* PendingUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6190F71A2CF5644200DAEBDE /* PendingUserCardView.swift */; };
+		61927B522D9CA899008798F1 /* Loaf in Frameworks */ = {isa = PBXBuildFile; productRef = 61927B512D9CA899008798F1 /* Loaf */; };
 		619992A12D13768D00440533 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619992A02D13768300440533 /* UserProfileView.swift */; };
 		61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 61E137542CC4769000E7BA6C /* BAHNSCHRIFT.TTF */; };
 		61E137632CC4B02C00E7BA6C /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E137622CC4B02C00E7BA6C /* ImagePicker.swift */; };
@@ -285,6 +286,7 @@
 			files = (
 				259CB2292CC02F2500C9F285 /* EnvironmentOverrides in Frameworks */,
 				259CB2262CC02F0D00C9F285 /* Appwrite in Frameworks */,
+				61927B522D9CA899008798F1 /* Loaf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +476,7 @@
 				25A399542CBF30C500D6BCE8 /* Orbit */,
 				25A399672CBF30C700D6BCE8 /* OrbitTests */,
 				25A399712CBF30C700D6BCE8 /* OrbitUITests */,
+				61927B502D9CA899008798F1 /* Frameworks */,
 				25A399532CBF30C500D6BCE8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -558,6 +561,13 @@
 			path = fonts;
 			sourceTree = "<group>";
 		};
+		61927B502D9CA899008798F1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -586,6 +596,7 @@
 			packageProductDependencies = (
 				259CB2252CC02F0D00C9F285 /* Appwrite */,
 				259CB2282CC02F2500C9F285 /* EnvironmentOverrides */,
+				61927B512D9CA899008798F1 /* Loaf */,
 			);
 			productName = Orbit;
 			productReference = 25A399522CBF30C500D6BCE8 /* Orbit.app */;
@@ -667,6 +678,7 @@
 			packageReferences = (
 				259CB2242CC02F0D00C9F285 /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
 				259CB2272CC02F2500C9F285 /* XCRemoteSwiftPackageReference "EnvironmentOverrides" */,
+				61927B4F2D9CA7BA008798F1 /* XCRemoteSwiftPackageReference "Loaf" */,
 			);
 			productRefGroup = 25A399532CBF30C500D6BCE8 /* Products */;
 			projectDirPath = "";
@@ -1198,6 +1210,14 @@
 				minimumVersion = 0.0.4;
 			};
 		};
+		61927B4F2D9CA7BA008798F1 /* XCRemoteSwiftPackageReference "Loaf" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/schmidyy/Loaf";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1210,6 +1230,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 259CB2272CC02F2500C9F285 /* XCRemoteSwiftPackageReference "EnvironmentOverrides" */;
 			productName = EnvironmentOverrides;
+		};
+		61927B512D9CA899008798F1 /* Loaf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61927B4F2D9CA7BA008798F1 /* XCRemoteSwiftPackageReference "Loaf" */;
+			productName = Loaf;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
