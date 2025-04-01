@@ -380,9 +380,11 @@ struct ProfilePageView: View {
             case .bio:
                 BioEditSheet(user: displayUser)
                     .environmentObject(userVM)
+                    .presentationDetents([.medium, .large])
             case .username:
                 UsernameEditSheet(user: displayUser)
                     .environmentObject(userVM)
+                    .presentationDetents([.medium, .large])
             case .profile:
                 ProfilePictureEditSheet(user: displayUser)
                     .environmentObject(userVM)
@@ -392,39 +394,46 @@ struct ProfilePageView: View {
                     section: "activitiesHobbies"
                 )
                 .environmentObject(userVM)
+                .presentationDetents([.medium, .large])
             case .friendActivities:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "friendActivities"
                 )
                 .environmentObject(userVM)
+                .presentationDetents([.medium, .large])
             case .meetupTypes:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "preferredMeetupType"
                 )
                 .environmentObject(userVM)
+                .presentationDetents([.medium, .large])
             case .convoTopics:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "convoTopics"
                 )
                 .environmentObject(userVM)
+                .presentationDetents([.fraction(0.6), .large]) //slightly higher than the rest to fit all the options in the half page version
             case .friendshipValues:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "friendshipValues"
                 )
                 .environmentObject(userVM)
+                .presentationDetents([.medium, .large])
             case .friendshipQualities:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "friendshipQualities"
                 )
                 .environmentObject(userVM)
+                .presentationDetents([.medium, .large])
             case .intentions:
                 IntentionsEditSheet(user: displayUser)
                     .environmentObject(userVM)
+                    .presentationDetents([.medium, .large])
             case .featuredInterests:
                 FeaturedInterestsEditSheet(user: displayUser)
                     .environmentObject(userVM)
