@@ -426,12 +426,6 @@ struct ChatDetailView: View {
     }
 }
 
-// Custom Dark Indigo Color
-extension Color {
-    static let darkIndigo = Color(
-        red: 13 / 255, green: 16 / 255, blue: 48 / 255)
-}
-
 #if DEBUG
     #Preview {
         @Previewable @Environment(\.colorScheme) var colorScheme
