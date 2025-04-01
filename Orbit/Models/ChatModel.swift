@@ -52,9 +52,20 @@ struct ChatModel: Codable, Equatable, Hashable, Identifiable,
             id: UUID().uuidString,
             createdByUser: .mock2(),
             otherUser: .mock(),
-            meetupRequest: .mock(),
+//            meetupRequest: .mock(),
             messages: [
                 .mock(), .mockOtherUserSent(), .mock2(), .mockOtherUserSent(),
+            ]
+        )
+    }
+    
+    static func mock2() -> Self {
+        return .init(
+            id: UUID().uuidString,
+            otherUser: .mock(),
+//            meetupRequest: .mock(),
+            messages: [
+                .mockOtherUserSent(), .mock(), .mockOtherUserSent(), .mock2(),
             ]
         )
     }

@@ -46,6 +46,8 @@ struct MeetupInfoSection: View {
             MeetupPostInfoRow(
                 icon: meetupRequest.data.intention.icon,
                 value: meetupRequest.data.intention.rawValue.capitalized)
+            
+            MeetupPostInfoRow(icon: meetupRequest.data.genderPreference.icon, value: meetupRequest.data.genderPreference.rawValue.capitalized)
         }
 
         .padding()

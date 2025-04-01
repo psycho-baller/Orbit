@@ -37,8 +37,6 @@ class MeetupRequestViewModel: ObservableObject {
                 // try await Task.detached(priority: .userInitiated) {
                 try await self.meetupService.listMeetups(queries: nil)
             // }.value
-            print("meetups: \(meetups)")
-
             self.meetupRequests = meetups
 
         } catch {
@@ -67,15 +65,19 @@ class MeetupRequestViewModel: ObservableObject {
     // This assumes that your UserModel now includes a `gender: GenderPreference` property.
     func filteredMeetupRequests(for user: UserModel?) -> [MeetupRequestDocument]
     {
+        let meetupRequestsWithoutMine = self.meetupRequests.filter {
+            $0.data.createdByUser != user
+        }
+
         if let userGender = user?.gender {
-            return meetupRequests.filter { meetup in
+            return meetupRequestsWithoutMine.filter { meetup in
                 // If the meetup is open to any gender, include it.
                 return doesUserGenderMatchPreference(
                     userGender: userGender,
                     preference: meetup.data.genderPreference)
             }
         } else {
-            return meetupRequests
+            return meetupRequestsWithoutMine
         }
     }
 
@@ -207,7 +209,13 @@ class MeetupRequestViewModel: ObservableObject {
 #if DEBUG
     #Preview {
         let vm = MeetupRequestViewModel()
-        vm.meetupRequests = [MeetupRequestDocument.mock()]
+        vm.meetupRequests = [
+            .mock(), .mock(data: .mock2()), .mock(data: .mock3()),
+            .mock(), .mock(data: .mock2()), .mock(data: .mock3()),
+        ]
         return MyOrbitScreen()
+            .environmentObject(UserViewModel.mock())
+            .environmentObject(vm)
+
     }
 #endif

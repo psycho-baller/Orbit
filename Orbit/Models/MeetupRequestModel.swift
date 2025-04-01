@@ -112,6 +112,48 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
         )
     }
 
+    static func mock2() -> Self {
+        let startTime = Date().addingTimeInterval(10_800)  // +3 hours
+        let endTime = startTime.addingTimeInterval(5400)  // +1.5 hours
+        return .init(
+            id: "abc1234567890",
+            title: "What's your biggest goal this semester?",
+            startTime: DateFormatterUtility.formatISO8601(startTime),
+            endTime: DateFormatterUtility.formatISO8601(endTime),
+            areaId: 521_659_158,
+            description:
+                "Trying to stay focused and build better study habits—curious what works for others.",
+            status: .active,
+            intention: .friendship,
+            createdByUser: .mock(),
+            chats: [
+                .mock()
+            ],
+            type: .coffee,
+            genderPreference: .any
+        )
+    }
+
+    static func mock3() -> Self {
+        let startTime = Date().addingTimeInterval(14_400)  // +4 hours
+        let endTime = startTime.addingTimeInterval(3600)  // +1 hour
+        return .init(
+            id: "xyz9876543210",
+            title: "Anyone else looking to meet someone new this weekend?",
+            startTime: DateFormatterUtility.formatISO8601(startTime),
+            endTime: DateFormatterUtility.formatISO8601(endTime),
+            areaId: 521_659_159,
+            description:
+                "Hoping to meet someone who’s also into outdoor activities or trying new things around campus.",
+            status: .filled,
+            intention: .relationship,
+            createdByUser: .mock2(),
+            chats: [],
+            type: .outdoorActivity,
+            genderPreference: .women
+        )
+    }
+
     func toJson(excludeId: Bool = false) -> [String: Any] {
         var json =
             try! JSONSerialization.jsonObject(
@@ -165,6 +207,9 @@ enum GenderPreference: String, CaseIterable, Identifiable, Codable {
     case nonBinary = "Non-binary"
 
     var id: String { self.rawValue }
+    var icon: String {
+        "figure.stand.dress.line.vertical.figure"
+    }
 }
 
 enum MeetupType: String, Codable {
