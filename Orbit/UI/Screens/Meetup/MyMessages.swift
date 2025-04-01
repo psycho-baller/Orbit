@@ -7,26 +7,20 @@
 
 import SwiftUI
 
-#warning(
-    "Basic Outline to build off using hard coded data, Change to look like design, use real data, and navigate"
-)
-
 struct MyMessages: View {
     @EnvironmentObject var chatRequestVM: ChatRequestViewModel
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
+    @State private var chatRequests: [ChatRequestDocument] = []
 
     var body: some View {
         NavigationStack {
             ZStack {
-                ColorPalette.background(for: colorScheme)
-                    .ignoresSafeArea()
+                Color.blue.opacity(0.9).ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: 16) {
-                        // Using MockData for preview
-                        #warning("TODO - Use real data")
-                        ForEach(MockData.chatRequests) { request in
+                        ForEach(chatRequests, id: \.id) { request in
                             MessageRequestRow(request: request)
                                 .padding(.horizontal)
                         }
@@ -36,91 +30,71 @@ struct MyMessages: View {
             }
             .navigationTitle("My Messages")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                Task {
+                    await chatRequestVM.fetchChatRequests()
+                }
+
+            }
         }
     }
-}
 
-struct MessageRequestRow: View {
-    let request: ChatRequestDocument
-    @EnvironmentObject var userVM: UserViewModel
-    @Environment(\.colorScheme) var colorScheme
+    struct MessageRequestRow: View {
+        let request: ChatRequestDocument
+        @EnvironmentObject var userVM: UserViewModel
+        @Environment(\.colorScheme) var colorScheme
 
-    var body: some View {
-        HStack(spacing: 16) {
-            if let user = userVM.users.first(where: {
-                $0.accountId == request.data.senderAccountId
-            }),
-                let profileUrl = user.profilePictureUrl,
-                let url = URL(string: profileUrl)
-            {
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 60, height: 60)
-                        .clipShape(Circle())
-                } placeholder: {
+        var body: some View {
+            HStack(spacing: 16) {
+                if let user = userVM.allUsers.first(where: {
+                    $0.accountId == request.data.senderAccountId
+                }),
+                    let profileUrl = user.profilePictureUrl,
+                    let url = URL(string: profileUrl)
+                {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 60, height: 60)
+                            .clipShape(Circle())
+                    } placeholder: {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(.white)
+                    }
+                } else {
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 60, height: 60)
-                        .foregroundColor(
-                            ColorPalette.secondaryText(for: colorScheme))
+                        .foregroundColor(.white)
                 }
-            } else {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 60, height: 60)
-                    .foregroundColor(
-                        ColorPalette.secondaryText(for: colorScheme))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(userVM.getUserName(from: request.data.senderAccountId))
+                        .font(.headline)
+                        .foregroundColor(.white)
+
+                    Text(request.data.message)
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.8))
+                }
+                Spacer()
             }
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(request.data.message)
-                    .font(.headline)
-                    .foregroundColor(ColorPalette.text(for: colorScheme))
-
-                Text("What's your favorite food place in MacHall?")
-                    .font(.subheadline)
-                    .foregroundColor(
-                        ColorPalette.secondaryText(for: colorScheme))
-            }
-
-            Spacer()
-
+            .padding()
+            .background(Color.black.opacity(0.2))
+            .cornerRadius(12)
         }
-        .padding()
-        .background(ColorPalette.main(for: colorScheme))
-        .cornerRadius(12)
     }
 }
-
-// Mock Data
-struct MockData {
-    static let chatRequests: [ChatRequestDocument] = [
-        .mock(
-            data: ChatRequestModel(
-                senderAccountId: "user1",
-                receiverAccountId: "currentUser",
-                message: "Hey! I would love to meet with you!",
-                status: .pending
-            )),
-        .mock(
-            data: ChatRequestModel(
-                senderAccountId: "user2",
-                receiverAccountId: "currentUser",
-                message: "What's your favorite food place in MacHall?",
-                status: .pending
-            )),
-    ]
-}
-
 #if DEBUG
     #Preview {
-        MyMessages()
+        let sender: UserModel = .mock()
+        let receiver: UserModel = .mock2()
+        ChatRequestView(sender: sender, receiver: receiver)
             .environmentObject(ChatRequestViewModel.mock())
-            .environmentObject(UserViewModel.mock())
-            .environmentObject(AppState())
     }
 #endif

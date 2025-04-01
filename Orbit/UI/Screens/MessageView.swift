@@ -144,36 +144,6 @@ struct MessageView: View {
                         ColorPalette.background(for: colorScheme)
                             .ignoresSafeArea(.all))
 
-                    if let currentLocation = userVM.currentLocation {
-                        LocationChoosingView(
-                            initialCoordinate: currentLocation,
-                            pinLocation: Binding(
-                                get: {
-                                    msgVM.currentLocation ?? currentLocation
-                                },
-                                set: { newCoordinate in
-                                    msgVM.currentLocation = newCoordinate
-                                    //msgVM.currentLocation = $0
-
-                                }
-                            ),
-                            onShareLocation: { selectedLocation in
-                                isLocationChoicePresented = false
-                                newMessageText = msgVM.encodeCoordinate(
-                                    selectedLocation)
-                                sendMessage()
-                                print(
-                                    "The new coordinate is \(selectedLocation)")
-                            }
-                        )
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(
-                            Color(ColorPalette.background(for: colorScheme))
-                                .ignoresSafeArea(.all))
-                    } else {
-                        Text("Cannot determine location")
-                    }
-
                 }
 
             }
@@ -182,11 +152,6 @@ struct MessageView: View {
         .background(
             Color(ColorPalette.background(for: colorScheme)).ignoresSafeArea()
         )
-        .onChange(of: isLocationChoicePresented) { wasPresented, isPresented in
-            if let currentLocation = userVM.currentLocation {
-                msgVM.currentLocation = currentLocation
-            }
-        }  //ensures that when location choosing view is opened, the sharing pin begins at current user location
 
     }
     private func sendMessage() {

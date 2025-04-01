@@ -71,20 +71,20 @@ struct ChatListView: View {
                             .scrollContentBackground(.hidden)
                         }
                     }
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Text("Chats")
-                                .largeBoldFont()
-                                .foregroundColor(
-                                    ColorPalette.text(for: colorScheme))
-                        }
-                    }
                 }
                 .navigationDestination(for: ChatDocument.self) { chat in
                     ChatDetailView(
                         chat: chat,
                         user: currentUser
                     )
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Chats")
+                        .largeBoldFont()
+                        .foregroundColor(
+                            ColorPalette.text(for: colorScheme))
                 }
             }
             .onAppear {
@@ -96,15 +96,81 @@ struct ChatListView: View {
             // If no user is available, show an error screen.
             ErrorScreen()
         }
+        //        .padding()
+        //            .background(Color.white.opacity(0.05))  // ✅ Light overlay for message bubble
+        //            .cornerRadius(12)
+    }
+
+    func formatTime(_ timestamp: String) -> String {
+        guard let date = DateFormatterUtility.parseISO8601(timestamp) else {
+            return ""
+        }
+        return DateFormatterUtility.dateOnlyFormatter.string(from: date)
+    }
+
+    func sendAutoResponse(_ chat: ChatDocument) {
+        print("Auto-response sent to \(chat.id)")
+        // Implement actual message sending logic here
+    }
+}
+
+struct ChatListRow: View {
+    let chat: ChatDocument
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 12) {
+                // Profile Image
+                Image("profile_pic")  // Replace with actual image logic
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle().stroke(Color.white.opacity(0.3), lineWidth: 1))
+
+                // Chat Info
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("No messages yet")
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.8))
+                        .lineLimit(1)
+                }
+
+                Spacer()
+            }
+
+            Button(action: {
+            }) {
+                HStack {
+                    Image(systemName: "cup.and.saucer.fill")
+                        .foregroundColor(.white)
+
+                    Text("What's your favorite food place in MacHall?")
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")  // ✅ Arrow icon for interaction
+                        .foregroundColor(.white)
+                }
+                .padding()
+                .background(Color.cyan.opacity(0.9))  // ✅ Cyan background
+                .cornerRadius(12)
+            }
+        }
     }
 }
 
 #if DEBUG
     #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+
         ChatListView()
             .environmentObject(ChatViewModel.mock())
             .environmentObject(UserViewModel.mock())
             .environmentObject(AppState())
-            .accentColor(ColorPalette.accent(for: .light))
+            .accentColor(ColorPalette.accent(for: colorScheme))
     }
 #endif

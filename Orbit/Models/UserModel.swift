@@ -18,9 +18,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var username: String
     var firstName: String
     var lastName: String?
-    var interests: [String]?
-    var conversations: [String]?
-    var currentAreaId: String?  // References Area collection
     var profilePictureUrl: String?
     var bio: String?
     var dob: String?  // Date of birth
@@ -59,6 +56,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var showStarSign: Bool = true
     var userLinks: [UserLinkModel]?
     var intentions: [UserIntention]?
+    var myBlocks: [UserBlockModel]? = []
+    var blockedMe: [UserBlockModel]? = []
+    var myReports: [UserReportModel]? = []
+    var reportedMe: [UserReportModel]? = []
+    var otherGender: String?
 
     // Display settings for the user's profile
     var showAge: Bool = true
@@ -71,8 +73,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     // Define CodingKeys to map "$id" to "id"
     enum CodingKeys: String, CodingKey {
         case id = "$id"
-        case accountId, username, firstName, lastName, interests, conversations,
-            currentAreaId
+        case accountId, username, firstName, lastName
         case profilePictureUrl, bio, dob
         case activitiesHobbies, friendActivities, preferredMeetupType,
             convoTopics,
@@ -82,6 +83,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case showLastOnline, showJoinedDate, showSentReceivedRatio, lastOnline
         case userLanguages, gender, pronouns, showStarSign, userLinks,
             intentions
+        case myBlocks, blockedMe, myReports, reportedMe
+        case otherGender
         case featuredInterests
     }
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
@@ -94,9 +97,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         username: String,
         firstName: String,
         lastName: String? = nil,
-        interests: [String]? = nil,
-        conversations: [String]? = nil,
-        currentAreaId: String? = nil,
         profilePictureUrl: String? = nil,
         bio: String? = nil,
         dob: String? = nil,
@@ -133,16 +133,18 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showStarSign: Bool = true,
         userLinks: [UserLinkModel]? = nil,
         intentions: [UserIntention]? = nil,
-        featuredInterests: [String]? = nil
+        featuredInterests: [String]? = nil,
+        myBlocks: [UserBlockModel]? = [],
+        blockedMe: [UserBlockModel]? = [],
+        myReports: [UserReportModel]? = [],
+        reportedMe: [UserReportModel]? = [],
+        otherGender: String? = nil
     ) {
         self.id = id
         self.accountId = accountId
         self.username = username
         self.firstName = firstName
         self.lastName = lastName
-        self.interests = interests
-        self.conversations = conversations
-        self.currentAreaId = currentAreaId
         self.profilePictureUrl = profilePictureUrl
         self.bio = bio
         self.dob = dob
@@ -172,6 +174,11 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.showStarSign = showStarSign
         self.userLinks = userLinks
         self.intentions = intentions
+        self.myBlocks = myBlocks
+        self.blockedMe = blockedMe
+        self.myReports = myReports
+        self.reportedMe = reportedMe
+        self.otherGender = otherGender
         self.featuredInterests = featuredInterests
     }
 
@@ -228,16 +235,18 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         showStarSign: Bool? = nil,
         userLinks: [UserLinkModel]? = nil,
         intentions: [UserIntention]? = nil,
-        featuredInterests: [String]? = nil
+        featuredInterests: [String]? = nil,
+        myBlocks: [UserBlockModel]? = nil,
+        blockedMe: [UserBlockModel]? = nil,
+        myReports: [UserReportModel]? = nil,
+        reportedMe: [UserReportModel]? = nil,
+        otherGender: String? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,
             username: username ?? self.username,
             firstName: firstName ?? self.firstName,
             lastName: lastName ?? self.lastName,
-            interests: interests ?? self.interests,
-            conversations: conversations ?? self.conversations,
-            currentAreaId: self.currentAreaId,
             profilePictureUrl: self.profilePictureUrl,
             bio: bio ?? self.bio,
             dob: dob ?? self.dob,
@@ -268,7 +277,12 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showStarSign: showStarSign ?? self.showStarSign,
             userLinks: userLinks ?? self.userLinks,
             intentions: intentions ?? self.intentions,
-            featuredInterests: featuredInterests ?? self.featuredInterests
+            featuredInterests: featuredInterests ?? self.featuredInterests,
+            myBlocks: myBlocks ?? self.myBlocks,
+            blockedMe: blockedMe ?? self.blockedMe,
+            myReports: myReports ?? self.myReports,
+            reportedMe: reportedMe ?? self.reportedMe,
+            otherGender: otherGender ?? self.otherGender
         )
     }
 
@@ -279,9 +293,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             username: "imjustken",
             firstName: "Ken",
             lastName: "",
-            interests: [
-                "Fitness", "Reading", "Meditation", "Writing", "Hiking",
-            ],
             profilePictureUrl: "https://picsum.photos/200",
             bio:
                 "I love photography, hiking, and art. I'm also a big fan of travel!",
@@ -324,7 +335,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             username: "slingshot69",
             firstName: "Mark",
             lastName: "",
-            interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
             profilePictureUrl: "https://picsum.photos/201",
             bio: "I'm just a chill dude",
             dob: "1995-06-15",
@@ -345,7 +355,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             //            requestedMeetups: [MeetupRequestModel.mock()],
             //            approvedMeetups: [],
             lastOnline: "2024-02-19T10:45:00Z",
-            gender: .man,
+            gender: .other,
+            otherGender: "Cat woman",
             pronouns: [.heHim],
             userLinks: [
                 .mock()
@@ -366,7 +377,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             username: "jordan_taylor",
             firstName: "Jordan",
             lastName: "Taylor",
-            interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
             profilePictureUrl: "https://picsum.photos/202",
             bio: "I'm just a chill dude",
             /// onboarding stuff
@@ -386,6 +396,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             //            requestedMeetups: [],
             //            approvedMeetups: [MeetupApprovalModel.mock()],
             lastOnline: "2024-02-18T20:15:00Z",
+            otherGender: nil,
             featuredInterests: ["Yoga", "Reading", "Meditation"]
         )
     }
@@ -397,7 +408,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             username: "slingshot69",
             firstName: "Mark",
             lastName: "",
-            interests: ["Fitness", "Reading", "Meditation", "Yoga", "Writing"],
             profilePictureUrl: "https://picsum.photos/202",
             bio:
                 "Curious, open-minded, and always up for a good conversation. I enjoy meeting new people, learning from different perspectives, and making the most of every experience",
@@ -435,6 +445,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .conversations,
                 .hobbies,
             ],
+            otherGender: nil,
             featuredInterests: ["Yoga", "Reading", "Meditation"]
         )
     }
@@ -450,7 +461,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 username: "alexrivera42",
                 firstName: "Alex",
                 lastName: "Rivera",
-                interests: ["Gaming", "Tech", "Music", "Movies", "Cooking"],
                 profilePictureUrl: "https://picsum.photos/201",
                 // personalPreferences: PersonalPreferences(
                 //     activitiesHobbies: ["Gaming", "Coding", "Music"],
@@ -472,6 +482,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true,
+                otherGender: nil,
                 featuredInterests: ["Gaming", "Tech", "Music"]
             ),
             UserModel(
@@ -480,9 +491,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 username: "noob",
                 firstName: "Klay",
                 lastName: "Blampson",
-                interests: [
-                    "Fitness", "Reading", "Meditation", "Yoga", "Writing",
-                ],
                 profilePictureUrl: "https://picsum.photos/202",
                 // personalPreferences: PersonalPreferences(
                 //     activitiesHobbies: ["Yoga", "Reading", "Meditation"],
@@ -504,6 +512,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
                 hasCompletedOnboarding: true,
+                otherGender: nil,
                 featuredInterests: ["Yoga", "Reading", "Meditation"]
             ),
         ]
@@ -520,7 +529,7 @@ enum UserGender: String, Codable, CaseIterable {
     case man
     case woman
     case nonBinary = "non-binary"
-    case preferNotToSay = "Prefer not to say"
+    //    case preferNotToSay = "Prefer not to say"
     case other
 }
 

@@ -25,6 +25,7 @@ struct CreateMeetupDetailsView: View {
     @State private var isShowingLocationDropdown = false
     @State private var selectedLocationId: String?
     @State private var locations: [Area] = []
+    @State private var genderPreference: GenderPreference = .any
 
     private var isFormValid: Bool {
         !title.isEmpty && !description.isEmpty
@@ -34,7 +35,6 @@ struct CreateMeetupDetailsView: View {
         ZStack {
             ColorPalette.background(for: colorScheme)
                 .ignoresSafeArea()
-            
             VStack {
                 ScrollView {
                     VStack(spacing: 24) {
@@ -62,12 +62,12 @@ struct CreateMeetupDetailsView: View {
 
                         // Location Selection
                         VStack(alignment: .leading) {
-                            
                             LocationPickerView(
                                 locationSearchText: $locationSearchText,
                                 selectedLocation: $selectedLocation,
                                 selectedLocationId: $selectedLocationId,
-                                isShowingLocationDropdown: $isShowingLocationDropdown,
+                                isShowingLocationDropdown:
+                                    $isShowingLocationDropdown,
                                 locations: locations,
                                 colorScheme: colorScheme
                             )
@@ -82,6 +82,22 @@ struct CreateMeetupDetailsView: View {
                                     MeetupIntention.friendship)
                                 Text("Relationship").tag(
                                     MeetupIntention.relationship)
+                            }
+                            .pickerStyle(.segmented)
+                            .padding(.horizontal)
+                            .padding(.vertical, 12)
+                            .background(ColorPalette.main(for: colorScheme))
+                            .cornerRadius(12)
+                        }
+
+                        // New Target Gender Section
+                        VStack(alignment: .leading) {
+                            Text("Gender Preferences")
+                                .font(.headline)
+                            Picker("", selection: $genderPreference) {
+                                ForEach(GenderPreference.allCases) { gender in
+                                    Text(gender.rawValue).tag(gender)
+                                }
                             }
                             .pickerStyle(.segmented)
                             .padding(.horizontal)
@@ -135,6 +151,7 @@ struct CreateMeetupDetailsView: View {
         } message: {
             Text(alertMessage)
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 
     private func createMeetup() {
@@ -144,8 +161,11 @@ struct CreateMeetupDetailsView: View {
             return
         }
 
-        let startTimeString: String = DateFormatterUtility.formatISO8601(startTime)
-        let endTime = Calendar.current.date(byAdding: .hour, value: 1, to: startTime) ?? startTime.addingTimeInterval(3600)
+        let startTimeString: String = DateFormatterUtility.formatISO8601(
+            startTime)
+        let endTime =
+            Calendar.current.date(byAdding: .hour, value: 1, to: startTime)
+            ?? startTime.addingTimeInterval(3600)
         let endTimeString = DateFormatterUtility.formatISO8601(endTime)
 
         print("Debug - Creating meetup:")
@@ -163,7 +183,8 @@ struct CreateMeetupDetailsView: View {
                 status: .active,
                 intention: selectedIntention,
                 createdByUser: currentUser,
-                type: selectedType
+                type: selectedType,
+                genderPreference: genderPreference
             )
             dismiss()
         }

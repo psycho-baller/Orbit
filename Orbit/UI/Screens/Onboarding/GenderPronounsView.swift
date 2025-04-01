@@ -15,7 +15,7 @@ struct GenderPronounsView: View {
     @State private var selectedPronouns: Set<UserPronouns> = []
 
     // If UserPronouns isn’t CaseIterable, define the options manually.
-    let pronounsOptions: [UserPronouns] = [.heHim, .sheHer, .theyThem] // , .other
+    let pronounsOptions: [UserPronouns] = [.heHim, .sheHer, .theyThem]  // , .other
 
     var body: some View {
         Form {
@@ -65,6 +65,8 @@ struct GenderPronounsView: View {
 }
 
 #Preview {
-    GenderPronounsView(viewModel: OnboardingViewModel())
-        .environmentObject(UserViewModel.mock())
+    NavigationView {
+        GenderPronounsView(viewModel: OnboardingViewModel())
+            .environmentObject(UserViewModel.mock())
+    }
 }

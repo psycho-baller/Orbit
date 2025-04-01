@@ -8,6 +8,15 @@
 import Appwrite
 import Foundation
 
+struct ChatRequestWrapper: Identifiable, Codable {
+    let id: String
+    let collectionId: String
+    let databaseId: String
+    let createdAt: String
+    let updatedAt: String
+    let permissions: [String]
+    let data: ChatRequestModel
+}
 protocol ChatRequestServiceProtocol {
     func getMeetUpRequests(userId: String, limit: Int?, offset: Int?)
         async throws -> [ChatRequestDocument]
@@ -18,6 +27,7 @@ protocol ChatRequestServiceProtocol {
     func updateMeetUpRequestStatus(
         requestId: String, status: ChatRequestModel.RequestStatus
     ) async throws -> ChatRequestDocument
+    func fetchChatRequests() async throws -> [ChatRequestWrapper]
 }
 
 class ChatRequestService: ChatRequestServiceProtocol {
@@ -67,6 +77,37 @@ class ChatRequestService: ChatRequestServiceProtocol {
         print("Created meet-up request: \(response.data)")
 
         return response
+    }
+
+    func fetchChatRequests() async throws -> [ChatRequestWrapper] {
+        let response = try await appwriteService.databases.listDocuments(
+            databaseId: appwriteService.databaseId,
+            collectionId: collectionId
+        )
+
+        return response.documents.compactMap { document in
+            do {
+                let jsonData = try JSONSerialization.data(
+                    withJSONObject: document.data)
+                let chatRequest = try JSONDecoder().decode(
+                    ChatRequestModel.self, from: jsonData)
+
+                return ChatRequestWrapper(
+                    id: document.id,
+                    collectionId: document.collectionId,
+                    databaseId: document.databaseId,
+                    createdAt: document.createdAt,
+                    updatedAt: document.updatedAt,
+                    permissions: document.permissions as! [String],
+                    data: chatRequest
+                )
+            } catch {
+                print(
+                    "❌ Failed to decode ChatRequestWrapper: \(error.localizedDescription)"
+                )
+                return nil
+            }
+        }
     }
 
     // Retrieve a meet-up request by its ID
