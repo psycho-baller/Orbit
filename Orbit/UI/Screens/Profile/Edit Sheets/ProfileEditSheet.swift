@@ -24,9 +24,35 @@ struct InterestsEditSheet: View {
     
     private var sectionTitle: String {
         switch section {
+        case "activitiesHobbies": return "Activities and hobbies that bring me joy"
+        case "friendActivities": return "What I'm interested in doing with friends"
+        case "preferredMeetupType": return "How I like to meet people"
+        case "convoTopics": return "Conversation topics I enjoy"
+        case "friendshipValues": return "What I value most in a friendship"
+        case "friendshipQualities": return "Qualities I look for in a friend"
+        default: return section.capitalized
+        }
+    }
+    
+    // More concise prompt text for the selection screen
+    private var promptText: String {
+        switch section {
+        case "activitiesHobbies": return "Select your favourite activities and hobbies"
+        case "friendActivities": return "Select activities you would like to do with friends"
+        case "preferredMeetupType": return "Select your preferred meetup activities"
+        case "convoTopics": return "Select topics you want to talk about"
+        case "friendshipValues": return "Select your most important values in a friendship"
+        case "friendshipQualities": return "Select your most important qualities in a friendship"
+        default: return "Select options"
+        }
+    }
+    
+    // More concise navigation title
+    private var navTitle: String {
+        switch section {
         case "activitiesHobbies": return "Activities & Hobbies"
         case "friendActivities": return "Friend Activities"
-        case "preferredMeetupType": return "Preferred Meetups"
+        case "preferredMeetupType": return "Meetup Types"
         case "convoTopics": return "Conversation Topics"
         case "friendshipValues": return "Friendship Values"
         case "friendshipQualities": return "Friendship Qualities"
@@ -69,7 +95,7 @@ struct InterestsEditSheet: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
-                Text("Select your \(sectionTitle.lowercased())")
+                Text(promptText)
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
@@ -106,7 +132,7 @@ struct InterestsEditSheet: View {
                 
                 Spacer()
             }
-            .navigationTitle("Edit \(sectionTitle)")
+            .navigationTitle(navTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -167,14 +193,14 @@ struct IntentionsEditSheet: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
-                Text("What are you looking for on Orbit?")
+                Text("What brings you to Orbit?")
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                     .padding(.horizontal)
                     .padding(.top)
                 
-                Text("Select all that apply")
+                Text("Select everything you hope to achieve with Orbit")
                     .font(.subheadline)
                     .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                     .padding(.bottom)
@@ -210,7 +236,7 @@ struct IntentionsEditSheet: View {
                 
                 Spacer()
             }
-            .navigationTitle("Edit Intentions")
+            .navigationTitle("Intentions")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

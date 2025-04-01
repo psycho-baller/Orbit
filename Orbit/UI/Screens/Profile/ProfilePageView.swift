@@ -244,7 +244,7 @@ struct ProfilePageView: View {
                     
                     // Activities & Hobbies Section
                     TappableProfileTagSection(
-                        title: "Activities & Hobbies",
+                        title: "Activities and hobbies that bring me joy",
                         items: displayUser.activitiesHobbies ?? [],
                         onTap: { activeSheet = .interests }
                     )
@@ -252,7 +252,7 @@ struct ProfilePageView: View {
                     
                     // Friend Activities Section
                     TappableProfileTagSection(
-                        title: "Friend Activities",
+                        title: "Activities I'd love to do with friends",
                         items: displayUser.friendActivities ?? [],
                         onTap: { activeSheet = .friendActivities }
                     )
@@ -260,7 +260,7 @@ struct ProfilePageView: View {
                     
                     // Preferred Meetup Types Section
                     TappableProfileTagSection(
-                        title: "Preferred Meetups",
+                        title: "Activities I enjoy doing with others",
                         items: displayUser.preferredMeetupType ?? [],
                         onTap: { activeSheet = .meetupTypes }
                     )
@@ -268,7 +268,7 @@ struct ProfilePageView: View {
                     
                     // Conversation Topics Section
                     TappableProfileTagSection(
-                        title: "Conversation Topics",
+                        title: "Conversation topics I enjoy",
                         items: displayUser.convoTopics ?? [],
                         onTap: { activeSheet = .convoTopics }
                     )
@@ -276,7 +276,7 @@ struct ProfilePageView: View {
                     
                     // Friendship Values Section
                     TappableProfileTagSection(
-                        title: "Friendship Values",
+                        title: "What I value most in a friendship",
                         items: displayUser.friendshipValues ?? [],
                         onTap: { activeSheet = .friendshipValues }
                     )
@@ -284,7 +284,7 @@ struct ProfilePageView: View {
                     
                     // Friendship Qualities Section
                     TappableProfileTagSection(
-                        title: "Friendship Qualities",
+                        title: "Qualities I look for in a friend",
                         items: displayUser.friendshipQualities ?? [],
                         onTap: { activeSheet = .friendshipQualities }
                     )
@@ -292,7 +292,7 @@ struct ProfilePageView: View {
                     
                     // Intentions Section
                     TappableProfileTagSection(
-                        title: "Intentions",
+                        title: "What brings me to Orbit",
                         items: displayUser.intentions?.map { $0.rawValue } ?? [],
                         onTap: { activeSheet = .intentions }
                     )
@@ -318,49 +318,49 @@ struct ProfilePageView: View {
                         let interests = user.activitiesHobbies ?? []
                         if !interests.isEmpty {
                             ProfileTagSection(
-                                title: "Interests",
+                                title: "Activities and hobbies that bring me joy",
                                 items: interests
                             )
                         }
 
                         if let activities = user.friendActivities, !activities.isEmpty {
                             ProfileTagSection(
-                                title: "Friend Activities",
+                                title: "Activities I'd love to do with friends",
                                 items: activities
                             )
                         }
 
                         if let meetups = user.preferredMeetupType, !meetups.isEmpty {
                             ProfileTagSection(
-                                title: "Preferred Meetups",
+                                title: "Activities I enjoy doing with others",
                                 items: meetups
                             )
                         }
 
                         if let topics = user.convoTopics, !topics.isEmpty {
                             ProfileTagSection(
-                                title: "Conversation Topics",
+                                title: "Conversation topics I enjoy",
                                 items: topics
                             )
                         }
 
                         if let values = user.friendshipValues, !values.isEmpty {
                             ProfileTagSection(
-                                title: "Friendship Values",
+                                title: "What I value most in a friendship",
                                 items: values
                             )
                         }
 
                         if let qualities = user.friendshipQualities, !qualities.isEmpty {
                             ProfileTagSection(
-                                title: "Friendship Qualities",
+                                title: "Qualities I look for in a friend",
                                 items: qualities
                             )
                         }
 
                         if let intentions = user.intentions, !intentions.isEmpty {
                             ProfileTagSection(
-                                title: "Intentions",
+                                title: "What brings me to Orbit",
                                 items: intentions.map { $0.rawValue }
                             )
                         }
