@@ -27,8 +27,7 @@ struct MyOrbitScreen: View {
 
                 if let userId = userId {
                     SuccessScreen(
-                        userId: userId,
-                        meetupRequestVM: meetupRequestVM)
+                        userId: userId)
                 } else {
                     ErrorScreen()
                 }
@@ -41,8 +40,7 @@ struct MyOrbitScreen: View {
 
                 if let userId = userId {
                     SuccessScreen(
-                        userId: userId,
-                        meetupRequestVM: meetupRequestVM)
+                        userId: userId)
                 } else {
                     ErrorScreen()
                 }
@@ -53,10 +51,31 @@ struct MyOrbitScreen: View {
     }
 }
 
+struct ChatDetailAsyncWrapper: View {
+    let chatModel: ChatModel
+    let currentUser: UserModel
+    @EnvironmentObject var chatVM: ChatViewModel
+    @State private var chatDocument: ChatDocument?
+
+    var body: some View {
+        Group {
+            if let chatDocument = chatDocument {
+                ChatDetailView(chat: chatDocument, user: currentUser)
+            } else {
+                ProgressView()
+            }
+        }
+        .task {
+            chatDocument = await chatVM.getChatDocument(chatId: chatModel.id)
+        }
+    }
+}
+
 // Success Screen (Shows meetup requests)
 struct SuccessScreen: View {
     let userId: String
-    @ObservedObject var meetupRequestVM: MeetupRequestViewModel
+    @EnvironmentObject var meetupRequestVM: MeetupRequestViewModel
+    @EnvironmentObject var chatVM: ChatViewModel
 
     var myMeetupPosts: [MeetupRequestDocument] {
         meetupRequestVM.meetupRequests.filter { request in
@@ -109,9 +128,9 @@ struct SuccessScreen: View {
                                         ? chatToGoTo.createdByUser
                                         : chatToGoTo.otherUser)
                             {
-                                    ChatDetailView(
-                                        chat: .mock(data: chatToGoTo),
-                                        user: currentUser)
+                                ChatDetailAsyncWrapper(
+                                    chatModel: chatToGoTo,
+                                    currentUser: currentUser)
                             } else {
                                 EmptyView()
                             }
@@ -130,9 +149,9 @@ struct SuccessScreen: View {
                                 }),
                                 let currentUser = chatToGoTo.createdByUser
                             {
-                                ChatDetailView(
-                                    chat: .mock(data: chatToGoTo),
-                                    user: currentUser)
+                                ChatDetailAsyncWrapper(
+                                    chatModel: chatToGoTo,
+                                    currentUser: currentUser)
                             } else {
                                 EmptyView()
                             }
@@ -141,11 +160,6 @@ struct SuccessScreen: View {
                 )
             }
             .padding()
-        }
-        .onAppear {
-            Task {
-                //                await meetupRequestVM.fetchMeetupRequests(for: userId)
-            }
         }
     }
 }

@@ -56,6 +56,26 @@ class ChatViewModel: ObservableObject {
             return nil
         }
     }
+    func getChatDocument(chatId: String) async -> ChatDocument? {
+        isLoading = true
+        defer { isLoading = false }
+
+        // First check if it's already in 'chats'
+        if let chatDoc = chats.first(where: { $0.id == chatId }) {
+            return chatDoc
+        }
+
+        do {
+            let chatDoc = try await chatService.getChat(chatId: chatId)
+            return chatDoc
+        } catch {
+            self.error = error.localizedDescription
+            print(
+                "ChatViewModel - getChatDocument: Error: \(error.localizedDescription)"
+            )
+            return nil
+        }
+    }
 
     /// Update an existing chat
     func updateChat(_ chat: ChatDocument) async {
