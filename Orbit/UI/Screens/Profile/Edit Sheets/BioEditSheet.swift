@@ -28,7 +28,7 @@ struct BioEditSheet: View {
     }
     
     private var isValidBio: Bool {
-        wordCount >= 3 && wordCount <= 50
+        wordCount <= maxWordCount
     }
     
     init(user: UserModel) {
@@ -38,38 +38,49 @@ struct BioEditSheet: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("In 50 words or less, how would you describe yourself?")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+            VStack(alignment: .leading, spacing: 24) {
+                // Header
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("In 50 words or less, how would you describe yourself?")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .padding(.horizontal)
+                    
+                    // Bio text editor - using TextField to match onboarding
+                    TextField("", text: $bio, axis: .vertical)
+                        .padding()
+                        .foregroundColor(ColorPalette.text(for: colorScheme))
+                        .background(ColorPalette.lightGray(for: colorScheme))
+                        .cornerRadius(10)
+                        .frame(minHeight: 150)
+                        .padding(.horizontal)
+                    
+                    // Word count indicator - matching onboarding style
+                    HStack {
+                        Spacer()
+                        Text("^[\(wordCount) word](inflect: true)")
+                            .font(.caption)
+                            .foregroundColor(
+                                isValidBio ?
+                                ColorPalette.secondaryText(for: colorScheme) :
+                                .red
+                            )
+                    }
                     .padding(.horizontal)
-                
-                TextEditor(text: $bio)
-                    .padding()
-                    .background(ColorPalette.lightGray(for: colorScheme))
-                    .cornerRadius(10)
-                    .frame(height: 200)
-                    .padding(.horizontal)
-                
-                Text("^[\(wordCount) word](inflect: true)")
-                    .font(.caption)
-                    .foregroundColor(
-                        isValidBio ?
-                        ColorPalette.secondaryText(for: colorScheme) :
-                        .red
-                    )
-                    .padding(.horizontal)
+                }
                 
                 Spacer()
             }
-            .padding(.top)
-            .navigationTitle("Edit Bio")
-            .navigationBarTitleDisplayMode(.inline)
+            .padding(.top, 24)
+            .navigationBarTitle("Edit Bio", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button(action: {
                         dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
                     }
                 }
                 
@@ -79,7 +90,6 @@ struct BioEditSheet: View {
                             isSaving = true
                             
                             Task {
-                                // Update directly without temp data
                                 await userVM.updateAndSaveUserData(bio: bio.isEmpty ? nil : bio)
                                 dismiss()
                             }
@@ -88,6 +98,7 @@ struct BioEditSheet: View {
                     .disabled(!isValidBio || isSaving)
                 }
             }
+            .background(ColorPalette.background(for: colorScheme))
         }
     }
 }

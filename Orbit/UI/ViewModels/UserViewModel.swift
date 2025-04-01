@@ -35,7 +35,6 @@ class UserViewModel: NSObject, ObservableObject {
     @Published var currentArea: String?  // Updated area name for the user
     @Published var selectedInterests: [String] = []
     @Published var allUsers: [UserModel] = []
-    @Published var tempUserData: UserModel?
 
     private var userManagementService: UserManagementServiceProtocol =
         UserManagementService()
@@ -460,139 +459,16 @@ class UserViewModel: NSObject, ObservableObject {
         return "Unknown Location"
     }
 
-    // Update temporary user data without saving to the database
-    func updateTempUserData(
-        username: String? = nil,
-        firstName: String? = nil,
-        lastName: Optional<String?> = .none,
-        bio: Optional<String?> = .none,
-        dob: String? = nil,
-        activitiesHobbies: [String]? = nil,
-        friendActivities: [String]? = nil,
-        preferredMeetupType: [String]? = nil,
-        convoTopics: [String]? = nil,
-        friendshipValues: [String]? = nil,
-        friendshipQualities: [String]? = nil,
-        pronouns: [UserPronouns]? = nil,
-        intentions: [UserIntention]? = nil,
-        featuredInterests: [String]? = nil,
-        gender: UserGender? = nil
-    ) {
-        // First, make sure we're working with the most up-to-date temp data
-        guard var updatedUser = tempUserData ?? currentUser else { return }
-        
-        // Update only the fields that were provided
-        if let username = username {
-            updatedUser.username = username
-        }
-        if let firstName = firstName {
-            updatedUser.firstName = firstName
-        }
-        
-        // Handle optional fields differently
-        if case .some(let value) = lastName {
-            updatedUser.lastName = value
-        }
-        if case .some(let value) = bio {
-            updatedUser.bio = value
-        }
-        
-        if let dob = dob {
-            updatedUser.dob = dob
-        }
-        if let activitiesHobbies = activitiesHobbies {
-            updatedUser.activitiesHobbies = activitiesHobbies
-        }
-        if let friendActivities = friendActivities {
-            updatedUser.friendActivities = friendActivities
-        }
-        if let preferredMeetupType = preferredMeetupType {
-            updatedUser.preferredMeetupType = preferredMeetupType
-        }
-        if let convoTopics = convoTopics {
-            updatedUser.convoTopics = convoTopics
-        }
-        if let friendshipValues = friendshipValues {
-            updatedUser.friendshipValues = friendshipValues
-        }
-        if let friendshipQualities = friendshipQualities {
-            updatedUser.friendshipQualities = friendshipQualities
-        }
-        if let pronouns = pronouns {
-            updatedUser.pronouns = pronouns
-        }
-        if let intentions = intentions {
-            updatedUser.intentions = intentions
-        }
-        if let featuredInterests = featuredInterests {
-            updatedUser.featuredInterests = featuredInterests
-        }
-        if let gender = gender {
-            updatedUser.gender = gender
-        }
-        
-        // Store in temporary variable
-        tempUserData = updatedUser
-        
-        // Notify observers that data has changed
-        objectWillChange.send()
-    }
+    
 
-    // Save temporary changes to the database
-    @MainActor
-    func saveProfileChanges() async {
-        guard let tempData = tempUserData else { return }
-        
-        isLoading = true
-        defer { isLoading = false }
-        
-        // Save to database
-        await updateUser(id: tempData.accountId, updatedUser: tempData)
-        
-        // Update the current user for UI refresh
-        self.currentUser = tempData
-        
-        // Clear temp data after successful update
-        self.tempUserData = nil
-        
-        // Notify observers that data has changed
-        objectWillChange.send()
-    }
+    
 
-    // Discard temporary changes
-    func discardProfileChanges() {
-        self.tempUserData = nil
-    }
+    
 
-    var hasUnsavedChanges: Bool {
-        // Return true if tempUserData exists and is different from currentUser
-        guard let tempData = tempUserData, let currentUser = currentUser else {
-            return false
-        }
-        
-        // Compare relevant fields that can be edited
-        return tempData.firstName != currentUser.firstName ||
-               tempData.lastName != currentUser.lastName ||
-               tempData.username != currentUser.username ||
-               tempData.bio != currentUser.bio ||
-               tempData.dob != currentUser.dob ||
-               tempData.activitiesHobbies != currentUser.activitiesHobbies ||
-               tempData.friendActivities != currentUser.friendActivities ||
-               tempData.preferredMeetupType != currentUser.preferredMeetupType ||
-               tempData.convoTopics != currentUser.convoTopics ||
-               tempData.friendshipValues != currentUser.friendshipValues ||
-               tempData.friendshipQualities != currentUser.friendshipQualities ||
-               tempData.pronouns != currentUser.pronouns ||
-               tempData.intentions != currentUser.intentions ||
-               tempData.showAge != currentUser.showAge ||
-               tempData.showPronouns != currentUser.showPronouns ||
-               tempData.showGender != currentUser.showGender ||
-               tempData.featuredInterests != currentUser.featuredInterests ||
-               tempData.gender != currentUser.gender
-    }
+    
 
     func updateDisplayPreferences(showAge: Bool? = nil, showPronouns: Bool? = nil, showGender: Bool? = nil) {
-        guard var tempUser = tempUserData ?? currentUser else { return }
+        guard var tempUser = currentUser else { return }
         
         var updatedUser = tempUser
         
@@ -608,7 +484,7 @@ class UserViewModel: NSObject, ObservableObject {
             updatedUser.showGender = showGender
         }
         
-        tempUserData = updatedUser
+        self.currentUser = updatedUser
     }
 
     @MainActor
@@ -642,12 +518,12 @@ class UserViewModel: NSObject, ObservableObject {
             updatedUser.firstName = firstName
         }
         
-        // Handle optional fields differently
-        if case .some(let value) = lastName {
-            updatedUser.lastName = value
+        // Handle optional fields differently 
+        if let lastNameOptional = lastName {
+            updatedUser.lastName = lastNameOptional
         }
-        if case .some(let value) = bio {
-            updatedUser.bio = value
+        if let bioOptional = bio {
+            updatedUser.bio = bioOptional
         }
         
         if let dob = dob {

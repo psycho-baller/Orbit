@@ -113,33 +113,82 @@ struct ProfilePageView: View {
                         }
                     }
                     
-                    // Name and basic info
-                    VStack(spacing: 4) {
-                        // Name
-                        Text(displayUser.firstName + " " + (displayUser.lastName ?? ""))
-                            .font(.title2)
+                    // Name, age, pronouns, username and bio
+                    VStack(alignment: .center, spacing: 12) {
+                        // name, age, pronouns
+                        VStack(alignment: .center, spacing: 4) {
+                            // Name on its own line
+                            Text(
+                                displayUser.firstName + " "
+                                    + (displayUser.lastName ?? "")
+                            )
+                            .font(.title)
                             .fontWeight(.bold)
-                            .foregroundColor(ColorPalette.text(for: colorScheme))
-                        
-                        // Age and pronouns
-                        HStack(spacing: 8) {
-                            if !ageText.isEmpty && displayUser.showAge {
-                                Text(ageText)
-                                    .font(.subheadline)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.text(for: colorScheme)
+                            )
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+
+                            // Age, gender, and pronouns on a second line
+                            HStack(spacing: 8) {
+                                // Age display
+                                if displayUser.showAge, !ageText.isEmpty {
+                                    Text(ageText)
+                                        .font(.title3)
+                                        .foregroundColor(
+                                            ColorPalette.secondaryText(
+                                                for: colorScheme))
+                                }
+
+                                // Gender display
+                                if let gender = displayUser.gender,
+                                    displayUser.showGender
+                                {
+                                    // Add a separator dot if age is shown before gender
+                                    if displayUser.showAge, !ageText.isEmpty {
+                                        Text("•")
+                                            .font(.title3)
+                                            .foregroundColor(
+                                                ColorPalette.secondaryText(
+                                                    for: colorScheme))
+                                    }
+
+                                    Text(gender.rawValue.capitalized)
+                                        .font(.title3)
+                                        .foregroundColor(
+                                            ColorPalette.secondaryText(
+                                                for: colorScheme))
+                                }
+
+                                // Add pronouns display
+                                if displayUser.showPronouns,
+                                    !pronounsText.isEmpty
+                                {
+                                    // Add a separator dot if either age or gender is shown before pronouns
+                                    let showAgeBefore =
+                                        displayUser.showAge && !ageText.isEmpty
+                                    let showGenderBefore =
+                                        displayUser.gender != nil
+                                        && displayUser.showGender
+                                        && displayUser.gender != .other
+
+                                    if showAgeBefore || showGenderBefore {
+                                        Text("•")
+                                            .font(.title3)
+                                            .foregroundColor(
+                                                ColorPalette.secondaryText(
+                                                    for: colorScheme))
+                                    }
+
+                                    Text(pronounsText.capitalized)
+                                        .font(.title3)
+                                        .foregroundColor(
+                                            ColorPalette.secondaryText(
+                                                for: colorScheme))
+                                }
                             }
-                            
-                            if !pronounsText.isEmpty && displayUser.showPronouns {
-                                Text("(\(pronounsText))")
-                                    .font(.subheadline)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                            }
-                            
-                            if let gender = displayUser.gender, displayUser.showGender {
-                                Text(gender.rawValue)
-                                    .font(.subheadline)
-                                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
-                            }
+                            .padding(.top, 2)
                         }
                         
                         // Edit button for personal info
