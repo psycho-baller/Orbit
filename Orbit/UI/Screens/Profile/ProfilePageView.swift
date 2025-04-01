@@ -132,8 +132,8 @@ struct ProfilePageView: View {
 
                             // Age, gender, and pronouns on a second line
                             HStack(spacing: 8) {
-                                // Age display
-                                if displayUser.showAge, !ageText.isEmpty {
+                                // Age display - always show if available
+                                if !ageText.isEmpty {
                                     Text(ageText)
                                         .font(.title3)
                                         .foregroundColor(
@@ -146,7 +146,7 @@ struct ProfilePageView: View {
                                     displayUser.showGender
                                 {
                                     // Add a separator dot if age is shown before gender
-                                    if displayUser.showAge, !ageText.isEmpty {
+                                    if !ageText.isEmpty {
                                         Text("•")
                                             .font(.title3)
                                             .foregroundColor(
@@ -166,8 +166,7 @@ struct ProfilePageView: View {
                                     !pronounsText.isEmpty
                                 {
                                     // Add a separator dot if either age or gender is shown before pronouns
-                                    let showAgeBefore =
-                                        displayUser.showAge && !ageText.isEmpty
+                                    let showAgeBefore = !ageText.isEmpty
                                     let showGenderBefore =
                                         displayUser.gender != nil
                                         && displayUser.showGender

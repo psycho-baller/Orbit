@@ -467,14 +467,10 @@ class UserViewModel: NSObject, ObservableObject {
 
     
 
-    func updateDisplayPreferences(showAge: Bool? = nil, showPronouns: Bool? = nil, showGender: Bool? = nil) {
+    func updateDisplayPreferences(showPronouns: Bool? = nil, showGender: Bool? = nil) {
         guard var tempUser = currentUser else { return }
         
         var updatedUser = tempUser
-        
-        if let showAge = showAge {
-            updatedUser.showAge = showAge
-        }
         
         if let showPronouns = showPronouns {
             updatedUser.showPronouns = showPronouns
@@ -504,7 +500,6 @@ class UserViewModel: NSObject, ObservableObject {
         intentions: [UserIntention]? = nil,
         featuredInterests: [String]? = nil,
         gender: UserGender? = nil,
-        showAge: Bool? = nil,
         showPronouns: Bool? = nil,
         showGender: Bool? = nil
     ) async {
@@ -558,9 +553,6 @@ class UserViewModel: NSObject, ObservableObject {
         }
         if let gender = gender {
             updatedUser.gender = gender
-        }
-        if let showAge = showAge {
-            updatedUser.showAge = showAge
         }
         if let showPronouns = showPronouns {
             updatedUser.showPronouns = showPronouns

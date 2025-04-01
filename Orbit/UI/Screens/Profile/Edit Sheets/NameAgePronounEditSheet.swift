@@ -19,7 +19,6 @@ struct NameAgePronounEditSheet: View {
     @State private var lastName: String
     @State private var dateOfBirth: Date
     @State private var selectedPronouns: Set<UserPronouns> = []
-    @State private var showAge: Bool
     @State private var showPronouns: Bool
     @State private var showGender: Bool
     @FocusState private var isFirstNameFocused: Bool
@@ -44,7 +43,6 @@ struct NameAgePronounEditSheet: View {
         _lastName = State(initialValue: user.lastName ?? "")
         
         // Initialize display preferences
-        _showAge = State(initialValue: user.showAge)
         _showPronouns = State(initialValue: user.showPronouns)
         _showGender = State(initialValue: user.showGender)
         
@@ -124,16 +122,6 @@ struct NameAgePronounEditSheet: View {
                         .datePickerStyle(WheelDatePickerStyle())
                         .labelsHidden()
                         .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(ColorPalette.lightGray(for: colorScheme))
-                        .cornerRadius(10)
-                        
-                        // Age display preference
-                        Toggle(isOn: $showAge) {
-                            Text("Display age on profile")
-                                .font(.body)
-                                .foregroundColor(ColorPalette.text(for: colorScheme))
-                        }
                         .padding()
                         .background(ColorPalette.lightGray(for: colorScheme))
                         .cornerRadius(10)
@@ -300,7 +288,6 @@ struct NameAgePronounEditSheet: View {
                                 dob: formattedDate,
                                 pronouns: Array(selectedPronouns),
                                 gender: selectedGender,
-                                showAge: showAge,
                                 showPronouns: showPronouns,
                                 showGender: showGender
                             )
