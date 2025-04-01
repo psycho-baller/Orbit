@@ -83,6 +83,25 @@ struct SuccessScreen: View {
             }
         }
     }
+    //    var myPendingMeetups: [MeetupRequestDocument] {
+    //        meetupRequestVM.meetupRequests.compactMap { request in
+    //            // Ensure the request isn't filled.
+    //            guard request.data.status != .filled,
+    //                  let chats = request.data.chats,
+    //                  let matchingChat = chats.first(where: { $0.createdByUser?.id == userId })
+    //            else {
+    //                return nil
+    //            }
+    //            request.data.chats = [matchingChat]
+    //            return request
+    //            // Create a modified copy of the request's data with chats filtered to only include the matching chat.
+    ////            var newData = request.data
+    ////            newData.chats = [matchingChat]
+    ////            // Now create a new MeetupRequestDocument with the modified data.
+    ////            // Here we use a mock helper (or a custom initializer) to create a new document.
+    ////            return MeetupRequestDocument.mock(data: newData)
+    //        }
+    //    }
 
     var body: some View {
         ScrollView {
@@ -99,7 +118,23 @@ struct SuccessScreen: View {
                     title: "Confirmed Meetups",
                     requests: myConfirmedMeetups,
                     destination: { request in
-                        ConfirmedMeetupScreen(meetupRequest: request)
+                        Group {
+                            if let chatToGoTo = request.data.chats?.first(
+                                where: { chat in
+                                    chat.meetupConfirmed
+                                }),
+                                let currentUser =
+                                    (chatToGoTo.createdByUser?.id == userId
+                                        ? chatToGoTo.createdByUser
+                                        : chatToGoTo.otherUser)
+                            {
+                                    ChatDetailView(
+                                        chat: .mock(data: chatToGoTo),
+                                        user: currentUser)
+                            } else {
+                                EmptyView()
+                            }
+                        }
                     }
                 )
 
@@ -107,7 +142,20 @@ struct SuccessScreen: View {
                     title: "Pending Requests",
                     requests: myPendingMeetups,
                     destination: { request in
-                        ApprovedMeetupScreen(meetupRequest: request)
+                        Group {
+                            if let chatToGoTo = request.data.chats?.first(
+                                where: { chat in
+                                    chat.createdByUser?.id == userId
+                                }),
+                                let currentUser = chatToGoTo.createdByUser
+                            {
+                                ChatDetailView(
+                                    chat: .mock(data: chatToGoTo),
+                                    user: currentUser)
+                            } else {
+                                EmptyView()
+                            }
+                        }
                     }
                 )
             }

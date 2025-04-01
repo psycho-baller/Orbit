@@ -196,12 +196,12 @@ class MeetupRequestViewModel: ObservableObject {
 
     #if DEBUG
         static func mock() -> MeetupRequestViewModel {
-            let meetupRequestVM = MeetupRequestViewModel()
-            meetupRequestVM.meetupRequests = [
-                MeetupRequestDocument.mock()
+            let vm = MeetupRequestViewModel()
+            vm.meetupRequests = [
+                .mock(), .mock(data: .mock2()), .mock(data: .mock3()),
+                .mock(), .mock(data: .mock2()), .mock(data: .mock3()),
             ]
-
-            return meetupRequestVM
+            return vm
         }
     #endif
 }

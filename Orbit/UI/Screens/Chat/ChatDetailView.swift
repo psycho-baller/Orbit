@@ -267,6 +267,25 @@ struct ChatDetailView: View {
                 }
                 ChatTextBox(message: $messageText, onSend: sendMessage)
             }
+            //            NavigationLink(
+            //                destination: {
+            //                    Group {
+            //                        if let other = otherUser,
+            //                            let meetupRequest = chat.data.meetupRequest
+            //                        {
+            //                            // Pass the same user and same logic flag (didRequestorSendMessage)
+            //                            MeetupDetailsInsideChat(
+            //                                user: other,
+            //                                meetupRequest: .mock(data: meetupRequest),
+            //                                showFullDetails: didRequestorSendMessage)
+            //                        } else {
+            //                            EmptyView()
+            //                        }
+            //                    }
+            //                }, isActive: $isShowingMeetupDetails
+            //            ) {
+            //                EmptyView()
+            //            }
         }
         .onReceive(
             NotificationCenter.default.publisher(
@@ -282,6 +301,24 @@ struct ChatDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
+        .onAppear {
+            print(
+                "other: \(otherUser) meetupRequest: \(chat.data.meetupRequest)")
+            print("chat.data: \(chat.data)")
+        }
+        .sheet(isPresented: $isShowingMeetupDetails) {
+            if let other = otherUser,
+                let meetupRequest = chat.data.meetupRequest
+            {
+                // Pass the same user and same logic flag (didRequestorSendMessage)
+                MeetupDetailsInsideChat(
+                    user: other,
+                    meetupRequest: .mock(data: meetupRequest),
+                    showFullDetails: didRequestorSendMessage)
+            } else {
+                EmptyView()
+            }
+        }
         .toolbar {
 
             ToolbarItem(placement: .navigationBarLeading) {
@@ -355,19 +392,6 @@ struct ChatDetailView: View {
                 // Handle report action.
             }
             Button("Dismiss", role: .cancel) {}
-        }
-        .navigationDestination(isPresented: $isShowingMeetupDetails) {
-            if let other = otherUser,
-                let meetupRequest = chat.data.meetupRequest
-            {
-                // Pass the same user and same logic flag (didRequestorSendMessage)
-                MeetupDetailsInsideChat(
-                    user: other,
-                    meetupRequest: .mock(data: meetupRequest),
-                    showFullDetails: didRequestorSendMessage)
-            } else {
-                EmptyView()
-            }
         }
     }
 
