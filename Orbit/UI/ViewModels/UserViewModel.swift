@@ -67,9 +67,8 @@ class UserViewModel: NSObject, ObservableObject {
                 self.currentUser = user
 
                 print(
-                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(String(describing: user.hasCompletedOnboarding))."
+                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(String(describing: user.accountId))."
                 )
-                print("\(String(describing: user))")
             } else {
                 print(
                     "UserViewModel - fetchCurrentUser: No current user found."
