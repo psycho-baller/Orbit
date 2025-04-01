@@ -195,13 +195,13 @@ struct ChatDetailView: View {
     }
 
     // Determines if the current user is the meetupRequest creator.
-    private var isCurrentUserCreator: Bool {
-        user.id == chat.data.meetupRequest?.createdByUser?.id
+    private var isCurrentUserChatCreator: Bool {
+        user.id == chat.data.createdByUser?.id
     }
 
     // The "other user" is the one that is not the current user.
     private var otherUser: UserModel? {
-        isCurrentUserCreator ? chat.data.otherUser : chat.data.createdByUser
+        isCurrentUserChatCreator ? chat.data.otherUser : chat.data.createdByUser
     }
 
     // Check if the meetupRequest creator (requestor) has sent any message in this chat.
