@@ -9,11 +9,10 @@ import SwiftUI
 
 struct MyMeetupPostDetailScreen: View {
     @Environment(\.colorScheme) var colorScheme
-    
+
     @State private var isEditing = false
 
     let meetupRequest: MeetupRequestDocument
-    
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -48,7 +47,7 @@ struct MyMeetupPostDetailScreen: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color.accentColor)
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }
@@ -80,9 +79,10 @@ struct MyMeetupPostDetailScreen: View {
     }
 }
 
-
 #Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
     MyMeetupPostDetailScreen(
         meetupRequest: MeetupRequestDocument.mock()
     )
+    .accentColor(ColorPalette.accent(for: colorScheme))
 }
