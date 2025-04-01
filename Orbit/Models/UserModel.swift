@@ -60,6 +60,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var blockedMe: [UserBlockModel]? = []
     var myReports: [UserReportModel]? = []
     var reportedMe: [UserReportModel]? = []
+    var otherGender: String?
 
     // Define CodingKeys to map "$id" to "id"
     enum CodingKeys: String, CodingKey {
@@ -75,6 +76,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         case userLanguages, gender, pronouns, showStarSign, userLinks,
             intentions
         case myBlocks, blockedMe, myReports, reportedMe
+        case otherGender
     }
     static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.accountId == rhs.accountId
@@ -125,7 +127,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         myBlocks: [UserBlockModel]? = [],
         blockedMe: [UserBlockModel]? = [],
         myReports: [UserReportModel]? = [],
-        reportedMe: [UserReportModel]? = []
+        reportedMe: [UserReportModel]? = [],
+        otherGender: String? = nil
     ) {
         self.id = id
         self.accountId = accountId
@@ -165,6 +168,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.blockedMe = blockedMe
         self.myReports = myReports
         self.reportedMe = reportedMe
+        self.otherGender = otherGender
     }
 
     func toJson(excludeId: Bool = false) -> [String: Any] {
@@ -223,7 +227,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         myBlocks: [UserBlockModel]? = nil,
         blockedMe: [UserBlockModel]? = nil,
         myReports: [UserReportModel]? = nil,
-        reportedMe: [UserReportModel]? = nil
+        reportedMe: [UserReportModel]? = nil,
+        otherGender: String? = nil
     ) -> UserModel {
         return UserModel(
             accountId: self.accountId,
@@ -263,7 +268,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             myBlocks: myBlocks ?? self.myBlocks,
             blockedMe: blockedMe ?? self.blockedMe,
             myReports: myReports ?? self.myReports,
-            reportedMe: reportedMe ?? self.reportedMe
+            reportedMe: reportedMe ?? self.reportedMe,
+            otherGender: otherGender ?? self.otherGender
         )
     }
 
@@ -303,12 +309,13 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .friendships,
                 .conversations,
                 .hobbies,
-            ]
-            //            ,
-            //            myBlocks: [.mock()],
-            //            blockedMe: [.mock()],
-            //            myReports: [.mock()],
-            //            reportedMe: [.mock()]
+            ],
+            otherGender: nil
+                //            ,
+                //            myBlocks: [.mock()],
+                //            blockedMe: [.mock()],
+                //            myReports: [.mock()],
+                //            reportedMe: [.mock()]
         )
     }
 
@@ -337,7 +344,9 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showSentReceivedRatio: false,
             //            requestedMeetups: [MeetupRequestModel.mock()],
             //            approvedMeetups: [],
-            lastOnline: "2024-02-19T10:45:00Z"
+            lastOnline: "2024-02-19T10:45:00Z",
+            gender: .other,
+            otherGender: "Cat woman"
         )
     }
 
@@ -366,7 +375,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             showSentReceivedRatio: true,
             //            requestedMeetups: [],
             //            approvedMeetups: [MeetupApprovalModel.mock()],
-            lastOnline: "2024-02-18T20:15:00Z"
+            lastOnline: "2024-02-18T20:15:00Z",
+            otherGender: nil
         )
     }
 
@@ -413,7 +423,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .friendships,
                 .conversations,
                 .hobbies,
-            ]
+            ],
+            otherGender: nil
         )
     }
 
@@ -448,7 +459,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 preferredGender: [.man, .woman],
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
-                hasCompletedOnboarding: true
+                hasCompletedOnboarding: true,
+                otherGender: nil
             ),
             UserModel(
                 id: "user5",
@@ -476,7 +488,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 preferredGender: [.man, .woman],
                 friendshipValues: ["Authenticity", "Adventure", "Growth"],
                 friendshipQualities: ["Open-minded", "Adventurous"],
-                hasCompletedOnboarding: true
+                hasCompletedOnboarding: true,
+                otherGender: nil
             ),
         ]
     }
@@ -492,7 +505,7 @@ enum UserGender: String, Codable, CaseIterable {
     case man
     case woman
     case nonBinary = "non-binary"
-    case preferNotToSay = "Prefer not to say"
+    //    case preferNotToSay = "Prefer not to say"
     case other
 }
 
