@@ -191,12 +191,12 @@ class ChatRequestViewModel: ObservableObject {
                     body:
                         "Your meet-up request to \(receiverName) has been approved. Start chatting!",
                     data: [
-                        "conversation": [
+                        "meetup": [
                             "id": conversation.id,
-                            "receiverName": receiverName,
-                            "senderId": updatedRequest.data.senderAccountId,
+                            "meetupCreatorName": receiverName,
+                            "approvedBy": updatedRequest.data.senderAccountId,
                         ],
-                        "type": "requestApproved",
+                        "type": "meetupApproved",
                     ]
                 )
                 return conversation
