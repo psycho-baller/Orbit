@@ -252,14 +252,15 @@ struct ChatDetailView: View {
                     if let meetupCreatorId = chat.data.meetupRequest?
                         .createdByUser?
                         .id,
-                        user.id == meetupCreatorId
+                        user.id == meetupCreatorId,
+                        chat.data.meetupRequest?.status != .filled
                     {
                         ActionButtonsView(
                             onIgnore: { await ignoreChat() },
                             onConfirm: { await confirmMeetup() }
                         )
                         .padding(.horizontal, 24)
-                    } else if chat.data.meetupRequest?.status != .filled {
+                    } else if chat.data.meetupConfirmed {
                         Text("Meetup confirmed!")
                             .foregroundColor(.white)
                     }
