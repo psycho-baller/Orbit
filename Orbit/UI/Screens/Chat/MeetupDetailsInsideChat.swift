@@ -40,6 +40,7 @@ struct MeetupDetailsInsideChat: View {
                 }
             }
         }
+        .accentColor(ColorPalette.accent(for: colorScheme))
     }
 }
 

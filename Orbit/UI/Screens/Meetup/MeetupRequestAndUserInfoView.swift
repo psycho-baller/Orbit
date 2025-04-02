@@ -13,6 +13,7 @@ struct MeetupRequestAndUserInfoView: View {
     let showFullDetails: Bool
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ScrollView {
@@ -97,15 +98,24 @@ struct MeetupRequestAndUserInfoView: View {
                         Text(bio)
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.blue.opacity(0.5))
+                            .background(ColorPalette.main(for: colorScheme))
                             .cornerRadius(10)
                     }
-                    .padding(.horizontal)
                 }
-
                 Spacer().frame(height: 50)
             }
             .padding()
         }
     }
 }
+
+#if DEBUG
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+        MeetupRequestAndUserInfoView(
+            user: .mock(), meetupRequest: .mock(), showFullDetails: true
+        )
+        .environmentObject(UserViewModel.mock())
+        .accentColor(ColorPalette.accent(for: colorScheme))
+    }
+#endif

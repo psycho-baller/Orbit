@@ -56,7 +56,7 @@ class ChatService: ChatServiceProtocol {
             )
             return document
         } catch {
-            throw NSError(domain: "Chat not found", code: 404, userInfo: nil)
+            throw NSError(domain: "Chat with chatID \(chatId) not found", code: 404, userInfo: nil)
         }
     }
 
