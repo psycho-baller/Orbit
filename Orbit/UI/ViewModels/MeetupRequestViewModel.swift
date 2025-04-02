@@ -50,7 +50,6 @@ class MeetupRequestViewModel: ObservableObject {
     func doesUserGenderMatchPreference(
         userGender: UserGender, preference: GenderPreference
     ) -> Bool {
-        print("userGender: \(userGender), preference: \(preference)")
         switch preference {
         case .any:
             return true

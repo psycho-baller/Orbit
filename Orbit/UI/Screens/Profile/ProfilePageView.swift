@@ -5,8 +5,8 @@
 //  Created by Nathaniel D'Orazio on 2024-12-18.
 //
 
-import SwiftUI
 import Loaf
+import SwiftUI
 
 struct ProfilePageView: View {
     let user: UserModel
@@ -33,7 +33,7 @@ struct ProfilePageView: View {
                     isCurrentUserProfile: isCurrentUserProfile,
                     activeSheet: $activeSheet
                 )
-                
+
                 // Profile content - different for current user vs other users
                 if isCurrentUserProfile {
                     CurrentUserProfileContent(
@@ -53,70 +53,59 @@ struct ProfilePageView: View {
             switch sheetType {
             case .personalInfo:
                 NameAgePronounEditSheet(user: displayUser)
-                .environmentObject(userVM)
             case .bio:
                 BioEditSheet(user: displayUser)
-                .environmentObject(userVM)
-                .presentationDetents([.fraction(0.6), .large])
+                    .presentationDetents([.fraction(0.6), .large])
             case .username:
                 UsernameEditSheet(user: displayUser)
-                .environmentObject(userVM)
-                .presentationDetents([.fraction(0.6), .large])
+                    .presentationDetents([.fraction(0.6), .large])
             case .profile:
                 ProfilePictureEditSheet(user: displayUser)
-                .environmentObject(userVM)
+
             case .interests:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "activitiesHobbies"
                 )
-                .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .friendActivities:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "friendActivities"
                 )
-                .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .meetupTypes:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "preferredMeetupType"
                 )
-                .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .convoTopics:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "convoTopics"
                 )
-                .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .friendshipValues:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "friendshipValues"
                 )
-                .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .friendshipQualities:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "friendshipQualities"
                 )
-                .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .intentions:
                 InterestsEditSheet(
                     user: displayUser,
                     section: "intentions"
                 )
-                .environmentObject(userVM)
                 .presentationDetents([.fraction(0.6), .large])
             case .featuredInterests:
                 FeaturedInterestsEditSheet(user: displayUser)
-                .environmentObject(userVM)
             }
         }
     }
@@ -136,14 +125,18 @@ struct ProfileTagSection: View {
                 Text(title)
                     .font(.headline)
                     .fontWeight(.semibold)
-                    .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                    .foregroundColor(
+                        ColorPalette.secondaryText(for: colorScheme)
+                    )
                     .padding(.top, 10)
 
                 if items.isEmpty {
                     Text("No items to display")
                         .font(.subheadline)
                         .italic()
-                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme))
+                        .foregroundColor(
+                            ColorPalette.secondaryText(for: colorScheme)
+                        )
                         .padding(.vertical, 8)
                 } else {
                     FlowLayout(items: items) { item in
@@ -153,9 +146,12 @@ struct ProfileTagSection: View {
                             .padding(.vertical, 8)
                             .background(
                                 Capsule()
-                                    .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                    .fill(
+                                        ColorPalette.accent(for: colorScheme)
+                                            .opacity(0.2))
                             )
-                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.accent(for: colorScheme))
                     }
                 }
             }
@@ -163,7 +159,6 @@ struct ProfileTagSection: View {
         }
     }
 }
-
 
 // Define an enum for the different sheet types
 enum ProfileEditType: String, Identifiable {
@@ -178,11 +173,11 @@ enum ProfileEditType: String, Identifiable {
 private struct ProfilePictureView: View {
     let displayUser: UserModel
     let colorScheme: ColorScheme
-    
+
     var body: some View {
         Group {
             if let profileUrl = displayUser.profilePictureUrl,
-               let url = URL(string: profileUrl)
+                let url = URL(string: profileUrl)
             {
                 AsyncImage(url: url) { image in
                     image
@@ -216,13 +211,13 @@ private struct UserProfileHeaderView: View {
     let isCurrentUserProfile: Bool
     @Binding var activeSheet: ProfileEditType?
     @Environment(\.colorScheme) var colorScheme
-    
+
     // Format pronouns for display
     private var pronounsText: String {
         displayUser.pronouns.map { $0.rawValue }.joined(separator: "/")
     }
     #warning(
-    "TODO: Find out why dates are formatted differently than expected when sent to the database. Is Appwrite doing it?"
+        "TODO: Find out why dates are formatted differently than expected when sent to the database. Is Appwrite doing it?"
     )  //Dates are expected to be formatted in "DateOnly" but are in "ISO8601"
     // Calculate age from birthdate
     private var ageText: String {
@@ -238,7 +233,7 @@ private struct UserProfileHeaderView: View {
             [.year], from: date, to: Date())
         return ageComponents.year.map { "\($0)" } ?? ""
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Profile picture with orbiting interests
@@ -258,35 +253,43 @@ private struct UserProfileHeaderView: View {
                             endRadius: 150
                         )
                     )
-                
+
                 // Orbiting Activities
                 if let activities = displayUser.featuredInterests,
-                   !activities.isEmpty
+                    !activities.isEmpty
                 {
                     OrbitContainer(interests: activities)
                 }
-                
+
                 // Profile Picture - make it tappable if it's the current user
                 if isCurrentUserProfile {
                     Button {
                         activeSheet = .profile
                     } label: {
-                        ProfilePictureView(displayUser: displayUser, colorScheme: colorScheme)
-                            .overlay(
-                                Circle()
-                                    .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2)
-                            )
-                    }
-                } else {
-                    ProfilePictureView(displayUser: displayUser, colorScheme: colorScheme)
+                        ProfilePictureView(
+                            displayUser: displayUser, colorScheme: colorScheme
+                        )
                         .overlay(
                             Circle()
-                                .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 2)
+                                .stroke(
+                                    ColorPalette.accent(for: colorScheme),
+                                    lineWidth: 2)
                         )
+                    }
+                } else {
+                    ProfilePictureView(
+                        displayUser: displayUser, colorScheme: colorScheme
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(
+                                ColorPalette.accent(for: colorScheme),
+                                lineWidth: 2)
+                    )
                 }
             }
             .padding(.top, 50)
-            
+
             // Edit featured interests button
             if isCurrentUserProfile {
                 Button {
@@ -298,12 +301,14 @@ private struct UserProfileHeaderView: View {
                         .padding(.vertical, 6)
                         .background(
                             Capsule()
-                                .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                .fill(
+                                    ColorPalette.accent(for: colorScheme)
+                                        .opacity(0.2))
                         )
                         .foregroundColor(ColorPalette.accent(for: colorScheme))
                 }
             }
-            
+
             // Name, age, pronouns, username and bio
             VStack(alignment: .center, spacing: 12) {
                 // name, age, pronouns
@@ -320,7 +325,7 @@ private struct UserProfileHeaderView: View {
                     )
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
-                    
+
                     // Age, gender, and pronouns on a second line
                     HStack(spacing: 8) {
                         // Age display - always show if available
@@ -331,7 +336,7 @@ private struct UserProfileHeaderView: View {
                                     ColorPalette.secondaryText(
                                         for: colorScheme))
                         }
-                        
+
                         // Gender display
                         if let gender = displayUser.gender,
                             displayUser.showGender
@@ -344,14 +349,14 @@ private struct UserProfileHeaderView: View {
                                         ColorPalette.secondaryText(
                                             for: colorScheme))
                             }
-                            
+
                             Text(gender.rawValue.capitalized)
                                 .font(.title3)
                                 .foregroundColor(
                                     ColorPalette.secondaryText(
                                         for: colorScheme))
                         }
-                        
+
                         // Add pronouns display
                         if displayUser.showPronouns,
                             !pronounsText.isEmpty
@@ -362,7 +367,7 @@ private struct UserProfileHeaderView: View {
                                 displayUser.gender != nil
                                 && displayUser.showGender
                                 && displayUser.gender != .other
-                            
+
                             if showAgeBefore || showGenderBefore {
                                 Text("•")
                                     .font(.title3)
@@ -370,7 +375,7 @@ private struct UserProfileHeaderView: View {
                                         ColorPalette.secondaryText(
                                             for: colorScheme))
                             }
-                            
+
                             Text(pronounsText.capitalized)
                                 .font(.title3)
                                 .foregroundColor(
@@ -380,7 +385,7 @@ private struct UserProfileHeaderView: View {
                     }
                     .padding(.top, 2)
                 }
-                
+
                 // Edit button for personal info
                 if isCurrentUserProfile {
                     Button {
@@ -392,9 +397,12 @@ private struct UserProfileHeaderView: View {
                             .padding(.vertical, 6)
                             .background(
                                 Capsule()
-                                    .fill(ColorPalette.accent(for: colorScheme).opacity(0.2))
+                                    .fill(
+                                        ColorPalette.accent(for: colorScheme)
+                                            .opacity(0.2))
                             )
-                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.accent(for: colorScheme))
                     }
                     .padding(.top, 4)
                 }
@@ -410,23 +418,29 @@ private struct CurrentUserProfileContent: View {
     let displayUser: UserModel
     @Binding var activeSheet: ProfileEditType?
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         VStack(spacing: 16) {
             // Username Section
-            TappableSection(title: "Username", action: {
-                activeSheet = .username
-            }) {
+            TappableSection(
+                title: "Username",
+                action: {
+                    activeSheet = .username
+                }
+            ) {
                 Text("@\(displayUser.username)")
                     .font(.headline)
                     .foregroundColor(ColorPalette.accent(for: colorScheme))
             }
             .padding(.horizontal)
-            
+
             // Bio Section
-            TappableSection(title: "Bio", action: {
-                activeSheet = .bio
-            }) {
+            TappableSection(
+                title: "Bio",
+                action: {
+                    activeSheet = .bio
+                }
+            ) {
                 if let bio = displayUser.bio, !bio.isEmpty {
                     Text(bio)
                         .font(.body)
@@ -436,11 +450,13 @@ private struct CurrentUserProfileContent: View {
                     Text("Tap to add a bio")
                         .font(.subheadline)
                         .italic()
-                        .foregroundColor(ColorPalette.secondaryText(for: colorScheme).opacity(0.7))
+                        .foregroundColor(
+                            ColorPalette.secondaryText(for: colorScheme)
+                                .opacity(0.7))
                 }
             }
             .padding(.horizontal)
-            
+
             // Activities & Hobbies Section
             TappableProfileTagSection(
                 title: "Activities and hobbies that bring me joy",
@@ -448,7 +464,7 @@ private struct CurrentUserProfileContent: View {
                 onTap: { activeSheet = .interests }
             )
             .padding(.horizontal)
-            
+
             // Friend Activities Section
             TappableProfileTagSection(
                 title: "Activities I'd love to do with friends",
@@ -456,7 +472,7 @@ private struct CurrentUserProfileContent: View {
                 onTap: { activeSheet = .friendActivities }
             )
             .padding(.horizontal)
-            
+
             // Preferred Meetup Types Section
             TappableProfileTagSection(
                 title: "Activities I enjoy doing with others",
@@ -464,7 +480,7 @@ private struct CurrentUserProfileContent: View {
                 onTap: { activeSheet = .meetupTypes }
             )
             .padding(.horizontal)
-            
+
             // Conversation Topics Section
             TappableProfileTagSection(
                 title: "Conversation topics I enjoy",
@@ -472,7 +488,7 @@ private struct CurrentUserProfileContent: View {
                 onTap: { activeSheet = .convoTopics }
             )
             .padding(.horizontal)
-            
+
             // Friendship Values Section
             TappableProfileTagSection(
                 title: "What I value most in a friendship",
@@ -480,7 +496,7 @@ private struct CurrentUserProfileContent: View {
                 onTap: { activeSheet = .friendshipValues }
             )
             .padding(.horizontal)
-            
+
             // Friendship Qualities Section
             TappableProfileTagSection(
                 title: "Qualities I look for in a friend",
@@ -488,7 +504,7 @@ private struct CurrentUserProfileContent: View {
                 onTap: { activeSheet = .friendshipQualities }
             )
             .padding(.horizontal)
-            
+
             // Intentions Section
             TappableProfileTagSection(
                 title: "What brings me to Orbit",
@@ -504,7 +520,7 @@ private struct CurrentUserProfileContent: View {
 private struct OtherUserProfileContent: View {
     let user: UserModel
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             // Bio if available
@@ -515,7 +531,7 @@ private struct OtherUserProfileContent: View {
                     .padding(.bottom, 8)
                     .padding(.horizontal)
             }
-            
+
             // Interests Section
             let interests = user.activitiesHobbies ?? []
             if !interests.isEmpty {
@@ -524,42 +540,42 @@ private struct OtherUserProfileContent: View {
                     items: interests
                 )
             }
-            
+
             if let activities = user.friendActivities, !activities.isEmpty {
                 ProfileTagSection(
                     title: "Activities I'd love to do with friends",
                     items: activities
                 )
             }
-            
+
             if let meetups = user.preferredMeetupType, !meetups.isEmpty {
                 ProfileTagSection(
                     title: "Activities I enjoy doing with others",
                     items: meetups
                 )
             }
-            
+
             if let topics = user.convoTopics, !topics.isEmpty {
                 ProfileTagSection(
                     title: "Conversation topics I enjoy",
                     items: topics
                 )
             }
-            
+
             if let values = user.friendshipValues, !values.isEmpty {
                 ProfileTagSection(
                     title: "What I value most in a friendship",
                     items: values
                 )
             }
-            
+
             if let qualities = user.friendshipQualities, !qualities.isEmpty {
                 ProfileTagSection(
                     title: "Qualities I look for in a friend",
                     items: qualities
                 )
             }
-            
+
             if let intentions = user.intentions, !intentions.isEmpty {
                 ProfileTagSection(
                     title: "What brings me to Orbit",
@@ -569,7 +585,6 @@ private struct OtherUserProfileContent: View {
         }
     }
 }
-
 
 // MARK: - Preview
 #if DEBUG
@@ -581,10 +596,10 @@ private struct OtherUserProfileContent: View {
         .environmentObject(AuthViewModel())
         .environmentObject(UserViewModel.mock())
     }
-    
+
     #Preview("Other User Profile") {
         ProfilePageView(
-            user: UserViewModel.mock().allUsers[1], // Using a different user from the mock data
+            user: UserViewModel.mock().allUsers[1],  // Using a different user from the mock data
             isCurrentUserProfile: false
         )
         .environmentObject(AuthViewModel())
