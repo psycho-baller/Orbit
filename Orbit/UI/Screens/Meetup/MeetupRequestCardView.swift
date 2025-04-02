@@ -23,7 +23,6 @@ struct MeetupRequestCardView: View {
             ) {
                 SwipeView {
                     HStack(alignment: .top, spacing: 12) {
-                        // ⭕ Type icon
                         Circle()
                             .fill(
                                 ColorPalette.secondaryText(for: colorScheme)
@@ -41,7 +40,6 @@ struct MeetupRequestCardView: View {
                             )
 
                         VStack(alignment: .leading, spacing: 8) {
-                            // Title is always shown
                             Text(meetupRequest.data.title)
                                 .font(.title3.bold())
                                 .foregroundColor(
@@ -122,7 +120,7 @@ struct MeetupRequestCardView: View {
                                         for: colorScheme))
                             }
                         }
-                        Spacer()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding()
                     .background(

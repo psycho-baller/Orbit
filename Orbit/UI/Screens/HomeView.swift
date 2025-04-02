@@ -16,7 +16,7 @@ struct HomeView: View {
     @State private var selectedSortingOption: SortingOptions = .recommended
     @State private var isListReversed: Bool = false
 
-    // MARK: - Home Filter Options
+    // MARK: - Home Filter & Sorting Options
     enum SortingOptions: String, CaseIterable, Identifiable {
         case recommended = "Recommended"
         case time = "Time"
