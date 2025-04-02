@@ -22,112 +22,138 @@ struct MeetupRequestCardView: View {
                     meetupRequest: meetupRequest)
             ) {
                 SwipeView {
-                    HStack(alignment: .top, spacing: 12) {
-                        Circle()
-                            .fill(
-                                ColorPalette.secondaryText(for: colorScheme)
-                                    .opacity(0.2)
-                            )
-                            .frame(width: 48, height: 48)
-                            .overlay(
-                                Image(systemName: meetupRequest.data.type.icon)
+                    VStack(spacing: 10) {
+                        HStack(alignment: .top, spacing: 12) {
+                            Circle()
+                                .fill(
+                                    ColorPalette.secondaryText(for: colorScheme)
+                                        .opacity(0.2)
+                                )
+                                .frame(width: 48, height: 48)
+                                .overlay(
+                                    Image(
+                                        systemName: meetupRequest.data.type.icon
+                                    )
                                     .resizable()
                                     .scaledToFit()
                                     .padding(12)
                                     .foregroundColor(
                                         ColorPalette.accent(for: colorScheme)),
-                                alignment: .center
-                            )
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(meetupRequest.data.title)
-                                .font(.title3.bold())
-                                .foregroundColor(
-                                    ColorPalette.accent(for: colorScheme)
+                                    alignment: .center
                                 )
-                                .lineLimit(1)
 
-                            // Details row: gender, age, time, and location
-                            HStack(spacing: 8) {
-                                // Gender and Age: Only if createdByUser exists
-                                if let createdByUser = meetupRequest.data
-                                    .createdByUser,
-                                    let gender = createdByUser.gender
-                                {
-                                    HStack(spacing: 4) {
-                                        Image(genderIcon(for: gender))
-                                            .resizable()
-                                            .renderingMode(.template)
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 16, height: 16)
-                                            .foregroundColor(
-                                                ColorPalette.secondaryText(
-                                                    for: colorScheme))
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(meetupRequest.data.title)
+                                    .font(.title3.bold())
+                                    .foregroundColor(
+                                        ColorPalette.accent(for: colorScheme)
+                                    )
+                                    .lineLimit(1)
 
-                                        // Show age only if it can be computed
-                                        if let dob = createdByUser.dob,
-                                            let age = DateFormatterUtility.age(
-                                                from: dob)
-                                        {
-                                            Text("\(age)")
-                                                .font(
-                                                    .system(
-                                                        size: 14,
-                                                        weight: .semibold)
-                                                )
+                                // Details row: gender, age, time, and location
+                                HStack(spacing: 8) {
+                                    // Gender and Age: Only if createdByUser exists
+                                    if let createdByUser = meetupRequest.data
+                                        .createdByUser,
+                                        let gender = createdByUser.gender
+                                    {
+                                        HStack(spacing: 4) {
+                                            Image(genderIcon(for: gender))
+                                                .resizable()
+                                                .renderingMode(.template)
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(width: 16, height: 16)
                                                 .foregroundColor(
                                                     ColorPalette.secondaryText(
                                                         for: colorScheme))
+
+                                            // Show age only if it can be computed
+                                            if let dob = createdByUser.dob,
+                                                let age =
+                                                    DateFormatterUtility.age(
+                                                        from: dob)
+                                            {
+                                                Text("\(age)")
+                                                    .font(
+                                                        .system(
+                                                            size: 14,
+                                                            weight: .semibold)
+                                                    )
+                                                    .foregroundColor(
+                                                        ColorPalette
+                                                            .secondaryText(
+                                                                for: colorScheme
+                                                            ))
+                                            }
                                         }
                                     }
-                                }
 
-                                Spacer().frame(width: 3)
+                                    Spacer().frame(width: 3)
 
-                                // Clock icon and simplified time display
-                                HStack(spacing: 4) {
-                                    Image(systemName: "clock")
-                                        .font(.system(size: 13))
+                                    // Clock icon and simplified time display
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "clock")
+                                            .font(.system(size: 13))
+                                            .foregroundColor(
+                                                ColorPalette.secondaryText(
+                                                    for: colorScheme))
+                                        Text(
+                                            formatMeetupTime(
+                                                meetup: meetupRequest.data)
+                                        )
+                                        .font(
+                                            .system(size: 14, weight: .semibold)
+                                        )
                                         .foregroundColor(
                                             ColorPalette.secondaryText(
                                                 for: colorScheme))
-                                    Text(
-                                        formatMeetupTime(
-                                            meetup: meetupRequest.data)
-                                    )
-                                    .font(.system(size: 14, weight: .semibold))
+                                    }
+
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "mappin.and.ellipse")
+                                            .font(.caption)
+                                        Text(
+                                            userVM.getAreaName(
+                                                forId: meetupRequest.data.areaId
+                                            )
+                                        )
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                        .font(
+                                            .system(
+                                                size: 14, weight: .semibold)
+                                        )
+                                    }
                                     .foregroundColor(
                                         ColorPalette.secondaryText(
                                             for: colorScheme))
                                 }
-
-                                HStack(spacing: 4) {
-                                    Image(systemName: "mappin.and.ellipse")
-                                        .font(.caption)
-                                    Text(
-                                        userVM.getAreaName(
-                                            forId: meetupRequest.data.areaId)
-                                    )
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                                    .font(
-                                        .system(
-                                            size: 14, weight: .semibold)
-                                    )
-                                }
-                                .foregroundColor(
-                                    ColorPalette.secondaryText(
-                                        for: colorScheme))
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        // If the model has an array of sharedInterests, show them.
+                        if let otherUserInterests = meetupRequest.data
+                            .createdByUser?.activitiesHobbies,
+                            let myInterests = userVM.currentUser?
+                                .activitiesHobbies
+                        {
+                            let sharedInterests = otherUserInterests.filter {
+                                myInterests.contains($0)
+                            }
+                            if !sharedInterests.isEmpty {
+                                SharedInterestsTags(interests: sharedInterests)
+                                Spacer()
+                            }
+                        }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 24)
                             .fill(ColorPalette.main(for: colorScheme))
                             .shadow(
-                                color: .black.opacity(0.05), radius: 4, x: 0,
+                                color: .black.opacity(0.05), radius: 4,
+                                x: 0,
                                 y: 2)
                     )
                 } leadingActions: { _ in
