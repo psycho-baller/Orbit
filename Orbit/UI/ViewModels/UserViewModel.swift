@@ -539,23 +539,30 @@ class UserViewModel: NSObject, ObservableObject {
         }
         
         isLoading = true
-        defer { isLoading = false }
+        
+        // Create a temporary copy
+        let tempUser = currentUser
+        
+        // Force UI update by setting to nil and back
+        self.currentUser = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.currentUser = updatedUser
+            self.objectWillChange.send()
+        }
         
         do {
             // Save to database
             try await updateUserWithError(id: updatedUser.accountId, updatedUser: updatedUser)
             
-            // Update the current user for UI refresh
-            self.currentUser = updatedUser
-            
-            // Show success toast if section name is provided
+            // Only show success toast after successful update
             if let section = sectionName {
                 showSuccessToast(section)
             }
-            
-            // Notify observers that data has changed
-            objectWillChange.send()
         } catch {
+            // Revert to original user if update fails
+            self.currentUser = tempUser
+            self.objectWillChange.send()
+            
             // Show error toast with the section name if provided
             if let section = sectionName {
                 showErrorToast("Failed to update \(section.lowercased())")
@@ -567,6 +574,8 @@ class UserViewModel: NSObject, ObservableObject {
             self.error = error.localizedDescription
             print("UserViewModel - updateAndSaveUserData: Error: \(error.localizedDescription)")
         }
+        
+        isLoading = false
     }
 
     // Modified updateUser function that throws errors instead of handling them internally

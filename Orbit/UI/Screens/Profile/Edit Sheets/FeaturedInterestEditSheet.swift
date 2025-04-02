@@ -164,13 +164,18 @@ struct FeaturedInterestsEditSheet: View {
                     Button("Save") {
                         isSaving = true
                         
+                        // Capture values to use in the background task
+                        let interestsToSave = selectedInterests
+                        
+                        // Dismiss immediately for a snappier feel
+                        dismiss()
+                        
+                        // Then perform the update in the background
                         Task {
                             await userVM.updateAndSaveUserData(
-                                featuredInterests: selectedInterests,
+                                featuredInterests: interestsToSave,
                                 sectionName: "Featured interests"
                             )
-                            
-                            dismiss()
                         }
                     }
                     .disabled(isSaving)

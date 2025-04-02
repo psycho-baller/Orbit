@@ -189,51 +189,58 @@ struct InterestsEditSheet: View {
                         Button("Save") {
                             isSaving = true
                             
+                            // Capture values to use in the background task
+                            let intentionsToSave = isIntentionsSection ? selectedIntentions : nil
+                            let itemsToSave = selectedItems
+                            let sectionToUpdate = section
+                            
+                            // Dismiss immediately for a snappier feel
+                            dismiss()
+                            
+                            // Then perform the update in the background
                             Task {
                                 if isIntentionsSection {
                                     await userVM.updateAndSaveUserData(
-                                        intentions: selectedIntentions,
+                                        intentions: intentionsToSave,
                                         sectionName: "Intentions"
                                     )
                                 } else {
                                     // Update directly based on section
-                                    switch section {
+                                    switch sectionToUpdate {
                                     case "activitiesHobbies":
                                         await userVM.updateAndSaveUserData(
-                                            activitiesHobbies: selectedItems,
+                                            activitiesHobbies: itemsToSave,
                                             sectionName: "Activities and hobbies"
                                         )
                                     case "friendActivities":
                                         await userVM.updateAndSaveUserData(
-                                            friendActivities: selectedItems,
+                                            friendActivities: itemsToSave,
                                             sectionName: "Friend activities"
                                         )
                                     case "preferredMeetupType":
                                         await userVM.updateAndSaveUserData(
-                                            preferredMeetupType: selectedItems,
+                                            preferredMeetupType: itemsToSave,
                                             sectionName: "Meetup types"
                                         )
                                     case "convoTopics":
                                         await userVM.updateAndSaveUserData(
-                                            convoTopics: selectedItems,
+                                            convoTopics: itemsToSave,
                                             sectionName: "Conversation topics"
                                         )
                                     case "friendshipValues":
                                         await userVM.updateAndSaveUserData(
-                                            friendshipValues: selectedItems,
+                                            friendshipValues: itemsToSave,
                                             sectionName: "Friendship values"
                                         )
                                     case "friendshipQualities":
                                         await userVM.updateAndSaveUserData(
-                                            friendshipQualities: selectedItems,
+                                            friendshipQualities: itemsToSave,
                                             sectionName: "Friendship qualities"
                                         )
                                     default:
                                         break
                                     }
                                 }
-                                
-                                dismiss()
                             }
                         }
                         .disabled(isSaving)

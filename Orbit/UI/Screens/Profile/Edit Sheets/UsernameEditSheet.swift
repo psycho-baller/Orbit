@@ -110,13 +110,18 @@ struct UsernameEditSheet: View {
                             if isUsernameAvailable == true && username != user.username {
                                 isSaving = true
                                 
+                                // Capture values to use in the background task
+                                let usernameToSave = username
+                                
+                                // Dismiss immediately for a snappier feel
+                                dismiss()
+                                
+                                // Then perform the update in the background
                                 Task {
                                     await userVM.updateAndSaveUserData(
-                                        username: username,
+                                        username: usernameToSave,
                                         sectionName: "Username"
                                     )
-                                    
-                                    dismiss()
                                 }
                             }
                         }

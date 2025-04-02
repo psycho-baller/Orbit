@@ -276,25 +276,36 @@ struct NameAgePronounEditSheet: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        isSaving = true
-                        
-                        // Format date to match the format used in onboarding
-                        let formattedDate = DateFormatterUtility.formatDateOnly(dateOfBirth)
-                        
-                        Task {
-                            // Update directly without temp data
-                            await userVM.updateAndSaveUserData(
-                                firstName: firstName,
-                                lastName: lastName.isEmpty ? nil : lastName,
-                                dob: formattedDate,
-                                pronouns: Array(selectedPronouns),
-                                gender: selectedGender,
-                                showPronouns: showPronouns,
-                                showGender: showGender,
-                                sectionName: "Personal info"
-                            )
+                        if isFormValid {
+                            isSaving = true
                             
+                            // Format date to match the format used in onboarding
+                            let formattedDate = DateFormatterUtility.formatDateOnly(dateOfBirth)
+                            
+                            // Capture all values to use in the background task
+                            let firstNameToSave = firstName
+                            let lastNameToSave = lastName.isEmpty ? nil : lastName
+                            let pronounsToSave = Array(selectedPronouns)
+                            let genderToSave = selectedGender
+                            let showPronounsToSave = showPronouns
+                            let showGenderToSave = showGender
+                            
+                            // Dismiss immediately for a snappier feel
                             dismiss()
+                            
+                            // Then perform the update in the background
+                            Task {
+                                await userVM.updateAndSaveUserData(
+                                    firstName: firstNameToSave,
+                                    lastName: lastNameToSave,
+                                    dob: formattedDate,
+                                    pronouns: pronounsToSave,
+                                    gender: genderToSave,
+                                    showPronouns: showPronounsToSave,
+                                    showGender: showGenderToSave,
+                                    sectionName: "Personal info"
+                                )
+                            }
                         }
                     }
                     .disabled(!isFormValid || isSaving)

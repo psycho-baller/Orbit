@@ -89,13 +89,18 @@ struct BioEditSheet: View {
                         if isValidBio {
                             isSaving = true
                             
+                            // Capture the bio value to use in the background task
+                            let bioToSave = bio.isEmpty ? nil : bio
+                            
+                            // Dismiss immediately for a snappier feel
+                            dismiss()
+                            
+                            // Then perform the update in the background
                             Task {
                                 await userVM.updateAndSaveUserData(
-                                    bio: bio.isEmpty ? nil : bio,
+                                    bio: bioToSave,
                                     sectionName: "Bio"
                                 )
-                                
-                                dismiss()
                             }
                         }
                     }
