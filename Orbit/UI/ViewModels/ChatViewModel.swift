@@ -14,8 +14,12 @@ class ChatViewModel: ObservableObject {
     @Published var error: String?
 
     private var chatService: ChatServiceProtocol = ChatService()
+    private let notificationService: NotificationServiceProtocol
 
-    init() {
+    init(
+        notificationService: NotificationServiceProtocol =
+            NotificationService()
+    ) {
         if !isPreviewMode {
             Task {
                 await fetchChats()
@@ -47,6 +51,36 @@ class ChatViewModel: ObservableObject {
         do {
             let savedChat = try await chatService.createChat(chat: chat)
             self.chats.append(savedChat)
+
+            // If this chat includes a meetup request, send a push notification for meetup approval
+            if let meetupRequest = savedChat.data.meetupRequest,
+                let sendToUser = meetupRequest.createdByUser,
+                let currentUser = savedChat.data.createdByUser
+            {
+                do {
+                    try await notificationService.sendPushNotification(
+                        to: [sendToUser.id],
+                        title:
+                            "\(currentUser.firstName) Would like to meet up!",
+                        body:
+                            "Start chatting and plan out your meetup",
+                        data: [
+                            "meetupRequest": [
+                                "id": meetupRequest.id,
+                                "createdByUserId": sendToUser.id,
+                                "approverUserId": currentUser,
+                            ],
+                            "type": "meetupApproved",
+                        ]
+                    )
+                } catch {
+                    // Log the push notification error separately without affecting chat creation
+                    print(
+                        "Push notification error: \(error.localizedDescription)"
+                    )
+                }
+            }
+
             return savedChat
         } catch {
             self.error = error.localizedDescription
