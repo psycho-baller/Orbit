@@ -21,10 +21,16 @@ class ChatMessageViewModel: ObservableObject {
         ChatMessageService()
     private var appwriteRealtimeClient = AppwriteService.shared.realtime
     private var realtimeSubscription: RealtimeSubscription?
+    private let notificationService: NotificationServiceProtocol
 
-    init(chatId: String, userId: String? = nil) {
+    init(
+        chatId: String, userId: String? = nil,
+        notificationService: NotificationServiceProtocol =
+            NotificationService()
+    ) {
         self.chatId = chatId
         self.userId = userId
+        self.notificationService = notificationService
         if isPreviewMode {
             self.messages = [
                 .mock(data: .mock()),
@@ -177,10 +183,46 @@ class ChatMessageViewModel: ObservableObject {
         do {
             let createdMessage = try await chatMessageService.createMessage(
                 message: message)
-            // update the final element with the data from savedMessage
+            // Replace the mock with the real message
             messages[messages.count - 1] = createdMessage
+
+            // Determine the receiver's id (this may depend on your chat model)
+            if let receiverUserAccountId =
+                (userId == message.chat?.createdByUser?.id)
+                ? message.chat?.otherUser?.accountId
+                : message.chat?.createdByUser?.accountId,
+                let currentUser = message.sentByUser,
+                let chatId = message.chat?.id
+            {
+                print(
+                    "send to \(receiverUserAccountId), \(currentUser.firstName) sent you a message!"
+                )
+
+                // Send push notification for the new message in a separate do-catch block
+                do {
+                    try await notificationService.sendPushNotification(
+                        to: [receiverUserAccountId],
+                        title: "\(currentUser.firstName) sent you a message!",
+                        body: message.content,
+                        data: [
+                            "newMessage": [
+                                "id": createdMessage.id,
+                                "sentByUserId": currentUser.accountId,
+                                "receiverUserId": receiverUserAccountId,
+                                "chatId": chatId,
+                            ],
+                            "type": "newMessage",
+                        ]
+                    )
+                } catch {
+                    // Log the push notification error separately without rolling back message creation
+                    print(
+                        "Push notification error: \(error.localizedDescription)"
+                    )
+                }
+            }
         } catch {
-            // remove the final element (the mock one)
+            // Remove the mock message if message creation fails
             messages.popLast()
             self.error = error.localizedDescription
             print(
