@@ -44,12 +44,15 @@ struct MeetupDetailsInsideChat: View {
     }
 }
 
-#Preview {
-    @Previewable @Environment(\.colorScheme) var colorScheme
+#if DEBUG
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
 
-    MeetupDetailsInsideChat(
-        user: UserModel.mock(), meetupRequest: .mock(), showFullDetails: true
-    )
-    .environmentObject(UserViewModel.mock())
-    .accentColor(ColorPalette.accent(for: colorScheme))
-}
+        MeetupDetailsInsideChat(
+            user: UserModel.mock(), meetupRequest: .mock(),
+            showFullDetails: true
+        )
+        .environmentObject(UserViewModel.mock())
+        .accentColor(ColorPalette.accent(for: colorScheme))
+    }
+#endif

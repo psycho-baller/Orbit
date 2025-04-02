@@ -138,7 +138,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         blockedMe: [UserBlockModel]? = [],
         myReports: [UserReportModel]? = [],
         reportedMe: [UserReportModel]? = [],
-        otherGender: String? = nil
+        otherGender: String? = nil,
+        location: String? = nil
     ) {
         self.id = id
         self.accountId = accountId

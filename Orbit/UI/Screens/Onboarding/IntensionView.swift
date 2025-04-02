@@ -108,11 +108,13 @@ struct IntentionView: View {
     }
 }
 
-#Preview {
-    NavigationView {
-        IntentionView(viewModel: .init())
-            .environmentObject(UserViewModel.mock())
-    }
-    .navigationBarTitleDisplayMode(.inline)
+#if DEBUG
+    #Preview {
+        NavigationView {
+            IntentionView(viewModel: .init())
+                .environmentObject(UserViewModel.mock())
+        }
+        .navigationBarTitleDisplayMode(.inline)
 
-}
+    }
+#endif

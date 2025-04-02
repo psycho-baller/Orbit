@@ -252,6 +252,7 @@ struct InterestsEditSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     InterestsEditSheet(
         user: UserViewModel.mock().currentUser!,
@@ -259,3 +260,4 @@ struct InterestsEditSheet: View {
     )
     .environmentObject(UserViewModel.mock())
 }
+#endif

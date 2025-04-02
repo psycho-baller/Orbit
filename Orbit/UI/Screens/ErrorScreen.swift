@@ -69,7 +69,9 @@ struct ErrorScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     ErrorScreen()
         .environmentObject(UserViewModel.mock())  // Ensure mock data is provided
 }
+#endif
