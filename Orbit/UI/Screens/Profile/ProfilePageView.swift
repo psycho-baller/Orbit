@@ -9,104 +9,103 @@ import Loaf
 import SwiftUI
 
 struct ProfilePageView: View {
-    let user: UserModel
+    //    let user: UserModel
     @Environment(\.colorScheme) var colorScheme
     @State private var orbitAngle: Double = 0
     @State private var activeSheet: ProfileEditType?
 
     // Determine if this is the current user's profile
-    var isCurrentUserProfile: Bool
+    //    var isCurrentUserProfile: Bool
 
     @EnvironmentObject var userVM: UserViewModel
 
-    // Use current user when available, otherwise use the provided user
-    private var displayUser: UserModel {
-        userVM.currentUser ?? user
-    }
-
     var body: some View {
-        ScrollView {
-            VStack(spacing: 15) {
-                // Profile Header with picture and orbiting interests
-                UserProfileHeaderView(
-                    displayUser: displayUser,
-                    isCurrentUserProfile: isCurrentUserProfile,
-                    activeSheet: $activeSheet
-                )
+        if let displayUser = userVM.currentUser {
+            ScrollView {
+                VStack(spacing: 15) {
+                    // Profile Header with picture and orbiting interests
+                    UserProfileHeaderView(
+                        displayUser: displayUser,
+                        //                    isCurrentUserProfile: isCurrentUserProfile,
+                        activeSheet: $activeSheet
+                    )
 
-                // Profile content - different for current user vs other users
-                if isCurrentUserProfile {
+                    // Profile content - different for current user vs other users
+                    //                if isCurrentUserProfile {
                     CurrentUserProfileContent(
                         displayUser: displayUser,
                         activeSheet: $activeSheet
                     )
-                } else {
-                    // Non-editable view for other users' profiles
-                    OtherUserProfileContent(user: user)
+                    //                } else {
+                    //                    // Non-editable view for other users' profiles
+                    //                    OtherUserProfileContent(user: user)
+                    //                }
                 }
             }
-        }
-        .background(ColorPalette.background(for: colorScheme))
-        .edgesIgnoringSafeArea(.top)
-        .sheet(item: $activeSheet) { sheetType in
-            // Sheet presentations
-            switch sheetType {
-            case .personalInfo:
-                NameAgePronounEditSheet(user: displayUser)
-            case .bio:
-                BioEditSheet(user: displayUser)
-                    .presentationDetents([.fraction(0.6), .large])
-            case .username:
-                UsernameEditSheet(user: displayUser)
-                    .presentationDetents([.fraction(0.6), .large])
-            case .profile:
-                ProfilePictureEditSheet(user: displayUser)
+            .background(ColorPalette.background(for: colorScheme))
+            .edgesIgnoringSafeArea(.top)
+            .sheet(item: $activeSheet) { sheetType in
+                // Sheet presentations
+                switch sheetType {
+                case .personalInfo:
+                    NameAgePronounEditSheet(user: displayUser)
+                case .bio:
+                    BioEditSheet(user: displayUser)
+                        .presentationDetents([.fraction(0.6), .large])
+                case .username:
+                    UsernameEditSheet(user: displayUser)
+                        .presentationDetents([.fraction(0.6), .large])
+                case .profile:
+                    ProfilePictureEditSheet(user: displayUser)
 
-            case .interests:
-                InterestsEditSheet(
-                    user: displayUser,
-                    section: "activitiesHobbies"
-                )
-                .presentationDetents([.fraction(0.6), .large])
-            case .friendActivities:
-                InterestsEditSheet(
-                    user: displayUser,
-                    section: "friendActivities"
-                )
-                .presentationDetents([.fraction(0.6), .large])
-            case .meetupTypes:
-                InterestsEditSheet(
-                    user: displayUser,
-                    section: "preferredMeetupType"
-                )
-                .presentationDetents([.fraction(0.6), .large])
-            case .convoTopics:
-                InterestsEditSheet(
-                    user: displayUser,
-                    section: "convoTopics"
-                )
-                .presentationDetents([.fraction(0.6), .large])
-            case .friendshipValues:
-                InterestsEditSheet(
-                    user: displayUser,
-                    section: "friendshipValues"
-                )
-                .presentationDetents([.fraction(0.6), .large])
-            case .friendshipQualities:
-                InterestsEditSheet(
-                    user: displayUser,
-                    section: "friendshipQualities"
-                )
-                .presentationDetents([.fraction(0.6), .large])
-            case .intentions:
-                InterestsEditSheet(
-                    user: displayUser,
-                    section: "intentions"
-                )
-                .presentationDetents([.fraction(0.6), .large])
-            case .featuredInterests:
-                FeaturedInterestsEditSheet(user: displayUser)
+                case .interests:
+                    InterestsEditSheet(
+                        user: displayUser,
+                        section: "activitiesHobbies"
+                    )
+                    .presentationDetents([.fraction(0.6), .large])
+                case .friendActivities:
+                    InterestsEditSheet(
+                        user: displayUser,
+                        section: "friendActivities"
+                    )
+                    .presentationDetents([.fraction(0.6), .large])
+                case .meetupTypes:
+                    InterestsEditSheet(
+                        user: displayUser,
+                        section: "preferredMeetupType"
+                    )
+                    .presentationDetents([.fraction(0.6), .large])
+                case .convoTopics:
+                    InterestsEditSheet(
+                        user: displayUser,
+                        section: "convoTopics"
+                    )
+                    .presentationDetents([.fraction(0.6), .large])
+                case .friendshipValues:
+                    InterestsEditSheet(
+                        user: displayUser,
+                        section: "friendshipValues"
+                    )
+                    .presentationDetents([.fraction(0.6), .large])
+                case .friendshipQualities:
+                    InterestsEditSheet(
+                        user: displayUser,
+                        section: "friendshipQualities"
+                    )
+                    .presentationDetents([.fraction(0.6), .large])
+                case .intentions:
+                    InterestsEditSheet(
+                        user: displayUser,
+                        section: "intentions"
+                    )
+                    .presentationDetents([.fraction(0.6), .large])
+                case .featuredInterests:
+                    FeaturedInterestsEditSheet(user: displayUser)
+                }
             }
+        } else {
+            Text("HELLOOOOOOOOOOOOO").font(.title)
         }
     }
 }
@@ -208,7 +207,7 @@ private struct ProfilePictureView: View {
 // MARK: - User Profile Header Component
 private struct UserProfileHeaderView: View {
     let displayUser: UserModel
-    let isCurrentUserProfile: Bool
+    //    let isCurrentUserProfile: Bool
     @Binding var activeSheet: ProfileEditType?
     @Environment(\.colorScheme) var colorScheme
 
@@ -262,21 +261,10 @@ private struct UserProfileHeaderView: View {
                 }
 
                 // Profile Picture - make it tappable if it's the current user
-                if isCurrentUserProfile {
-                    Button {
-                        activeSheet = .profile
-                    } label: {
-                        ProfilePictureView(
-                            displayUser: displayUser, colorScheme: colorScheme
-                        )
-                        .overlay(
-                            Circle()
-                                .stroke(
-                                    ColorPalette.accent(for: colorScheme),
-                                    lineWidth: 2)
-                        )
-                    }
-                } else {
+                //                if isCurrentUserProfile {
+                Button {
+                    activeSheet = .profile
+                } label: {
                     ProfilePictureView(
                         displayUser: displayUser, colorScheme: colorScheme
                     )
@@ -287,27 +275,38 @@ private struct UserProfileHeaderView: View {
                                 lineWidth: 2)
                     )
                 }
+                //                } else {
+                //                    ProfilePictureView(
+                //                        displayUser: displayUser, colorScheme: colorScheme
+                //                    )
+                //                    .overlay(
+                //                        Circle()
+                //                            .stroke(
+                //                                ColorPalette.accent(for: colorScheme),
+                //                                lineWidth: 2)
+                //                    )
+                //                }
             }
             .padding(.top, 50)
 
             // Edit featured interests button
-            if isCurrentUserProfile {
-                Button {
-                    activeSheet = .featuredInterests
-                } label: {
-                    Text("Edit Featured Interests")
-                        .font(.caption)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(
-                            Capsule()
-                                .fill(
-                                    ColorPalette.accent(for: colorScheme)
-                                        .opacity(0.2))
-                        )
-                        .foregroundColor(ColorPalette.accent(for: colorScheme))
-                }
+            //            if isCurrentUserProfile {
+            Button {
+                activeSheet = .featuredInterests
+            } label: {
+                Text("Edit Featured Interests")
+                    .font(.caption)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(
+                                ColorPalette.accent(for: colorScheme)
+                                    .opacity(0.2))
+                    )
+                    .foregroundColor(ColorPalette.accent(for: colorScheme))
             }
+            //            }
 
             // Name, age, pronouns, username and bio
             VStack(alignment: .center, spacing: 12) {
@@ -387,25 +386,25 @@ private struct UserProfileHeaderView: View {
                 }
 
                 // Edit button for personal info
-                if isCurrentUserProfile {
-                    Button {
-                        activeSheet = .personalInfo
-                    } label: {
-                        Text("Edit Personal Info")
-                            .font(.caption)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(
-                                        ColorPalette.accent(for: colorScheme)
-                                            .opacity(0.2))
-                            )
-                            .foregroundColor(
-                                ColorPalette.accent(for: colorScheme))
-                    }
-                    .padding(.top, 4)
+                //                if isCurrentUserProfile {
+                Button {
+                    activeSheet = .personalInfo
+                } label: {
+                    Text("Edit Personal Info")
+                        .font(.caption)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule()
+                                .fill(
+                                    ColorPalette.accent(for: colorScheme)
+                                        .opacity(0.2))
+                        )
+                        .foregroundColor(
+                            ColorPalette.accent(for: colorScheme))
                 }
+                .padding(.top, 4)
+                //                }
             }
             .padding(.top, 16)
         }
@@ -589,18 +588,14 @@ private struct OtherUserProfileContent: View {
 // MARK: - Preview
 #if DEBUG
     #Preview("Current User Profile") {
-        ProfilePageView(
-            user: UserViewModel.mock().currentUser!,
-            isCurrentUserProfile: true
-        )
-        .environmentObject(AuthViewModel())
-        .environmentObject(UserViewModel.mock())
+        ProfilePageView()
+            .environmentObject(AuthViewModel())
+            .environmentObject(UserViewModel.mock())
     }
 
     #Preview("Other User Profile") {
-        ProfilePageView(
-            user: UserViewModel.mock().allUsers[1],  // Using a different user from the mock data
-            isCurrentUserProfile: false
+        ProfilePageView(  //            user: UserViewModel.mock().allUsers[1],  // Using a different user from the mock data
+        //            isCurrentUserProfile: false
         )
         .environmentObject(AuthViewModel())
         .environmentObject(UserViewModel.mock())

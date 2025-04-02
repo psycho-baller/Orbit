@@ -18,7 +18,7 @@ struct UserProfileView: View {
     @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
-        ProfilePageView(user: user, isCurrentUserProfile: false)
+        ProfilePageView()
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -47,27 +47,36 @@ struct UserProfileView: View {
                             Text("Send a request to \(user.username)")
                                 .font(.title2)
                                 .fontWeight(.semibold)
-                                .foregroundColor(ColorPalette.text(for: colorScheme))
+                                .foregroundColor(
+                                    ColorPalette.text(for: colorScheme)
+                                )
                                 .padding(.top, 24)
 
-                            TextField("Hi! Would you like to meet up?", text: $message, axis: .vertical)
-                                .frame(height: 150, alignment: .top)
-                                .padding()
-                                .background(ColorPalette.main(for: colorScheme))
-                                .cornerRadius(16)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .stroke(ColorPalette.accent(for: colorScheme), lineWidth: 1)
-                                )
-                                .padding(.horizontal)
-                                .padding(.top, 24)
+                            TextField(
+                                "Hi! Would you like to meet up?",
+                                text: $message, axis: .vertical
+                            )
+                            .frame(height: 150, alignment: .top)
+                            .padding()
+                            .background(ColorPalette.main(for: colorScheme))
+                            .cornerRadius(16)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(
+                                        ColorPalette.accent(for: colorScheme),
+                                        lineWidth: 1)
+                            )
+                            .padding(.horizontal)
+                            .padding(.top, 24)
 
                             Button(action: {
                                 if let currentUser = userVM.currentUser {
                                     let request = ChatRequestModel(
                                         senderAccountId: currentUser.accountId,
                                         receiverAccountId: user.accountId,
-                                        message: message.isEmpty ? "👋 Hi! Would you like to meet up?" : message
+                                        message: message.isEmpty
+                                            ? "👋 Hi! Would you like to meet up?"
+                                            : message
                                     )
                                     Task {
                                         await chatRequestVM.sendMeetUpRequest(
@@ -86,7 +95,9 @@ struct UserProfileView: View {
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(ColorPalette.accent(for: colorScheme))
+                                .background(
+                                    ColorPalette.accent(for: colorScheme)
+                                )
                                 .cornerRadius(16)
                             }
                             .padding(.horizontal)
@@ -100,7 +111,8 @@ struct UserProfileView: View {
                             Button("Cancel") {
                                 showingMessageSheet = false
                             }
-                            .foregroundColor(ColorPalette.accent(for: colorScheme))
+                            .foregroundColor(
+                                ColorPalette.accent(for: colorScheme))
                         }
                     }
                 }
