@@ -110,6 +110,8 @@ struct MeetupRequestCardView: View {
                                         userVM.getAreaName(
                                             forId: meetupRequest.data.areaId)
                                     )
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
                                     .font(
                                         .system(
                                             size: 14, weight: .semibold)
@@ -118,10 +120,8 @@ struct MeetupRequestCardView: View {
                                 .foregroundColor(
                                     ColorPalette.secondaryText(
                                         for: colorScheme))
-
                             }
                         }
-
                         Spacer()
                     }
                     .padding()
@@ -260,11 +260,13 @@ private func genderIcon(for gender: UserGender) -> String {
     }
 }
 
-#Preview {
-    @Previewable @Environment(\.colorScheme) var colorScheme
-    MeetupRequestCardView(meetupRequest: .mock())
-        .environmentObject(MeetupRequestViewModel.mock())
-        .environmentObject(ChatViewModel.mock())
-        .environmentObject(UserViewModel.mock())
-        .accentColor(ColorPalette.accent(for: colorScheme))
-}
+#if DEBUG
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
+        MeetupRequestCardView(meetupRequest: .mock())
+            .environmentObject(MeetupRequestViewModel.mock())
+            .environmentObject(ChatViewModel.mock())
+            .environmentObject(UserViewModel.mock())
+            .accentColor(ColorPalette.accent(for: colorScheme))
+    }
+#endif

@@ -46,8 +46,10 @@ struct MeetupInfoSection: View {
             MeetupPostInfoRow(
                 icon: meetupRequest.data.intention.icon,
                 value: meetupRequest.data.intention.rawValue.capitalized)
-            
-            MeetupPostInfoRow(icon: meetupRequest.data.genderPreference.icon, value: meetupRequest.data.genderPreference.rawValue.capitalized)
+
+            MeetupPostInfoRow(
+                icon: meetupRequest.data.genderPreference.icon,
+                value: meetupRequest.data.genderPreference.rawValue.capitalized)
         }
 
         .padding()
@@ -73,10 +75,12 @@ struct MeetupPostInfoRow: View {
     }
 }
 
-#Preview {
-    @Previewable @Environment(\.colorScheme) var colorScheme
+#if DEBUG
+    #Preview {
+        @Previewable @Environment(\.colorScheme) var colorScheme
 
-    MeetupInfoSection(meetupRequest: MeetupRequestDocument.mock())
-        .environmentObject(UserViewModel.mock())
-        .accentColor(ColorPalette.accent(for: colorScheme))
-}
+        MeetupInfoSection(meetupRequest: MeetupRequestDocument.mock())
+            .environmentObject(UserViewModel.mock())
+            .accentColor(ColorPalette.accent(for: colorScheme))
+    }
+#endif

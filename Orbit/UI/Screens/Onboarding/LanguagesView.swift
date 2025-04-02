@@ -178,7 +178,9 @@ struct ProficiencyPickerSheet: View {
     }
 }
 
-#Preview {
-    LanguagesView(viewModel: OnboardingViewModel())
-        .environmentObject(UserViewModel.mock())
-}
+#if DEBUG
+    #Preview {
+        LanguagesView(viewModel: OnboardingViewModel())
+            .environmentObject(UserViewModel.mock())
+    }
+#endif
