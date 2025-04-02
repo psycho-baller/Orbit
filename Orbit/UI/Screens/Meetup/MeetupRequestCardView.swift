@@ -17,12 +17,6 @@ struct MeetupRequestCardView: View {
 
     var body: some View {
         if !isHidden {
-            // Extracting basic info from the meetup request
-            let createdBy = meetupRequest.data.createdByUser
-            let gender = createdBy?.gender ?? .man
-            let age = createdBy?.dob
-            let location = userVM.getAreaName(forId: meetupRequest.data.areaId)
-
             NavigationLink(
                 destination: MeetupRequestDetailedView(
                     meetupRequest: meetupRequest)
@@ -44,11 +38,10 @@ struct MeetupRequestCardView: View {
                                     .foregroundColor(
                                         ColorPalette.accent(for: colorScheme)),
                                 alignment: .center
-
                             )
 
                         VStack(alignment: .leading, spacing: 8) {
-                            // Title is now larger and bolder, limited to one line.
+                            // Title is always shown
                             Text(meetupRequest.data.title)
                                 .font(.title3.bold())
                                 .foregroundColor(
@@ -58,22 +51,37 @@ struct MeetupRequestCardView: View {
 
                             // Details row: gender, age, time, and location
                             HStack(spacing: 8) {
-                                HStack(spacing: 4) {
-                                    Image(genderIcon(for: gender))
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 16, height: 16)
-                                        .foregroundColor(
-                                            ColorPalette.secondaryText(
-                                                for: colorScheme))
-                                    Text("\(age)")
-                                        .font(
-                                            .system(size: 14, weight: .semibold)
-                                        )
-                                        .foregroundColor(
-                                            ColorPalette.secondaryText(
-                                                for: colorScheme))
+                                // Gender and Age: Only if createdByUser exists
+                                if let createdByUser = meetupRequest.data
+                                    .createdByUser,
+                                    let gender = createdByUser.gender
+                                {
+                                    HStack(spacing: 4) {
+                                        Image(genderIcon(for: gender))
+                                            .resizable()
+                                            .renderingMode(.template)
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 16, height: 16)
+                                            .foregroundColor(
+                                                ColorPalette.secondaryText(
+                                                    for: colorScheme))
+
+                                        // Show age only if it can be computed
+                                        if let dob = createdByUser.dob,
+                                            let age = DateFormatterUtility.age(
+                                                from: dob)
+                                        {
+                                            Text("\(age)")
+                                                .font(
+                                                    .system(
+                                                        size: 14,
+                                                        weight: .semibold)
+                                                )
+                                                .foregroundColor(
+                                                    ColorPalette.secondaryText(
+                                                        for: colorScheme))
+                                        }
+                                    }
                                 }
 
                                 Spacer().frame(width: 3)
@@ -95,18 +103,22 @@ struct MeetupRequestCardView: View {
                                             for: colorScheme))
                                 }
 
-                                // Location info
                                 HStack(spacing: 4) {
                                     Image(systemName: "mappin.and.ellipse")
                                         .font(.caption)
-                                    Text(location)
-                                        .font(
-                                            .system(size: 14, weight: .semibold)
-                                        )
+                                    Text(
+                                        userVM.getAreaName(
+                                            forId: meetupRequest.data.areaId)
+                                    )
+                                    .font(
+                                        .system(
+                                            size: 14, weight: .semibold)
+                                    )
                                 }
                                 .foregroundColor(
-                                    ColorPalette.secondaryText(for: colorScheme)
-                                )
+                                    ColorPalette.secondaryText(
+                                        for: colorScheme))
+
                             }
                         }
 
@@ -127,7 +139,8 @@ struct MeetupRequestCardView: View {
                         VStack(spacing: 4) {
                             Image(systemName: "calendar.badge.plus")
                                 .font(.title2)
-                            Text("Meetup").font(.caption)
+                            Text("Meetup")
+                                .font(.caption)
                         }
                         .foregroundColor(.white)
                         .frame(width: 60)
@@ -143,7 +156,8 @@ struct MeetupRequestCardView: View {
                         VStack(spacing: 4) {
                             Image(systemName: "xmark.circle")
                                 .font(.title2)
-                            Text("Hide").font(.caption)
+                            Text("Hide")
+                                .font(.caption)
                         }
                         .foregroundColor(.white)
                         .frame(width: 60)
@@ -163,13 +177,11 @@ struct MeetupRequestCardView: View {
 
     private func approveMeetupRequest() {
         guard let sender = userVM.currentUser else { return }
-
         let newChat = ChatModel(
             createdByUser: sender,
             otherUser: meetupRequest.data.createdByUser!,
             meetupRequest: meetupRequest.data
         )
-
         Task {
             await chatVM.createChat(chat: newChat)
         }
@@ -250,7 +262,6 @@ private func genderIcon(for gender: UserGender) -> String {
 
 #Preview {
     @Previewable @Environment(\.colorScheme) var colorScheme
-
     MeetupRequestCardView(meetupRequest: .mock())
         .environmentObject(MeetupRequestViewModel.mock())
         .environmentObject(ChatViewModel.mock())
