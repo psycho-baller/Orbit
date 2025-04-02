@@ -21,6 +21,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var profilePictureUrl: String?
     var bio: String?
     var dob: String?  // Date of birth
+    var location: String? // for the location tab inside the Meetuprequestcardview
 
     // Onboarding-related fields
     //    var personalPreferences: PersonalPreferences?
@@ -128,7 +129,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         blockedMe: [UserBlockModel]? = [],
         myReports: [UserReportModel]? = [],
         reportedMe: [UserReportModel]? = [],
-        otherGender: String? = nil
+        otherGender: String? = nil,
+        location: String? = nil
     ) {
         self.id = id
         self.accountId = accountId
@@ -169,6 +171,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
         self.myReports = myReports
         self.reportedMe = reportedMe
         self.otherGender = otherGender
+        self.location = location
     }
 
     func toJson(excludeId: Bool = false) -> [String: Any] {
@@ -346,7 +349,8 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             //            approvedMeetups: [],
             lastOnline: "2024-02-19T10:45:00Z",
             gender: .other,
-            otherGender: "Cat woman"
+            otherGender: "Cat woman",
+            location: "MacEwan"
         )
     }
 

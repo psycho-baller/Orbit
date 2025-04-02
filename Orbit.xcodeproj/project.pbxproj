@@ -50,7 +50,6 @@
 		258B23FB2D6A90CB00B987F3 /* UserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258B23FA2D6A90CB00B987F3 /* UserDetailsView.swift */; };
 		258B24022D6AD5E200B987F3 /* AuthNavigationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258B24002D6AD5E200B987F3 /* AuthNavigationPath.swift */; };
 		258B24382D6AF67700B987F3 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258B24372D6AF67700B987F3 /* LoadingButton.swift */; };
-		258F6CA72D8CCCE100DC3291 /* APIKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 258F6CA62D8CCCE100DC3291 /* APIKeys.plist */; };
 		258F6CF72D8CDE5800DC3291 /* ChatTextBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258F6CF62D8CDE5800DC3291 /* ChatTextBox.swift */; };
 		258F6CF92D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258F6CF82D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift */; };
 		2590D8A12CF7E43200D9E35D /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2590D8A02CF7E42C00D9E35D /* Views.swift */; };
@@ -110,6 +109,9 @@
 		25F3F0DC2D6CC2C300CEB34B /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F3F0DB2D6CC2C300CEB34B /* FlowLayout.swift */; };
 		25F5B9CB2CEE5A0D0062438B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F5B9CA2CEE5A090062438B /* Helpers.swift */; };
 		25F5B9CF2CEEA4F90062438B /* SwipeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */; };
+		318A19F12D9C8E4600C13920 /* APIKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 318A19F02D9C8E4600C13920 /* APIKeys.plist */; };
+		318A19F22D9C8E4600C13920 /* APIKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 318A19F02D9C8E4600C13920 /* APIKeys.plist */; };
+		318A19F32D9C8E4600C13920 /* APIKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 318A19F02D9C8E4600C13920 /* APIKeys.plist */; };
 		61129BC72CEC10D10076C793 /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61129BC62CEC10D10076C793 /* UserCardView.swift */; };
 		614168E82D80982700829319 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614168E72D80982300829319 /* DateFormatter.swift */; };
 		6141694E2D809E3C00829319 /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6141694D2D809E3600829319 /* LocationPickerView.swift */; };
@@ -184,7 +186,6 @@
 		258B23FA2D6A90CB00B987F3 /* UserDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsView.swift; sourceTree = "<group>"; };
 		258B24002D6AD5E200B987F3 /* AuthNavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigationPath.swift; sourceTree = "<group>"; };
 		258B24372D6AF67700B987F3 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
-		258F6CA62D8CCCE100DC3291 /* APIKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = APIKeys.plist; sourceTree = "<group>"; };
 		258F6CF62D8CDE5800DC3291 /* ChatTextBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTextBox.swift; sourceTree = "<group>"; };
 		258F6CF82D8CE3A100DC3291 /* AdvancedDynamicTextBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedDynamicTextBox.swift; sourceTree = "<group>"; };
 		2590D8A02CF7E42C00D9E35D /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
@@ -252,6 +253,7 @@
 		25F3F0DB2D6CC2C300CEB34B /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		25F5B9CA2CEE5A090062438B /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		25F5B9CE2CEEA4F90062438B /* SwipeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeActions.swift; sourceTree = "<group>"; };
+		318A19F02D9C8E4600C13920 /* APIKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = APIKeys.plist; sourceTree = "<group>"; };
 		61129BC62CEC10D10076C793 /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
 		614168E72D80982300829319 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		6141694D2D809E3600829319 /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
@@ -526,7 +528,6 @@
 		25DC74E72CC0522300731939 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				258F6CA62D8CCCE100DC3291 /* APIKeys.plist */,
 				2513832E2D6E0FB500FAF309 /* Languages.json */,
 				25DC74E82CC0522300731939 /* Localizable.strings */,
 				25DC74EA2CC0522300731939 /* LaunchScreen.storyboard */,
@@ -536,6 +537,7 @@
 				25DC74F32CC0522300731939 /* fonts */,
 				25DC74F82CC0522300731939 /* Info.plist */,
 				25ECBA1D2CD03A0A00256104 /* CleanedUofCLocationData.json */,
+				318A19F02D9C8E4600C13920 /* APIKeys.plist */,
 			);
 			name = Resources;
 			path = Orbit/Resources;
@@ -629,7 +631,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					25A399512CBF30C500D6BCE8 = {
 						CreatedOnToolsVersion = 15.2;
@@ -679,7 +681,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				256D92182CC0567A00F1340A /* Orbit.entitlements in Resources */,
-				258F6CA72D8CCCE100DC3291 /* APIKeys.plist in Resources */,
 				25ECBA1E2CD03A0A00256104 /* CleanedUofCLocationData.json in Resources */,
 				2513832F2D6E0FB500FAF309 /* Languages.json in Resources */,
 				25DC74FD2CC0522300731939 /* Poppins-Light.ttf in Resources */,
@@ -687,6 +688,7 @@
 				25DC74FA2CC0522300731939 /* LaunchScreen.storyboard in Resources */,
 				25DC74F92CC0522300731939 /* Localizable.strings in Resources */,
 				25DC75002CC0522300731939 /* Poppins-SemiBold.ttf in Resources */,
+				318A19F12D9C8E4600C13920 /* APIKeys.plist in Resources */,
 				25DC74FC2CC0522300731939 /* Preview Assets.xcassets in Resources */,
 				61E137552CC4769000E7BA6C /* BAHNSCHRIFT.TTF in Resources */,
 				25DC74FB2CC0522300731939 /* Assets.xcassets in Resources */,
@@ -698,6 +700,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				318A19F22D9C8E4600C13920 /* APIKeys.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -705,6 +708,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				318A19F32D9C8E4600C13920 /* APIKeys.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,7 +800,6 @@
 				0088BFE72CD8EB04002B4B9D /* MessagesList.swift in Sources */,
 				2590D8A12CF7E43200D9E35D /* Views.swift in Sources */,
 				258B24022D6AD5E200B987F3 /* AuthNavigationPath.swift in Sources */,
-				259CB2A32CC046F300C9F285 /* UserModel.swift in Sources */,
 				25ECBA1C2CD0390600256104 /* DataLoader.swift in Sources */,
 				25F5B9CB2CEE5A0D0062438B /* Helpers.swift in Sources */,
 				259CB2822CC0460400C9F285 /* AppwriteService.swift in Sources */,
@@ -877,6 +880,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -940,6 +944,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1060,7 +1065,6 @@
 		25A3997C2CBF30C700D6BCE8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1080,7 +1084,6 @@
 		25A3997D2CBF30C700D6BCE8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1100,7 +1103,6 @@
 		25A3997F2CBF30C700D6BCE8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3V2UU7RRK9;
@@ -1118,7 +1120,6 @@
 		25A399802CBF30C700D6BCE8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3V2UU7RRK9;

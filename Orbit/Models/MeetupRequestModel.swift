@@ -31,6 +31,7 @@ struct MeetupRequestModel: Codable, Equatable, Identifiable,
     // enum type: coffee, meal, indoor activity, outdoor activity, event, other
     let type: MeetupType
     var genderPreference: GenderPreference
+    var tags: [String]?
 
     enum CodingKeys: String, CodingKey {
         case id = "$id"  // Maps Appwrite's `$id` to `id`
