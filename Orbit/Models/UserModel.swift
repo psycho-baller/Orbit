@@ -21,7 +21,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
     var profilePictureUrl: String?
     var bio: String?
     var dob: String?  // Date of birth
-    var location: String? // for the location tab inside the Meetuprequestcardview
 
     // Onboarding-related fields
     //    var personalPreferences: PersonalPreferences?
@@ -358,7 +357,6 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
             //            approvedMeetups: [],
             lastOnline: "2024-02-19T10:45:00Z",
             gender: .other,
-            otherGender: "Cat woman",
             pronouns: [.heHim],
             userLinks: [
                 .mock()
@@ -369,6 +367,7 @@ struct UserModel: Codable, Identifiable, Equatable, CodableDictionaryConvertible
                 .hobbies,
             ],
             featuredInterests: ["Gaming", "Tech", "Music"],
+            otherGender: "Cat woman"
         )
     }
 
