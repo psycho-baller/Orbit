@@ -11,6 +11,7 @@ import CoreLocation
 import Foundation
 import JSONCodable
 import SwiftUI
+import Loaf
 
 // struct OnboardingUpdate {
 //     var personalPreferences: PersonalPreferences?
@@ -67,9 +68,8 @@ class UserViewModel: NSObject, ObservableObject {
                 self.currentUser = user
 
                 print(
-                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(String(describing: user.hasCompletedOnboarding))."
+                    "UserViewModel - fetchCurrentUser: Successfully fetched current user \(String(describing: user.accountId))."
                 )
-                print("\(String(describing: user))")
             } else {
                 print(
                     "UserViewModel - fetchCurrentUser: No current user found."
@@ -457,6 +457,177 @@ class UserViewModel: NSObject, ObservableObject {
             return area.name
         }
         return "Unknown Location"
+    }
+
+    @MainActor
+    func updateAndSaveUserData(
+        username: String? = nil,
+        firstName: String? = nil,
+        lastName: Optional<String>? = nil,
+        bio: Optional<String>? = nil,
+        dob: String? = nil,
+        activitiesHobbies: [String]? = nil,
+        friendActivities: [String]? = nil,
+        preferredMeetupType: [String]? = nil,
+        convoTopics: [String]? = nil,
+        friendshipValues: [String]? = nil,
+        friendshipQualities: [String]? = nil,
+        pronouns: [UserPronouns]? = nil,
+        intentions: [UserIntention]? = nil,
+        featuredInterests: [String]? = nil,
+        gender: UserGender? = nil,
+        showPronouns: Bool? = nil,
+        showGender: Bool? = nil,
+        sectionName: String? = nil
+    ) async {
+        guard var updatedUser = currentUser else { return }
+        
+        // Update only the fields that were provided
+        if let username = username {
+            updatedUser.username = username
+        }
+        if let firstName = firstName {
+            updatedUser.firstName = firstName
+        }
+        
+        // Handle optional fields differently 
+        if let lastNameOptional = lastName {
+            updatedUser.lastName = lastNameOptional
+        }
+        if let bioOptional = bio {
+            updatedUser.bio = bioOptional
+        }
+        
+        if let dob = dob {
+            updatedUser.dob = dob
+        }
+        if let activitiesHobbies = activitiesHobbies {
+            updatedUser.activitiesHobbies = activitiesHobbies
+        }
+        if let friendActivities = friendActivities {
+            updatedUser.friendActivities = friendActivities
+        }
+        if let preferredMeetupType = preferredMeetupType {
+            updatedUser.preferredMeetupType = preferredMeetupType
+        }
+        if let convoTopics = convoTopics {
+            updatedUser.convoTopics = convoTopics
+        }
+        if let friendshipValues = friendshipValues {
+            updatedUser.friendshipValues = friendshipValues
+        }
+        if let friendshipQualities = friendshipQualities {
+            updatedUser.friendshipQualities = friendshipQualities
+        }
+        if let pronouns = pronouns {
+            updatedUser.pronouns = pronouns
+        }
+        if let intentions = intentions {
+            updatedUser.intentions = intentions
+        }
+        if let featuredInterests = featuredInterests {
+            updatedUser.featuredInterests = featuredInterests
+        }
+        if let gender = gender {
+            updatedUser.gender = gender
+        }
+        if let showPronouns = showPronouns {
+            updatedUser.showPronouns = showPronouns
+        }
+        if let showGender = showGender {
+            updatedUser.showGender = showGender
+        }
+        
+        isLoading = true
+        
+        // Create a temporary copy
+        let tempUser = currentUser
+        
+        // Force UI update by setting to nil and back
+        self.currentUser = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.currentUser = updatedUser
+            self.objectWillChange.send()
+        }
+        
+        do {
+            // Save to database
+            try await updateUserWithError(id: updatedUser.accountId, updatedUser: updatedUser)
+            
+            // Only show success toast after successful update
+            if let section = sectionName {
+                showSuccessToast(section)
+            }
+        } catch {
+            // Revert to original user if update fails
+            self.currentUser = tempUser
+            self.objectWillChange.send()
+            
+            // Show error toast with the section name if provided
+            if let section = sectionName {
+                showErrorToast("Failed to update \(section.lowercased())")
+            } else {
+                showErrorToast("Update failed")
+            }
+            
+            // Set the error property for other UI components to use
+            self.error = error.localizedDescription
+            print("UserViewModel - updateAndSaveUserData: Error: \(error.localizedDescription)")
+        }
+        
+        isLoading = false
+    }
+
+    // Modified updateUser function that throws errors instead of handling them internally
+    @MainActor
+    private func updateUserWithError(id: String, updatedUser: UserModel) async throws {
+        print("UserViewModel - updateUser: Attempting to update user with ID \(id).")
+        
+        guard let updatedUserDocument = try await userManagementService.updateUser(
+            accountId: id, updatedUser: updatedUser)
+        else {
+            throw NSError(domain: "User not found", code: 404, userInfo: nil)
+        }
+        
+        print("UserViewModel - updateUser: User \(updatedUserDocument.id) successfully updated.")
+    }
+
+    // Function to show success toast
+    private func showSuccessToast(_ section: String) {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .compactMap({ $0 as? UIWindowScene })
+                .first {
+                
+                // Get the key window from the active scene
+                if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }),
+                   let rootViewController = keyWindow.rootViewController {
+                    
+                    // Show toast on the root view controller
+                    Loaf("\(section) updated successfully", state: .success, location: .top, sender: rootViewController).show()
+                }
+            }
+        }
+    }
+
+    // Function to show error toast
+    private func showErrorToast(_ message: String) {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .compactMap({ $0 as? UIWindowScene })
+                .first {
+                
+                // Get the key window from the active scene
+                if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }),
+                   let rootViewController = keyWindow.rootViewController {
+                    
+                    // Show toast on the root view controller
+                    Loaf(message, state: .error, location: .top, sender: rootViewController).show()
+                }
+            }
+        }
     }
 }
 

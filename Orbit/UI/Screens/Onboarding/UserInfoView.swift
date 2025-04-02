@@ -24,7 +24,7 @@ struct UserInfoView: View {
     }
 
     private var isValidBio: Bool {
-        wordCount >= 3 && wordCount <= 50
+        wordCount <= 50
     }
 
     var body: some View {

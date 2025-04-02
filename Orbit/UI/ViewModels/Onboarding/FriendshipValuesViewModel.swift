@@ -18,17 +18,7 @@ class FriendshipValuesViewModel: ObservableObject {
         questions = [
             Question(
                 text: "What do you value most in a friendship?",
-                options: [
-                    "Deep Conversations",
-                    "Adventure",
-                    "Humor",
-                    "Loyalty",
-                    "Honesty",
-                    "Kindness",
-                    "Respect",
-                    "Similar Interests",
-                    "Mutual Support",
-                ].map { title in
+                options: OnboardingOptions.friendshipValues.map { title in
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.friendshipValues?
@@ -40,21 +30,8 @@ class FriendshipValuesViewModel: ObservableObject {
             ),
             Question(
                 text:
-                    "What qualities do you look for in someone you’d like to meet?",
-                options: [
-                    "Good Listener",
-                    "Outgoing",
-                    "Empathetic",
-                    "Reliable",
-                    "Intelligent",
-                    "Creative",
-                    "Curious",
-                    "Funny",
-                    "Open-Minded",
-                    "Positive",
-                    "Thoughtful",
-                    "Passionate",
-                ].map { title in
+                    "What qualities do you look for in someone you'd like to meet?",
+                options: OnboardingOptions.friendshipQualities.map { title in
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?.friendshipQualities?

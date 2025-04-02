@@ -68,7 +68,6 @@ class UserManagementService: UserManagementServiceProtocol {
         )
         // Check if any document was found
         if let document = response.documents.first {
-            print("meow \(document.data.id) ?? ")
             return document
         } else {
             throw NSError(domain: "User not found", code: 404, userInfo: nil)

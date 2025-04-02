@@ -41,6 +41,13 @@ enum DateFormatterUtility {
         return formatter
     }()
     
+    static let isoDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
     static func formatForDisplay(_ date: Date) -> String {
         return displayDateFormatter.string(from: date)
     }
@@ -62,7 +69,23 @@ enum DateFormatterUtility {
     }
     
     static func formatDateOnly(_ date: Date) -> String {
-        return dateOnlyFormatter.string(from: date)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
+    }
+    
+    static func parseDateOnly(_ dateString: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: dateString)
+    }
+    
+    static func parseISODate(_ string: String) -> Date? {
+        return isoDateFormatter.date(from: string)
+    }
+    
+    static func formatISODate(_ date: Date) -> String {
+        return isoDateFormatter.string(from: date)
     }
 }
 

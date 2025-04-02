@@ -18,7 +18,7 @@ struct UserProfileView: View {
     @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
-        ProfilePageView(user: user)
+        ProfilePageView(user: user, isCurrentUserProfile: false)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
