@@ -51,7 +51,7 @@ struct InterestsHorizontalTags: View {
                             value: userVM.selectedInterests.contains(interest))  // Spring animation
                 }
             }
-            .padding()
+            //            .padding()
         }
     }
 }

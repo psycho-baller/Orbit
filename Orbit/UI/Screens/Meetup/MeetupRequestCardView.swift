@@ -14,6 +14,57 @@ struct MeetupRequestCardView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var isHidden = false
+    private var computedSharedInterests: [String] {
+        guard
+            let otherUserInterests = meetupRequest.data.createdByUser?
+                .activitiesHobbies,
+            let myInterests = userVM.currentUser?.activitiesHobbies
+        else {
+            return []
+        }
+        var result = otherUserInterests.filter { myInterests.contains($0) }
+
+        if let otherFriendActivities = meetupRequest.data.createdByUser?
+            .friendActivities,
+            let myFriendActivities = userVM.currentUser?.friendActivities
+        {
+            result.append(
+                contentsOf: otherFriendActivities.filter {
+                    myFriendActivities.contains($0)
+                })
+        }
+
+        if let otherFriendshipQualities = meetupRequest.data.createdByUser?
+            .friendshipQualities,
+            let myFriendshipQualities = userVM.currentUser?.friendshipQualities
+        {
+            result.append(
+                contentsOf: otherFriendshipQualities.filter {
+                    myFriendshipQualities.contains($0)
+                })
+        }
+
+        if let otherFriendshipValues = meetupRequest.data.createdByUser?
+            .friendshipValues,
+            let myFriendshipValues = userVM.currentUser?.friendshipValues
+        {
+            result.append(
+                contentsOf: otherFriendshipValues.filter {
+                    myFriendshipValues.contains($0)
+                })
+        }
+
+        if let otherConvoTopics = meetupRequest.data.createdByUser?.convoTopics,
+            let myConvoTopics = userVM.currentUser?.convoTopics
+        {
+            result.append(
+                contentsOf: otherConvoTopics.filter {
+                    myConvoTopics.contains($0)
+                })
+        }
+
+        return result
+    }
 
     var body: some View {
         if !isHidden {
@@ -130,21 +181,16 @@ struct MeetupRequestCardView: View {
                                 }
                             }
                         }
-
-                        // If the model has an array of sharedInterests, show them.
-                        if let otherUserInterests = meetupRequest.data
-                            .createdByUser?.activitiesHobbies,
-                            let myInterests = userVM.currentUser?
-                                .activitiesHobbies
-                        {
-                            let sharedInterests = otherUserInterests.filter {
-                                myInterests.contains($0)
-                            }
-                            if !sharedInterests.isEmpty {
-                                SharedInterestsTags(interests: sharedInterests)
-                                Spacer()
-                            }
+                        if !computedSharedInterests.isEmpty {
+                            InterestsHorizontalTags(
+                                interests: computedSharedInterests,
+                                onTapInterest: { interest in
+                                    print("clicked")
+                                }
+                            )
+//                            Spacer()
                         }
+
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
