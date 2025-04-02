@@ -15,7 +15,6 @@ struct BioEditSheet: View {
     @EnvironmentObject var userVM: UserViewModel
     
     let user: UserModel
-    var onSuccess: (() -> Void)?
     
     @State private var bio: String
     @State private var isSaving = false
@@ -32,9 +31,8 @@ struct BioEditSheet: View {
         wordCount <= maxWordCount
     }
     
-    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
+    init(user: UserModel) {
         self.user = user
-        self.onSuccess = onSuccess
         _bio = State(initialValue: user.bio ?? "")
     }
     
@@ -92,10 +90,10 @@ struct BioEditSheet: View {
                             isSaving = true
                             
                             Task {
-                                await userVM.updateAndSaveUserData(bio: bio.isEmpty ? nil : bio)
-                                
-                                // Call the success callback
-                                onSuccess?()
+                                await userVM.updateAndSaveUserData(
+                                    bio: bio.isEmpty ? nil : bio,
+                                    sectionName: "Bio"
+                                )
                                 
                                 dismiss()
                             }

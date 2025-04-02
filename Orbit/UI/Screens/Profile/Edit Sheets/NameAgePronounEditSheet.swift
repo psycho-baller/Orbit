@@ -15,7 +15,6 @@ struct NameAgePronounEditSheet: View {
     @EnvironmentObject var userVM: UserViewModel
     
     let user: UserModel
-    var onSuccess: (() -> Void)?
     
     @State private var firstName: String
     @State private var lastName: String
@@ -39,9 +38,8 @@ struct NameAgePronounEditSheet: View {
     // Pronouns options
     private let pronounsOptions: [UserPronouns] = [.heHim, .sheHer, .theyThem]
     
-    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
+    init(user: UserModel) {
         self.user = user
-        self.onSuccess = onSuccess
         _firstName = State(initialValue: user.firstName)
         _lastName = State(initialValue: user.lastName ?? "")
         
@@ -292,11 +290,9 @@ struct NameAgePronounEditSheet: View {
                                 pronouns: Array(selectedPronouns),
                                 gender: selectedGender,
                                 showPronouns: showPronouns,
-                                showGender: showGender
+                                showGender: showGender,
+                                sectionName: "Personal info"
                             )
-                            
-                            // Call the success callback
-                            onSuccess?()
                             
                             dismiss()
                         }

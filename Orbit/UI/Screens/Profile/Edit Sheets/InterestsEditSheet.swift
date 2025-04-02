@@ -16,7 +16,6 @@ struct InterestsEditSheet: View {
     
     let user: UserModel
     let section: String
-    var onSuccess: (() -> Void)?
     
     @State private var selectedItems: [String] = []
     @State private var availableItems: [String] = []
@@ -68,10 +67,9 @@ struct InterestsEditSheet: View {
         }
     }
     
-    init(user: UserModel, section: String, onSuccess: (() -> Void)? = nil) {
+    init(user: UserModel, section: String) {
         self.user = user
         self.section = section
-        self.onSuccess = onSuccess
         
         // Initialize selected items based on section
         if section == "intentions" {
@@ -193,29 +191,47 @@ struct InterestsEditSheet: View {
                             
                             Task {
                                 if isIntentionsSection {
-                                    await userVM.updateAndSaveUserData(intentions: selectedIntentions)
+                                    await userVM.updateAndSaveUserData(
+                                        intentions: selectedIntentions,
+                                        sectionName: "Intentions"
+                                    )
                                 } else {
                                     // Update directly based on section
                                     switch section {
                                     case "activitiesHobbies":
-                                        await userVM.updateAndSaveUserData(activitiesHobbies: selectedItems)
+                                        await userVM.updateAndSaveUserData(
+                                            activitiesHobbies: selectedItems,
+                                            sectionName: "Activities and hobbies"
+                                        )
                                     case "friendActivities":
-                                        await userVM.updateAndSaveUserData(friendActivities: selectedItems)
+                                        await userVM.updateAndSaveUserData(
+                                            friendActivities: selectedItems,
+                                            sectionName: "Friend activities"
+                                        )
                                     case "preferredMeetupType":
-                                        await userVM.updateAndSaveUserData(preferredMeetupType: selectedItems)
+                                        await userVM.updateAndSaveUserData(
+                                            preferredMeetupType: selectedItems,
+                                            sectionName: "Meetup types"
+                                        )
                                     case "convoTopics":
-                                        await userVM.updateAndSaveUserData(convoTopics: selectedItems)
+                                        await userVM.updateAndSaveUserData(
+                                            convoTopics: selectedItems,
+                                            sectionName: "Conversation topics"
+                                        )
                                     case "friendshipValues":
-                                        await userVM.updateAndSaveUserData(friendshipValues: selectedItems)
+                                        await userVM.updateAndSaveUserData(
+                                            friendshipValues: selectedItems,
+                                            sectionName: "Friendship values"
+                                        )
                                     case "friendshipQualities":
-                                        await userVM.updateAndSaveUserData(friendshipQualities: selectedItems)
+                                        await userVM.updateAndSaveUserData(
+                                            friendshipQualities: selectedItems,
+                                            sectionName: "Friendship qualities"
+                                        )
                                     default:
                                         break
                                     }
                                 }
-                                
-                                // Call the success callback
-                                onSuccess?()
                                 
                                 dismiss()
                             }

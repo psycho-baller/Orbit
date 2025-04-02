@@ -18,7 +18,6 @@ struct UsernameEditSheet: View {
     @EnvironmentObject var userVM: UserViewModel
     
     let user: UserModel
-    var onSuccess: (() -> Void)?
     
     @State private var username: String
     @State private var isCheckingUsername = false
@@ -27,9 +26,8 @@ struct UsernameEditSheet: View {
     
     @State private var debounceCancellable: AnyCancellable?
     
-    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
+    init(user: UserModel) {
         self.user = user
-        self.onSuccess = onSuccess
         _username = State(initialValue: user.username)
     }
     
@@ -113,11 +111,10 @@ struct UsernameEditSheet: View {
                                 isSaving = true
                                 
                                 Task {
-                                    // Update directly without temp data
-                                    await userVM.updateAndSaveUserData(username: username)
-                                    
-                                    // Call the success callback
-                                    onSuccess?()
+                                    await userVM.updateAndSaveUserData(
+                                        username: username,
+                                        sectionName: "Username"
+                                    )
                                     
                                     dismiss()
                                 }

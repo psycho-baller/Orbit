@@ -11,6 +11,7 @@ import CoreLocation
 import Foundation
 import JSONCodable
 import SwiftUI
+import Loaf
 
 // struct OnboardingUpdate {
 //     var personalPreferences: PersonalPreferences?
@@ -476,7 +477,8 @@ class UserViewModel: NSObject, ObservableObject {
         featuredInterests: [String]? = nil,
         gender: UserGender? = nil,
         showPronouns: Bool? = nil,
-        showGender: Bool? = nil
+        showGender: Bool? = nil,
+        sectionName: String? = nil
     ) async {
         guard var updatedUser = currentUser else { return }
         
@@ -539,14 +541,84 @@ class UserViewModel: NSObject, ObservableObject {
         isLoading = true
         defer { isLoading = false }
         
-        // Save to database
-        await updateUser(id: updatedUser.accountId, updatedUser: updatedUser)
+        do {
+            // Save to database
+            try await updateUserWithError(id: updatedUser.accountId, updatedUser: updatedUser)
+            
+            // Update the current user for UI refresh
+            self.currentUser = updatedUser
+            
+            // Show success toast if section name is provided
+            if let section = sectionName {
+                showSuccessToast(section)
+            }
+            
+            // Notify observers that data has changed
+            objectWillChange.send()
+        } catch {
+            // Show error toast with the section name if provided
+            if let section = sectionName {
+                showErrorToast("Failed to update \(section.lowercased())")
+            } else {
+                showErrorToast("Update failed")
+            }
+            
+            // Set the error property for other UI components to use
+            self.error = error.localizedDescription
+            print("UserViewModel - updateAndSaveUserData: Error: \(error.localizedDescription)")
+        }
+    }
+
+    // Modified updateUser function that throws errors instead of handling them internally
+    @MainActor
+    private func updateUserWithError(id: String, updatedUser: UserModel) async throws {
+        print("UserViewModel - updateUser: Attempting to update user with ID \(id).")
         
-        // Update the current user for UI refresh
-        self.currentUser = updatedUser
+        guard let updatedUserDocument = try await userManagementService.updateUser(
+            accountId: id, updatedUser: updatedUser)
+        else {
+            throw NSError(domain: "User not found", code: 404, userInfo: nil)
+        }
         
-        // Notify observers that data has changed
-        objectWillChange.send()
+        print("UserViewModel - updateUser: User \(updatedUserDocument.id) successfully updated.")
+    }
+
+    // Function to show success toast
+    private func showSuccessToast(_ section: String) {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .compactMap({ $0 as? UIWindowScene })
+                .first {
+                
+                // Get the key window from the active scene
+                if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }),
+                   let rootViewController = keyWindow.rootViewController {
+                    
+                    // Show toast on the root view controller
+                    Loaf("\(section) updated successfully", state: .success, location: .top, sender: rootViewController).show()
+                }
+            }
+        }
+    }
+
+    // Function to show error toast
+    private func showErrorToast(_ message: String) {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .compactMap({ $0 as? UIWindowScene })
+                .first {
+                
+                // Get the key window from the active scene
+                if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }),
+                   let rootViewController = keyWindow.rootViewController {
+                    
+                    // Show toast on the root view controller
+                    Loaf(message, state: .error, location: .top, sender: rootViewController).show()
+                }
+            }
+        }
     }
 }
 

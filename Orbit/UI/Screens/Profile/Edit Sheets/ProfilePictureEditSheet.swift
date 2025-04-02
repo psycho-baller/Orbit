@@ -17,15 +17,13 @@ struct ProfilePictureEditSheet: View {
     @EnvironmentObject var userVM: UserViewModel
     
     let user: UserModel
-    var onSuccess: (() -> Void)?
     
     @State private var selectedItem: PhotosPickerItem?
     @State private var selectedImageData: Data?
     @State private var selectedImage: UIImage?
     
-    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
+    init(user: UserModel) {
         self.user = user
-        self.onSuccess = onSuccess
     }
     
     var body: some View {

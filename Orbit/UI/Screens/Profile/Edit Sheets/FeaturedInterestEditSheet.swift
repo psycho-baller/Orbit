@@ -15,16 +15,14 @@ struct FeaturedInterestsEditSheet: View {
     
     let user: UserModel
     let maxFeaturedInterests = 6
-    var onSuccess: (() -> Void)?
     
     @State private var selectedInterests: [String] = []
     @State private var availableInterests: [String] = []
     @State private var showAlert = false
     @State private var isSaving = false
     
-    init(user: UserModel, onSuccess: (() -> Void)? = nil) {
+    init(user: UserModel) {
         self.user = user
-        self.onSuccess = onSuccess
         
         // Initialize selected interests
         _selectedInterests = State(initialValue: user.featuredInterests ?? [])
@@ -167,10 +165,10 @@ struct FeaturedInterestsEditSheet: View {
                         isSaving = true
                         
                         Task {
-                            await userVM.updateAndSaveUserData(featuredInterests: selectedInterests)
-                            
-                            // Call the success callback
-                            onSuccess?()
+                            await userVM.updateAndSaveUserData(
+                                featuredInterests: selectedInterests,
+                                sectionName: "Featured interests"
+                            )
                             
                             dismiss()
                         }
