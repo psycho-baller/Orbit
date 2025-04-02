@@ -44,6 +44,7 @@ struct ProfilePageView: View {
                     // Non-editable view for other users' profiles
                     OtherUserProfileContent(user: user)
                 }
+                Spacer().frame(height: 12)
             }
         }
         .background(ColorPalette.background(for: colorScheme))
