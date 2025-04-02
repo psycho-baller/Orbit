@@ -13,6 +13,126 @@ struct HomeView: View {
     @State private var chatRequestListDetent: PresentationDetent = .medium
     @State private var isPendingExpanded = false
     @State private var showLogoutAlert = false
+    @State private var selectedSortingOption: SortingOptions = .recommended
+    @State private var isListReversed: Bool = false
+
+    // MARK: - Home Filter & Sorting Options
+    enum SortingOptions: String, CaseIterable, Identifiable {
+        case recommended = "Recommended"
+        case time = "Time"
+        case proximity = "Proximity"
+
+        var id: String { rawValue }
+
+        var iconName: String {
+            switch self {
+            case .recommended: return "star.fill"
+            case .time: return "clock"
+            case .proximity: return "location.fill"
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func searchAndFilterBar() -> some View {
+        VStack(spacing: 4) {
+            SearchBar(
+                text: $userVM.searchText,
+                placeholder: "Search for a meetup request"
+            )
+            .padding(.horizontal)
+            .padding(.top, 8)
+
+            HStack(spacing: 12) {
+                // 1. Box wrapping: Left icon + filter pills
+                HStack(spacing: 12) {
+                    Image(systemName: "line.3.horizontal.decrease")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(Color.accentColor)
+                        .frame(width: 24, height: 24)
+
+                    ForEach(SortingOptions.allCases) { option in
+                        let isSelected = option == selectedSortingOption
+                        let bgColor =
+                            isSelected
+                            ? ColorPalette.accent(for: colorScheme)
+                            : ColorPalette.background(for: colorScheme).opacity(
+                                0.9)
+
+                        let textColor =
+                            isSelected
+                            ? Color.white
+                            : ColorPalette.text(for: colorScheme).opacity(0.85)
+
+                        Button(action: {
+                            selectedSortingOption = option
+                        }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: option.iconName)
+                                    .font(.system(size: 14))
+                                Text(option.rawValue)
+                                    .font(.system(size: 11, weight: .bold))
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .minimumScaleFactor(0.9)
+                                    .layoutPriority(1)
+                            }
+                            .fixedSize(horizontal: true, vertical: false)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(bgColor)
+                            )
+                            .foregroundColor(textColor)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 6)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(
+                            ColorPalette.secondaryText(for: colorScheme)
+                                .opacity(0.15))
+                )
+
+                // 2. OUTSIDE the background: Rightmost icon
+                Button(action: {
+                    // show advanced filters maybe?
+                }) {
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(Color.accentColor)
+                        .padding(10)
+                }
+            }
+            .padding(.horizontal)
+
+        }
+    }
+
+    @ViewBuilder
+    private func meetupCardList() -> some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                ForEach(
+                    isListReversed
+                        ? meetupRequestVM.filteredMeetupRequests(
+                            for: userVM.currentUser
+                        ).reversed()
+                        : meetupRequestVM.filteredMeetupRequests(
+                            for: userVM.currentUser)
+                ) { meetupRequest in
+                    MeetupRequestCardView(meetupRequest: meetupRequest)
+                }
+
+            }
+            .padding(.vertical)
+            .padding(.horizontal)
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -62,7 +182,7 @@ struct HomeView: View {
                                     ? .thinMaterial : .ultraThinMaterial)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                //                    .background(ColorPalette.background(for: colorScheme))
+                    .background(ColorPalette.background(for: colorScheme))
             }
             .onAppear {
                 Task {
@@ -185,29 +305,15 @@ struct HomeView: View {
 
     private func loadedView() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            SearchBar(
-                text: $userVM.searchText,
-                placeholder: "Search for a meetup request"
-            )
-            ScrollView {
-                LazyVStack(spacing: 16) {
-                    ForEach(
-                        meetupRequestVM.filteredMeetupRequests(
-                            for: userVM.currentUser)
-                    ) {
-                        meetupRequest in
-                        MeetupRequestCardView(meetupRequest: meetupRequest)
-                    }
-                }
-                .padding(.vertical)
-            }
+            searchAndFilterBar()
+            meetupCardList()
         }
-        .padding(.horizontal)
         .background(ColorPalette.background(for: colorScheme))
         .refreshable {
             await meetupRequestVM.fetchAllMeetups()
         }
     }
+
 }
 
 // MARK: - Preview

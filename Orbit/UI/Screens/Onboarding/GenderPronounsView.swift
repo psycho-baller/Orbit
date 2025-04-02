@@ -64,9 +64,11 @@ struct GenderPronounsView: View {
     }
 }
 
-#Preview {
-    NavigationView {
-        GenderPronounsView(viewModel: OnboardingViewModel())
-            .environmentObject(UserViewModel.mock())
+#if DEBUG
+    #Preview {
+        NavigationView {
+            GenderPronounsView(viewModel: OnboardingViewModel())
+                .environmentObject(UserViewModel.mock())
+        }
     }
-}
+#endif

@@ -166,8 +166,10 @@ struct MessageBubble: View {
     }
 }
 
-#Preview {
-    MessageDetailView(request: .mock(data: .mock()))
-        .environmentObject(ChatRequestViewModel.mock())
-        .environmentObject(UserViewModel.mock())
-}
+#if DEBUG
+    #Preview {
+        MessageDetailView(request: .mock(data: .mock()))
+            .environmentObject(ChatRequestViewModel.mock())
+            .environmentObject(UserViewModel.mock())
+    }
+#endif
