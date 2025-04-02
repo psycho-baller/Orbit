@@ -227,17 +227,38 @@ struct ChatDetailView: View {
                                 message in
                                 MessageBubbleView(message: message)
                             }
+                            // Add extra space at the bottom and assign an id for scrolling.
+                            Color.clear.frame(height: 50).id("bottom")
                         }
                     }
                     .padding()
+                    // When the keyboard is shown, scroll to the last message.
+                    .onReceive(
+                        NotificationCenter.default.publisher(
+                            for: UIResponder.keyboardWillShowNotification)
+                    ) { _ in
+                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                scrollProxy.scrollTo("bottom", anchor: .bottom)
+                            }
+                        }
+                    }
+                    // When the keyboard is hidden, also scroll to the last message.
+                    .onReceive(
+                        NotificationCenter.default.publisher(
+                            for: UIResponder.keyboardWillHideNotification)
+                    ) { _ in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                scrollProxy.scrollTo("bottom", anchor: .bottom)
+                            }
+                        }
+                    }
                     // When messages update, scroll to the last one.
                     .onChange(of: chatMessageVM.messages) {
                         oldMessages, newMessages in
-                        if let lastMessage = newMessages.last {
-                            withAnimation {
-                                scrollProxy.scrollTo(
-                                    lastMessage.id, anchor: .bottom)
-                            }
+                        withAnimation {
+                            scrollProxy.scrollTo("bottom", anchor: .bottom)
                         }
                     }
                     //                    .padding(.horizontal)
