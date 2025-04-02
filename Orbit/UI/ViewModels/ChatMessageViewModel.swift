@@ -193,6 +193,7 @@ class ChatMessageViewModel: ObservableObject {
                 let currentUser = message.sentByUser,
                 let chatId = message.chat?.id
             {
+                print("send to \(receiverUserId), \(currentUser.firstName) sent you a message!")
 
                 // Send push notification for the new message in a separate do-catch block
                 do {
