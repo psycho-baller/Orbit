@@ -18,7 +18,9 @@ class APIManager {
             let plist = try? PropertyListSerialization.propertyList(
                 from: data, options: [], format: nil) as? [String: Any]
         {
-            APPWRITE_PROJECT_ID = plist["APPWRITE_PROJECT_ID"] as? String
+            APPWRITE_PROJECT_ID =
+                plist["APPWRITE_PROJECT_ID"] as? String?
+                ?? "67017126001e334dd053"
         }
     }
 }
