@@ -458,30 +458,6 @@ class UserViewModel: NSObject, ObservableObject {
         return "Unknown Location"
     }
 
-    
-
-    
-
-    
-
-    
-
-    func updateDisplayPreferences(showPronouns: Bool? = nil, showGender: Bool? = nil) {
-        guard var tempUser = currentUser else { return }
-        
-        var updatedUser = tempUser
-        
-        if let showPronouns = showPronouns {
-            updatedUser.showPronouns = showPronouns
-        }
-        
-        if let showGender = showGender {
-            updatedUser.showGender = showGender
-        }
-        
-        self.currentUser = updatedUser
-    }
-
     @MainActor
     func updateAndSaveUserData(
         username: String? = nil,

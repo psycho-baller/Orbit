@@ -53,19 +53,27 @@ struct ProfilePageView: View {
             // Sheet presentations
             switch sheetType {
             case .personalInfo:
-                NameAgePronounEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Personal info" })
-                    .environmentObject(userVM)
+                NameAgePronounEditSheet(user: displayUser,
+                onSuccess: { lastUpdatedSection = "Personal info" }
+                )
+                .environmentObject(userVM)
             case .bio:
-                BioEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Bio" })
-                    .environmentObject(userVM)
-                    .presentationDetents([.fraction(0.6), .large])
+                BioEditSheet(user: displayUser,
+                onSuccess: { lastUpdatedSection = "Bio" }
+                )
+                .environmentObject(userVM)
+                .presentationDetents([.fraction(0.6), .large])
             case .username:
-                UsernameEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Username" })
-                    .environmentObject(userVM)
-                    .presentationDetents([.fraction(0.6), .large])
+                UsernameEditSheet(user: displayUser, 
+                onSuccess: { lastUpdatedSection = "Username" }
+                )
+                .environmentObject(userVM)
+                .presentationDetents([.fraction(0.6), .large])
             case .profile:
-                ProfilePictureEditSheet(user: displayUser, onSuccess: { lastUpdatedSection = "Profile picture" })
-                    .environmentObject(userVM)
+                ProfilePictureEditSheet(user: displayUser, 
+                onSuccess: { lastUpdatedSection = "Profile picture" }
+                )
+                .environmentObject(userVM)
             case .interests:
                 InterestsEditSheet(
                     user: displayUser,
