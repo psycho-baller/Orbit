@@ -14,7 +14,7 @@ struct ChatTextBox: View {
     var body: some View {
         HStack(alignment: .bottom) {
             AdvancedDynamicTextBox(text: $message)
-                .padding(.vertical, 12)
+                .padding(.vertical, 16)
                 .padding(.leading, 16)
             Button(action: onSend) {
                 ZStack {
@@ -35,7 +35,7 @@ struct ChatTextBox: View {
         }
         .background(
             // Apply the material background with only the top corners rounded.
-            RoundedCorner(radius: 20, corners: [.topLeft, .topRight])
+            RoundedCorner(radius: 24, corners: [.topLeft, .topRight])
                 .fill(.thinMaterial)
         )
         .foregroundColor(.primary)
