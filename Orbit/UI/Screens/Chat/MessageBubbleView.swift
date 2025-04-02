@@ -16,6 +16,30 @@ struct MessageBubbleView: View {
         // Assuming `userVM.currentUser?.id` is available
         return message.data.sentByUser?.id == userVM.currentUser?.id
     }
+    private var bubbleColor: Color {
+        if isFromCurrentUser {
+            // Sent bubble
+            return colorScheme == .dark
+                ? Color(red: 0.2, green: 0.65, blue: 0.85)  // Darker teal-like color for dark mode
+                : .accentColor  // Existing color in light mode
+        } else {
+            // Received bubble
+            return colorScheme == .dark
+                ? Color(red: 0.2, green: 0.2, blue: 0.25)  // Subdued dark gray for dark mode
+                : ColorPalette.lightGray(for: colorScheme)
+        }
+    }
+
+    // Dynamic text color based on dark/light mode and ownership
+    private var textColor: Color {
+        if isFromCurrentUser {
+            // Sent messages typically use white text
+            return .white
+        } else {
+            // Received messages: white text in dark mode, black in light mode
+            return colorScheme == .dark ? .white : .black
+        }
+    }
 
     var body: some View {
         HStack {
@@ -25,12 +49,8 @@ struct MessageBubbleView: View {
             ) {
                 Text(message.data.content)
                     .padding()
-                    .background(
-                        isFromCurrentUser
-                            ? .accentColor
-                            : ColorPalette.lightGray(for: colorScheme)
-                    )
-                    .foregroundColor(isFromCurrentUser ? .white : .black)
+                    .background(bubbleColor)
+                    .foregroundColor(textColor)
                     .cornerRadius(15)
 
                 //                Text("Today at \(message.timestamp)") // Example timestamp format
