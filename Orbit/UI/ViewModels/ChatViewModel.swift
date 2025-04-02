@@ -60,7 +60,7 @@ class ChatViewModel: ObservableObject {
             {
                 do {
                     try await notificationService.sendPushNotification(
-                        to: [sendToUser.id],
+                        to: [sendToUser.accountId],
                         title:
                             "\(currentUser.firstName) Would like to meet up!",
                         body:

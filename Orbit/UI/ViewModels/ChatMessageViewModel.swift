@@ -187,24 +187,28 @@ class ChatMessageViewModel: ObservableObject {
             messages[messages.count - 1] = createdMessage
 
             // Determine the receiver's id (this may depend on your chat model)
-            if let receiverUserId =
+            if let receiverUserAccountId =
                 (userId == message.chat?.createdByUser?.id)
-                ? message.chat?.otherUser?.id : message.chat?.createdByUser?.id,
+                ? message.chat?.otherUser?.accountId
+                : message.chat?.createdByUser?.accountId,
                 let currentUser = message.sentByUser,
                 let chatId = message.chat?.id
             {
+                print(
+                    "send to \(receiverUserAccountId), \(currentUser.firstName) sent you a message!"
+                )
 
                 // Send push notification for the new message in a separate do-catch block
                 do {
                     try await notificationService.sendPushNotification(
-                        to: [receiverUserId],
+                        to: [receiverUserAccountId],
                         title: "\(currentUser.firstName) sent you a message!",
                         body: message.content,
                         data: [
                             "newMessage": [
                                 "id": createdMessage.id,
-                                "sentByUserId": currentUser.id,
-                                "receiverUserId": receiverUserId,
+                                "sentByUserId": currentUser.accountId,
+                                "receiverUserId": receiverUserAccountId,
                                 "chatId": chatId,
                             ],
                             "type": "newMessage",

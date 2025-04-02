@@ -18,38 +18,7 @@ class PersonalPreferencesViewModel: ObservableObject {
         questions = [
             Question(
                 text: "What are some activities or hobbies that bring you joy?",
-                options: [
-                    "Hiking",
-                    "Reading",
-                    "Writing",
-                    "Cooking",
-                    "Volunteering",
-                    "Photography",
-                    "Yoga",
-                    "Gaming",
-                    "Painting",
-                    "Traveling",
-                    "Coding",
-                    "Music",
-                    "Meditation",
-                    "Dancing",
-                    "Gardening",
-                    "Climbing",
-                    "Crochet",
-                    "Skateboarding",
-                    "Debating",
-                    "Snow Sports",
-                    "Water Sports",
-                    "Racket Sports",
-                    "Extreme Sports",
-                    "Ball Sports",
-                    "Board Games",
-                    "Martial Arts",
-                    "Collecting",
-                    "Language Learning",
-                    "Journaling",
-                    "Golf",
-                ].map { title in
+                options: OnboardingOptions.activitiesHobbies.map { title in
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?
@@ -62,18 +31,7 @@ class PersonalPreferencesViewModel: ObservableObject {
             Question(
                 text:
                     "What’s something you’d love to find a friend to do with you?",
-                options: [
-                    "Workout Partner",
-                    "Travel Buddy",
-                    "Study Partner",
-                    "Creative Collaborator",
-                    "Hobby Buddy",
-                    "Event Companion",
-                    "Group Hangouts",
-                    "Casual Meetup",
-                    "Deep Conversations",
-                    "Reliability Partner",
-                ].map { title in
+                options: OnboardingOptions.friendActivities.map { title in
                     QuestionOption(
                         title: title,
                         isSelected: currentUser?
