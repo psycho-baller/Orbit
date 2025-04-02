@@ -113,7 +113,7 @@ struct HomeView: View {
     @ViewBuilder
     private func meetupCardList() -> some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: 12) {
                 ForEach(
                     isListReversed
                         ? meetupRequestVM.filteredMeetupRequests(for: userVM.currentUser).reversed()
