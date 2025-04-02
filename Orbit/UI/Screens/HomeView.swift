@@ -7,17 +7,17 @@ struct HomeView: View {
     @EnvironmentObject private var meetupRequestVM: MeetupRequestViewModel
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) var colorScheme
-    
+
     //    @State private var selectedMeetupRequest: MeetupRequestDocument? = nil
     @State private var isShowingChatRequests = false
     @State private var chatRequestListDetent: PresentationDetent = .medium
     @State private var isPendingExpanded = false
     @State private var showLogoutAlert = false
-    @State private var selectedFilter: HomeFilter = .recommended
+    @State private var selectedSortingOption: SortingOptions = .recommended
     @State private var isListReversed: Bool = false
 
     // MARK: - Home Filter Options
-    enum HomeFilter: String, CaseIterable, Identifiable {
+    enum SortingOptions: String, CaseIterable, Identifiable {
         case recommended = "Recommended"
         case time = "Time"
         case proximity = "Proximity"
@@ -33,7 +33,6 @@ struct HomeView: View {
         }
     }
 
-    
     @ViewBuilder
     private func searchAndFilterBar() -> some View {
         VStack(spacing: 4) {
@@ -49,33 +48,37 @@ struct HomeView: View {
                 HStack(spacing: 12) {
                     Image(systemName: "line.3.horizontal.decrease")
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(Color.cyan)
+                        .foregroundColor(Color.accentColor)
                         .frame(width: 24, height: 24)
 
-                    ForEach(HomeFilter.allCases) { filter in
-                        let isSelected = filter == selectedFilter
-                        let bgColor = isSelected
+                    ForEach(SortingOptions.allCases) { option in
+                        let isSelected = option == selectedSortingOption
+                        let bgColor =
+                            isSelected
                             ? ColorPalette.accent(for: colorScheme)
-                            : ColorPalette.background(for: colorScheme).opacity(0.9)
+                            : ColorPalette.background(for: colorScheme).opacity(
+                                0.9)
 
-                        let textColor = isSelected
+                        let textColor =
+                            isSelected
                             ? Color.white
                             : ColorPalette.text(for: colorScheme).opacity(0.85)
 
                         Button(action: {
-                            selectedFilter = filter
+                            selectedSortingOption = option
                         }) {
                             HStack(spacing: 6) {
-                                Image(systemName: filter.iconName)
+                                Image(systemName: option.iconName)
                                     .font(.system(size: 14))
-                                Text(filter.rawValue)
+                                Text(option.rawValue)
                                     .font(.system(size: 11, weight: .bold))
                                     .lineLimit(1)
                                     .truncationMode(.tail)
                                     .minimumScaleFactor(0.9)
                                     .layoutPriority(1)
                             }
-                            .fixedSize(horizontal: true, vertical: false)                            .padding(.horizontal, 6)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .padding(.horizontal, 6)
                             .padding(.vertical, 10)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
@@ -90,7 +93,9 @@ struct HomeView: View {
                 .padding(.vertical, 12)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(ColorPalette.secondaryText(for: colorScheme).opacity(0.15))
+                        .fill(
+                            ColorPalette.secondaryText(for: colorScheme)
+                                .opacity(0.15))
                 )
 
                 // 2. OUTSIDE the background: Rightmost icon
@@ -99,7 +104,7 @@ struct HomeView: View {
                 }) {
                     Image(systemName: "slider.horizontal.3")
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(Color.cyan)
+                        .foregroundColor(Color.accentColor)
                         .padding(10)
                 }
             }
@@ -108,16 +113,17 @@ struct HomeView: View {
         }
     }
 
-
-    
     @ViewBuilder
     private func meetupCardList() -> some View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 ForEach(
                     isListReversed
-                        ? meetupRequestVM.filteredMeetupRequests(for: userVM.currentUser).reversed()
-                        : meetupRequestVM.filteredMeetupRequests(for: userVM.currentUser)
+                        ? meetupRequestVM.filteredMeetupRequests(
+                            for: userVM.currentUser
+                        ).reversed()
+                        : meetupRequestVM.filteredMeetupRequests(
+                            for: userVM.currentUser)
                 ) { meetupRequest in
                     MeetupRequestCardView(meetupRequest: meetupRequest)
                 }
@@ -135,7 +141,7 @@ struct HomeView: View {
                     .navigationTitle(
                         "Astronauts around you"
                     )
-                
+
                     .navigationBarTitleDisplayMode(
                         .automatic
                     )
@@ -144,14 +150,14 @@ struct HomeView: View {
                         ToolbarItem(placement: .navigationBarLeading) {
                             logoutButton
                         }
-                        
+
                         // Trailing toolbar: Notification button
                         ToolbarItem(placement: .navigationBarTrailing) {
                             notificationButton
                                 .overlay(
                                     notificationBadge
                                 )
-                            
+
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             settingsButton
@@ -173,10 +179,10 @@ struct HomeView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .presentationBackground(
                                 colorScheme == .dark
-                                ? .thinMaterial : .ultraThinMaterial)
+                                    ? .thinMaterial : .ultraThinMaterial)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                   .background(ColorPalette.background(for: colorScheme))
+                    .background(ColorPalette.background(for: colorScheme))
             }
             .onAppear {
                 Task {
@@ -190,7 +196,7 @@ struct HomeView: View {
             }
         }
     }
-    
+
     private func handleNotificationNavigation() async {
         if let requestId = appState.selectedRequestId {
             //            if let request = await chatRequestVM.getMeetUpRequest(
@@ -215,7 +221,7 @@ struct HomeView: View {
             loadedView()
         }
     }
-    
+
     // MARK: - Buttons
     private var notificationButton: some View {
         Button(action: {
@@ -226,7 +232,7 @@ struct HomeView: View {
                 .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
     }
-    
+
     private var notificationBadge: some View {
         Group {
             Text("\(5)")
@@ -237,9 +243,9 @@ struct HomeView: View {
                 .clipShape(Circle())
                 .offset(x: 10, y: -10)
         }
-        
+
     }
-    
+
     private var logoutButton: some View {
         Button(action: {
             showLogoutAlert = true
@@ -261,7 +267,7 @@ struct HomeView: View {
             )
         }
     }
-    
+
     private var settingsButton: some View {
         Button(action: {
             appState.isShowingHomeSettings = true
@@ -271,7 +277,7 @@ struct HomeView: View {
                 .foregroundColor(ColorPalette.accent(for: colorScheme))
         }
     }
-    
+
     // MARK: - Views
     private func failedView(_ error: String) -> some View {
         VStack {
@@ -281,7 +287,7 @@ struct HomeView: View {
             Text(error)
                 .multilineTextAlignment(.center)
                 .padding()
-            
+
             Button(action: {
                 Task {
                     await userVM.initialize()
@@ -296,7 +302,7 @@ struct HomeView: View {
         }
         .background(ColorPalette.background(for: colorScheme))
     }
-    
+
     private func loadedView() -> some View {
         VStack(alignment: .leading, spacing: 0) {
             searchAndFilterBar()
