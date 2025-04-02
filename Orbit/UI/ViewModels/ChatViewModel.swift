@@ -20,6 +20,7 @@ class ChatViewModel: ObservableObject {
         notificationService: NotificationServiceProtocol =
             NotificationService()
     ) {
+        self.notificationService = notificationService
         if !isPreviewMode {
             Task {
                 await fetchChats()
