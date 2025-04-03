@@ -181,6 +181,7 @@ struct MeetupRequestCardView: View {
                                 }
                             }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         if !computedSharedInterests.isEmpty {
                             InterestsHorizontalTags(
                                 interests: computedSharedInterests,
@@ -188,11 +189,9 @@ struct MeetupRequestCardView: View {
                                     print("clicked")
                                 }
                             )
-//                            Spacer()
                         }
 
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 24)
