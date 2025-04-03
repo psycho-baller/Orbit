@@ -19,7 +19,7 @@ class APIManager {
                 from: data, options: [], format: nil) as? [String: Any]
         {
             APPWRITE_PROJECT_ID =
-                plist["APPWRITE_PROJECT_ID"] as? String?
+                plist["APPWRITE_PROJECT_ID"] as? String
                 ?? "67017126001e334dd053"
         }
     }
