@@ -170,7 +170,6 @@
 		2513832E2D6E0FB500FAF309 /* Languages.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Languages.json; sourceTree = "<group>"; };
 		25306A0F2D6B753F002E8E81 /* DragAndDropScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragAndDropScreen.swift; sourceTree = "<group>"; };
 		254BEB1F2D9AE9550052FDD4 /* NotificationsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsListView.swift; sourceTree = "<group>"; };
-		2553B44C2CF00AF000E14E2B /* Orbit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Orbit.entitlements; sourceTree = "<group>"; };
 		255A67FF2D83833F009CFF3F /* CloudFunctionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFunctionsService.swift; sourceTree = "<group>"; };
 		257440C92D6E3781009DEAA9 /* RangeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSliderView.swift; sourceTree = "<group>"; };
 		257454AE2D67AED400C7747F /* MeetupRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupRequestModel.swift; sourceTree = "<group>"; };
@@ -212,7 +211,6 @@
 		259CB2A92CC0486D00C9F285 /* OrbitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitApp.swift; sourceTree = "<group>"; };
 		25A1C5F92D930EC80020C3F2 /* TagSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSectionView.swift; sourceTree = "<group>"; };
 		25A399522CBF30C500D6BCE8 /* Orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		25A3995E2CBF30C700D6BCE8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		25A399642CBF30C700D6BCE8 /* OrbitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		25A399682CBF30C700D6BCE8 /* OrbitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitTests.swift; sourceTree = "<group>"; };
 		25A3996E2CBF30C700D6BCE8 /* OrbitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -474,6 +472,7 @@
 			isa = PBXGroup;
 			children = (
 				25A399542CBF30C500D6BCE8 /* Orbit */,
+				25DC74EE2CC0522300731939 /* Assets.xcassets */,
 				25A399672CBF30C700D6BCE8 /* OrbitTests */,
 				25A399712CBF30C700D6BCE8 /* OrbitUITests */,
 				61927B502D9CA899008798F1 /* Frameworks */,
@@ -495,23 +494,13 @@
 			isa = PBXGroup;
 			children = (
 				25F1BDB02CF29EDB0036D7E1 /* System */,
-				2553B44C2CF00AF000E14E2B /* Orbit.entitlements */,
 				259CB2832CC0465600C9F285 /* UI */,
 				259CB2782CC0460400C9F285 /* Services */,
 				259CB2A42CC047D000C9F285 /* Utilities */,
 				259CB2A12CC046F300C9F285 /* Models */,
 				25DC74E72CC0522300731939 /* Resources */,
-				25A3995D2CBF30C700D6BCE8 /* Preview Content */,
 			);
 			path = Orbit;
-			sourceTree = "<group>";
-		};
-		25A3995D2CBF30C700D6BCE8 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				25A3995E2CBF30C700D6BCE8 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		25A399672CBF30C700D6BCE8 /* OrbitTests */ = {
@@ -538,7 +527,6 @@
 				2513832E2D6E0FB500FAF309 /* Languages.json */,
 				25DC74E82CC0522300731939 /* Localizable.strings */,
 				25DC74EA2CC0522300731939 /* LaunchScreen.storyboard */,
-				25DC74EE2CC0522300731939 /* Assets.xcassets */,
 				25DC74F02CC0522300731939 /* Orbit.entitlements */,
 				25DC74F12CC0522300731939 /* Preview Assets.xcassets */,
 				25DC74F32CC0522300731939 /* fonts */,
@@ -1016,11 +1004,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = NewAppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = Orbit/Orbit.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Orbit/Resources/Orbit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = Orbit/Resources;
-				DEVELOPMENT_TEAM = FYD42C2RFJ;
+				DEVELOPMENT_TEAM = 3V2UU7RRK9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				"INFOPLIST_FILE[sdk=*]" = "$(SRCROOT)/Orbit/Resources/Info.plist";
@@ -1050,7 +1038,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = NewAppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = Orbit/Orbit.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Orbit/Resources/Orbit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = Orbit/Resources;
