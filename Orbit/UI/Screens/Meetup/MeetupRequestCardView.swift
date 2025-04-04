@@ -102,13 +102,13 @@ struct MeetupRequestCardView: View {
                                     .lineLimit(1)
 
                                 // Details row: gender, age, time, and location
-                                HStack(spacing: 8) {
+                                HStack(spacing: 16) {
                                     // Gender and Age: Only if createdByUser exists
                                     if let createdByUser = meetupRequest.data
                                         .createdByUser,
                                         let gender = createdByUser.gender
                                     {
-                                        HStack(spacing: 4) {
+                                        HStack(spacing: 2) {
                                             Image(genderIcon(for: gender))
                                                 .resizable()
                                                 .renderingMode(.template)
@@ -127,7 +127,7 @@ struct MeetupRequestCardView: View {
                                                 Text("\(age)")
                                                     .font(
                                                         .system(
-                                                            size: 14,
+                                                            size: 12,
                                                             weight: .semibold)
                                                     )
                                                     .foregroundColor(
@@ -139,12 +139,10 @@ struct MeetupRequestCardView: View {
                                         }
                                     }
 
-                                    Spacer().frame(width: 3)
-
                                     // Clock icon and simplified time display
-                                    HStack(spacing: 4) {
+                                    HStack(spacing: 2) {
                                         Image(systemName: "clock")
-                                            .font(.system(size: 13))
+                                            .font(.system(size: 12))
                                             .foregroundColor(
                                                 ColorPalette.secondaryText(
                                                     for: colorScheme))
@@ -160,7 +158,7 @@ struct MeetupRequestCardView: View {
                                                 for: colorScheme))
                                     }
 
-                                    HStack(spacing: 4) {
+                                    HStack(spacing: 2) {
                                         Image(systemName: "mappin.and.ellipse")
                                             .font(.caption)
                                         Text(
