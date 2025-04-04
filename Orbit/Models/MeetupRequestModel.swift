@@ -224,11 +224,46 @@ enum MeetupType: String, Codable {
         switch self {
         case .coffee: return "cup.and.saucer.fill"
         case .meal: return "fork.knife"
-        case .indoorActivity: return "house.fill"
+        case .indoorActivity: return "dumbbell.fill"
         case .outdoorActivity: return "figure.hiking"
         case .event: return "calendar"
         case .other: return "ellipsis.circle.fill"
         }
+    }
+
+    // Custom decoding from kebab-case
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+
+        switch rawValue {
+        case "coffee": self = .coffee
+        case "meal": self = .meal
+        case "indoor-activity": self = .indoorActivity
+        case "outdoor-activity": self = .outdoorActivity
+        case "event": self = .event
+        case "other": self = .other
+        default:
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Invalid meetup type: \(rawValue)"
+            )
+        }
+    }
+
+    // Custom encoding to kebab-case
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        let encodedValue: String
+        switch self {
+        case .coffee: encodedValue = "coffee"
+        case .meal: encodedValue = "meal"
+        case .indoorActivity: encodedValue = "indoor-activity"
+        case .outdoorActivity: encodedValue = "outdoor-activity"
+        case .event: encodedValue = "event"
+        case .other: encodedValue = "other"
+        }
+        try container.encode(encodedValue)
     }
 }
 
