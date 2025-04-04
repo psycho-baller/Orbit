@@ -6,8 +6,6 @@
 //
 import SwiftUI
 
-import SwiftUI
-
 struct EditMeetupPostSheet: View {
     let meetupRequest: MeetupRequestDocument
     var onDismiss: () -> Void
@@ -25,14 +23,18 @@ struct EditMeetupPostSheet: View {
     @State private var selectedLocationId: String?
     @State private var locations: [Area] = []
 
-    init(meetupRequest: MeetupRequestDocument, onDismiss: @escaping () -> Void) {
+    init(meetupRequest: MeetupRequestDocument, onDismiss: @escaping () -> Void)
+    {
         self.meetupRequest = meetupRequest
         self.onDismiss = onDismiss
         _title = State(initialValue: meetupRequest.data.title ?? "")
         _description = State(initialValue: meetupRequest.data.description ?? "")
-        _startTime = State(initialValue: meetupRequest.data.startTimeDate ?? Date())
-        _selectedIntention = State(initialValue: meetupRequest.data.intention ?? .friendship)
-        _selectedLocationId = State(initialValue: String(meetupRequest.data.areaId))
+        _startTime = State(
+            initialValue: meetupRequest.data.startTimeDate ?? Date())
+        _selectedIntention = State(
+            initialValue: meetupRequest.data.intention ?? .friendship)
+        _selectedLocationId = State(
+            initialValue: String(meetupRequest.data.areaId))
     }
 
     var body: some View {
@@ -112,7 +114,11 @@ struct EditMeetupPostSheet: View {
         .accentColor(ColorPalette.accent(for: colorScheme))
         .onAppear {
             locations = DataLoader.loadUofCLocationDataFromJSON()
-                .filter { $0.categories.contains("building.university") }
+                .filter { category in
+                    category.categories.contains(where: {
+                        $0.hasPrefix("building")
+                    })
+                }
         }
     }
 
