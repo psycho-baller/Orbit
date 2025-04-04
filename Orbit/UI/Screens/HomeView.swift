@@ -8,7 +8,6 @@ struct HomeView: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) var colorScheme
 
-    //    @State private var selectedMeetupRequest: MeetupRequestDocument? = nil
     @State private var isShowingChatRequests = false
     @State private var chatRequestListDetent: PresentationDetent = .medium
     @State private var isPendingExpanded = false
@@ -26,7 +25,7 @@ struct HomeView: View {
 
         var iconName: String {
             switch self {
-            case .recommended: return "star.fill"
+            case .recommended: return "sparkles"
             case .time: return "clock"
             case .proximity: return "location.fill"
             }
@@ -40,59 +39,80 @@ struct HomeView: View {
                 text: $userVM.searchText,
                 placeholder: "Search for a meetup request"
             )
-            .padding(.horizontal)
             .padding(.top, 8)
 
-            HStack(spacing: 12) {
-                // 1. Box wrapping: Left icon + filter pills
-                HStack(spacing: 12) {
+            HStack(spacing: 6) {
+                HStack(spacing: 10) {
                     Image(systemName: "line.3.horizontal.decrease")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Color.accentColor)
-                        .frame(width: 24, height: 24)
+                        .padding(2)
 
-                    ForEach(SortingOptions.allCases) { option in
-                        let isSelected = option == selectedSortingOption
-                        let bgColor =
-                            isSelected
-                            ? ColorPalette.accent(for: colorScheme)
-                            : ColorPalette.background(for: colorScheme).opacity(
-                                0.9)
+                    HStack(spacing: 10) {
+                        ForEach(SortingOptions.allCases) { option in
+                            let isSelected = option == selectedSortingOption
+                            let bgColor =
+                                isSelected
+                                ? ColorPalette.accent(for: colorScheme).opacity(
+                                    0.7)
+                                : ColorPalette.background(for: colorScheme)
+                                    .opacity(0.9)
 
-                        let textColor =
-                            isSelected
-                            ? Color.white
-                            : ColorPalette.text(for: colorScheme).opacity(0.85)
+                            let textColor =
+                                isSelected
+                                ? Color.white
+                                : ColorPalette.text(for: colorScheme).opacity(
+                                    0.85)
 
-                        Button(action: {
-                            selectedSortingOption = option
-                        }) {
-                            HStack(spacing: 6) {
-                                Image(systemName: option.iconName)
-                                    .font(.system(size: 14))
-                                Text(option.rawValue)
-                                    .font(.system(size: 11, weight: .bold))
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                                    .minimumScaleFactor(0.9)
-                                    .layoutPriority(1)
+                            Button(action: {
+                                withAnimation {
+                                    selectedSortingOption = option
+                                }
+                            }) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: option.iconName)
+                                        .font(.system(size: 14))
+
+                                    if isSelected {
+                                        Text(option.rawValue)
+                                            .font(
+                                                .system(
+                                                    size: 13, weight: .semibold)
+                                            )
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                            .minimumScaleFactor(0.9)
+                                            .layoutPriority(1)
+                                            .transition(
+                                                .opacity.combined(with: .scale))
+                                    }
+                                }
+                                .padding(
+                                    .horizontal,
+                                    selectedSortingOption == .recommended
+                                        ? 14 : 24
+                                )
+                                .frame(
+                                    maxWidth: isSelected ? .infinity : nil,
+                                    alignment: .center
+                                )
+//                                .padding(.horizontal, 4)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(bgColor)
+                                )
+                                .foregroundColor(textColor)
                             }
-                            .fixedSize(horizontal: true, vertical: false)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(bgColor)
-                            )
-                            .foregroundColor(textColor)
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
+                    .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal, 6)
-                .padding(.vertical, 12)
+                .padding(.vertical, 6)
                 .background(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: 12)
                         .fill(
                             ColorPalette.secondaryText(for: colorScheme)
                                 .opacity(0.15))
@@ -108,10 +128,7 @@ struct HomeView: View {
                         .padding(10)
                 }
             }
-            .padding(.horizontal, 20)
-
         }
-        //        .padding(.horizontal, 40)
     }
 
     @ViewBuilder
@@ -131,9 +148,8 @@ struct HomeView: View {
                     }
                 }
             }
-            //            .padding(.vertical)
-            .padding(.horizontal, 20)
-            .padding(.bottom, 16)
+            .padding(.horizontal)
+
         }
     }
 
@@ -202,17 +218,6 @@ struct HomeView: View {
 
     private func handleNotificationNavigation() async {
         if let requestId = appState.selectedRequestId {
-            //            if let request = await chatRequestVM.getMeetUpRequest(
-            //                requestId: requestId)
-            //            {
-            //                print("Selected request ID changed: ", requestId)
-            //                isShowingChatRequests = true
-            //                chatRequestListDetent = .large
-            //                //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            //                chatRequestVM.selectedRequest = request
-            //                //                }
-            //            }
-            //            appState.selectedRequestId = nil  // Reset after handling
         }
     }
     @ViewBuilder private var content: some View {
@@ -309,6 +314,8 @@ struct HomeView: View {
     private func loadedView() -> some View {
         VStack(alignment: .leading, spacing: 10) {
             searchAndFilterBar()
+                .padding(.horizontal)
+
             meetupCardList()
         }
         .background(ColorPalette.background(for: colorScheme))
