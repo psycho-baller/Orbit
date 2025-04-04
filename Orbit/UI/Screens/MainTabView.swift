@@ -50,7 +50,7 @@ struct MainTabView: View {
 
                 ChatListView()
                     .tabItem {
-                        Label("Messages", systemImage: "message.fill")
+                        Label("Chats", systemImage: "message.fill")
                     }
                     .tag(MainViewTabs.messages)
 
