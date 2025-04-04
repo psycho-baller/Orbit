@@ -108,29 +108,32 @@ struct HomeView: View {
                         .padding(10)
                 }
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 20)
 
         }
+        //        .padding(.horizontal, 40)
     }
 
     @ViewBuilder
     private func meetupCardList() -> some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
-                ForEach(
-                    isListReversed
-                        ? meetupRequestVM.filteredMeetupRequests(
-                            for: userVM.currentUser
-                        ).reversed()
-                        : meetupRequestVM.filteredMeetupRequests(
-                            for: userVM.currentUser)
-                ) { meetupRequest in
-                    MeetupRequestCardView(meetupRequest: meetupRequest)
+            VStack(spacing: 12) {
+                LazyVStack(spacing: 12) {
+                    ForEach(
+                        isListReversed
+                            ? meetupRequestVM.filteredMeetupRequests(
+                                for: userVM.currentUser
+                            ).reversed()
+                            : meetupRequestVM.filteredMeetupRequests(
+                                for: userVM.currentUser)
+                    ) { meetupRequest in
+                        MeetupRequestCardView(meetupRequest: meetupRequest)
+                    }
                 }
-
             }
-            .padding(.vertical)
-            .padding(.horizontal)
+            //            .padding(.vertical)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 16)
         }
     }
 
@@ -304,7 +307,7 @@ struct HomeView: View {
     }
 
     private func loadedView() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 10) {
             searchAndFilterBar()
             meetupCardList()
         }
