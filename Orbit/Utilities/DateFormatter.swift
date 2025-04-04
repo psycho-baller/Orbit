@@ -83,6 +83,14 @@ enum DateFormatterUtility {
         return formatter.date(from: dateString)
     }
 
+    static func parseISODateOnly(_ dateString: String) -> Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [
+            .withInternetDateTime, .withFractionalSeconds,
+        ]
+        return formatter.date(from: dateString)
+    }
+
     static func parseISODate(_ string: String) -> Date? {
         return isoDateFormatter.date(from: string)
     }
@@ -94,7 +102,10 @@ enum DateFormatterUtility {
     /// - Parameter dobString: A string representing the user's date of birth in "yyyy-MM-dd" format.
     /// - Returns: The calculated age or nil if the date could not be parsed.
     static func age(from dobString: String) -> Int? {
-        guard let dob = parseDateOnly(dobString) else { return nil }
+        guard let dob = parseISODateOnly(dobString) else {
+            print("dobString: \(dobString)")
+            return nil
+        }
         let now = Date()
         let calendar = Calendar.current
         let ageComponents = calendar.dateComponents([.year], from: dob, to: now)
