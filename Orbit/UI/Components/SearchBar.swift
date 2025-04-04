@@ -26,13 +26,15 @@ struct SearchBar: UIViewRepresentable {
         searchBar.backgroundImage = UIImage()  // Removes background image to make it clear
         
         // Customize the search text field
-        if let textField = searchBar.searchTextField as? UITextField {
-            textField.backgroundColor = UIColor(white: 1, alpha: 0.3) // Semi-transparent background
+        if let textField = searchBar.searchTextField as UITextField? {
+            textField.backgroundColor = UIScreen.main.traitCollection.userInterfaceStyle == .dark
+            ? UIColor(Color(hex: "#ACC9E3").opacity(0.15))
+            : UIColor(Color(hex: "#448c89").opacity(0.15))
             textField.textColor = .white  // White text color
             textField.tintColor = .white  // White cursor and text input highlight
             textField.layer.cornerRadius = 10  // Rounded corners
             textField.clipsToBounds = true  // Apply corner radius
-                }
+        }
         
         searchBar.tintColor = cancelButtonColor
         

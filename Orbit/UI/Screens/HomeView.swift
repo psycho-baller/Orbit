@@ -37,7 +37,7 @@ struct HomeView: View {
         VStack(spacing: 4) {
             SearchBar(
                 text: $userVM.searchText,
-                placeholder: "Search for a meetup request"
+                placeholder: "Smart Search"
             )
             .padding(.top, 8)
 
@@ -158,7 +158,7 @@ struct HomeView: View {
             ZStack {
                 content
                     .navigationTitle(
-                        "Astronauts around you"
+                        "Meetups around you"
                     )
 
                     .navigationBarTitleDisplayMode(
