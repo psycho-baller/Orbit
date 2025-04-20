@@ -197,7 +197,7 @@ struct MeetupRequestCardView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         if !computedSharedInterests.isEmpty {
                             InterestsHorizontalTags(
-                                interests: Array(computedSharedInterests),
+                                interests: Array(computedSharedInterests).sorted(),
                                 onTapInterest: { interest in
                                     print("clicked")
                                 }
