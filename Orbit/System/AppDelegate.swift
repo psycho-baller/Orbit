@@ -126,7 +126,7 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                                     print("Receiver Name: \(receiverName)")
                                     print("Sender ID: \(senderId)")
 
-                                    self.appState.selectedTab = .messages
+                                    self.appState.selectedTab = .chats
 //                                    self.appState.messagesNavigationPath.append(
 //                                        ConversationDetailModel(
 //                                            id: conversationId,

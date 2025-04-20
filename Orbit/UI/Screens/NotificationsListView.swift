@@ -5,13 +5,6 @@
 //  Created by Rami Maalouf on 2025-03-31.
 //
 
-//
-//  NotificationsListView.swift
-//  Orbit
-//
-//  Created by Rami Maalouf on 2024-11-15.
-//
-
 import SwiftUI
 
 struct NotificationsListView: View {
@@ -31,7 +24,8 @@ struct NotificationsListView: View {
 
     private func approveRequest(request: ChatRequestDocument) async {
         let receiverName = userVM.getUserName(
-            from: request.data.receiverAccountId)
+            from: request.data.receiverAccountId
+        )
         dismiss()
         if let conversation =
             await chatRequestVM
@@ -42,7 +36,7 @@ struct NotificationsListView: View {
             )
         {
 
-            appState.selectedTab = .messages
+            appState.selectedTab = .chats
             //            appState.messagesNavigationPath.append(
             //                ConversationDetailModel(
             //                    id: conversation.id,
@@ -60,7 +54,8 @@ struct NotificationsListView: View {
         let receiverName =
             userVM.getUserName(
                 from: request.data
-                    .receiverAccountId)
+                    .receiverAccountId
+            )
         await chatRequestVM
             .respondToMeetUpRequest(
                 requestId: request.id,
@@ -85,7 +80,8 @@ struct NotificationsListView: View {
                             if let accountId = userVM.currentUser?.accountId {
                                 Task {
                                     await chatRequestVM.fetchRequestsForUser(
-                                        userId: accountId)
+                                        userId: accountId
+                                    )
                                 }
                             }
                         }
@@ -110,15 +106,15 @@ struct NotificationsListView: View {
                             )
                             .fontWeight(.semibold)
 
-//                        Text(
-//                            "When someone sends you a meetup request, it will appear here"
-//                        )
-//                        .font(.headline)
-//                        .foregroundColor(
-//                            ColorPalette.secondaryText(for: colorScheme)
-//                        )
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 50)
+                            //                        Text(
+                            //                            "When someone sends you a meetup request, it will appear here"
+                            //                        )
+                            //                        .font(.headline)
+                            //                        .foregroundColor(
+                            //                            ColorPalette.secondaryText(for: colorScheme)
+                            //                        )
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 50)
                     }
                     .frame(maxHeight: .infinity)
                 } else {
@@ -140,7 +136,8 @@ struct NotificationsListView: View {
                                     SwipeAction {
                                         Task {
                                             await approveRequest(
-                                                request: request)
+                                                request: request
+                                            )
                                         }
                                     } label: { isHighlighted in
                                         VStack(spacing: 4) {
@@ -162,7 +159,8 @@ struct NotificationsListView: View {
                                     SwipeAction {
                                         Task {
                                             await declineRequest(
-                                                request: request)
+                                                request: request
+                                            )
                                         }
                                     } label: { isHighlighted in
                                         VStack(spacing: 4) {
@@ -176,18 +174,22 @@ struct NotificationsListView: View {
                                     } background: { isHighlighted in
                                         Color.red
                                             .opacity(
-                                                isHighlighted ? 0.8 : 1)
+                                                isHighlighted ? 0.8 : 1
+                                            )
                                     }
                                     .allowSwipeToTrigger()
                                 }
                                 .swipeOffsetCloseAnimation(
-                                    stiffness: 500, damping: 600
+                                    stiffness: 500,
+                                    damping: 600
                                 )
                                 .swipeOffsetExpandAnimation(
-                                    stiffness: 500, damping: 600
+                                    stiffness: 500,
+                                    damping: 600
                                 )
                                 .swipeOffsetTriggerAnimation(
-                                    stiffness: 500, damping: 600
+                                    stiffness: 500,
+                                    damping: 600
                                 )
                                 .swipeMinimumDistance(20)
                             }
@@ -196,8 +198,8 @@ struct NotificationsListView: View {
                     }
                 }
             }
-//            .navigationTitle("Meet-up Requests")
-//            .navigationBarTitleDisplayMode(.inline)
+            //            .navigationTitle("Meet-up Requests")
+            //            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 refreshRequests()
             }
@@ -233,7 +235,8 @@ struct OldMeetUpRequestRow: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 60, height: 60)
                         .foregroundColor(
-                            ColorPalette.secondaryText(for: colorScheme))
+                            ColorPalette.secondaryText(for: colorScheme)
+                        )
                 }
             } else {
                 Image(systemName: "person.circle.fill")
@@ -241,7 +244,8 @@ struct OldMeetUpRequestRow: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 60, height: 60)
                     .foregroundColor(
-                        ColorPalette.secondaryText(for: colorScheme))
+                        ColorPalette.secondaryText(for: colorScheme)
+                    )
             }
 
             // Text Content

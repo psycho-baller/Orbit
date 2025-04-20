@@ -10,7 +10,7 @@ import SwiftUI
 
 enum MainViewTabs {
     case home
-    case messages
+    case chats
     case profile
     case myOrbit
 }
@@ -52,7 +52,7 @@ struct MainTabView: View {
                     .tabItem {
                         Label("Chats", systemImage: "message.fill")
                     }
-                    .tag(MainViewTabs.messages)
+                    .tag(MainViewTabs.chats)
 
                 ProfileView()
                     .tabItem {

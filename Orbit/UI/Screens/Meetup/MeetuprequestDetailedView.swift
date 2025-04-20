@@ -24,8 +24,10 @@ struct MeetupRequestDetailedView: View {
                     .ignoresSafeArea()
                 if let otherUser = meetupRequest.data.createdByUser {
                     MeetupRequestAndUserInfoView(
-                        user: otherUser, meetupRequest: meetupRequest,
-                        showFullDetails: false)
+                        user: otherUser,
+                        meetupRequest: meetupRequest,
+                        showFullDetails: false
+                    )
                 }
                 HStack(spacing: 16) {
                     Button(action: declineMeetupRequest) {
@@ -64,7 +66,8 @@ struct MeetupRequestDetailedView: View {
                     } label: {
                         Image(systemName: "person.crop.circle.badge.xmark")  //Other potential icons: "nosign", "shield.lefthalf.filled"
                             .foregroundColor(
-                                ColorPalette.secondaryText(for: colorScheme))
+                                ColorPalette.secondaryText(for: colorScheme)
+                            )
                         #warning(
                             "TODO: Add block functionality"
                         )
@@ -84,14 +87,15 @@ struct MeetupRequestDetailedView: View {
         }
 
         let newChat = ChatModel(
-            createdByUser: sender, otherUser: meetupRequest.data.createdByUser!,
+            createdByUser: sender,
+            otherUser: meetupRequest.data.createdByUser!,
             meetupRequest: meetupRequest.data
         )
         dismiss()
 
         Task {
             if let createdChat = await chatVM.createChat(chat: newChat) {
-                appState.selectedTab = .messages
+                appState.selectedTab = .chats
                 appState.messagesNavigationPath.append(createdChat)
             }
         }
