@@ -69,7 +69,7 @@ class ChatViewModel: ObservableObject {
                             "meetupRequest": [
                                 "id": meetupRequest.id,
                                 "createdByUserId": sendToUser.id,
-                                "approverUserId": currentUser,
+                                "approverUserId": currentUser.id,
                             ],
                             "type": "meetupApproved",
                         ]
@@ -119,7 +119,8 @@ class ChatViewModel: ObservableObject {
 
         do {
             if let updatedChat = try await chatService.updateChat(
-                chatId: chat.id, updatedChat: chat.data
+                chatId: chat.id,
+                updatedChat: chat.data
             ), let index = chats.firstIndex(where: { $0.id == updatedChat.id })
             {
                 chats[index] = updatedChat
@@ -158,8 +159,9 @@ class ChatViewModel: ObservableObject {
         var updatedChatModel = chat.data
         updatedChatModel.meetupConfirmed = true
         if let confirmedChat = await chatService.updateChat(
-            chatId: chat.id, updatedChat: updatedChatModel)
-        {
+            chatId: chat.id,
+            updatedChat: updatedChatModel
+        ) {
             print(
                 "Meetup confirmed for chat \(confirmedChat.id) and other chats archived."
             )

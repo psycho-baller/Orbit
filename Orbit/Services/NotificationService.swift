@@ -9,8 +9,11 @@ import Foundation
 
 protocol NotificationServiceProtocol {
     func sendPushNotification(
-        to accountIds: [String], title: String, body: String,
-        data: [String: Any])
+        to accountIds: [String],
+        title: String,
+        body: String,
+        data: [String: Any]
+    )
         async throws
 
 }
@@ -25,7 +28,9 @@ class NotificationService: NotificationServiceProtocol {
     }
 
     func sendPushNotification(
-        to accountIds: [String], title: String, body: String,
+        to accountIds: [String],
+        title: String,
+        body: String,
         data: [String: Any]
     )
         async throws
@@ -43,8 +48,9 @@ class NotificationService: NotificationServiceProtocol {
 
         // Convert the dictionary to JSON data
         if let jsonBody = try? JSONSerialization.data(
-            withJSONObject: body, options: .prettyPrinted)
-        {
+            withJSONObject: body,
+            options: .prettyPrinted
+        ) {
             // Convert JSON data to a string
             if let stringBody = String(data: jsonBody, encoding: .utf8) {
                 print("JSON String: \(stringBody)")
@@ -59,11 +65,13 @@ class NotificationService: NotificationServiceProtocol {
                     print("Notification sent successfully: \(response.status)")
                 } catch {
                     throw NSError(
-                        domain: "NotificationService", code: 0,
+                        domain: "NotificationService",
+                        code: 0,
                         userInfo: [
                             NSLocalizedDescriptionKey:
                                 "Failed to send push notification: \(error.localizedDescription)"
-                        ])
+                        ]
+                    )
                 }
             } else {
                 print("Failed to convert JSON data to String.")
