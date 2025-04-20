@@ -236,6 +236,7 @@ struct HomeView: View {
             self.appState.messagesNavigationPath.append(
                 chatDocumentToNavigateTo
             )
+            appState.selectedChatId = nil
         }
     }
     @ViewBuilder private var content: some View {
