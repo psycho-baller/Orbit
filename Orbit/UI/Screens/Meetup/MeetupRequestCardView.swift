@@ -14,7 +14,7 @@ struct MeetupRequestCardView: View {
     @EnvironmentObject var userVM: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var isHidden = false
-    private var computedSharedInterests: [String] {
+    private var computedSharedInterests: Set<String> {
         guard
             let otherUserInterests = meetupRequest.data.createdByUser?
                 .activitiesHobbies,
@@ -22,45 +22,44 @@ struct MeetupRequestCardView: View {
         else {
             return []
         }
-        var result = otherUserInterests.filter { myInterests.contains($0) }
+
+        var result = Set(otherUserInterests).intersection(Set(myInterests))
 
         if let otherFriendActivities = meetupRequest.data.createdByUser?
             .friendActivities,
             let myFriendActivities = userVM.currentUser?.friendActivities
         {
-            result.append(
-                contentsOf: otherFriendActivities.filter {
-                    myFriendActivities.contains($0)
-                })
+            result.formUnion(
+                Set(otherFriendActivities).intersection(Set(myFriendActivities))
+            )
         }
 
         if let otherFriendshipQualities = meetupRequest.data.createdByUser?
             .friendshipQualities,
             let myFriendshipQualities = userVM.currentUser?.friendshipQualities
         {
-            result.append(
-                contentsOf: otherFriendshipQualities.filter {
-                    myFriendshipQualities.contains($0)
-                })
+            result.formUnion(
+                Set(otherFriendshipQualities).intersection(
+                    Set(myFriendshipQualities)
+                )
+            )
         }
 
         if let otherFriendshipValues = meetupRequest.data.createdByUser?
             .friendshipValues,
             let myFriendshipValues = userVM.currentUser?.friendshipValues
         {
-            result.append(
-                contentsOf: otherFriendshipValues.filter {
-                    myFriendshipValues.contains($0)
-                })
+            result.formUnion(
+                Set(otherFriendshipValues).intersection(Set(myFriendshipValues))
+            )
         }
 
         if let otherConvoTopics = meetupRequest.data.createdByUser?.convoTopics,
             let myConvoTopics = userVM.currentUser?.convoTopics
         {
-            result.append(
-                contentsOf: otherConvoTopics.filter {
-                    myConvoTopics.contains($0)
-                })
+            result.formUnion(
+                Set(otherConvoTopics).intersection(Set(myConvoTopics))
+            )
         }
 
         return result
@@ -70,7 +69,8 @@ struct MeetupRequestCardView: View {
         if !isHidden {
             NavigationLink(
                 destination: MeetupRequestDetailedView(
-                    meetupRequest: meetupRequest)
+                    meetupRequest: meetupRequest
+                )
             ) {
                 SwipeView {
                     VStack(spacing: 10) {
@@ -89,7 +89,8 @@ struct MeetupRequestCardView: View {
                                     .scaledToFit()
                                     .padding(12)
                                     .foregroundColor(
-                                        ColorPalette.accent(for: colorScheme)),
+                                        ColorPalette.accent(for: colorScheme)
+                                    ),
                                     alignment: .center
                                 )
 
@@ -116,25 +117,30 @@ struct MeetupRequestCardView: View {
                                                 .frame(width: 16, height: 16)
                                                 .foregroundColor(
                                                     ColorPalette.secondaryText(
-                                                        for: colorScheme))
+                                                        for: colorScheme
+                                                    )
+                                                )
 
                                             // Show age only if it can be computed
                                             if let dob = createdByUser.dob,
                                                 let age =
                                                     DateFormatterUtility.age(
-                                                        from: dob)
+                                                        from: dob
+                                                    )
                                             {
                                                 Text("\(age)")
                                                     .font(
                                                         .system(
                                                             size: 12,
-                                                            weight: .semibold)
+                                                            weight: .semibold
+                                                        )
                                                     )
                                                     .foregroundColor(
                                                         ColorPalette
                                                             .secondaryText(
                                                                 for: colorScheme
-                                                            ))
+                                                            )
+                                                    )
                                             }
                                         }
                                     }
@@ -145,17 +151,22 @@ struct MeetupRequestCardView: View {
                                             .font(.system(size: 12))
                                             .foregroundColor(
                                                 ColorPalette.secondaryText(
-                                                    for: colorScheme))
+                                                    for: colorScheme
+                                                )
+                                            )
                                         Text(
                                             formatMeetupTime(
-                                                meetup: meetupRequest.data)
+                                                meetup: meetupRequest.data
+                                            )
                                         )
                                         .font(
                                             .system(size: 14, weight: .semibold)
                                         )
                                         .foregroundColor(
                                             ColorPalette.secondaryText(
-                                                for: colorScheme))
+                                                for: colorScheme
+                                            )
+                                        )
                                     }
 
                                     HStack(spacing: 2) {
@@ -170,19 +181,23 @@ struct MeetupRequestCardView: View {
                                         .truncationMode(.tail)
                                         .font(
                                             .system(
-                                                size: 14, weight: .semibold)
+                                                size: 14,
+                                                weight: .semibold
+                                            )
                                         )
                                     }
                                     .foregroundColor(
                                         ColorPalette.secondaryText(
-                                            for: colorScheme))
+                                            for: colorScheme
+                                        )
+                                    )
                                 }
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         if !computedSharedInterests.isEmpty {
                             InterestsHorizontalTags(
-                                interests: computedSharedInterests,
+                                interests: Array(computedSharedInterests),
                                 onTapInterest: { interest in
                                     print("clicked")
                                 }
@@ -195,9 +210,11 @@ struct MeetupRequestCardView: View {
                         RoundedRectangle(cornerRadius: 24)
                             .fill(ColorPalette.main(for: colorScheme))
                             .shadow(
-                                color: .black.opacity(0.05), radius: 4,
+                                color: .black.opacity(0.05),
+                                radius: 4,
                                 x: 0,
-                                y: 2)
+                                y: 2
+                            )
                     )
                 } leadingActions: { _ in
                     SwipeAction {
@@ -213,7 +230,8 @@ struct MeetupRequestCardView: View {
                         .frame(width: 60)
                     } background: { isHighlighted in
                         ColorPalette.accent(for: colorScheme).opacity(
-                            isHighlighted ? 0.8 : 1)
+                            isHighlighted ? 0.8 : 1
+                        )
                     }
                     .allowSwipeToTrigger()
                 } trailingActions: { _ in
@@ -284,8 +302,11 @@ struct FlexibleTagView: View {
                                             .opacity(0.3)
                                     )
                                     .shadow(
-                                        color: .black.opacity(0.1), radius: 2,
-                                        x: 0, y: 1)
+                                        color: .black.opacity(0.1),
+                                        radius: 2,
+                                        x: 0,
+                                        y: 1
+                                    )
                             )
                     }
                 }
