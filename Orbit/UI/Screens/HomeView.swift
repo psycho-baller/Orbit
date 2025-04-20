@@ -5,6 +5,7 @@ struct HomeView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @EnvironmentObject private var authVM: AuthViewModel
     @EnvironmentObject private var meetupRequestVM: MeetupRequestViewModel
+    @EnvironmentObject private var chatVM: ChatViewModel
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) var colorScheme
 
@@ -54,7 +55,8 @@ struct HomeView: View {
                             let bgColor =
                                 isSelected
                                 ? ColorPalette.accent(for: colorScheme).opacity(
-                                    0.7)
+                                    0.7
+                                )
                                 : ColorPalette.background(for: colorScheme)
                                     .opacity(0.9)
 
@@ -62,7 +64,8 @@ struct HomeView: View {
                                 isSelected
                                 ? Color.white
                                 : ColorPalette.text(for: colorScheme).opacity(
-                                    0.85)
+                                    0.85
+                                )
 
                             Button(action: {
                                 withAnimation {
@@ -77,14 +80,17 @@ struct HomeView: View {
                                         Text(option.rawValue)
                                             .font(
                                                 .system(
-                                                    size: 13, weight: .semibold)
+                                                    size: 13,
+                                                    weight: .semibold
+                                                )
                                             )
                                             .lineLimit(1)
                                             .truncationMode(.tail)
                                             .minimumScaleFactor(0.9)
                                             .layoutPriority(1)
                                             .transition(
-                                                .opacity.combined(with: .scale))
+                                                .opacity.combined(with: .scale)
+                                            )
                                     }
                                 }
                                 .padding(
@@ -96,7 +102,7 @@ struct HomeView: View {
                                     maxWidth: isSelected ? .infinity : nil,
                                     alignment: .center
                                 )
-//                                .padding(.horizontal, 4)
+                                //                                .padding(.horizontal, 4)
                                 .padding(.vertical, 10)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
@@ -115,7 +121,8 @@ struct HomeView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(
                             ColorPalette.secondaryText(for: colorScheme)
-                                .opacity(0.15))
+                                .opacity(0.15)
+                        )
                 )
 
                 // 2. OUTSIDE the background: Rightmost icon
@@ -142,7 +149,8 @@ struct HomeView: View {
                                 for: userVM.currentUser
                             ).reversed()
                             : meetupRequestVM.filteredMeetupRequests(
-                                for: userVM.currentUser)
+                                for: userVM.currentUser
+                            )
                     ) { meetupRequest in
                         MeetupRequestCardView(meetupRequest: meetupRequest)
                     }
@@ -187,7 +195,8 @@ struct HomeView: View {
                             chatRequestListDetent: $chatRequestListDetent
                         )
                         .presentationDetents(
-                            [.medium, .large], selection: $chatRequestListDetent
+                            [.medium, .large],
+                            selection: $chatRequestListDetent
                         )
                         .presentationBackground(.ultraThinMaterial)
                     }
@@ -198,7 +207,8 @@ struct HomeView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .presentationBackground(
                                 colorScheme == .dark
-                                    ? .thinMaterial : .ultraThinMaterial)
+                                    ? .thinMaterial : .ultraThinMaterial
+                            )
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(ColorPalette.background(for: colorScheme))
@@ -208,7 +218,7 @@ struct HomeView: View {
                     await handleNotificationNavigation()
                 }
             }
-            .onChange(of: appState.selectedRequestId) {
+            .onChange(of: appState.selectedChatId) {
                 Task {
                     await handleNotificationNavigation()
                 }
@@ -217,7 +227,15 @@ struct HomeView: View {
     }
 
     private func handleNotificationNavigation() async {
-        if let requestId = appState.selectedRequestId {
+        if let chatId = appState.selectedChatId,
+            let chatDocumentToNavigateTo = await chatVM.getChatDocument(
+                chatId: chatId
+            )
+        {
+            self.appState.selectedTab = .chats
+            self.appState.messagesNavigationPath.append(
+                chatDocumentToNavigateTo
+            )
         }
     }
     @ViewBuilder private var content: some View {

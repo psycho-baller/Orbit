@@ -207,9 +207,9 @@ class ChatMessageViewModel: ObservableObject {
                         data: [
                             "newMessage": [
                                 "id": createdMessage.id,
+                                "chatId": chatId,
                                 "sentByUserId": currentUser.accountId,
                                 "receiverUserId": receiverUserAccountId,
-                                "chatId": chatId,
                             ],
                             "type": "newMessage",
                         ]

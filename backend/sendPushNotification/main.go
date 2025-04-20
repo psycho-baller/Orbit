@@ -39,6 +39,7 @@ type MeetupRequestData struct {
 	Id              string `json:"id"`
 	CreatedByUserId string `json:"createdByUserId"`
 	ApproverUserId  string `json:"approverUserId"`
+	ChatId          string `json:"chatId"`
 }
 
 // Data now supports two possible payloads: one for new messages and one for meetup approvals.

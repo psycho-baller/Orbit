@@ -15,7 +15,8 @@ class AppDelegate: NSObject, UIApplicationDelegate,
 {
     let logger = Logger(
         subsystem: "com.cpsc575.orbit.pushnotifications",
-        category: "AppDelegate")
+        category: "AppDelegate"
+    )
 
     let appState = AppState()
 
@@ -40,7 +41,8 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                 )
             } else {
                 self.logger.info(
-                    "Notification authorization granted: \(granted)")
+                    "Notification authorization granted: \(granted)"
+                )
             }
 
             DispatchQueue.main.async {
@@ -110,33 +112,20 @@ class AppDelegate: NSObject, UIApplicationDelegate,
 
                     DispatchQueue.main.async {
                         switch notificationType {
-                        case "requestApproved":
+                        case "meetupApproved":
                             // Check if "conversation" exists and is a dictionary
-                            if let conversation = data["conversation"]
-                                as? [String: String]
+                            if let meetupRequest = data["meetupRequest"]
+                                as? [String: Any]
                             {
-                                print("Conversation details: \(conversation)")
+                                print("meetupRequest details: \(meetupRequest)")
 
-                                if let conversationId = conversation["id"],
-                                    let receiverName = conversation[
-                                        "receiverName"],
-                                    let senderId = conversation["senderId"]
+                                // Extract fields safely from a loosely typed dictionary
+                                if let chatId = meetupRequest["chatId"]
+                                    as? String
                                 {
-                                    print("Conversation ID: \(conversationId)")
-                                    print("Receiver Name: \(receiverName)")
-                                    print("Sender ID: \(senderId)")
+                                    print("Chat ID: \(chatId)")
+                                    self.appState.selectedChatId = chatId
 
-                                    self.appState.selectedTab = .chats
-//                                    self.appState.messagesNavigationPath.append(
-//                                        ConversationDetailModel(
-//                                            id: conversationId,
-//                                            messagerName: receiverName,
-//                                            lastMessage: "",
-//                                            timestamp: "Today",
-//                                            isRead: false,
-//                                            lastSenderId: senderId
-//                                        )
-//                                    )
                                     print(
                                         "Navigation path updated for conversation."
                                     )
@@ -147,20 +136,20 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                                 }
                             } else {
                                 print(
-                                    "Failed to parse 'conversation' from data.")
+                                    "Failed to parse 'conversation' from data."
+                                )
                             }
 
-                        case "newMeetupRequest":
+                        case "newMessage":
                             // Check if "requestId" exists
-                            if let requestId = data["requestId"] as? String {
-                                print("Request ID: \(requestId)")
-                                self.appState.selectedTab = .home
-                                self.appState.selectedRequestId = requestId
+                            if let chatId = data["chatId"] as? String {
+                                print("Chat ID: \(chatId)")
+                                self.appState.selectedChatId = chatId
                                 print(
                                     "Navigation path updated for meet-up request."
                                 )
                             } else {
-                                print("Missing 'requestId' in data.")
+                                print("Missing 'chatId' in data.")
                             }
 
                         default:

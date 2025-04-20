@@ -68,6 +68,7 @@ class ChatViewModel: ObservableObject {
                         data: [
                             "meetupRequest": [
                                 "id": meetupRequest.id,
+                                "chatId": savedChat.id,
                                 "createdByUserId": sendToUser.id,
                                 "approverUserId": currentUser.id,
                             ],
@@ -97,19 +98,24 @@ class ChatViewModel: ObservableObject {
 
         // First check if it's already in 'chats'
         if let chatDoc = chats.first(where: { $0.id == chatId }) {
+            print("chatDoc already in chats")
             return chatDoc
         }
 
         do {
-            let chatDoc = try await chatService.getChat(chatId: chatId)
-            return chatDoc
+            if let chatDoc = try await chatService.getChat(chatId: chatId) {
+                print("chatDoc fetched from backend")
+                self.chats.append(chatDoc)
+                return chatDoc
+            }
         } catch {
             self.error = error.localizedDescription
             print(
                 "ChatViewModel - getChatDocument: Error: \(error.localizedDescription)"
             )
-            return nil
         }
+        print("something went wrong")
+        return nil
     }
 
     /// Update an existing chat

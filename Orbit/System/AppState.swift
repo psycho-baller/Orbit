@@ -13,7 +13,7 @@ class AppState: ObservableObject {
     @Published var selectedTab: MainViewTabs = .home
     @Published var messagesNavigationPath: [ChatDocument] = []
     @Published var targetScreen: String? = nil  // Tracks the target screen for deep links
-    @Published var selectedRequestId: String? = nil
+    @Published var selectedChatId: String? = nil
     @Published var isShowingHomeSettings = false
 
 }
