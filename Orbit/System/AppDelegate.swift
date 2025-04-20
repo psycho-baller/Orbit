@@ -113,7 +113,6 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                     DispatchQueue.main.async {
                         switch notificationType {
                         case "meetupApproved":
-                            // Check if "conversation" exists and is a dictionary
                             if let meetupRequest = data["meetupRequest"]
                                 as? [String: Any]
                             {
@@ -139,19 +138,32 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                                     "Failed to parse 'conversation' from data."
                                 )
                             }
-
                         case "newMessage":
-                            // Check if "requestId" exists
-                            if let chatId = data["chatId"] as? String {
-                                print("Chat ID: \(chatId)")
-                                self.appState.selectedChatId = chatId
-                                print(
-                                    "Navigation path updated for meet-up request."
-                                )
-                            } else {
-                                print("Missing 'chatId' in data.")
-                            }
+                            if let meetupRequest = data["newMessage"]
+                                as? [String: Any]
+                            {
+                                print("meetupRequest details: \(meetupRequest)")
 
+                                // Extract fields safely from a loosely typed dictionary
+                                if let chatId = meetupRequest["chatId"]
+                                    as? String
+                                {
+                                    print("Chat ID: \(chatId)")
+                                    self.appState.selectedChatId = chatId
+
+                                    print(
+                                        "Navigation path updated for conversation."
+                                    )
+                                } else {
+                                    print(
+                                        "Missing conversation fields (id, receiverName, senderId)."
+                                    )
+                                }
+                            } else {
+                                print(
+                                    "Failed to parse 'conversation' from data."
+                                )
+                            }
                         default:
                             print(
                                 "Unhandled notification type: \(notificationType)"

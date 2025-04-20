@@ -322,11 +322,7 @@ struct ChatDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
-        .onAppear {
-            print(
-                "other: \(otherUser) meetupRequest: \(chat.data.meetupRequest)")
-            print("chat.data: \(chat.data)")
-        }
+
         .sheet(isPresented: $isShowingMeetupDetails) {
             if let other = otherUser,
                 let meetupRequest = chat.data.meetupRequest
